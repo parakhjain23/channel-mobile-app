@@ -1,4 +1,5 @@
 import React from 'react'
+import { FlatList, View } from 'react-native'
 
 const OrgScreen = () =>{
     const data = [
@@ -12,6 +13,12 @@ const OrgScreen = () =>{
         },
     ]
     return(
-        <></>
+        <View>
+            <FlatList 
+            data={data}
+            renderItem={({item})=>{
+            }}
+            />
+        </View>
     )
 }
