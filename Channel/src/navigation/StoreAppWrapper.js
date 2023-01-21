@@ -3,9 +3,11 @@ import {persistor, store} from '../redux/Store';
 import {Provider} from 'react-redux';
 // import AppWrapper from './appWrapper.js';
 import {PersistGate} from 'redux-persist/integration/react';
-import { Text } from 'react-native';
 import SplashScreen from '../screens/splashScreen/SplashScreen';
+import AppWrapper from './AppWrapper';
+
 const StoreAppWrapper = () => {
+  console.log('Inside StoreAppWrapper');
   const [showSplashScreen, setShowSplashScreen] = useState(true);
   return (
     <Provider store={store}>
@@ -13,7 +15,7 @@ const StoreAppWrapper = () => {
         {showSplashScreen ? (
           <SplashScreen setShowSplashScreen={setShowSplashScreen} />
         ) : (
-          <Text>In application{console.log('in store')}</Text>
+          <AppWrapper />
         )}
       </PersistGate>
     </Provider>

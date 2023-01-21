@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Text, View} from 'react-native';
+import {Image, Text, View} from 'react-native';
 
 const SplashScreen = ({setShowSplashScreen}) => {
   console.log('in splash screen');
@@ -9,8 +9,8 @@ const SplashScreen = ({setShowSplashScreen}) => {
     }, 2000);
   });
   return (
-    <View>
-      <Text>In splashScreen</Text>
+    <View style={{flex:1,justifyContent:'center'}}>
+      <Text style={{textAlign:'center'}}>In splashScreen</Text>
     </View>
   );
 };
