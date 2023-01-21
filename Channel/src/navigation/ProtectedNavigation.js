@@ -1,12 +1,13 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import LoginScreen from '../screens/loginScreen/LoginScreen';
 import { connect } from 'react-redux';
 // import {useNavigation, useTheme} from '@react-navigation/native';
 
 const ProtectedNavigation = () => {
-    console.log('Inside Protected Navigation');
   const Stack = createNativeStackNavigator();
+  // const {Navigator,Screen} = createDrawerNavigator();
 //   const navigate = useNavigation();
   //   const {colors} = useTheme();
   //   const getShopingCartHeader = {
@@ -19,12 +20,18 @@ const ProtectedNavigation = () => {
   //     },
   //     statusBarTranslucent:true
   //   };
-  return (
-    // <Stack.Navigator>
-    //     <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:true}} />
-    // </Stack.Navigator>
-    <></>
-  )
+  return true ? (
+    <Stack.Navigator>
+        <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:true}} />
+    </Stack.Navigator>
+  ) : (
+    // <Drawer.Navigator>
+    //   <Drawer.Screen name='Login' component={LoginScreen}/>
+    // </Drawer.Navigator>
+    <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:true}}/>
+    </Stack.Navigator>
+  );
 };
 
 const mapStateToProps = (state) => ({

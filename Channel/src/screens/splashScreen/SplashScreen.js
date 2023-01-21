@@ -6,11 +6,12 @@ const SplashScreen = ({setShowSplashScreen}) => {
   useEffect(() => {
     setTimeout(() => {
       setShowSplashScreen(false);
-    }, 2000);
+    }, 1000);
   });
   return (
-    <View style={{flex:1,justifyContent:'center'}}>
-      <Text style={{textAlign:'center'}}>In splashScreen</Text>
+    <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+      <Image source={require('../../assests/images/appIcon/icon-96x96.png')}/>
+      <Text style={{textAlign:'center'}}>Channel by Space</Text>
     </View>
   );
 };
