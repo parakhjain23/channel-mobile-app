@@ -1,7 +1,7 @@
 import { all, fork } from "redux-saga/effects";
-import ChatSaga from "./actions/chat/ChatSaga";
-import OrgSaga from "./actions/org/OrgSaga";
-import UserSaga from "./actions/user/UserSaga";
+import ChatSaga from "./saga/ChatSaga";
+import OrgSaga from "./saga/OrgSaga";
+import UserSaga from "./saga/UserSaga";
 
 export default function* rootSaga() {
   yield all([fork(OrgSaga),fork(ChatSaga),fork(UserSaga)]);

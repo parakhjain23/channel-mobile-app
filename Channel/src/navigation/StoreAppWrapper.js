@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {persistor, store} from '../redux/Store';
 import {Provider} from 'react-redux';
-// import AppWrapper from './appWrapper.js';
 import {PersistGate} from 'redux-persist/integration/react';
 import SplashScreen from '../screens/splashScreen/SplashScreen';
 import AppWrapper from './AppWrapper';
