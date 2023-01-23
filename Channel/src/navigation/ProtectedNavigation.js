@@ -1,13 +1,11 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import LoginScreen from '../screens/loginScreen/LoginScreen';
 import { connect } from 'react-redux';
 // import {useNavigation, useTheme} from '@react-navigation/native';
 
 const ProtectedNavigation = () => {
   const Stack = createNativeStackNavigator();
-  // const {Navigator,Screen} = createDrawerNavigator();
 //   const navigate = useNavigation();
   //   const {colors} = useTheme();
   //   const getShopingCartHeader = {
@@ -22,12 +20,9 @@ const ProtectedNavigation = () => {
   //   };
   return true ? (
     <Stack.Navigator>
-        <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:true}} />
+        <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}} />
     </Stack.Navigator>
   ) : (
-    // <Drawer.Navigator>
-    //   <Drawer.Screen name='Login' component={LoginScreen}/>
-    // </Drawer.Navigator>
     <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:true}}/>
     </Stack.Navigator>
