@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, View } from 'react-native'
+import { Text, View } from 'react-native'
 
 const OrgScreen = () =>{
     const data = [
@@ -13,12 +13,12 @@ const OrgScreen = () =>{
         },
     ]
     return(
-        <View>
-            <FlatList 
-            data={data}
-            renderItem={({item})=>{
-            }}
-            />
+        <View style={{backgroundColor:'grey',flex:1,justifyContent:'center'}}>
+            <Text style={{color:'yellow'}}>
+                this IS ORG SCREEN
+            </Text>
         </View>
     )
 }
+
+export default OrgScreen

@@ -2,6 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from '../screens/loginScreen/LoginScreen';
 import { connect } from 'react-redux';
+import OrgScreen from '../screens/orgScreen/OrgScreen';
 // import {useNavigation, useTheme} from '@react-navigation/native';
 
 const ProtectedNavigation = () => {
@@ -19,8 +20,9 @@ const ProtectedNavigation = () => {
   //     statusBarTranslucent:true
   //   };
   return true ? (
-    <Stack.Navigator>
+    <Stack.Navigator >
         <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}} />
+        <Stack.Screen name="Hello" component={OrgScreen} options={{headerShown:false}} />
     </Stack.Navigator>
   ) : (
     <Stack.Navigator initialRouteName="Login">
