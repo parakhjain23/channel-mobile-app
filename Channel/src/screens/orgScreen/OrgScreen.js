@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, View } from 'react-native'
 
-const OrgScreen = () =>{
+const OrgScreen = ({naviagation}) =>{
     const data = [
         {
             name: "Programmer",

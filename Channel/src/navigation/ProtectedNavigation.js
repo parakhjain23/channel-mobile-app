@@ -19,16 +19,15 @@ const ProtectedNavigation = () => {
   //     },
   //     statusBarTranslucent:true
   //   };
-  return true ? (
-    <Stack.Navigator >
+  return    <Stack.Navigator>
         <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}} />
         <Stack.Screen name="Hello" component={OrgScreen} options={{headerShown:false}} />
     </Stack.Navigator>
-  ) : (
-    <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:true}}/>
-    </Stack.Navigator>
-  );
+  // ) : (
+  //   <Stack.Navigator initialRouteName="Login">
+  //       <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:true}}/>
+  //   </Stack.Navigator>
+  // );
 };
 
 const mapStateToProps = (state) => ({
