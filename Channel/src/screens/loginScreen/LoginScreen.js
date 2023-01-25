@@ -2,7 +2,7 @@ import React from 'react';
 import {Button, Image, Linking, Text, View} from 'react-native';
 import { connect } from 'react-redux';
 
-const LoginScreen = ({props}) => {
+const LoginScreen = (props) => {
   console.log(props?.route?.params?.org,"THIS IS ORG ID=-=-=-=-=-=");
   console.log(props?.route?.params?.token,"THIS IS TOKENNNNNN ID=-=-=-=-=-=");
   return (
