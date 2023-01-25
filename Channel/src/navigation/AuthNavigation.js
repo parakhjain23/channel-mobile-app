@@ -4,9 +4,6 @@ import ProtectedNavigation from './ProtectedNavigation';
 import {ActivityIndicator} from 'react-native';
 // import { StatusBar, useColorScheme } from 'react-native';
 // import { DARK_THEME, LIGHT_THEME } from '../constant/styles';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import LoginScreen from '../screens/loginScreen/LoginScreen';
-import OrgScreen from '../screens/orgScreen/OrgScreen';
 
 const linking = {
   prefixes: ['channel://'],
@@ -15,6 +12,9 @@ const linking = {
     screens: {
       Login: {
         path: 'login',
+        parse:{
+          props: (props)=>props
+        }
       },
       Hello: {
         path: 'hello',

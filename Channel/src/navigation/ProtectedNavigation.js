@@ -1,7 +1,7 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginScreen from '../screens/loginScreen/LoginScreen';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import OrgScreen from '../screens/orgScreen/OrgScreen';
 // import {useNavigation, useTheme} from '@react-navigation/native';
 
@@ -19,26 +19,23 @@ const ProtectedNavigation = () => {
   //     },
   //     statusBarTranslucent:true
   //   };
-  return (
+  return false ? (
     <Stack.Navigator>
       <Stack.Screen
         name="Login"
         component={LoginScreen}
         options={{headerShown: false}}
       />
+    </Stack.Navigator>
+  ) : (
+    <Stack.Navigator initialRouteName="Org">
       <Stack.Screen
-        name="Hello"
-        component={OrgScreen}
-        options={{headerShown: false}}
+        name="Org"
+        component={LoginScreen}
+        options={{headerShown: true}}
       />
     </Stack.Navigator>
-    
   );
-  // ) : (
-  //   <Stack.Navigator initialRouteName="Login">
-  //       <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:true}}/>
-  //   </Stack.Navigator>
-  // );
 };
 
 const mapStateToProps = state => ({
