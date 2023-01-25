@@ -25,25 +25,11 @@ const linking = {
 };
 
 const AuthNavigation = () => {
-  const Stack = createNativeStackNavigator();
-
-  //   const scheme = useColorScheme();
   return (
     <NavigationContainer
       linking={linking}
       fallback={<ActivityIndicator color={'red'} size={'large'} />}>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Hello"
-          component={OrgScreen}
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
+        <ProtectedNavigation/>
     </NavigationContainer>
   );
 };
