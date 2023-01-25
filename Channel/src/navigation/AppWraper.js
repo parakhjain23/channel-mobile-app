@@ -1,7 +1,6 @@
 import React from 'react'
 import AuthNavigation from './AuthNavigation';
 const AppWrapper = () => {
-    console.log('Inside AppWrapper');
     return (
         <AuthNavigation />
     )

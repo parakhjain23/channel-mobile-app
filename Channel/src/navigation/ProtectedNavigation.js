@@ -1,5 +1,5 @@
 import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginScreen from '../screens/loginScreen/LoginScreen';
 import { connect } from 'react-redux';
 import OrgScreen from '../screens/orgScreen/OrgScreen';
@@ -7,7 +7,7 @@ import OrgScreen from '../screens/orgScreen/OrgScreen';
 
 const ProtectedNavigation = () => {
   const Stack = createNativeStackNavigator();
-//   const navigate = useNavigation();
+  //   const navigate = useNavigation();
   //   const {colors} = useTheme();
   //   const getShopingCartHeader = {
   //     animationDuration: 0,
@@ -19,22 +19,31 @@ const ProtectedNavigation = () => {
   //     },
   //     statusBarTranslucent:true
   //   };
-  return false ? (
+  return (
     <Stack.Navigator>
-        <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}} />
-    </Stack.Navigator>
-  ) : (
-    <Stack.Navigator initialRouteName="Org">
-        <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:true}}/>
-        <Stack.Screen name="Org" component={OrgScreen} options={{headerShown:true}}/>
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Hello"
+        component={OrgScreen}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
     
   );
+  // ) : (
+  //   <Stack.Navigator initialRouteName="Login">
+  //       <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:true}}/>
+  //   </Stack.Navigator>
+  // );
 };
 
-const mapStateToProps = (state) => ({
-    userInfoSate: state.userInfoReducer,
-})
+const mapStateToProps = state => ({
+  userInfoSate: state.userInfoReducer,
+});
 export default connect(mapStateToProps)(ProtectedNavigation);
 
 // IMPROVE  : STYLES

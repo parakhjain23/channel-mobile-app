@@ -31,6 +31,9 @@
 		E5BC4A252981104100EA84FB /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5BC4A152981104100EA84FB /* EvilIcons.ttf */; };
 		E5BC4A262981104100EA84FB /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5BC4A162981104100EA84FB /* SimpleLineIcons.ttf */; };
 		E5BC4A272981104100EA84FB /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5BC4A172981104100EA84FB /* MaterialIcons.ttf */; };
+		185137D001FB83A37497BE47 /* libPods-Channel.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A835C07965608E940D27DAA3 /* libPods-Channel.a */; };
+		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		BB1A7E5ABA646794E403491F /* libPods-Channel-ChannelTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D1A13669D492944F145E99FE /* libPods-Channel-ChannelTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -134,8 +137,13 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
+<<<<<<< HEAD
 				4215617982F63EDF97AF3388 /* libPods-Channel.a */,
 				593AFA9DFE57D5EBCF968E06 /* libPods-Channel-ChannelTests.a */,
+=======
+				A835C07965608E940D27DAA3 /* libPods-Channel.a */,
+				D1A13669D492944F145E99FE /* libPods-Channel-ChannelTests.a */,
+>>>>>>> d1eb11ca18e279e4616cd1d6b9704ccc26ac5c21
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -174,10 +182,17 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
+<<<<<<< HEAD
 				ECEBD49EFB4E123F143D48B0 /* Pods-Channel.debug.xcconfig */,
 				F58A771107FC1AB390D2F0F0 /* Pods-Channel.release.xcconfig */,
 				C0F3FFFD0364B45457860D9F /* Pods-Channel-ChannelTests.debug.xcconfig */,
 				1FFE303EF4C8B082043B3D18 /* Pods-Channel-ChannelTests.release.xcconfig */,
+=======
+				7A066C287F784DF23AB5891E /* Pods-Channel.debug.xcconfig */,
+				850889749149D6D937B6161D /* Pods-Channel.release.xcconfig */,
+				362D138513E892CF4EBF6F11 /* Pods-Channel-ChannelTests.debug.xcconfig */,
+				B68BEF0E88C595ECBC224194 /* Pods-Channel-ChannelTests.release.xcconfig */,
+>>>>>>> d1eb11ca18e279e4616cd1d6b9704ccc26ac5c21
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -213,12 +228,21 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "ChannelTests" */;
 			buildPhases = (
+<<<<<<< HEAD
 				012B0E3E8EB9CD9ACE8DDEE8 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
 				62E0F89C4B3B1A29EB9D2C93 /* [CP] Embed Pods Frameworks */,
 				BB304A6442A31A4E6230C174 /* [CP] Copy Pods Resources */,
+=======
+				79886DC0B73122BC233F5919 /* [CP] Check Pods Manifest.lock */,
+				00E356EA1AD99517003FC87E /* Sources */,
+				00E356EB1AD99517003FC87E /* Frameworks */,
+				00E356EC1AD99517003FC87E /* Resources */,
+				2ECB537F961B96E96BBC3120 /* [CP] Embed Pods Frameworks */,
+				C78688214E4F66C3EC4DE8D7 /* [CP] Copy Pods Resources */,
+>>>>>>> d1eb11ca18e279e4616cd1d6b9704ccc26ac5c21
 			);
 			buildRules = (
 			);
@@ -234,14 +258,23 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Channel" */;
 			buildPhases = (
+<<<<<<< HEAD
 				4932399377014961F7BAE536 /* [CP] Check Pods Manifest.lock */,
+=======
+				05CE6F9BA5D9CC2118035F08 /* [CP] Check Pods Manifest.lock */,
+>>>>>>> d1eb11ca18e279e4616cd1d6b9704ccc26ac5c21
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+<<<<<<< HEAD
 				EACF465D82C126DED21870AA /* [CP] Embed Pods Frameworks */,
 				3154B36299168B4285EC297D /* [CP] Copy Pods Resources */,
+=======
+				B5AB0A70AC2597905EA67A22 /* [CP] Embed Pods Frameworks */,
+				FD0F70BF95453A52609E2FFF /* [CP] Copy Pods Resources */,
+>>>>>>> d1eb11ca18e279e4616cd1d6b9704ccc26ac5c21
 			);
 			buildRules = (
 			);
@@ -339,7 +372,73 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
+<<<<<<< HEAD
 		012B0E3E8EB9CD9ACE8DDEE8 /* [CP] Check Pods Manifest.lock */ = {
+=======
+		05CE6F9BA5D9CC2118035F08 /* [CP] Check Pods Manifest.lock */ = {
+>>>>>>> d1eb11ca18e279e4616cd1d6b9704ccc26ac5c21
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+<<<<<<< HEAD
+				"$(DERIVED_FILE_DIR)/Pods-Channel-ChannelTests-checkManifestLockResult.txt",
+=======
+				"$(DERIVED_FILE_DIR)/Pods-Channel-checkManifestLockResult.txt",
+>>>>>>> d1eb11ca18e279e4616cd1d6b9704ccc26ac5c21
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+<<<<<<< HEAD
+		3154B36299168B4285EC297D /* [CP] Copy Pods Resources */ = {
+=======
+		2ECB537F961B96E96BBC3120 /* [CP] Embed Pods Frameworks */ = {
+>>>>>>> d1eb11ca18e279e4616cd1d6b9704ccc26ac5c21
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+<<<<<<< HEAD
+				"${PODS_ROOT}/Target Support Files/Pods-Channel/Pods-Channel-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Channel/Pods-Channel-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Channel/Pods-Channel-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4932399377014961F7BAE536 /* [CP] Check Pods Manifest.lock */ = {
+=======
+				"${PODS_ROOT}/Target Support Files/Pods-Channel-ChannelTests/Pods-Channel-ChannelTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Channel-ChannelTests/Pods-Channel-ChannelTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Channel-ChannelTests/Pods-Channel-ChannelTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		79886DC0B73122BC233F5919 /* [CP] Check Pods Manifest.lock */ = {
+>>>>>>> d1eb11ca18e279e4616cd1d6b9704ccc26ac5c21
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -361,63 +460,32 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		3154B36299168B4285EC297D /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Channel/Pods-Channel-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Channel/Pods-Channel-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Channel/Pods-Channel-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		4932399377014961F7BAE536 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Channel-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
+<<<<<<< HEAD
 		62E0F89C4B3B1A29EB9D2C93 /* [CP] Embed Pods Frameworks */ = {
+=======
+		B5AB0A70AC2597905EA67A22 /* [CP] Embed Pods Frameworks */ = {
+>>>>>>> d1eb11ca18e279e4616cd1d6b9704ccc26ac5c21
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Channel-ChannelTests/Pods-Channel-ChannelTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Channel/Pods-Channel-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Channel-ChannelTests/Pods-Channel-ChannelTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Channel/Pods-Channel-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Channel-ChannelTests/Pods-Channel-ChannelTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Channel/Pods-Channel-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+<<<<<<< HEAD
 		BB304A6442A31A4E6230C174 /* [CP] Copy Pods Resources */ = {
+=======
+		C78688214E4F66C3EC4DE8D7 /* [CP] Copy Pods Resources */ = {
+>>>>>>> d1eb11ca18e279e4616cd1d6b9704ccc26ac5c21
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -434,21 +502,37 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Channel-ChannelTests/Pods-Channel-ChannelTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+<<<<<<< HEAD
 		EACF465D82C126DED21870AA /* [CP] Embed Pods Frameworks */ = {
+=======
+		FD0F70BF95453A52609E2FFF /* [CP] Copy Pods Resources */ = {
+>>>>>>> d1eb11ca18e279e4616cd1d6b9704ccc26ac5c21
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
+<<<<<<< HEAD
 				"${PODS_ROOT}/Target Support Files/Pods-Channel/Pods-Channel-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+=======
+				"${PODS_ROOT}/Target Support Files/Pods-Channel/Pods-Channel-resources-${CONFIGURATION}-input-files.xcfilelist",
+>>>>>>> d1eb11ca18e279e4616cd1d6b9704ccc26ac5c21
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
+<<<<<<< HEAD
 				"${PODS_ROOT}/Target Support Files/Pods-Channel/Pods-Channel-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Channel/Pods-Channel-frameworks.sh\"\n";
+=======
+				"${PODS_ROOT}/Target Support Files/Pods-Channel/Pods-Channel-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Channel/Pods-Channel-resources.sh\"\n";
+>>>>>>> d1eb11ca18e279e4616cd1d6b9704ccc26ac5c21
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -503,7 +587,11 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
+<<<<<<< HEAD
 			baseConfigurationReference = C0F3FFFD0364B45457860D9F /* Pods-Channel-ChannelTests.debug.xcconfig */;
+=======
+			baseConfigurationReference = 362D138513E892CF4EBF6F11 /* Pods-Channel-ChannelTests.debug.xcconfig */;
+>>>>>>> d1eb11ca18e279e4616cd1d6b9704ccc26ac5c21
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -531,7 +619,11 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
+<<<<<<< HEAD
 			baseConfigurationReference = 1FFE303EF4C8B082043B3D18 /* Pods-Channel-ChannelTests.release.xcconfig */;
+=======
+			baseConfigurationReference = B68BEF0E88C595ECBC224194 /* Pods-Channel-ChannelTests.release.xcconfig */;
+>>>>>>> d1eb11ca18e279e4616cd1d6b9704ccc26ac5c21
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -556,7 +648,11 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
+<<<<<<< HEAD
 			baseConfigurationReference = ECEBD49EFB4E123F143D48B0 /* Pods-Channel.debug.xcconfig */;
+=======
+			baseConfigurationReference = 7A066C287F784DF23AB5891E /* Pods-Channel.debug.xcconfig */;
+>>>>>>> d1eb11ca18e279e4616cd1d6b9704ccc26ac5c21
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -582,7 +678,11 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
+<<<<<<< HEAD
 			baseConfigurationReference = F58A771107FC1AB390D2F0F0 /* Pods-Channel.release.xcconfig */;
+=======
+			baseConfigurationReference = 850889749149D6D937B6161D /* Pods-Channel.release.xcconfig */;
+>>>>>>> d1eb11ca18e279e4616cd1d6b9704ccc26ac5c21
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
