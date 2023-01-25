@@ -15,7 +15,7 @@ const OrgScreen = ({naviagation}) =>{
     return(
         <View style={{backgroundColor:'grey',flex:1,justifyContent:'center'}}>
             <Text style={{color:'yellow'}}>
-                this IS ORG SCREEN
+                this IS HELLO SCREEN
             </Text>
         </View>
     )

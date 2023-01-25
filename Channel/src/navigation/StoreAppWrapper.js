@@ -7,7 +7,6 @@ import AppWrapper from './AppWraper';
 
 
 const StoreAppWrapper = () => {
-  console.log('Inside StoreAppWrapper');
   const [showSplashScreen, setShowSplashScreen] = useState(true);
   return (
     <Provider store={store}>

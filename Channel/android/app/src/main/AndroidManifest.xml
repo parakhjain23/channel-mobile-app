@@ -11,6 +11,8 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="channel"/>
+        <data android:scheme="rnchannel"/>
+        <data android:scheme="channnel"/>
       </intent-filter>
     </activity>
   </application>
