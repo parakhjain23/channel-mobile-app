@@ -19,7 +19,7 @@ const ProtectedNavigation = () => {
   //     },
   //     statusBarTranslucent:true
   //   };
-  return false ? (
+  return true ? (
     <Stack.Navigator>
       <Stack.Screen
         name="Login"

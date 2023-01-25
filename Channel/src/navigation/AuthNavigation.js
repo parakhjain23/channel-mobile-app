@@ -12,9 +12,6 @@ const linking = {
     screens: {
       Login: {
         path: 'login',
-        parse:{
-          props: (props)=>props
-        }
       },
       Hello: {
         path: 'hello',

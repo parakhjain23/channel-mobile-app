@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {Button, Image, Linking, Text, View} from 'react-native';
 import { connect } from 'react-redux';
+import { saveUserToken } from '../../redux/actions/user/userAction';
 
-const LoginScreen = ({props}) => {
-  console.log(props?.route?.params?.org,"THIS IS ORG ID=-=-=-=-=-=");
-  console.log(props?.route?.params?.token,"THIS IS TOKENNNNNN ID=-=-=-=-=-=");
+const LoginScreen = (props) => {
+  const [token,setToken] = useState( props?.route?.params?.token);
+  useEffect(()=>{
+    setToken(props?.route?.params?.token)
+  },[props?.route?.params?.token])
+  useEffect(()=>{
+    if(token!=undefined){
+      props.saveUserTokenAction(props?.route?.params?.token);
+    }
+  },[token])
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <Image source={require('../../assests/images/appIcon/icon-96x96.png')} />
@@ -22,4 +30,9 @@ const LoginScreen = ({props}) => {
 const mapStateToProps = state => ({
   userInfoSate: state.userInfoReducer,
 });
-export default connect(mapStateToProps)(LoginScreen);
+const mapDispatchToProps = dispatch =>{
+  return {
+    saveUserTokenAction :(token)=> dispatch(saveUserToken(token))
+  }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(LoginScreen);
