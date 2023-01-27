@@ -33,11 +33,11 @@ const ProtectedNavigation = ({userInfoSate}) => {
     </Stack.Navigator>
   ) : (
       <Stack.Navigator initialRouteName="Org">
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Org"
           component={DrawerNavigation}
           options={{headerShown: false}}
-        />
+        /> */}
         <Stack.Screen 
           name='Channel'
           component={ChannelsScreen}

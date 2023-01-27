@@ -12,15 +12,16 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
 
 const OrgCard = ({item}) => {
+  const navigation = useNavigation();
   return (
-    <TouchableOpacity style={{borderWidth:.5,borderColor:'gray',borderRadius:5,marginVertical:'1%'}}>
+    <TouchableOpacity onPress={()=>navigation.navigate('Channeled',{orgId: item?.id,name:item?.name})} style={{borderWidth:.5,borderColor:'gray',borderRadius:5,marginVertical:'1%'}}>
       <View style={{flexDirection: 'row', alignItems: 'center',justifyContent:'space-between',padding:8}}>
         <View style={{flexDirection: 'row',alignItems:'center'}}>
           <Image
-            source={item.iconKey ? {uri: `https://resources.intospace.io/cdn-cgi/image/width=100/${item.iconKey}`} : require('../../assests/images/appIcon/icon-48x48.png')}
+            source={item?.iconKey ? {uri: `https://resources.intospace.io/cdn-cgi/image/width=100/${item.iconKey}`} : require('../../assests/images/appIcon/icon-48x48.png')}
             style={{height: 40, width: 40, marginRight: 10}}
           />
-          <Text>{item.name}</Text>
+          <Text>{item?.name}</Text>
         </View>
         <View>
           <Icon name="chevron-right" />
@@ -30,7 +31,6 @@ const OrgCard = ({item}) => {
   );
 };
 const OrgScreen = ({orgsState}) => {
-  console.log('inside org screen',orgsState);
   const data = orgsState?.orgs;
   return (
     <View style={{flex: 1}}>

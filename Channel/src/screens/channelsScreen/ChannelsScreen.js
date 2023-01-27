@@ -14,8 +14,12 @@ import {saveUserToken} from '../../redux/actions/user/userAction';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SearchBox from '../../components/searchBox';
 import {FAB} from '@rneui/themed';
+import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
+import OrgScreen from '../orgScreen/OrgScreen';
 
 const ChannelsScreen = props => {
+  // console.log('in channel sc',props);
+  console.log('inside channel');
   const sampleData = [
     {
       _id: '60b1cc779067603098f21a8b',
@@ -186,19 +190,6 @@ const ChannelsScreen = props => {
       userIds: [],
     },
     {
-      _id: '6112841dbb890f0010856ca2',
-      type: 'PUBLIC',
-      isArchived: true,
-      name: 'Channel-OS',
-      orgId: 'q957w6rtkdinckgbp8vv',
-      createdBy: 'plfvQttQqdXxKZly',
-      updatedBy: 'plfvQttQqdXxKZly',
-      createdAt: '2021-08-10T13:50:21.818Z',
-      updatedAt: '2022-07-15T12:54:51.809Z',
-      __v: 0,
-      userIds: [],
-    },
-    {
       _id: '6113eb10bb890f0010891b83',
       type: 'PUBLIC',
       isArchived: true,
@@ -280,17 +271,27 @@ const ChannelsScreen = props => {
       );
     }
   });
-
-  return (
-    <View style={{flex: 1, padding: 5}}>
+  const Drawer = createDrawerNavigator();
+  const Channel = () =>{
+    return (
+      <View style={{flex: 1, padding: 5}}>
       <FlatList data={sampleData} renderItem={renderChannels} 
       />
-      <SearchBox 
-         searchValue={searchValue}
-         changeText={changeText}
-         isSearchFocus={true}
-      />
     </View>
+    )
+  }
+  const CustomDrawer = () => {
+    return (
+        // <OrgScreen/>
+        <DrawerContentScrollView>
+            <OrgScreen/>
+        </DrawerContentScrollView>
+    )
+}
+  return (
+    <Drawer.Navigator drawerContent={(props)=><CustomDrawer/>}>
+      <Drawer.Screen name='Channeled' component={Channel} />
+    </Drawer.Navigator>
   );
 };
 const mapStateToProps = state => ({
