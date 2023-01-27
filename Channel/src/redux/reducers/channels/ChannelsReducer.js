@@ -9,14 +9,19 @@ const initialState = {
   
   export function channelsReducer(state = initialState, action) {
     switch (action.type) {
+
       case Actions.SAVETOKEN : 
         return {...state, accessToken : action.accessToken , orgId : action.orgId }
+
       case Actions.FETCH_CHANNELS_START:
-        return {...state,channels: [] , isLoading : true  }
+        return {...state, isLoading : true }
+
       case Actions.FETCH_CHANNELS_SUCCESS :
-        return {...state,channels:[],isLoading : false}
+        return {...state, channels: action.channels , isLoading : false}
+
       case Actions.FETCH_CHANNELS_ERROR :
-        return {...state,channels:[],isLoading: false}
+        return {...state, channels:[], isLoading: false}
+        
       default:
         return state;
     }

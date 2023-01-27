@@ -7,7 +7,7 @@ import { saveUserToken } from '../../redux/actions/user/userAction';
 const ChannelsScreen = (props) => {
     useEffect(() => {
         if(props.channelsState.channels == []){
-            props.fetchChannelsAction(props.channelsState.accessToken)
+            props.fetchChannelsAction(props.channelsState.accessToken,props.channelsState.orgId)
         }
     })
     
@@ -15,12 +15,7 @@ const ChannelsScreen = (props) => {
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <Image source={require('../../assests/images/appIcon/icon-96x96.png')} />
       <Button
-        title="Login Via Space"
-        onPress={() =>
-          Linking.openURL(
-            'https://auth.intospace.io?redirect_to=channel://&skipURLProtocol=true',
-          )
-        }
+        title="channel screen"
       />
     </View>
   );
@@ -30,8 +25,7 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch =>{
   return {
-    fetchChannelsAction :(token)=> dispatch(getChannelsStart(token))
-
+    fetchChannelsAction :(token,orgId)=> dispatch(getChannelsStart(token,orgId))
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(ChannelsScreen);
