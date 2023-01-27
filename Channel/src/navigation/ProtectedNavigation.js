@@ -3,10 +3,13 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginScreen from '../screens/loginScreen/LoginScreen';
 import {connect} from 'react-redux';
 import OrgScreen from '../screens/orgScreen/OrgScreen';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import DrawerNavigation from './DrawerNavigation';
 // import {useNavigation, useTheme} from '@react-navigation/native';
 
 const ProtectedNavigation = ({userInfoSate}) => {
   const Stack = createNativeStackNavigator();
+  const Drawer = createDrawerNavigator();
   //   const navigate = useNavigation();
   //   const {colors} = useTheme();
   //   const getShopingCartHeader = {
@@ -28,13 +31,16 @@ const ProtectedNavigation = ({userInfoSate}) => {
       />
     </Stack.Navigator>
   ) : (
-    <Stack.Navigator initialRouteName="Org">
-      <Stack.Screen
-        name="Org"
-        component={OrgScreen}
-        options={{headerShown: true}}
-      />
-    </Stack.Navigator>
+    <>
+      
+      <Stack.Navigator initialRouteName="Org">
+        <Stack.Screen
+          name="Org"
+          component={DrawerNavigation}
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
+    </>
   );
 };
 
