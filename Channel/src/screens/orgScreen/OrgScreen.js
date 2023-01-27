@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {
   FlatList,
@@ -8,14 +9,16 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { connect } from 'react-redux';
 
 const OrgCard = ({item}) => {
+  const navigation = useNavigation();
   return (
     <TouchableOpacity style={{borderWidth:.5,borderColor:'gray',borderRadius:5,marginVertical:'1%'}}>
       <View style={{flexDirection: 'row', alignItems: 'center',justifyContent:'space-between',padding:8}}>
         <View style={{flexDirection: 'row',alignItems:'center'}}>
           <Image
-            source={{uri: item.icon}}
+            source={item.iconKey ? {uri: `https://resources.intospace.io/cdn-cgi/image/width=100/${item.iconKey}`} : require('../../assests/images/appIcon/icon-48x48.png')}
             style={{height: 40, width: 40, marginRight: 10}}
           />
           <Text>{item.name}</Text>
@@ -27,22 +30,9 @@ const OrgCard = ({item}) => {
     </TouchableOpacity>
   );
 };
-const OrgScreen = () => {
-  console.log('inside org screen');
-  const data = [
-    {
-      name: 'Programmer',
-      icon: 'https://resources.intospace.io/cdn-cgi/image/width=96/gMv5N0EtECmu4Fa9_6b30b481-85e1-4ec6-9265-8464ea680f8f',
-    },
-    {
-      name: 'Walkover',
-      icon: 'https://resources.intospace.io/cdn-cgi/image/width=96/gMv5N0EtECmu4Fa9_6b30b481-85e1-4ec6-9265-8464ea680f8f',
-    },
-    {
-      name: 'Channel',
-      icon: 'https://resources.intospace.io/cdn-cgi/image/width=96/gMv5N0EtECmu4Fa9_6b30b481-85e1-4ec6-9265-8464ea680f8f',
-    },
-  ];
+const OrgScreen = ({orgsState}) => {
+  console.log('inside org screen',orgsState);
+  const data = orgsState?.orgs;
   return (
     <View style={{flex: 1}}>
       {/* <ScrollView style={{padding: 20}}> */}
@@ -52,10 +42,16 @@ const OrgScreen = () => {
           </Text>
         </View>
         <View style={{marginHorizontal: '5%'}}>
-          <FlatList data={data} renderItem={OrgCard} />
+          {data?.map((item,index)=>{
+            return <OrgCard key={index} item={item} />
+          })}
+          {/* <FlatList data={data} renderItem={OrgCard} /> */}
         </View>
       {/* </ScrollView> */}
     </View>
   );
 };
-export default OrgScreen;
+const mapStateToProps = state => ({
+  orgsState: state.orgsReducer,
+})
+export default connect(mapStateToProps)(OrgScreen);
