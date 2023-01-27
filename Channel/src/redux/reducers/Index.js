@@ -8,7 +8,7 @@ import { channelsReducer } from './channels/channelsReducer';
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['userInfoReducer','OrgsReducer'],
+  whitelist: ['userInfoReducer','orgsReducer'],
 };
 
 const rootReducer = combineReducers({

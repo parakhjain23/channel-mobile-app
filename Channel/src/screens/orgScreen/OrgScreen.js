@@ -12,7 +12,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
 
 const OrgCard = ({item}) => {
-  const navigation = useNavigation();
   return (
     <TouchableOpacity style={{borderWidth:.5,borderColor:'gray',borderRadius:5,marginVertical:'1%'}}>
       <View style={{flexDirection: 'row', alignItems: 'center',justifyContent:'space-between',padding:8}}>
