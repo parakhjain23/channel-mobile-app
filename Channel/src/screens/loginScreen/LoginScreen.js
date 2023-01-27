@@ -10,7 +10,7 @@ const LoginScreen = (props) => {
   },[props?.route?.params?.token])
   useEffect(()=>{
     if(token!=undefined){
-      props.saveUserTokenAction(props?.route?.params?.token);
+      props.saveUserTokenAction(props?.route?.params?.token,props?.route?.params?.org);
     }
   },[token])
   return (
@@ -32,7 +32,7 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch =>{
   return {
-    saveUserTokenAction :(token)=> dispatch(saveUserToken(token))
+    saveUserTokenAction :(token,orgId)=> dispatch(saveUserToken(token,orgId))
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(LoginScreen);
