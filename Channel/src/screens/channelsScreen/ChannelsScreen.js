@@ -266,6 +266,12 @@ const ChannelsScreen = props => {
       </TouchableOpacity>
     );
   };
+
+  const [searchValue, setsearchValue] = useState('')
+  const changeText = value => {
+    setsearchValue(value);
+  };
+
   useEffect(() => {
     if (props?.channelsState?.channels == []) {
       props.fetchChannelsAction(
@@ -274,21 +280,14 @@ const ChannelsScreen = props => {
       );
     }
   });
-  const searchbox = ()=>{
-    console.log("=-=-=-=-");
-    return <SearchBox 
-      searchValue={''}
-      changeText={''}
-      isSearchFocus={false}
-    />
-  }
+
   return (
     <View style={{flex: 1, padding: 5}}>
       <FlatList data={sampleData} renderItem={renderChannels} 
       />
       <SearchBox 
-         searchValue={''}
-         changeText={''}
+         searchValue={searchValue}
+         changeText={changeText}
          isSearchFocus={true}
       />
     </View>
