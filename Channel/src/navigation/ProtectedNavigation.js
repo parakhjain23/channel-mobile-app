@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import OrgScreen from '../screens/orgScreen/OrgScreen';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import DrawerNavigation from './DrawerNavigation';
+import ChannelsScreen from '../screens/channelsScreen/ChannelsScreen';
 // import {useNavigation, useTheme} from '@react-navigation/native';
 
 const ProtectedNavigation = ({userInfoSate}) => {

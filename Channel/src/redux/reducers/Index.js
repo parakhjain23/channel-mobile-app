@@ -3,6 +3,7 @@ import {combineReducers} from 'redux';
 import persistReducer from 'redux-persist/es/persistReducer';
 import { userInfoReducer } from './user/UserInfo';
 import { orgsReducer } from './orgs/GetOrgDetailsReducer';
+import { channelsReducer } from './channels/channelsReducer';
 
 const persistConfig = {
   key: 'root',
