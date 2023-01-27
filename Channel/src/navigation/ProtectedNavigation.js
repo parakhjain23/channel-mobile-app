@@ -3,6 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginScreen from '../screens/loginScreen/LoginScreen';
 import {connect} from 'react-redux';
 import OrgScreen from '../screens/orgScreen/OrgScreen';
+import ChannelsScreen from '../screens/channelsScreen/ChannelsScreen';
 // import {useNavigation, useTheme} from '@react-navigation/native';
 
 const ProtectedNavigation = ({userInfoSate}) => {
@@ -31,8 +32,8 @@ const ProtectedNavigation = ({userInfoSate}) => {
     <Stack.Navigator initialRouteName="Org">
       <Stack.Screen
         name="Org"
-        component={OrgScreen}
-        options={{headerShown: true}}
+        component={ChannelsScreen}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );
