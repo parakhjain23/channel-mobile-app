@@ -1,26 +1,26 @@
 import {put, call} from 'redux-saga/effects';
+import { fetchOrgsApi } from '../../../api/GetOrgs';
 import * as Actions from '../../Enums';
 
-export function* getOrgDetails({payLoad}){
+export function* getOrgDetails({token}){
   try {
-    var response = yield call() 
+    var response = yield call(fetchOrgsApi, token)
     yield put(getOrgDetailsSuccess(response))
   } catch (error) {
     console.log(error);
   }
 }
 
-export function getOrgDetailsStart(payLoad){
+export function getOrgDetailsStart(token){
   return {
     type: Actions.GET_ORG_START,
-    payLoad : payLoad
+    token : token
   }
 }
 export function getOrgDetailsSuccess(data){
   return {
     type: Actions.GET_ORG_SUCCESS,
-    data : data,
-    shopify_id: data.id,
+    payload : data,
   }
 }
 export function getOrgDetailsReset(){

@@ -31,8 +31,6 @@ const ProtectedNavigation = ({userInfoSate}) => {
       />
     </Stack.Navigator>
   ) : (
-    <>
-      
       <Stack.Navigator initialRouteName="Org">
         <Stack.Screen
           name="Org"
@@ -40,7 +38,6 @@ const ProtectedNavigation = ({userInfoSate}) => {
           options={{headerShown: false}}
         />
       </Stack.Navigator>
-    </>
   );
 };
 
@@ -48,5 +45,3 @@ const mapStateToProps = state => ({
   userInfoSate: state.userInfoReducer,
 });
 export default connect(mapStateToProps)(ProtectedNavigation);
-
-// IMPROVE  : STYLES

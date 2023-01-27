@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {Button, Image, Linking, Text, View} from 'react-native';
 import { connect } from 'react-redux';
+import { getOrgDetails, getOrgDetailsStart } from '../../redux/actions/org/GetOrgDetailsAction';
 import { saveUserToken } from '../../redux/actions/user/userAction';
 
 const LoginScreen = (props) => {
@@ -11,6 +12,7 @@ const LoginScreen = (props) => {
   useEffect(()=>{
     if(token!=undefined){
       props.saveUserTokenAction(props?.route?.params?.token,props?.route?.params?.org);
+      props.getOrgDetailsAction(props?.route?.params?.token);
     }
   },[token])
   return (
@@ -32,7 +34,8 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch =>{
   return {
-    saveUserTokenAction :(token,orgId)=> dispatch(saveUserToken(token,orgId))
+    saveUserTokenAction :(token,orgId)=> dispatch(saveUserToken(token,orgId)),
+    getOrgDetailsAction: (token) => dispatch(getOrgDetailsStart(token)),
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(LoginScreen);

@@ -6,8 +6,8 @@ import { saveUserToken } from '../../redux/actions/user/userAction';
 
 const ChannelsScreen = (props) => {
     useEffect(() => {
-        if(props.channelsState.channels == []){
-            props.fetchChannelsAction(props.channelsState.accessToken,props.channelsState.orgId)
+        if(props?.channelsState?.channels == []){
+            props.fetchChannelsAction(props?.channelsState?.accessToken,props?.channelsState?.orgId)
         }
     })
     
