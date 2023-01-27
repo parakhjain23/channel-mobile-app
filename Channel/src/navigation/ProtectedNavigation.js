@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import OrgScreen from '../screens/orgScreen/OrgScreen';
 // import {useNavigation, useTheme} from '@react-navigation/native';
 
-const ProtectedNavigation = () => {
+const ProtectedNavigation = ({userInfoSate}) => {
   const Stack = createNativeStackNavigator();
   //   const navigate = useNavigation();
   //   const {colors} = useTheme();
@@ -19,7 +19,7 @@ const ProtectedNavigation = () => {
   //     },
   //     statusBarTranslucent:true
   //   };
-  return true ? (
+  return !userInfoSate?.isSignedIn ? (
     <Stack.Navigator>
       <Stack.Screen
         name="Login"
@@ -31,7 +31,7 @@ const ProtectedNavigation = () => {
     <Stack.Navigator initialRouteName="Org">
       <Stack.Screen
         name="Org"
-        component={LoginScreen}
+        component={OrgScreen}
         options={{headerShown: true}}
       />
     </Stack.Navigator>

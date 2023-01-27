@@ -45,7 +45,7 @@ const OrgScreen = () => {
   ];
   return (
     <View style={{flex: 1}}>
-      <ScrollView style={{padding: 20}}>
+      {/* <ScrollView style={{padding: 20}}> */}
         <View style={{paddingVertical: 5}}>
           <Text style={{textAlign: 'center', fontSize: 22, fontWeight: '400'}}>
             Welcome, UserName
@@ -54,7 +54,7 @@ const OrgScreen = () => {
         <View style={{marginHorizontal: '5%'}}>
           <FlatList data={data} renderItem={OrgCard} />
         </View>
-      </ScrollView>
+      {/* </ScrollView> */}
     </View>
   );
 };
