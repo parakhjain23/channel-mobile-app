@@ -3,8 +3,8 @@ import { getUserDetailsApi } from "../../../api/userDetailsApi/UserDetailsApi";
 import * as Actions from "../../Enums";
 
 export function* getUserDetails({accessToken}){
-    console.log(accessToken,"THIS IS ACCESS TOKEN");
     try {
+        console.log("inside user detiails api");
         var response = yield call(getUserDetailsApi,accessToken)
         yield put(getUserDetailsSuccess(response))
     } catch (error) {
@@ -13,7 +13,6 @@ export function* getUserDetails({accessToken}){
 }
 
 export function saveUserToken(token,orgId){
-    console.log("this IS TOKEN IN ACTION FUNCTION",token,orgId);
     return {
         type: Actions.SAVETOKEN,
         accessToken : token,

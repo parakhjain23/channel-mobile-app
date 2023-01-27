@@ -18,6 +18,7 @@ export function userInfoReducer(state = initialState, action) {
     
     case Actions.FETCH_USER_DETAILS_SUCCESS:
       return {...state, user : action.userDetails}
+
     default:
       return state;
   }
