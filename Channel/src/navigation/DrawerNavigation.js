@@ -1,4 +1,4 @@
-import {createDrawerNavigator, DrawerContentScrollView} from '@react-navigation/drawer';
+import {createDrawerNavigator, DrawerContent, DrawerContentScrollView} from '@react-navigation/drawer';
 import React from 'react';
 import { Text, View } from 'react-native';
 import ChannelsScreen from '../screens/channelsScreen/ChannelsScreen';
@@ -7,11 +7,10 @@ const Drawer = createDrawerNavigator();
 
 const CustomDrawer = () => {
     return (
-        <OrgScreen/>
-
-        // <DrawerContentScrollView>
-        //     <OrgScreen/>
-        // </DrawerContentScrollView>
+        // <OrgScreen/>
+        <DrawerContentScrollView>
+            <OrgScreen/>
+        </DrawerContentScrollView>
     )
 }
 const DrawerNavigation = () => {

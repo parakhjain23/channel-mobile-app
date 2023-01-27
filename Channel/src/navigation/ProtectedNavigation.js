@@ -38,6 +38,10 @@ const ProtectedNavigation = ({userInfoSate}) => {
           component={DrawerNavigation}
           options={{headerShown: false}}
         />
+        <Stack.Screen 
+          name='Channel'
+          component={ChannelsScreen}
+        />
       </Stack.Navigator>
   );
 };
