@@ -1,7 +1,6 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import ProtectedNavigation from './ProtectedNavigation';
-import {ActivityIndicator} from 'react-native';
 // import { StatusBar, useColorScheme } from 'react-native';
 // import { DARK_THEME, LIGHT_THEME } from '../constant/styles';
 
@@ -24,8 +23,7 @@ const linking = {
 const AuthNavigation = () => {
   return (
     <NavigationContainer
-      linking={linking}
-      fallback={<ActivityIndicator color={'red'} size={'large'} />}>
+      linking={linking}>
         <ProtectedNavigation/>
     </NavigationContainer>
   );

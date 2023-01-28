@@ -25,3 +25,9 @@ export function getUserDetailsSuccess(data){
         userDetails: data
     }
 }
+
+export default  function signOut(){
+    return {
+        type: Actions.SIGN_OUT
+    }
+}

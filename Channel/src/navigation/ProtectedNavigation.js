@@ -2,10 +2,8 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginScreen from '../screens/loginScreen/LoginScreen';
 import {connect} from 'react-redux';
-import OrgScreen from '../screens/orgScreen/OrgScreen';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import DrawerNavigation from './DrawerNavigation';
-import ChannelsScreen from '../screens/channelsScreen/ChannelsScreen';
 // import {useNavigation, useTheme} from '@react-navigation/native';
 
 const ProtectedNavigation = ({userInfoSate}) => {
@@ -41,6 +39,7 @@ const ProtectedNavigation = ({userInfoSate}) => {
         {/* <Stack.Screen 
           name='Login'
           component={LoginScreen}
+          options={{headerShown:false}}
         /> */}
       </Stack.Navigator>
   );

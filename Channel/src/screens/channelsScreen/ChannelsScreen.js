@@ -16,7 +16,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import SearchBox from '../../components/searchBox';
 import {FAB} from '@rneui/themed';
 import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
-import OrgScreen from '../orgScreen/OrgScreen';
+import CustomeDrawerScreen from '../Drawer/CustomDrawerScreen';
 import { useNavigation } from '@react-navigation/native';
 
 const ChannelsScreen = props => {

@@ -16,6 +16,9 @@ export function userInfoReducer(state = initialState, action) {
     case Actions.FETCH_USER_DETAILS_SUCCESS:
       return {...state, user : action.userDetails}
 
+    case Actions.SIGN_OUT:
+      return {initialState};
+
     default:
       return state;
   }

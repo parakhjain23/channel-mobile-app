@@ -1,9 +1,10 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 import {
+  Button,
   FlatList,
   Image,
-  ScrollView,
   Text,
   TouchableOpacity,
   View,
@@ -13,10 +14,11 @@ import {connect} from 'react-redux';
 import {IMAGE_BASE_URL} from '../../constants/Constants';
 import {getChannelsStart} from '../../redux/actions/channels/ChannelsAction';
 import { switchOrgStart } from '../../redux/actions/org/changeCurrentOrg';
+import signOut from '../../redux/actions/user/userAction';
 
 
 
-const OrgScreen = ({orgsState, userInfoState, getChannelsAction,switchOrgAction}) => {
+const CustomeDrawerScreen = ({orgsState, userInfoState, getChannelsAction,switchOrgAction,signOutAction}) => {
   const data = orgsState?.orgs;
   const navigation = useNavigation();
   useEffect(() => {
@@ -68,7 +70,7 @@ const OrgScreen = ({orgsState, userInfoState, getChannelsAction,switchOrgAction}
     );
   };
   return (
-    <View style={{flex: 1, paddingVertical: '3%', paddingHorizontal: '3%'}}>
+    <View style={{flex: 1, paddingVertical: '3%',paddingTop:'8%', paddingHorizontal: '3%'}}>
       <View style={{flex: 0.15, justifyContent: 'center'}}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Image
@@ -76,17 +78,9 @@ const OrgScreen = ({orgsState, userInfoState, getChannelsAction,switchOrgAction}
             style={{width: 60, height: 60, borderRadius: 50}}
           />
           <View>
-            {/* <Text
-              style={{
-                fontSize: 18,
-                fontWeight: '400',
-                marginLeft: 10,
-              }}>
-              Welcome
-            </Text> */}
             <Text
               style={{
-                fontSize: 25,
+                fontSize: 18,
                 fontWeight: '400',
                 marginLeft: 10,
               }}>
@@ -122,7 +116,9 @@ const OrgScreen = ({orgsState, userInfoState, getChannelsAction,switchOrgAction}
           borderTopWidth: 0.3,
           justifyContent: 'center',
         }}>
-        <Text>Sign out</Text>
+          <Button title='Sign Out' onPress={()=>{
+            signOutAction()
+          }}/>
       </View>
     </View>
   );
@@ -135,7 +131,8 @@ const mapDispatchToProps = dispatch => {
   return {
     getChannelsAction: (token, orgId, userId) =>
       dispatch(getChannelsStart(token, orgId, userId)),
-    switchOrgAction : (accessToken,orgId,userId) => dispatch(switchOrgStart(accessToken,orgId,userId))
+    switchOrgAction : (accessToken,orgId,userId) => dispatch(switchOrgStart(accessToken,orgId,userId)),
+    signOutAction: () => dispatch(signOut())
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(OrgScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(CustomeDrawerScreen);

@@ -7,12 +7,12 @@ import React from 'react';
 import {Text, View} from 'react-native';
 import { connect } from 'react-redux';
 import ChannelsScreen from '../screens/channelsScreen/ChannelsScreen';
-import OrgScreen from '../screens/orgScreen/OrgScreen';
+import CustomeDrawerScreen from '../screens/Drawer/CustomDrawerScreen';
 const Drawer = createDrawerNavigator();
 
 const CustomDrawer = props => {
   return (
-      <OrgScreen props={props} />
+      <CustomeDrawerScreen props={props} />
   );
 };
 const DrawerNavigation = ({userInfoState}) => {
@@ -30,5 +30,6 @@ const DrawerNavigation = ({userInfoState}) => {
 };
 const mapStateToProps = state => ({
   userInfoState: state.userInfoReducer,
+  orgState: state.orgsReducer
 })
 export default connect(mapStateToProps)(DrawerNavigation);
