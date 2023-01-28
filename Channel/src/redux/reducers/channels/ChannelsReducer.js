@@ -11,6 +11,9 @@ const initialState = {
       case Actions.FETCH_CHANNELS_START:
         return {...state, isLoading : true }
 
+      case Actions.UPDATE_CURRENT_ORG_ID:
+        return {...state, isLoading : true}
+
       case Actions.FETCH_CHANNELS_SUCCESS :
         return {...state, channels: action.channels , isLoading : false}
 

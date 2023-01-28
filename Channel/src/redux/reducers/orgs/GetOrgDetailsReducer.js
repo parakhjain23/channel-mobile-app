@@ -12,6 +12,9 @@ export function orgsReducer(state = initialState, action) {
     case Actions.SAVE_TOKEN_AND_ORGID : 
       return {...state, currentOrgId : action.orgId }
 
+    case Actions.UPDATE_CURRENT_ORG_ID :
+      return {...state, currentOrgId : action.orgId}
+      
     case Actions.GET_ORG_START:
       return {...state, isLoading: true, isInitiated: true};
 
