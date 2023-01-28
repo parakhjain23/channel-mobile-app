@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {Button, Image, Linking, Text, View} from 'react-native';
 import { connect } from 'react-redux';
+import { getChannelsStart } from '../../redux/actions/channels/ChannelsAction';
 import { getOrgDetails, getOrgDetailsStart } from '../../redux/actions/org/GetOrgDetailsAction';
 import { saveUserToken } from '../../redux/actions/user/userAction';
 
 const LoginScreen = (props) => {
   const [token,setToken] = useState( props?.route?.params?.token);
+  console.log(props?.userInfoSate);
   useEffect(()=>{
     setToken(props?.route?.params?.token)
   },[props?.route?.params?.token])

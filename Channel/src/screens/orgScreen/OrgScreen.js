@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   FlatList,
   Image,
@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
+import { getChannelsStart } from '../../redux/actions/channels/ChannelsAction';
 
 const OrgCard = ({item,props}) => {
   const navigation = useNavigation();
@@ -30,8 +31,14 @@ const OrgCard = ({item,props}) => {
     </TouchableOpacity>
   );
 };
-const OrgScreen = ({orgsState,props}) => {
+const OrgScreen = ({orgsState,userInfoState,getChannelsAction}) => {
   const data = orgsState?.orgs;
+  useEffect(() => {
+   if(userInfoState?.user != null){
+    getChannelsAction(userInfoState?.accessToken,orgsState?.currentOrgId,userInfoState?.user?.id)
+   }
+  },[userInfoState?.user])
+  
   return (
     <View style={{flex: 1}}>
       {/* <ScrollView style={{padding: 20}}> */}
@@ -42,7 +49,7 @@ const OrgScreen = ({orgsState,props}) => {
         </View>
         <View style={{marginHorizontal: '5%'}}>
           {data?.map((item,index)=>{
-            return <OrgCard key={index} item={item} props={props}/>
+            return <OrgCard key={index} item={item}/>
           })}
           {/* <FlatList data={data} renderItem={OrgCard} /> */}
         </View>
@@ -52,5 +59,11 @@ const OrgScreen = ({orgsState,props}) => {
 };
 const mapStateToProps = state => ({
   orgsState: state.orgsReducer,
+  userInfoState : state.userInfoReducer
 })
-export default connect(mapStateToProps)(OrgScreen);
+const mapDispatchToProps = dispatch =>{
+  return{
+    getChannelsAction: (token,orgId,userId)=> dispatch(getChannelsStart(token,orgId,userId))
+  }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(OrgScreen);

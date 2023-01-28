@@ -3,7 +3,6 @@ import { getUserDetailsApi } from "../../../api/userDetailsApi/UserDetailsApi";
 import * as Actions from "../../Enums";
 
 export function* getUserDetails({accessToken}){
-    console.log(accessToken,"THIS IS ACCESS TOKEN");
     try {
         var response = yield call(getUserDetailsApi,accessToken)
         yield put(getUserDetailsSuccess(response))
@@ -13,9 +12,8 @@ export function* getUserDetails({accessToken}){
 }
 
 export function saveUserToken(token,orgId){
-    console.log("this IS TOKEN IN ACTION FUNCTION",token,orgId);
     return {
-        type: Actions.SAVETOKEN,
+        type: Actions.SAVE_TOKEN_AND_ORGID,
         accessToken : token,
         orgId : orgId 
     }
