@@ -7,7 +7,7 @@ import React from 'react';
 import {Text, View} from 'react-native';
 import { connect } from 'react-redux';
 import ChannelsScreen from '../screens/channelsScreen/ChannelsScreen';
-import CustomeDrawerScreen from '../screens/Drawer/CustomDrawerScreen';
+import CustomeDrawerScreen from '../screens/drawer/CustomDrawerScreen';
 const Drawer = createDrawerNavigator();
 
 const CustomDrawer = props => {

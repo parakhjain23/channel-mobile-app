@@ -1,22 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
-  Button,
   FlatList,
-  Image,
-  Linking,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {getChannelsStart} from '../../redux/actions/channels/ChannelsAction';
-import {saveUserToken} from '../../redux/actions/user/userAction';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SearchBox from '../../components/searchBox';
-import {FAB} from '@rneui/themed';
-import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
-import CustomeDrawerScreen from '../Drawer/CustomDrawerScreen';
 import { useNavigation } from '@react-navigation/native';
 
 const ChannelsScreen = props => {
