@@ -55,8 +55,8 @@ const ChannelsScreen = props => {
   useEffect(() => {
     if (props?.channelsState?.channels == []) {
       props?.getChannelsStartAction(
-        props?.channelsState?.accessToken,
-        props?.channelsState?.orgId,
+        props?.userInfoState?.accessToken,
+        props?.orgsState?.currentOrgId,
         props?.userInfoState?.user?.id
       );
     }
@@ -79,6 +79,7 @@ const ChannelsScreen = props => {
   );
 };
 const mapStateToProps = state => ({
+  orgsState : state.orgsReducer,
   channelsState: state.channelsReducer,
   userInfoState: state.userInfoReducer
 });

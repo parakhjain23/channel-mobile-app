@@ -3,7 +3,6 @@ import { getChannelsApi } from '../../../api/channelsApi/getChannels';
 import * as Actions from '../../Enums';
 
 export function* getChannels({token,orgId,userId}){
-  console.log(userId,"TYHIS IS USER ID ");
   try {
     var response = yield call(getChannelsApi,token,orgId,userId) 
     yield put(getChannelsSuccess(response))
@@ -13,7 +12,6 @@ export function* getChannels({token,orgId,userId}){
 }
 
 export function getChannelsStart(token,orgId,userId){
-  console.log(userId,"this is user id in getCHANNELSTART");
   return {
     type: Actions.FETCH_CHANNELS_START,
     token:token,

@@ -32,11 +32,10 @@ const OrgCard = ({item}) => {
   );
 };
 const OrgScreen = ({orgsState,userInfoState,getChannelsAction}) => {
-  // console.log("hello");
   const data = orgsState?.orgs;
   useEffect(() => {
    if(userInfoState?.user != null){
-    getChannelsAction(userInfoState?.accessToken,userInfoState?.orgId,userInfoState?.user?.id)
+    getChannelsAction(userInfoState?.accessToken,orgsState?.currentOrgId,userInfoState?.user?.id)
    }
   },[userInfoState?.user])
   

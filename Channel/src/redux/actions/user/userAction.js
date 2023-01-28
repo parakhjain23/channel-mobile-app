@@ -4,7 +4,6 @@ import * as Actions from "../../Enums";
 
 export function* getUserDetails({accessToken}){
     try {
-        console.log("inside user detiails api");
         var response = yield call(getUserDetailsApi,accessToken)
         yield put(getUserDetailsSuccess(response))
     } catch (error) {
@@ -14,7 +13,7 @@ export function* getUserDetails({accessToken}){
 
 export function saveUserToken(token,orgId){
     return {
-        type: Actions.SAVETOKEN,
+        type: Actions.SAVE_TOKEN_AND_ORGID,
         accessToken : token,
         orgId : orgId 
     }

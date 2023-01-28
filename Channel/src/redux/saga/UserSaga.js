@@ -3,7 +3,7 @@ import { getUserDetails } from "../actions/user/userAction";
 import * as Actions from '../Enums';
 
 function* UserSaga() {
-    yield takeLatest(Actions.SAVETOKEN,getUserDetails)
+    yield takeLatest(Actions.SAVE_TOKEN_AND_ORGID,getUserDetails)
 }
 
 export default UserSaga;
