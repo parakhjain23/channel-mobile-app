@@ -27,7 +27,7 @@ const ChannelsScreen = props => {
           flexDirection: 'column',
           justifyContent: 'center',
         }}
-        onPress={()=>navigation.navigate("")}
+        onPress={()=>navigation.navigate("Chat",{chatHeaderTitle:item?.name})}
         >
         <View
           style={{

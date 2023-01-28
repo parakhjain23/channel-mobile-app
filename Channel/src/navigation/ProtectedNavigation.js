@@ -4,6 +4,7 @@ import LoginScreen from '../screens/loginScreen/LoginScreen';
 import {connect} from 'react-redux';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import DrawerNavigation from './DrawerNavigation';
+import ChatScreen from '../screens/chatScreen/ChatScreen';
 // import {useNavigation, useTheme} from '@react-navigation/native';
 
 const ProtectedNavigation = ({userInfoSate}) => {
@@ -30,17 +31,20 @@ const ProtectedNavigation = ({userInfoSate}) => {
       />
     </Stack.Navigator>
   ) : (
-      <Stack.Navigator initialRouteName="Chat">
+      <Stack.Navigator initialRouteName="Org">
         <Stack.Screen
-          name="Chat"
+          name="Org"
           component={DrawerNavigation}
           options={{headerShown: false}}
         />
-        {/* <Stack.Screen 
-          name='Login'
-          component={LoginScreen}
-          options={{headerShown:false}}
-        /> */}
+        <Stack.Screen 
+          name='Chat'
+          component={ChatScreen}
+          options={({route}) => ({
+            headerTitle: route?.params?.chatHeaderTitle,
+            headerShown:true
+          })}
+        />
       </Stack.Navigator>
   );
 };
