@@ -12,45 +12,11 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 import {IMAGE_BASE_URL} from '../../constants/Constants';
 import {getChannelsStart} from '../../redux/actions/channels/ChannelsAction';
+import { switchOrgStart } from '../../redux/actions/org/changeCurrentOrg';
 
-const OrgCard = ({item, navigation}) => {
-  return (
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('Channel', {orgId: item?.id, name: item?.name})
-      }
-      style={{
-        borderWidth: 0.5,
-        borderColor: 'gray',
-        borderRadius: 5,
-        marginVertical: '1%',
-      }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: 8,
-        }}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Image
-            source={
-              item?.iconKey
-                ? {uri: `${IMAGE_BASE_URL}${item.iconKey}`}
-                : require('../../assests/images/appIcon/icon-48x48.png')
-            }
-            style={{height: 40, width: 40, marginRight: 10}}
-          />
-          <Text>{item?.name}</Text>
-        </View>
-        <View>
-          <Icon name="chevron-right" />
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-};
-const OrgScreen = ({orgsState, userInfoState, getChannelsAction}) => {
+
+
+const OrgScreen = ({orgsState, userInfoState, getChannelsAction,switchOrgAction}) => {
   const data = orgsState?.orgs;
   const navigation = useNavigation();
   useEffect(() => {
@@ -62,7 +28,45 @@ const OrgScreen = ({orgsState, userInfoState, getChannelsAction}) => {
       );
     }
   }, [userInfoState?.user]);
-  console.log(userInfoState?.user);
+  const OrgCard = ({item, navigation}) => {
+    return (
+      <TouchableOpacity
+        onPress={() =>
+          {
+            switchOrgAction(userInfoState?.accessToken,item?.id,userInfoState?.user?.id)
+            navigation.navigate('Channel', {orgId: item?.id, name: item?.name})}
+        }
+        style={{
+          borderWidth: 0.5,
+          borderColor: 'gray',
+          borderRadius: 5,
+          marginVertical: '1%',
+        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: 8,
+          }}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Image
+              source={
+                item?.iconKey
+                  ? {uri: `${IMAGE_BASE_URL}${item.iconKey}`}
+                  : require('../../assests/images/appIcon/icon-48x48.png')
+              }
+              style={{height: 40, width: 40, marginRight: 10}}
+            />
+            <Text>{item?.name}</Text>
+          </View>
+          <View>
+            <Icon name="chevron-right" />
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  };
   return (
     <View style={{flex: 1, paddingVertical: '3%', paddingHorizontal: '3%'}}>
       <View style={{flex: 0.15, justifyContent: 'center'}}>
@@ -131,6 +135,7 @@ const mapDispatchToProps = dispatch => {
   return {
     getChannelsAction: (token, orgId, userId) =>
       dispatch(getChannelsStart(token, orgId, userId)),
+    switchOrgAction : (accessToken,orgId,userId) => dispatch(switchOrgStart(accessToken,orgId,userId))
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(OrgScreen);

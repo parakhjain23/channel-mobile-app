@@ -7,7 +7,6 @@ import { saveUserToken } from '../../redux/actions/user/userAction';
 
 const LoginScreen = (props) => {
   const [token,setToken] = useState( props?.route?.params?.token);
-  console.log(props?.userInfoSate);
   useEffect(()=>{
     setToken(props?.route?.params?.token)
   },[props?.route?.params?.token])
