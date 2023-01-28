@@ -2,9 +2,9 @@ import {put, call} from 'redux-saga/effects';
 import { fetchOrgsApi } from '../../../api/GetOrgs';
 import * as Actions from '../../Enums';
 
-export function* getOrgDetails({token}){
+export function* getOrgDetails({accessToken}){
   try {
-    var response = yield call(fetchOrgsApi, token)
+    var response = yield call(fetchOrgsApi, accessToken)
     yield put(getOrgDetailsSuccess(response))
   } catch (error) {
     console.log(error);
@@ -14,7 +14,7 @@ export function* getOrgDetails({token}){
 export function getOrgDetailsStart(token){
   return {
     type: Actions.GET_ORG_START,
-    token : token
+    accessToken : token
   }
 }
 export function getOrgDetailsSuccess(data){

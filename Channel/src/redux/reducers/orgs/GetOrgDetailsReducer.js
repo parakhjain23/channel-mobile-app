@@ -4,7 +4,8 @@ const initialState = {
   isLoading: false,
   isInitiated: false,
   orgs: null,
-  currentOrgId:null
+  currentOrgId:null,
+  userIdAndNameMapping: null
 };
 
 export function orgsReducer(state = initialState, action) {
@@ -21,6 +22,12 @@ export function orgsReducer(state = initialState, action) {
     case Actions.GET_ORG_SUCCESS:
       return {...state, orgs: action.payload, isLoading: false};
 
+    case Actions.GET_ALL_USERS_SUCCESS:
+      var idAndNameMap = new Map();
+      action?.allUser?.map((item)=>{
+        idAndNameMap?.set(item?.id,item?.firstName +" "+item?.lastName)
+      })
+      return {...state, userIdAndNameMapping: idAndNameMap}  
     default:
       return state;
   }
