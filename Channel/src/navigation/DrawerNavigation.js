@@ -12,10 +12,7 @@ const Drawer = createDrawerNavigator();
 
 const CustomDrawer = props => {
   return (
-    // <OrgScreen/>
-    <DrawerContentScrollView>
       <OrgScreen props={props} />
-    </DrawerContentScrollView>
   );
 };
 const DrawerNavigation = ({userInfoState}) => {
