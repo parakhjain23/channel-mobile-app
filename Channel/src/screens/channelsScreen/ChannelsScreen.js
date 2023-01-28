@@ -16,6 +16,7 @@ import SearchBox from '../../components/searchBox';
 import {FAB} from '@rneui/themed';
 import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
 import OrgScreen from '../orgScreen/OrgScreen';
+import { useNavigation } from '@react-navigation/native';
 
 const ChannelsScreen = props => {
   // console.log('in channel sc',props);
@@ -229,7 +230,7 @@ const ChannelsScreen = props => {
     },
   ];
 
-  const renderChannels = ({item}) => {
+  const RenderChannels = ({item,navigation}) => {
     return (
       <TouchableOpacity
         style={{
@@ -240,7 +241,9 @@ const ChannelsScreen = props => {
           width: '100%',
           flexDirection: 'column',
           justifyContent: 'center',
-        }}>
+        }}
+        onPress={()=>navigation.navigate("")}
+        >
         <View
           style={{
             flexDirection: 'row',
@@ -257,12 +260,6 @@ const ChannelsScreen = props => {
       </TouchableOpacity>
     );
   };
-
-  const [searchValue, setsearchValue] = useState('')
-  const changeText = value => {
-    setsearchValue(value);
-  };
-
   useEffect(() => {
     if (props?.channelsState?.channels == []) {
       props.fetchChannelsAction(
@@ -271,27 +268,14 @@ const ChannelsScreen = props => {
       );
     }
   });
-  const Drawer = createDrawerNavigator();
-  const Channel = () =>{
-    return (
+
+  const navigation = useNavigation();
+  return (
       <View style={{flex: 1, padding: 5}}>
-      <FlatList data={sampleData} renderItem={renderChannels} 
+      <FlatList data={sampleData}
+      renderItem={({ item }) => <RenderChannels item={item} navigation={navigation} />}
       />
     </View>
-    )
-  }
-  const CustomDrawer = () => {
-    return (
-        // <OrgScreen/>
-        <DrawerContentScrollView>
-            <OrgScreen/>
-        </DrawerContentScrollView>
-    )
-}
-  return (
-    <Drawer.Navigator drawerContent={(props)=><CustomDrawer/>}>
-      <Drawer.Screen name='Channeled' component={Channel} />
-    </Drawer.Navigator>
   );
 };
 const mapStateToProps = state => ({

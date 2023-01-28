@@ -1,23 +1,37 @@
-import {createDrawerNavigator, DrawerContent, DrawerContentScrollView} from '@react-navigation/drawer';
+import {
+  createDrawerNavigator,
+  DrawerContent,
+  DrawerContentScrollView,
+} from '@react-navigation/drawer';
 import React from 'react';
-import { Text, View } from 'react-native';
+import {Text, View} from 'react-native';
+import { connect } from 'react-redux';
 import ChannelsScreen from '../screens/channelsScreen/ChannelsScreen';
 import OrgScreen from '../screens/orgScreen/OrgScreen';
 const Drawer = createDrawerNavigator();
 
-const CustomDrawer = () => {
-    return (
-        // <OrgScreen/>
-        <DrawerContentScrollView>
-            <OrgScreen/>
-        </DrawerContentScrollView>
-    )
-}
-const DrawerNavigation = () => {
+const CustomDrawer = props => {
   return (
-    <Drawer.Navigator drawerContent={(props)=><CustomDrawer/>}>
-      <Drawer.Screen name="Channel" component={ChannelsScreen} />
+    // <OrgScreen/>
+    <DrawerContentScrollView>
+      <OrgScreen props={props} />
+    </DrawerContentScrollView>
+  );
+};
+const DrawerNavigation = ({userInfoState}) => {
+  return (
+    <Drawer.Navigator drawerContent={props => <CustomDrawer {...props} />}>
+      <Drawer.Screen
+        name="Channel"
+        component={ChannelsScreen}
+        options={({route}) => ({
+          headerTitle: route?.params?.name || userInfoState.orgId,
+        })}
+      />
     </Drawer.Navigator>
   );
 };
-export default DrawerNavigation;
+const mapStateToProps = state => ({
+  userInfoState: state.userInfoReducer,
+})
+export default connect(mapStateToProps)(DrawerNavigation);

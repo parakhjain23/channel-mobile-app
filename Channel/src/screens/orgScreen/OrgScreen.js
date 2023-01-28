@@ -11,10 +11,10 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
 
-const OrgCard = ({item}) => {
+const OrgCard = ({item,props}) => {
   const navigation = useNavigation();
   return (
-    <TouchableOpacity onPress={()=>navigation.navigate('Channeled',{orgId: item?.id,name:item?.name})} style={{borderWidth:.5,borderColor:'gray',borderRadius:5,marginVertical:'1%'}}>
+    <TouchableOpacity onPress={()=>navigation.navigate('Channel',{orgId: item?.id,name:item?.name})} style={{borderWidth:.5,borderColor:'gray',borderRadius:5,marginVertical:'1%'}}>
       <View style={{flexDirection: 'row', alignItems: 'center',justifyContent:'space-between',padding:8}}>
         <View style={{flexDirection: 'row',alignItems:'center'}}>
           <Image
@@ -30,7 +30,7 @@ const OrgCard = ({item}) => {
     </TouchableOpacity>
   );
 };
-const OrgScreen = ({orgsState}) => {
+const OrgScreen = ({orgsState,props}) => {
   const data = orgsState?.orgs;
   return (
     <View style={{flex: 1}}>
@@ -42,7 +42,7 @@ const OrgScreen = ({orgsState}) => {
         </View>
         <View style={{marginHorizontal: '5%'}}>
           {data?.map((item,index)=>{
-            return <OrgCard key={index} item={item} />
+            return <OrgCard key={index} item={item} props={props}/>
           })}
           {/* <FlatList data={data} renderItem={OrgCard} /> */}
         </View>
