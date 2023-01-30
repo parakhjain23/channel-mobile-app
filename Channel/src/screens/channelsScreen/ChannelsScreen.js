@@ -16,6 +16,7 @@ const ChannelsScreen = props => {
   const [searchValue, setsearchValue] = useState('')
 
   const RenderChannels = ({item,navigation}) => {
+    const Name = item?.type == 'DIRECT_MESSAGE' ? props?.orgsState?.userIdAndNameMapping?.get(`${item.userIds[0] != props?.userInfoState?.user?.id ?item.userIds[0] : item.userIds[1] }`):item?.name
     return (
       <TouchableOpacity
         style={{
@@ -27,7 +28,7 @@ const ChannelsScreen = props => {
           flexDirection: 'column',
           justifyContent: 'center',
         }}
-        onPress={()=>navigation.navigate("Chat",{chatHeaderTitle:item?.name})}
+        onPress={()=>navigation.navigate("Chat",{chatHeaderTitle:Name})}
         >
         <View
           style={{
@@ -39,7 +40,7 @@ const ChannelsScreen = props => {
           <Icon name="chevron-right" />
           <Text style={{fontSize: 16, fontWeight: '400', color: 'black'}}>
             {' '}
-            {item?.type == 'DIRECT_MESSAGE' ? props?.orgsState?.userIdAndNameMapping.get(`${item.userIds[0] != props?.userInfoState?.user?.id ?item.userIds[0] : item.userIds[1] }`):item?.name}
+            {Name}
           </Text>
         </View>
       </TouchableOpacity>
