@@ -15,14 +15,14 @@ const CustomDrawer = props => {
       <CustomeDrawerScreen props={props} />
   );
 };
-const DrawerNavigation = ({userInfoState}) => {
+const DrawerNavigation = ({userInfoState,orgsState}) => {
   return (
     <Drawer.Navigator drawerContent={props => <CustomDrawer {...props} />}>
       <Drawer.Screen
         name="Channel"
         component={ChannelsScreen}
         options={({route}) => ({
-          headerTitle: route?.params?.name || userInfoState?.orgId,
+          headerTitle: orgsState.orgIdAndNameMapping!=null ? orgsState?.orgIdAndNameMapping[orgsState?.currentOrgId] : 'Channel',
         })}
       />
     </Drawer.Navigator>
@@ -30,6 +30,6 @@ const DrawerNavigation = ({userInfoState}) => {
 };
 const mapStateToProps = state => ({
   userInfoState: state.userInfoReducer,
-  orgState: state.orgsReducer
+  orgsState: state.orgsReducer
 })
 export default connect(mapStateToProps)(DrawerNavigation);

@@ -10,10 +10,19 @@ import {connect} from 'react-redux';
 import {getChannelsStart} from '../../redux/actions/channels/ChannelsAction';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SearchBox from '../../components/searchBox';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
-const RenderChannels = ({item,navigation,props}) => {
-  const Name = item?.type == 'DIRECT_MESSAGE' ? props?.orgsState?.userIdAndNameMapping[`${item.userIds[0] != props?.userInfoState?.user?.id ? item.userIds[0] : item.userIds[1] }`]:item?.name
+const RenderChannels = ({item, navigation, props}) => {
+  const Name =
+    item?.type == 'DIRECT_MESSAGE'
+      ? props?.orgsState?.userIdAndNameMapping && props?.orgsState?.userIdAndNameMapping[
+          `${
+            item.userIds[0] != props?.userInfoState?.user?.id
+              ? item.userIds[0]
+              : item.userIds[1]
+          }`
+        ]
+      : item?.name;
   return (
     <TouchableOpacity
       style={{
@@ -25,8 +34,7 @@ const RenderChannels = ({item,navigation,props}) => {
         flexDirection: 'column',
         justifyContent: 'center',
       }}
-      onPress={()=>navigation.navigate("Chat",{chatHeaderTitle:Name})}
-      >
+      onPress={() => navigation.navigate('Chat', {chatHeaderTitle: Name})}>
       <View
         style={{
           flexDirection: 'row',
@@ -44,7 +52,7 @@ const RenderChannels = ({item,navigation,props}) => {
   );
 };
 const ChannelsScreen = props => {
-  const [searchValue, setsearchValue] = useState('')
+  const [searchValue, setsearchValue] = useState('');
   const changeText = value => {
     setsearchValue(value);
   };
@@ -52,29 +60,39 @@ const ChannelsScreen = props => {
   const navigation = useNavigation();
   return (
     <View style={{flex: 1, padding: 5}}>
-      {props?.channelsState?.isLoading ? <ActivityIndicator size={'large'} color={'black'}/> :
-         <>
-          <FlatList data={props?.channelsState?.channels} renderItem={({ item }) => <RenderChannels item={item} navigation={navigation} props={props}/>}
+      {props?.channelsState?.isLoading ? (
+        <ActivityIndicator size={'large'} color={'black'} />
+      ) : (
+        <>
+          <FlatList
+            data={props?.channelsState?.channels}
+            renderItem={({item}) => (
+              <RenderChannels
+                item={item}
+                navigation={navigation}
+                props={props}
+              />
+            )}
           />
-          <SearchBox 
-             searchValue={searchValue}
-             changeText={changeText}
-             isSearchFocus={false}
+          <SearchBox
+            searchValue={searchValue}
+            changeText={changeText}
+            isSearchFocus={false}
           />
-          </>
-      }
+        </>
+      )}
     </View>
   );
 };
 const mapStateToProps = state => ({
-  orgsState : state.orgsReducer,
+  orgsState: state.orgsReducer,
   channelsState: state.channelsReducer,
-  userInfoState: state.userInfoReducer
+  userInfoState: state.userInfoReducer,
 });
 const mapDispatchToProps = dispatch => {
   return {
-    getChannelsStartAction: (token, orgId,userId) =>
-      dispatch(getChannelsStart(token, orgId,userId)),
+    getChannelsStartAction: (token, orgId, userId) =>
+      dispatch(getChannelsStart(token, orgId, userId)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelsScreen);
