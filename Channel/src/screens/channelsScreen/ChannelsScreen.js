@@ -49,16 +49,6 @@ const ChannelsScreen = props => {
     setsearchValue(value);
   };
 
-  useEffect(() => {
-    if (props?.channelsState?.channels == []) {
-      props?.getChannelsStartAction(
-        props?.userInfoState?.accessToken,
-        props?.orgsState?.currentOrgId,
-        props?.userInfoState?.user?.id
-      );
-    }
-  });
-
   const navigation = useNavigation();
   return (
     <View style={{flex: 1, padding: 5}}>
