@@ -22,7 +22,7 @@ const DrawerNavigation = ({userInfoState}) => {
         name="Channel"
         component={ChannelsScreen}
         options={({route}) => ({
-          headerTitle: route?.params?.name || userInfoState.orgId,
+          headerTitle: route?.params?.name || userInfoState?.orgId,
         })}
       />
     </Drawer.Navigator>
