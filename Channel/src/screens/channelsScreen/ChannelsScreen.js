@@ -16,7 +16,7 @@ const ChannelsScreen = props => {
   const [searchValue, setsearchValue] = useState('')
 
   const RenderChannels = ({item,navigation}) => {
-    const Name = item?.type == 'DIRECT_MESSAGE' ? props?.orgsState?.userIdAndNameMapping?.get(`${item.userIds[0] != props?.userInfoState?.user?.id ?item.userIds[0] : item.userIds[1] }`):item?.name
+    const Name = item?.type == 'DIRECT_MESSAGE' ? props?.orgsState?.userIdAndNameMapping?.get(`${item.userIds[0] != props?.userInfoState?.user?.id ? item.userIds[0] : item.userIds[1] }`):item?.name
     return (
       <TouchableOpacity
         style={{

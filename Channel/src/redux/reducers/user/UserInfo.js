@@ -1,6 +1,5 @@
 import * as Actions from "../../Enums";
 
-
 const initialState = {
   user: null,
   isLoading: true,
