@@ -23,9 +23,9 @@ export function orgsReducer(state = initialState, action) {
       return {...state, orgs: action.payload, isLoading: false};
 
     case Actions.GET_ALL_USERS_SUCCESS:
-      var idAndNameMap = new Map();
+      var idAndNameMap = {};
       action?.allUser?.map((item)=>{
-        idAndNameMap?.set(item?.id,item?.firstName +" "+item?.lastName)
+        idAndNameMap[item?.id] = `${item?.firstName+" "+item?.lastName}`
       })
       return {...state, userIdAndNameMapping: idAndNameMap}  
     default:
