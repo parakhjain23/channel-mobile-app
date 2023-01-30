@@ -40,7 +40,7 @@ const ChannelsScreen = props => {
           <Icon name="chevron-right" />
           <Text style={{fontSize: 16, fontWeight: '400', color: 'black'}}>
             {' '}
-            {item?.type == 'DIRECT_MESSAGE' ? props?.orgsState?.userIdAndNameMapping?.get(`${item.userIds[0] != props?.userInfoState?.user?.id ?item.userIds[0] : item.userIds[1] }`):item?.name}
+            {Name}
           </Text>
         </View>
       </TouchableOpacity>
