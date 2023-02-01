@@ -13,7 +13,6 @@ export function* getChats({teamId,token}){
 }
 
 export function getChatsStart(teamId,token){
-  console.log('action');
   return {
     type: Actions.FETCH_CHAT_START,
     teamId,

@@ -3,12 +3,15 @@ import createSagaMiddleware from 'redux-saga';
 import {persistStore} from 'redux-persist';
 import rootReducer from './reducers/Index';
 import rootSaga from './Saga';
+import createSocketMiddleware from '../../Socket';
+// import createSocketMiddleware from '../utils/Socket';
 
 const sagaMiddleware = createSagaMiddleware();
+const socketMiddleware = createSocketMiddleware();
 const store = createStore(
   // mount it on the Store
   rootReducer,
-  applyMiddleware(sagaMiddleware),
+  applyMiddleware(sagaMiddleware,socketMiddleware),
 );
 sagaMiddleware.run(rootSaga);
 

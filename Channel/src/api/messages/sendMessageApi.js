@@ -5,7 +5,6 @@ export const sendMessageApi = async (
   senderId,
   token,
 ) => {
-  console.log(message, teamId, orgId, senderId, token);
   try {
     var response = await fetch('https://api.intospace.io/chat/message', {
       method: 'POST',
@@ -27,7 +26,6 @@ export const sendMessageApi = async (
       }),
     });
     const result = await response.json();
-    console.log(result, 'result from the api');
   } catch (error) {
     console.log(error);
   }

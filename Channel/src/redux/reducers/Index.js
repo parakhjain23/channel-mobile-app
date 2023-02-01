@@ -18,6 +18,7 @@ const rootReducer = combineReducers({
   orgsReducer,
   channelsReducer,
   chatReducer,
+  
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

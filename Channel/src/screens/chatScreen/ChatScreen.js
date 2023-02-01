@@ -43,6 +43,7 @@ const ChatScreen = ({
   chatState,
   orgState,
 }) => {
+  console.log("iiiiiii");
   const {teamId} = route.params;
   const [message, onChangeMessage] = React.useState(null);
   useEffect(() => {
