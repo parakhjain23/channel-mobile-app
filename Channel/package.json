@@ -25,6 +25,7 @@
     "react-native-vector-icons": "^9.2.0",
     "react-native-webview": "^11.26.0",
     "react-redux": "^8.0.5",
+    "react-render-html": "^0.6.0",
     "redux": "^4.2.0",
     "redux-persist": "^6.0.0",
     "redux-saga": "^1.2.2",

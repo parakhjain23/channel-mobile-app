@@ -1,7 +1,7 @@
 import * as SocketActions from '../../SocketEnums';
 
 import {put, call} from 'redux-saga/effects';
-import createSocket from '../../../utils/Socket';
+import createSocket, { test } from '../../../utils/Socket';
 
 export function* createSocketMiddleware(){
   try {
