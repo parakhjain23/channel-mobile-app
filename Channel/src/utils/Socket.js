@@ -26,6 +26,9 @@ const createSocket = () => {
     socket.on('disconnect', () => {
       console.log('Disconnected');
     });
+    socket.on('chat/message created',(data)=>{
+      console.log(data);
+    })
     return socket;
   };
 export default createSocket;

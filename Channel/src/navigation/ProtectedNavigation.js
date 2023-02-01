@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginScreen from '../screens/loginScreen/LoginScreen';
-import {connect} from 'react-redux';
+import {connect, useDispatch} from 'react-redux';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import DrawerNavigation from './DrawerNavigation';
 import ChatScreen from '../screens/chatScreen/ChatScreen';
@@ -23,13 +23,14 @@ const ProtectedNavigation = ({userInfoSate,orgsState}) => {
   //     },
   //     statusBarTranslucent:true
   //   };
-
+  const dispatch = useDispatch();
   useEffect(() => {
     if(userInfoSate?.accessToken!=null){
       console.log('access token hai');
-      initializeSocket();
+      dispatch(initializeSocket());
+      // initializeSocket();
     }
-  }, [])
+  }, [userInfoSate?.accessToken])
   
   return !userInfoSate?.isSignedIn ? (
     <Stack.Navigator>
