@@ -5,11 +5,12 @@ import { userInfoReducer } from './user/UserInfo';
 import { orgsReducer } from './orgs/GetOrgDetailsReducer';
 import {channelsReducer} from './channels/ChannelsReducer';
 import { chatReducer } from './chat/ChatReducer';
+import { socketReducer } from './socket/SocketReducer';
 
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['userInfoReducer','orgsReducer','channelsReducer','chatReducer'],
+  whitelist: ['userInfoReducer','orgsReducer','channelsReducer','chatReducer','socketReducer'],
 };
 
 const rootReducer = combineReducers({
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   orgsReducer,
   channelsReducer,
   chatReducer,
+  socketReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
