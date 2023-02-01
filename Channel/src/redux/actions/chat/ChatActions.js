@@ -46,3 +46,11 @@ export function sendMessageStart(message,teamId,orgId,senderId,token){
     message,teamId,orgId,senderId,token
   }
 }
+
+export function addNewMessage(message){
+  return {
+    type: Actions.ADD_NEW_MESSAGE,
+    message,
+    teamId: message?._id
+  }
+}

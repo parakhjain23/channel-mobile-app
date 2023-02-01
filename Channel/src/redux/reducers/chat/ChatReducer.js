@@ -21,6 +21,15 @@ export function chatReducer(state = initialState, action) {
           [action.teamId]: {messages: action?.payload, isloading: false},
         },
       };
+      case Actions.ADD_NEW_MESSAGE:
+        console.log('redddd',action);
+        return {
+          ...state,
+          data: {
+            ...state.data,
+            [action.teamId]: {messages: [...state.data[action.teamId].messages,action.message]}
+          }
+        }
     default:
       return state;
   }

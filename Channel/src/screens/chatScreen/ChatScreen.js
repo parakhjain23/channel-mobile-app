@@ -29,7 +29,7 @@ const RenderChatCard = ({chat, userInfoState, orgState}) => {
           borderRadius: 10,
           padding: 8,
         }}>
-        <Text>{chat?.content}</Text>
+        <Text>{(chat?.content)}</Text>
         <Text></Text>
       </View>
     </View>
