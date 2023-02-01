@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginScreen from '../screens/loginScreen/LoginScreen';
 import {connect} from 'react-redux';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import DrawerNavigation from './DrawerNavigation';
 import ChatScreen from '../screens/chatScreen/ChatScreen';
+import { initializeSocket } from '../redux/actions/socket/socketActions';
 // import {useNavigation, useTheme} from '@react-navigation/native';
 
-const ProtectedNavigation = ({userInfoSate}) => {
+const ProtectedNavigation = ({userInfoSate,orgsState}) => {
   const Stack = createNativeStackNavigator();
   const Drawer = createDrawerNavigator();
   //   const navigate = useNavigation();
@@ -22,6 +23,14 @@ const ProtectedNavigation = ({userInfoSate}) => {
   //     },
   //     statusBarTranslucent:true
   //   };
+
+  useEffect(() => {
+    if(userInfoSate?.accessToken!=null){
+      console.log('access token hai');
+      initializeSocket();
+    }
+  }, [])
+  
   return !userInfoSate?.isSignedIn ? (
     <Stack.Navigator>
       <Stack.Screen
@@ -37,12 +46,12 @@ const ProtectedNavigation = ({userInfoSate}) => {
           component={DrawerNavigation}
           options={{headerShown: false}}
         />
-        <Stack.Screen 
-          name='Chat'
+        <Stack.Screen
+          name="Chat"
           component={ChatScreen}
           options={({route}) => ({
             headerTitle: route?.params?.chatHeaderTitle,
-            headerShown:true
+            headerShown: true,
           })}
         />
       </Stack.Navigator>
@@ -51,5 +60,6 @@ const ProtectedNavigation = ({userInfoSate}) => {
 
 const mapStateToProps = state => ({
   userInfoSate: state.userInfoReducer,
+  orgsState: state.orgsReducer
 });
 export default connect(mapStateToProps)(ProtectedNavigation);
