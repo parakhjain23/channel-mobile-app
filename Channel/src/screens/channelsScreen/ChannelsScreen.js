@@ -35,7 +35,7 @@ const RenderChannels = ({item, navigation, props}) => {
         flexDirection: 'column',
         justifyContent: 'center',
       }}
-      onPress={() => navigation.navigate('Chat', {chatHeaderTitle: Name})}>
+      onPress={() => navigation.navigate('Chat', {chatHeaderTitle: Name,teamId:item?._id})}>
       <View
         style={{
           flexDirection: 'row',
