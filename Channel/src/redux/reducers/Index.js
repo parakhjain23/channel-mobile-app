@@ -19,11 +19,7 @@ const rootReducer = combineReducers({
   orgsReducer,
   channelsReducer,
   chatReducer,
-<<<<<<< HEAD
-  
-=======
   socketReducer,
->>>>>>> 045e5b5d65239d6f6d6c59787355ea50d602ba82
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
