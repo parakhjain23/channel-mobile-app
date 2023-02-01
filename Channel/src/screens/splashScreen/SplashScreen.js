@@ -1,9 +1,11 @@
 import React, {useEffect} from 'react';
 import {Image, Text, View} from 'react-native';
+import { websock } from '../Socket';
 
 const SplashScreen = ({setShowSplashScreen}) => {
   useEffect(() => {
     setTimeout(() => {
+      // websock()
       setShowSplashScreen(false);
     }, 1000);
   });

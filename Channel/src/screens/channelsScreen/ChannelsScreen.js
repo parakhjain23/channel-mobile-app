@@ -23,6 +23,7 @@ const RenderChannels = ({item, navigation, props}) => {
           }`
         ]
       : item?.name;
+  item?.type =='DIRECT_MESSAGE' && console.log(item);
   return (
     <TouchableOpacity
       style={{
