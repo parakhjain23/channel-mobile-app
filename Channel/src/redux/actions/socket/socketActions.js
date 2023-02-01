@@ -1,9 +1,14 @@
 import * as SocketActions from '../../SocketEnums';
 
 import {put, call} from 'redux-saga/effects';
+import createSocket from '../../../utils/Socket';
 
 export function* createSocketMiddleware(){
-  console.log('hello');
+  try {
+    createSocket();
+  } catch (error) {
+    console.log('error',error);
+  }
 }
 
 export function initializeSocket(){
