@@ -8,7 +8,7 @@ import {
 } from '../../redux/actions/chat/ChatActions';
 
 const RenderChatCard = ({chat, userInfoState, orgState}) => {
-  const date = new Date()
+  const date = new Date(chat.updatedAt);
   const FlexAlign =
     chat?.senderId == userInfoState?.user?.id ? 'flex-end' : 'flex-start';
   const SenderName =
@@ -32,7 +32,7 @@ const RenderChatCard = ({chat, userInfoState, orgState}) => {
           padding: 8,
         }}>
         <Text>{(chat?.content)}</Text>
-        <View style={{justifyContent:'flex-end'}}><Text style={{fontSize:10}}>{date.getHours()}:{date.getMinutes()}   </Text></View>
+        <View style={{justifyContent:'flex-end'}}><Text style={{fontSize:10}}>{date.getHours() +':'+ date.getMinutes()} </Text></View>
       </View>
     </View>
   );
