@@ -43,12 +43,12 @@ const ChatScreen = ({
   chatState,
   orgState,
 }) => {
-  console.log("iiiiiii");
   const {teamId} = route.params;
   const [message, onChangeMessage] = React.useState(null);
   useEffect(() => {
     fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
   }, []);
+  console.log(chatState?.data[teamId]?.messages);
   return (
     <View style={{flex: 1}}>
       <View style={{flex: 7}}>

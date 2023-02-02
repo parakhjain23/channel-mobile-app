@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import ProtectedNavigation from './ProtectedNavigation';
+import { createSocket } from '../utils/Socket';
+import { connect } from 'react-redux';
 // import { StatusBar, useColorScheme } from 'react-native';
 // import { DARK_THEME, LIGHT_THEME } from '../constant/styles';
 

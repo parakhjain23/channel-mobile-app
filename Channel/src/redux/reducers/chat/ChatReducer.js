@@ -5,8 +5,10 @@ const initialState = {
 };
 
 export function chatReducer(state = initialState, action) {
+  console.log("inside chat reducer");
   switch (action.type) {
     case Actions.FETCH_CHAT_START:
+      console.log(action.teamId,"this is team id of parakh chat");
       return {
         ...state,
         data: {...state.data, [action.teamId]: {isloading: true, messages: []}},
@@ -20,12 +22,12 @@ export function chatReducer(state = initialState, action) {
         },
       };
       case Actions.ADD_NEW_MESSAGE:
-        console.log('redddd',action);
+        console.log('redddd this is team id of parakh by socket',action.teamId);
         return {
           ...state,
-          data: {
-            ...state.data,
-            [action.teamId]: {messages: [...state.data[action.teamId].messages,action.message]}
+          data: { 
+            ...state?.data,
+            [action.teamId]: {messages:[action?.message,...state?.data[action?.teamId]?.messages]}
           }
         }
     default:

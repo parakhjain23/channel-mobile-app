@@ -1,13 +1,9 @@
 import { connect } from 'react-redux';
 import io from 'socket.io-client';
 import {addNewMessage} from '../redux/actions/chat/ChatActions';
+import React from 'react';
 
-export function test(){
-  console.log('231231232å');
-}
-
-
-const createSocket = async () => {
+export function createSocket(){
   console.log('in create socket');
   const socket = io('wss://api.intospace.io', {
     forceNew: true,
@@ -19,8 +15,7 @@ const createSocket = async () => {
     'authentication',
     {
       strategy: 'jwt',
-      accessToken:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJlbWFpbCI6InBhcmFraGphaW4yMzAxQGdtYWlsLmNvbSIsImlhdCI6MTY3NDEzMDE5MiwiZXhwIjoxNzA1Njg3NzkyLCJhdWQiOiJodHRwczovL3lvdXJkb21haW4uY29tIiwiaXNzIjoiZmVhdGhlcnMiLCJzdWIiOiJRbjA5d2F1ZWxCcHNGTmRPIiwianRpIjoiNzZmYTIwMmYtMTUxOS00ZDhlLWJhZGItMmY3NDBiZTIzZGNkIn0.FWYFEIH2sDBata8pOCMWg74qlNgHujoThUsnylDuGbc',
+      accessToken:'eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJlbWFpbCI6InJ1ZHJha3Noa2FjaGhhd2FAZ21haWwuY29tIiwiaWF0IjoxNjcyNDc1MTY1LCJleHAiOjE3MDQwMzI3NjUsImF1ZCI6Imh0dHBzOi8veW91cmRvbWFpbi5jb20iLCJpc3MiOiJmZWF0aGVycyIsInN1YiI6ImdNdjVOMEV0RUNtdTRGYTkiLCJqdGkiOiI3MjY2YTYxOC0wZmQ3LTQyNGUtYmY4MC1iYThiNzlhMThkOWYifQ.xHavkj7bniggtDgtqDUsMG522hwyFBOlpNAFDhgYmXo',
       orgId: 'q957w6rtkdinckgbp8vv',
       product: 'channel',
       deviceType: 'WEB',
@@ -35,16 +30,16 @@ const createSocket = async () => {
   socket.on('disconnect', () => {
     console.log('Disconnected');
   });
-  socket.on('chat/message created', data => {
-    console.log('jljlkjl');
-    // addNewMessageAction(data)
-  });
-  // return socket;
+  // socket.on('chat/message created', data => {
+  //   console.log('jljlkjl');
+  //   props?.addNewMessageAction(data)
+  // });
+  return socket;
 };
 // const mapDispatchToProps = dispatch => {
 //   return {
 //     addNewMessageAction: data => dispatch(addNewMessage(data)),
 //   };
 // };
-export default createSocket;
+// export default createSocket;
 // export default connect(mapDispatchToProps)(createSocket);

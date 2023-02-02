@@ -10,7 +10,7 @@ import { socketReducer } from './socket/SocketReducer';
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['userInfoReducer','orgsReducer','channelsReducer','chatReducer','socketReducer'],
+  whitelist: ['userInfoReducer','orgsReducer','channelsReducer','chatReducer'],
 };
 
 const rootReducer = combineReducers({
