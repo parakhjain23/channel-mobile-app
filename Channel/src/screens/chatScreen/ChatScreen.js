@@ -30,6 +30,7 @@ const RenderChatCard = ({chat, userInfoState, orgState}) => {
           borderColor: 'gray',
           borderRadius: 10,
           padding: 8,
+          flexWrap:'wrap'
         }}>
         <Text>{(chat?.content)}</Text>
         <View style={{justifyContent:'flex-end'}}><Text style={{fontSize:10}}>{date.getHours() +':'+ date.getMinutes()} </Text></View>
@@ -48,10 +49,9 @@ const ChatScreen = ({
   const {teamId} = route.params;
   const [message, onChangeMessage] = React.useState(null);
   useEffect(() => {
-    if(chatState?.data[teamId]?.messages == undefined){
-      fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
-    }
+    fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
   }, []);
+  console.log(chatState?.data[teamId]?.messages);
   return (
     <View style={{flex: 1}}>
       <View style={{flex: 7}}>
@@ -94,7 +94,7 @@ const ChatScreen = ({
             size={20}
             onPress={() => {
               sendMessageAction(
-                message,
+                (message).trim(),
                 teamId,
                 orgState?.currentOrgId,
                 userInfoState?.user?.id,
