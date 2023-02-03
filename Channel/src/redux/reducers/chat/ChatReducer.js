@@ -27,7 +27,7 @@ export function chatReducer(state = initialState, action) {
           [action.teamId]: {
             messages: state?.data[action?.teamId]?.messages
               ? [action?.message, ...state?.data[action?.teamId]?.messages]
-              : action?.message,
+              : [action?.message],
           },
         },
       };

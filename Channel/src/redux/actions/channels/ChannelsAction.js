@@ -30,3 +30,10 @@ export function getChannelsError(){
         type:Actions.FETCH_CHANNELS_ERROR
     }
 }
+
+export function moveChannelToTop(channelId){
+  return {
+    type: Actions.MOVE_CHANNEL_TO_TOP,
+    channelId:channelId
+  }
+}

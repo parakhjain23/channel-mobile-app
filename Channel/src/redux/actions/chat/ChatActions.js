@@ -2,6 +2,7 @@ import {put, call} from 'redux-saga/effects';
 import { getMessagesOfTeamApi } from '../../../api/messages/getMessagesOfTeamApi';
 import { sendMessageApi } from '../../../api/messages/sendMessageApi';
 import * as Actions from '../../Enums';
+import { moveChannelToTop } from '../channels/ChannelsAction';
 
 export function* getChats({teamId,token}){
   try {
@@ -35,6 +36,7 @@ export function getChatsError(){
 export function* sendMessage({message,teamId,orgId,senderId,token}){
   try {
     yield call(sendMessageApi,message,teamId,orgId,senderId,token)
+    yield put(moveChannelToTop(teamId))
   } catch (error) {
     console.log(error);
   }
