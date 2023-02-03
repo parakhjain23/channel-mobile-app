@@ -7,9 +7,9 @@ import { createSocket } from '../../../utils/Socket';
 export function* createSocketMiddleware() {
   try {
     var socket = yield call(createSocket)
-    yield put(SocketCreated(socket))
+    SocketService(socket)
   } catch (error) {
-    console.log('error', error);
+    console.log('error is here', error);
   }
 }
 
@@ -20,9 +20,4 @@ export function initializeSocket() {
   };
 }
 
-export function SocketCreated(socket){
-  return {
-    type : 'SOCKET_CREATED',
-    socket:socket
-  }
-}
+

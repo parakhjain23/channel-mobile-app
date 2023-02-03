@@ -4,7 +4,6 @@ import {addNewMessage} from '../redux/actions/chat/ChatActions';
 import React from 'react';
 
 export function createSocket(){
-  console.log('in create socket');
   const socket = io('wss://api.intospace.io', {
     forceNew: true,
     transports: ['websocket', 'polling'],
@@ -30,16 +29,5 @@ export function createSocket(){
   socket.on('disconnect', () => {
     console.log('Disconnected');
   });
-  // socket.on('chat/message created', data => {
-  //   console.log('jljlkjl');
-  //   props?.addNewMessageAction(data)
-  // });
   return socket;
 };
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     addNewMessageAction: data => dispatch(addNewMessage(data)),
-//   };
-// };
-// export default createSocket;
-// export default connect(mapDispatchToProps)(createSocket);

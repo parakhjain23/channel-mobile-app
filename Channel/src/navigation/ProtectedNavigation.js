@@ -10,7 +10,7 @@ import { createSocket } from '../utils/Socket';
 import { addNewMessage } from '../redux/actions/chat/ChatActions';
 // import {useNavigation, useTheme} from '@react-navigation/native';
 
-const ProtectedNavigation = ({userInfoSate,socketState,addMessageAction}) => {
+const ProtectedNavigation = ({userInfoSate}) => {
   const Stack = createNativeStackNavigator();
   const Drawer = createDrawerNavigator();
   //   const navigate = useNavigation();
@@ -28,16 +28,9 @@ const ProtectedNavigation = ({userInfoSate,socketState,addMessageAction}) => {
   const dispatch = useDispatch();
   useEffect(() => {
     if(userInfoSate?.accessToken!=null){
-      console.log('access token hai');
       dispatch(initializeSocket());
-      // initializeSocket();
     }
   }, [userInfoSate?.accessToken])
-  useEffect(()=>{
-    socketState?.socket?.on('chat/message created', data => {
-      addMessageAction(data)
-    });
-  },[socketState?.socket])
   return !userInfoSate?.isSignedIn ? (
     <Stack.Navigator>
       <Stack.Screen
@@ -68,11 +61,5 @@ const ProtectedNavigation = ({userInfoSate,socketState,addMessageAction}) => {
 const mapStateToProps = state => ({
   userInfoSate: state.userInfoReducer,
   orgsState: state.orgsReducer,
-  socketState : state.socketReducer
 });
-const mapDispatchToProps = dispatch =>{
-  return {
-    addMessageAction : (message) => dispatch(addNewMessage(message))
-  }
-}
-export default connect(mapStateToProps,mapDispatchToProps)(ProtectedNavigation);
+export default connect(mapStateToProps)(ProtectedNavigation);
