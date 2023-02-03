@@ -49,9 +49,10 @@ const ChatScreen = ({
   const {teamId} = route.params;
   const [message, onChangeMessage] = React.useState(null);
   useEffect(() => {
-    fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
+    if(chatState?.data[teamId]?.messages == undefined){
+      fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
+    }
   }, []);
-  console.log(chatState?.data[teamId]?.messages);
   return (
     <View style={{flex: 1}}>
       <View style={{flex: 7}}>

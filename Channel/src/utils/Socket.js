@@ -1,9 +1,6 @@
-import {connect} from 'react-redux';
 import io from 'socket.io-client';
-import {addNewMessage} from '../redux/actions/chat/ChatActions';
-import React from 'react';
 
-export function createSocket() {
+export function createSocket(){
   const socket = io('wss://api.intospace.io', {
     forceNew: true,
     transports: ['websocket', 'polling'],
@@ -31,4 +28,4 @@ export function createSocket() {
     console.log('Disconnected');
   });
   return socket;
-}
+};
