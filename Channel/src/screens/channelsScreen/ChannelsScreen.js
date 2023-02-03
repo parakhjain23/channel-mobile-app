@@ -11,6 +11,7 @@ import {getChannelsStart} from '../../redux/actions/channels/ChannelsAction';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SearchBox from '../../components/searchBox';
 import {useNavigation} from '@react-navigation/native';
+import { FAB } from 'react-native-paper';
 
 const RenderChannels = ({item, navigation, props}) => {
   const Name =
@@ -79,6 +80,23 @@ const ChannelsScreen = props => {
             changeText={changeText}
             isSearchFocus={false}
           />
+           <View style={{
+ position: "absolute",
+ width: '100%',
+ bottom: 100,
+ right: 0,
+ alignItems: 'flex-end',
+  }}>
+          <FAB
+            onPress={() => {
+              // navigation.navigate('Cart');
+            }}
+            color={'grey'}
+            uppercase={false}
+            style={{}}
+            label={`new channel`}
+          />
+        </View>
         </>
       )}
     </View>

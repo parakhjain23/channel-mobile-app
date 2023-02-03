@@ -10,7 +10,7 @@ import { createSocket } from '../utils/Socket';
 import { addNewMessage } from '../redux/actions/chat/ChatActions';
 // import {useNavigation, useTheme} from '@react-navigation/native';
 
-const ProtectedNavigation = ({userInfoSate}) => {
+const ProtectedNavigation = ({userInfoSate,orgsState}) => {
   const Stack = createNativeStackNavigator();
   const Drawer = createDrawerNavigator();
   //   const navigate = useNavigation();
@@ -28,7 +28,7 @@ const ProtectedNavigation = ({userInfoSate}) => {
   const dispatch = useDispatch();
   useEffect(() => {
     if(userInfoSate?.accessToken!=null){
-      dispatch(initializeSocket());
+      dispatch(initializeSocket(userInfoSate?.accessToken,orgsState?.currentOrgId));
     }
   }, [userInfoSate?.accessToken])
   return !userInfoSate?.isSignedIn ? (
