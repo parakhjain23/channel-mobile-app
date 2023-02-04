@@ -28,7 +28,6 @@ const ProtectedNavigation = ({userInfoSate,orgsState}) => {
   const dispatch = useDispatch();
   useEffect(() => {
     if(userInfoSate?.accessToken!=null){
-      console.log(orgsState?.currentOrgId);
       dispatch(initializeSocket(userInfoSate?.accessToken,orgsState?.currentOrgId));
     }
   }, [userInfoSate?.accessToken,orgsState?.currentOrgId])
