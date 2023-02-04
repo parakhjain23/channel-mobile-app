@@ -1,11 +1,15 @@
 import io from 'socket.io-client';
 
+const socket = io('wss://api.intospace.io', {
+  forceNew: true,
+  transports: ['websocket', 'polling'],
+  reconnectionAttempts: 10,
+});
 export function createSocket(accessToken,orgId){
-  const socket = io('wss://api.intospace.io', {
-    forceNew: true,
-    transports: ['websocket', 'polling'],
-    reconnectionAttempts: 10,
-  });
+  if(socket?.connected){
+    socket.off();
+    console.log('socket off');
+  }
   socket.emit(
     'create',
     'authentication',
