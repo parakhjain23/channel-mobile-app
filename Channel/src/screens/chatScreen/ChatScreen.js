@@ -30,6 +30,7 @@ const RenderChatCard = ({chat, userInfoState, orgState}) => {
           borderColor: 'gray',
           borderRadius: 10,
           padding: 8,
+          flexWrap:'wrap'
         }}>
         <Text>{(chat?.content)}</Text>
         <View style={{justifyContent:'flex-end'}}><Text style={{fontSize:10}}>{date.getHours() +':'+ date.getMinutes()} </Text></View>
@@ -48,18 +49,18 @@ const ChatScreen = ({
   const {teamId} = route.params;
   const [message, onChangeMessage] = React.useState(null);
   useEffect(() => {
-    if(chatState?.data[teamId]?.messages == undefined){
+    if(chatState?.data[teamId]?.messages == undefined || chatState?.data[teamId]?.messages == []){
       fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
     }
   }, []);
   return (
     <View style={{flex: 1}}>
       <View style={{flex: 7}}>
-        {chatState?.data[teamId]?.isloading ? (
+        {/* {chatState?.data[teamId]?.isloading ? (
           <ActivityIndicator />
-        ) : (
+        ) : ( */}
           <FlatList
-            data={chatState?.data[teamId]?.messages}
+            data={chatState?.data[teamId]?.messages || []}
             renderItem={({item}) => (
               <RenderChatCard
                 chat={item}
@@ -70,7 +71,7 @@ const ChatScreen = ({
             inverted
             // contentContainerStyle={{ flexDirection: 'column-reverse' }}
           />
-        )}
+        {/* )} */}
       </View>
       <View style={{flex: 1, margin: 10, flexDirection: 'row'}}>
         <TextInput
@@ -94,7 +95,7 @@ const ChatScreen = ({
             size={20}
             onPress={() => {
               sendMessageAction(
-                message,
+                (message).trim(),
                 teamId,
                 orgState?.currentOrgId,
                 userInfoState?.user?.id,

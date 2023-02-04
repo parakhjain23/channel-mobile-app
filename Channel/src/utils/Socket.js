@@ -1,21 +1,24 @@
-import { connect } from 'react-redux';
 import io from 'socket.io-client';
-import {addNewMessage} from '../redux/actions/chat/ChatActions';
-import React from 'react';
+import {initializeSocket} from '../redux/actions/socket/socketActions';
+import {store} from '../redux/Store';
 
-export function createSocket(accessToken,orgId){
-  const socket = io('wss://api.intospace.io', {
-    forceNew: true,
-    transports: ['websocket', 'polling'],
-    reconnectionAttempts: 10,
-  });
+const socket = io('wss://api.intospace.io', {
+  forceNew: true,
+  transports: ['websocket', 'polling'],
+  reconnectionAttempts: 10,
+});
+export function createSocket(accessToken, orgId) {
+  if (socket?.connected) {
+    socket.close();
+    console.log('socket off');
+  }
   socket.emit(
     'create',
     'authentication',
     {
       strategy: 'jwt',
-      accessToken:`${accessToken}`,
-      orgId: `${orgId}`,
+      accessToken: accessToken,
+      orgId: orgId,
       product: 'channel',
       deviceType: 'WEB',
     },
@@ -30,4 +33,4 @@ export function createSocket(accessToken,orgId){
     console.log('Disconnected');
   });
   return socket;
-};
+}
