@@ -6,11 +6,11 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import DrawerNavigation from './DrawerNavigation';
 import ChatScreen from '../screens/chatScreen/ChatScreen';
 import { initializeSocket } from '../redux/actions/socket/socketActions';
-import { closeSocket, createSocket } from '../utils/Socket';
+import { createSocket } from '../utils/Socket';
 import { addNewMessage } from '../redux/actions/chat/ChatActions';
 // import {useNavigation, useTheme} from '@react-navigation/native';
 
-const ProtectedNavigation = ({userInfoSate,orgsState,socketState}) => {
+const ProtectedNavigation = ({userInfoSate,orgsState}) => {
   const Stack = createNativeStackNavigator();
   const Drawer = createDrawerNavigator();
   //   const navigate = useNavigation();
@@ -60,6 +60,5 @@ const ProtectedNavigation = ({userInfoSate,orgsState,socketState}) => {
 const mapStateToProps = state => ({
   userInfoSate: state.userInfoReducer,
   orgsState: state.orgsReducer,
-  socketState : state.socketReducer
 });
 export default connect(mapStateToProps)(ProtectedNavigation);
