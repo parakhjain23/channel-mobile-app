@@ -3,12 +3,13 @@ import io from 'socket.io-client';
 import {addNewMessage} from '../redux/actions/chat/ChatActions';
 import React from 'react';
 
+const socket = io('wss://api.intospace.io', {
+  forceNew: true,
+  transports: ['websocket', 'polling'],
+  reconnectionAttempts: 10,
+});
+
 export function createSocket(accessToken,orgId){
-  const socket = io('wss://api.intospace.io', {
-    forceNew: true,
-    transports: ['websocket', 'polling'],
-    reconnectionAttempts: 10,
-  });
   socket.emit(
     'create',
     'authentication',
@@ -31,3 +32,11 @@ export function createSocket(accessToken,orgId){
   });
   return socket;
 };
+
+export function closeSocket(){
+  console.log("inside close Socket");
+ if(socket.connected()){
+  socket.off()
+  socket.close()
+ }
+}
