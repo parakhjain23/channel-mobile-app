@@ -1,13 +1,15 @@
 import io from 'socket.io-client';
+import {initializeSocket} from '../redux/actions/socket/socketActions';
+import {store} from '../redux/Store';
 
 const socket = io('wss://api.intospace.io', {
   forceNew: true,
   transports: ['websocket', 'polling'],
   reconnectionAttempts: 10,
 });
-export function createSocket(accessToken,orgId){
-  if(socket?.connected){
-    socket.off();
+export function createSocket(accessToken, orgId) {
+  if (socket?.connected) {
+    socket.close();
     console.log('socket off');
   }
   socket.emit(
@@ -29,6 +31,7 @@ export function createSocket(accessToken,orgId){
   });
   socket.on('disconnect', () => {
     console.log('Disconnected');
+    store.dispatch(initializeSocket(accessToken, orgId));
   });
   return socket;
-};
+}
