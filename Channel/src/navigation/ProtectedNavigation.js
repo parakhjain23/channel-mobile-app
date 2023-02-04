@@ -27,10 +27,9 @@ const ProtectedNavigation = ({userInfoSate,orgsState}) => {
   //   };
   const dispatch = useDispatch();
   useEffect(() => {
-    if(userInfoSate?.accessToken!=null){
       dispatch(initializeSocket(userInfoSate?.accessToken,orgsState?.currentOrgId));
-    }
   }, [userInfoSate?.accessToken,orgsState?.currentOrgId])
+  
   return !userInfoSate?.isSignedIn ? (
     <Stack.Navigator>
       <Stack.Screen
