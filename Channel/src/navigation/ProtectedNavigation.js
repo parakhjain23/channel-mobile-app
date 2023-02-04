@@ -6,11 +6,11 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import DrawerNavigation from './DrawerNavigation';
 import ChatScreen from '../screens/chatScreen/ChatScreen';
 import { initializeSocket } from '../redux/actions/socket/socketActions';
-import { createSocket } from '../utils/Socket';
+import { closeSocket, createSocket } from '../utils/Socket';
 import { addNewMessage } from '../redux/actions/chat/ChatActions';
 // import {useNavigation, useTheme} from '@react-navigation/native';
 
-const ProtectedNavigation = ({userInfoSate,orgsState}) => {
+const ProtectedNavigation = ({userInfoSate,orgsState,socketState}) => {
   const Stack = createNativeStackNavigator();
   const Drawer = createDrawerNavigator();
   //   const navigate = useNavigation();
@@ -27,11 +27,14 @@ const ProtectedNavigation = ({userInfoSate,orgsState}) => {
   //   };
   const dispatch = useDispatch();
   useEffect(() => {
+    if(socketState?.needToCloseAndReconnectSocket || userInfoSate?.accessToken == null){
+      closeSocket()                    
+    }
     if(userInfoSate?.accessToken!=null){
       console.log(orgsState?.currentOrgId);
       dispatch(initializeSocket(userInfoSate?.accessToken,orgsState?.currentOrgId));
     }
-  }, [userInfoSate?.accessToken,orgsState?.currentOrgId])
+  }, [userInfoSate?.accessToken,orgsState?.currentOrgId]) 
   return !userInfoSate?.isSignedIn ? (
     <Stack.Navigator>
       <Stack.Screen
@@ -62,5 +65,6 @@ const ProtectedNavigation = ({userInfoSate,orgsState}) => {
 const mapStateToProps = state => ({
   userInfoSate: state.userInfoReducer,
   orgsState: state.orgsReducer,
+  socketState : state.socketReducer
 });
 export default connect(mapStateToProps)(ProtectedNavigation);

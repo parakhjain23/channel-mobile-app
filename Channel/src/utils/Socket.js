@@ -7,11 +7,8 @@ const socket = io('wss://api.intospace.io', {
   transports: ['websocket', 'polling'],
   reconnectionAttempts: 10,
 });
-export function createSocket(accessToken, orgId) {
-  if (socket?.connected) {
-    socket.close();
-    console.log('socket off');
-  }
+
+export function createSocket(accessToken,orgId){
   socket.emit(
     'create',
     'authentication',
@@ -33,4 +30,12 @@ export function createSocket(accessToken, orgId) {
     console.log('Disconnected');
   });
   return socket;
+};
+
+export function closeSocket(){
+  console.log("inside close Socket");
+ if(socket.connected()){
+  socket.off()
+  socket.close()
+ }
 }
