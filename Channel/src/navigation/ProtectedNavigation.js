@@ -27,14 +27,9 @@ const ProtectedNavigation = ({userInfoSate,orgsState,socketState}) => {
   //   };
   const dispatch = useDispatch();
   useEffect(() => {
-    if(socketState?.needToCloseAndReconnectSocket || userInfoSate?.accessToken == null){
-      closeSocket()                    
-    }
-    if(userInfoSate?.accessToken!=null){
-      console.log(orgsState?.currentOrgId);
       dispatch(initializeSocket(userInfoSate?.accessToken,orgsState?.currentOrgId));
-    }
-  }, [userInfoSate?.accessToken,orgsState?.currentOrgId]) 
+  }, [userInfoSate?.accessToken,orgsState?.currentOrgId])
+  
   return !userInfoSate?.isSignedIn ? (
     <Stack.Navigator>
       <Stack.Screen

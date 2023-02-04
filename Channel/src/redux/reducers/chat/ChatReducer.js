@@ -31,10 +31,10 @@ export function chatReducer(state = initialState, action) {
           },
         },
       };
-    
+
     case Actions.UPDATE_CURRENT_ORG_ID:
-      return { ...state, data : {} }
-       
+      return initialState;
+      
     default:
       return state;
   }
