@@ -22,7 +22,9 @@ const RenderChatCard = ({
   userInfoState,
   orgState,
   deleteMessageAction,
-  chatState
+  chatState,
+  setreplyOnMessage,
+  setrepliedMsgDetails
 }) => {
   const [optionsVisible, setOptionsVisible] = useState(false);
   const onLongPress = () => {
@@ -46,6 +48,14 @@ const RenderChatCard = ({
                 deleteMessageAction(userInfoState?.accessToken, chat?._id);
             }}>
             <Text style={styles.option}>Delete</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setOptionsVisible(false)
+              setrepliedMsgDetails(chat)
+              setreplyOnMessage(true)
+            }}>
+            <Text style={styles.option}>reply</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -92,6 +102,8 @@ const ChatScreen = ({
 }) => {
   const {teamId} = route.params;
   const [message, onChangeMessage] = React.useState(null);
+  const [replyOnMessage, setreplyOnMessage] = useState(false)
+  const [repliedMsgDetails, setrepliedMsgDetails] = useState('')
   useEffect(() => {
     if (
       chatState?.data[teamId]?.messages == undefined ||
@@ -116,6 +128,8 @@ const ChatScreen = ({
               orgState={orgState}
               deleteMessageAction={deleteMessageAction}
               chatState={chatState}
+              setreplyOnMessage={setreplyOnMessage}
+              setrepliedMsgDetails={setrepliedMsgDetails}
             />
           )}
           inverted
@@ -123,7 +137,15 @@ const ChatScreen = ({
         />
         {/* )} */}
       </View>
-      <View style={{flex: 1, margin: 10, flexDirection: 'row'}}>
+      <View style={{flex: 1, margin: 10, justifyContent:'center'}}>
+        {
+          replyOnMessage && <TouchableOpacity onPress={()=>setreplyOnMessage(false)}>
+            <View style={{flexDirection:'row',justifyContent:'center',marginTop:10,borderWidth:1,height:30}}>
+            <Text>{repliedMsgDetails?.content}</Text>
+          </View>
+          </TouchableOpacity>
+        }
+        <View style={{flexDirection:'row'}}>
         <TextInput
           editable
           multiline
@@ -150,10 +172,13 @@ const ChatScreen = ({
                 orgState?.currentOrgId,
                 userInfoState?.user?.id,
                 userInfoState?.accessToken,
+                repliedMsgDetails?._id || null
               );
               onChangeMessage('');
+              setreplyOnMessage(false)
             }}
           />
+        </View>
         </View>
       </View>
     </View>
@@ -168,8 +193,8 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchChatsOfTeamAction: (teamId, token) =>
       dispatch(getChatsStart(teamId, token)),
-    sendMessageAction: (message, teamId, orgId, senderId, token) =>
-      dispatch(sendMessageStart(message, teamId, orgId, senderId, token)),
+    sendMessageAction: (message, teamId, orgId, senderId, token, parentId) =>
+      dispatch(sendMessageStart(message, teamId, orgId, senderId, token, parentId)),
     deleteMessageAction: (accessToken, msgId) =>
       dispatch(deleteMessageStart(accessToken, msgId)),
   };

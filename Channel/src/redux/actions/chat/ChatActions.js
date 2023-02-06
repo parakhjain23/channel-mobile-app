@@ -34,18 +34,18 @@ export function getChatsError(){
     }
 }
 
-export function* sendMessage({message,teamId,orgId,senderId,token}){
+export function* sendMessage({message,teamId,orgId,senderId,token,parentId}){
   try {
-    yield call(sendMessageApi,message,teamId,orgId,senderId,token)
+    yield call(sendMessageApi,message,teamId,orgId,senderId,token,parentId)
     yield put(moveChannelToTop(teamId))
   } catch (error) {
     console.log(error);
   }
 }
-export function sendMessageStart(message,teamId,orgId,senderId,token){
+export function sendMessageStart(message,teamId,orgId,senderId,token,parentId){
   return {
     type: Actions.SEND_MESSAGE_START,
-    message,teamId,orgId,senderId,token
+    message,teamId,orgId,senderId,token,parentId
   }
 }
 
