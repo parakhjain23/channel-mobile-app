@@ -34,8 +34,52 @@ const RenderChatCard = ({
     chat?.senderId == userInfoState?.user?.id
       ? 'You'
       : orgState?.userIdAndNameMapping[chat?.senderId];
-  console.log(chat,'from the chat screeen');
-  return (
+  return chat?.parentId !=null  ? <TouchableOpacity onLongPress={onLongPress}>
+      <View style={styles.repliedContainer}>
+      <View
+          style={[
+            styles.message,
+            {
+              alignSelf: FlexAlign,
+              borderWidth: 1,
+              borderColor: 'gray',
+              borderRadius: 10,
+              padding: 8,
+            },
+          ]}>
+          <Text>{chat?.parentMessage?.content}</Text>
+          <View style={styles.timeContainer}>
+            <Text style={styles.time}>
+              {date.getHours() + ':' + date.getMinutes()}
+            </Text>
+          </View>
+        </View>
+        <View style={[styles.senderName, { alignSelf: FlexAlign }]}>
+          <Text>{SenderName}</Text>
+        </View>
+      </View>
+      <View style={styles.messageContainer}>
+        <View
+          style={[
+            styles.message,
+            {
+              alignSelf: FlexAlign,
+              borderWidth: 1,
+              borderColor: 'gray',
+              borderRadius: 10,
+              padding: 8,
+            },
+          ]}>
+          <Text>{chat?.content}</Text>
+          <View style={styles.timeContainer}>
+            <Text style={styles.time}>
+              {date.getHours() + ':' + date.getMinutes()}
+            </Text>
+          </View>
+        </View>
+      </View>
+    </TouchableOpacity>
+    :
     <TouchableOpacity onLongPress={onLongPress}>
       {optionsVisible && (
         <View style={styles.optionsContainer}>
@@ -76,7 +120,6 @@ const RenderChatCard = ({
         </View>
       </View>
     </TouchableOpacity>
-  );
 };
 const ChatScreen = ({
   route,
