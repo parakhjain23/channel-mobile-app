@@ -13,7 +13,6 @@ const RenderChatCard = ({chat, userInfoState, orgState ,deleteMessageAction}) =>
   const onLongPress = () => {
     setOptionsVisible(true);
   };
-
   const date = new Date(chat.updatedAt);
   const FlexAlign =
     chat?.senderId == userInfoState?.user?.id ? 'flex-end' : 'flex-start';
@@ -21,7 +20,52 @@ const RenderChatCard = ({chat, userInfoState, orgState ,deleteMessageAction}) =>
     chat?.senderId == userInfoState?.user?.id
       ? 'You'
       : orgState?.userIdAndNameMapping[chat?.senderId];
-  return (
+  return chat?.isRepliedMessage ? <TouchableOpacity onLongPress={onLongPress}>
+      <View style={styles.repliedContainer}>
+      <View
+          style={[
+            styles.message,
+            {
+              alignSelf: FlexAlign,
+              borderWidth: 1,
+              borderColor: 'gray',
+              borderRadius: 0,
+              padding: 5,
+            },
+          ]}>
+          <Text>{chat?.parentMessage?.content}</Text>
+          <View style={styles.timeContainer}>
+            <Text style={styles.time}>
+              {date.getHours() + ':' + date.getMinutes()}
+            </Text>
+          </View>
+        </View>
+        <View style={[styles.senderName, { alignSelf: FlexAlign }]}>
+          <Text>{SenderName}</Text>
+        </View>
+      </View>
+      <View style={styles.messageContainer}>
+        <View
+          style={[
+            styles.message,
+            {
+              alignSelf: FlexAlign,
+              borderWidth: 1,
+              borderColor: 'gray',
+              borderRadius: 10,
+              padding: 8,
+            },
+          ]}>
+          <Text>{chat?.content}</Text>
+          <View style={styles.timeContainer}>
+            <Text style={styles.time}>
+              {date.getHours() + ':' + date.getMinutes()}
+            </Text>
+          </View>
+        </View>
+      </View>
+    </TouchableOpacity>
+    :
     <TouchableOpacity onLongPress={onLongPress}>
       {optionsVisible && (
         <View style={styles.optionsContainer}>
@@ -54,29 +98,7 @@ const RenderChatCard = ({chat, userInfoState, orgState ,deleteMessageAction}) =>
         </View>
       </View>
     </TouchableOpacity>
-    // <TouchableOpacity>
-    //   <View style={{margin: 10}}>
-    //   <View style={{alignSelf: FlexAlign}}>
-    //     <Text>{SenderName}</Text>
-    //   </View>
-    //   <View
-    //     style={{
-    //       width: '70%',
-    //       flexDirection: 'row',
-    //       alignSelf: FlexAlign,
-    //       justifyContent:'space-between',
-    //       borderWidth: 1,
-    //       borderColor: 'gray',
-    //       borderRadius: 10,
-    //       padding: 8,
-    //       flexWrap:'wrap'
-    //     }}>
-    //     <Text>{(chat?.content)}</Text>
-    //     <View style={{justifyContent:'flex-end'}}><Text style={{fontSize:10}}>{date.getHours() +':'+ date.getMinutes()} </Text></View>
-    //   </View>
-    // </View>
-    // </TouchableOpacity>
-  );
+
 };
 const ChatScreen = ({
   route,
@@ -169,6 +191,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);
 const styles = StyleSheet.create({
   messageContainer: {
     margin: 10,
+  },
+  repliedContainer:{
+    margin: 5,
   },
   senderName: {
     alignSelf: 'flex-start',

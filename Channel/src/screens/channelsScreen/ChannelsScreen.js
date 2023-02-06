@@ -57,7 +57,7 @@ const ChannelsScreen = props => {
   const changeText = value => {
     setsearchValue(value);
   };
-
+console.log("-==-=-=-=",props?.userInfoState?.user?.id);
   const navigation = useNavigation();
   return (
     <View style={{flex: 1, padding: 5}}>
