@@ -22,11 +22,13 @@ const RenderChatCard = ({
   userInfoState,
   orgState,
   deleteMessageAction,
+  chatState
 }) => {
   const [optionsVisible, setOptionsVisible] = useState(false);
   const onLongPress = () => {
     setOptionsVisible(true);
   };
+  const parentId = chat?.parentId
   const date = new Date(chat.updatedAt);
   const FlexAlign =
     chat?.senderId == userInfoState?.user?.id ? 'flex-end' : 'flex-start';
@@ -63,9 +65,9 @@ const RenderChatCard = ({
               flexDirection: 'column',
             },
           ]}>
-          {chat?.parentId != null && (
+          {parentId != null && (
             <View>
-              <Text>{chat?.parentMessage?.content}</Text>
+              <Text>{chatState?.data[chat.teamId]?.parentMessages[parentId]?.content}</Text>
             </View>
           )}
           <Text>{chat?.content}</Text>
@@ -113,6 +115,7 @@ const ChatScreen = ({
               userInfoState={userInfoState}
               orgState={orgState}
               deleteMessageAction={deleteMessageAction}
+              chatState={chatState}
             />
           )}
           inverted

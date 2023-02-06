@@ -9,18 +9,28 @@ export function chatReducer(state = initialState, action) {
     case Actions.FETCH_CHAT_START:
       return {
         ...state,
-        data: {...state.data, [action.teamId]: {isloading: true, messages: [], parentMessages: []}},
+        data: {...state.data, [action.teamId]: {isloading: true, messages: []}},
       };
     case Actions.FETCH_CHAT_SUCCESS:
+      var parMessages = {}
+      var parentId = null
+      for(let i = 0 ; i < action?.parentMessages.length ; i++ ){
+        parentId = action?.parentMessages[i]?._id
+        parMessages[parentId] = action?.parentMessages[i]
+      }
+
       return {
         ...state,
         data: {
           ...state.data,
-          [action.teamId]: {messages: action?.messages, parentMessages: action?.parentMessages , isloading: false , apiCalled : true},
+          [action.teamId]: {messages: action?.messages, parentMessages: parMessages , isloading: false , apiCalled : true},
         },
       };
     case Actions.ADD_NEW_MESSAGE:
-      console.log(action,"this is action");
+      var parMessages =  {}
+      var parentId = null
+      parentId = action?.parentMessage?._id
+      parMessages[parentId] = action?.parentMessage
       return {
         ...state,
         data: {
@@ -29,9 +39,10 @@ export function chatReducer(state = initialState, action) {
             messages: state?.data[action?.teamId]?.messages
               ? [action?.message, ...state?.data[action?.teamId]?.messages]
               : [action?.message],  
-            parentMessages: state?.data[action?.teamId]?.parentMessages 
-              ? [action?.parentMessage,...state?.data[action?.teamId]?.parentMessages]
-              : [action?.parentMessage]
+            parentMessages: state?.data[action.teamId]?.parentMessages == undefined ? 
+               parMessages : 
+               { ...state.data[action.teamId].parentMessages, [parentId]: parMessages[parentId] }
+             
           },
         },
       };
