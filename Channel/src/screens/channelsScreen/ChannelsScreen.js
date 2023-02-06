@@ -64,14 +64,19 @@ const RenderChannels = ({item, navigation, props}) => {
 const CreateChannelModel = ({modalizeRef, props}) => {
   const [title, setTitle] = useState('');
   const [channelType, setChannelType] = useState('PUBLIC');
-  const {TextInputRef} = useRef(false)
+  const {TextInputRef} = useRef(false);
   return (
     <Modalize
       ref={modalizeRef}
       modalStyle={{top: '12%'}}
       childrenStyle={{flex: 1}}>
       <View style={{margin: 12}}>
-        <TextInput ref={TextInputRef} label={'Title'} mode={'outlined'} onChangeText={setTitle} />
+        <TextInput
+          ref={TextInputRef}
+          label={'Title'}
+          mode={'outlined'}
+          onChangeText={setTitle}
+        />
         <View
           style={{
             flexDirection: 'row',
@@ -147,16 +152,20 @@ const ChannelsScreen = props => {
             style={{
               position: 'absolute',
               width: '100%',
-              bottom: 100,
+              bottom: 80,
               right: 0,
               alignItems: 'flex-end',
             }}>
             <FAB
               onPress={onOpen}
-              color={'grey'}
+              color={'black'}
+              animated={true}
               uppercase={false}
-              style={{}}
-              label={`new channel`}
+              style={{
+                backgroundColor: '#4db8ff',
+                margin:10
+              }}
+              label={`New\nChannel`}
             />
           </View>
         </>
