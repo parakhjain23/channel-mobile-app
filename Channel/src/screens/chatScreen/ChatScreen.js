@@ -10,7 +10,6 @@ import { deleteMessageStart } from '../../redux/actions/chat/DeleteChatAction';
 
 const RenderChatCard = ({chat, userInfoState, orgState ,deleteMessageAction}) => {
   const [optionsVisible, setOptionsVisible] = useState(false);
-
   const onLongPress = () => {
     setOptionsVisible(true);
   };

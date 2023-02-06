@@ -33,12 +33,9 @@ export function chatReducer(state = initialState, action) {
       };
     
     case Actions.DELETE_MESSAGE_SUCCESS:
-      console.log("inside reducer",action);
       for(let i=0;i<state?.data[action.teamId]?.messages?.length;i++){
-        console.log("inside loop");
         console.log(state?.data[action.teamId]?.messages[i]._id );
         if(state?.data[action.teamId]?.messages[i]._id == action.msgIdToDelete){
-          console.log("inside if condition");
           state?.data[action.teamId]?.messages?.splice(i,1)
           break;
         }

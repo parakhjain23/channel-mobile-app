@@ -42,7 +42,6 @@ export function createSocket(accessToken, orgId) {
 };
 
 export function closeSocket(){
-  console.log("inside close Socket");
  if(socket.connected()){
   socket.off()
   socket.close()
