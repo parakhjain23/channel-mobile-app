@@ -4,7 +4,7 @@ import {
   Button,
   FlatList,
   Text,
-  TextInput,
+  // TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -13,8 +13,10 @@ import {getChannelsStart} from '../../redux/actions/channels/ChannelsAction';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SearchBox from '../../components/searchBox';
 import {useNavigation} from '@react-navigation/native';
-import {FAB} from 'react-native-paper';
+import {FAB, RadioButton, TextInput} from 'react-native-paper';
 import {Modalize} from 'react-native-modalize';
+import {CHANNEL_TYPE} from '../../constants/Constants';
+import { createNewChannelStart } from '../../redux/actions/channels/CreateNewChannelAction';
 
 const RenderChannels = ({item, navigation, props}) => {
   const Name =
@@ -58,6 +60,37 @@ const RenderChannels = ({item, navigation, props}) => {
     </TouchableOpacity>
   );
 };
+const CreateChannelModel = ({modalizeRef,props}) => {
+  const [title, setTitle] = React.useState('');
+  const [channelType, setChannelType] = useState('PUBLIC');
+  return (
+    <Modalize
+      ref={modalizeRef}
+      modalStyle={{top: '12%'}}
+      childrenStyle={{flex: 1}}>
+      <View style={{margin: 12}}>
+        <TextInput label={'Title'} mode={'outlined'} onChangeText={setTitle}/>
+        <View style={{flexDirection: 'row', justifyContent: 'space-around',flexWrap:'wrap',marginVertical:20}}>
+          {CHANNEL_TYPE?.map((item, index) => {
+            return (
+              <TouchableOpacity
+                key={index}
+                style={{flexDirection: 'row', alignItems: 'center'}}
+                onPress={() => setChannelType(item?.type)}>
+                <Text>{item?.name}</Text>
+                <RadioButton
+                  value={item?.type}
+                  status={channelType === item?.type ? 'checked' : 'unchecked'}
+                />
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      </View>
+      <Button title="Create Channel" onPress={()=>{props.createNewChannelAction(props?.userInfoState?.accessToken,props?.orgsState?.currentOrgId, title,channelType);modalizeRef?.current?.close()}}/>
+    </Modalize>
+  );
+};
 const ChannelsScreen = props => {
   const [searchValue, setsearchValue] = useState('');
   const changeText = value => {
@@ -68,43 +101,7 @@ const ChannelsScreen = props => {
   const onOpen = () => {
     modalizeRef.current?.open();
   };
-  const CreateChannelModel = ({modalizeRef}) => {
-    const [text, onChangeText] = React.useState('');
-    return (
-      <Modalize ref={modalizeRef} modalStyle={{top: '12%'}}>
-        <View style={{margin: 12,alignContent:'center'}}>
-          <Text>Title*</Text>
-          <TextInput
-            style={{
-              height: 40,
-              borderWidth: 1,
-              marginVertical: 10,
-              padding: 10,
-              borderRadius: 10,
-            }}
-            onChangeText={onChangeText}
-            value={text}
-            placeholder="Title"
-            keyboardType="default"
-          />
-          <TextInput
-            style={{
-              height: 40,
-              borderWidth: 1,
-              marginVertical: 10,
-              padding: 10,
-              borderRadius: 10,
-            }}
-            onChangeText={onChangeText}
-            value={text}
-            placeholder="Title"
-            keyboardType="default"
-          />
-        </View>
-        <Button title='Create Channel'/>
-      </Modalize>
-    );
-  };
+ 
   const navigation = useNavigation();
   return (
     <View style={{flex: 1, padding: 5}}>
@@ -145,7 +142,7 @@ const ChannelsScreen = props => {
           </View>
         </>
       )}
-      <CreateChannelModel modalizeRef={modalizeRef} />
+      <CreateChannelModel modalizeRef={modalizeRef} props={props} />
     </View>
   );
 };
@@ -158,6 +155,7 @@ const mapDispatchToProps = dispatch => {
   return {
     getChannelsStartAction: (token, orgId, userId) =>
       dispatch(getChannelsStart(token, orgId, userId)),
+    createNewChannelAction: (token,orgId,title,channelType) => dispatch(createNewChannelStart(token,orgId,title,channelType))
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelsScreen);

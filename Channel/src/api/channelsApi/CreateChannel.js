@@ -1,5 +1,6 @@
-export const createChannel = async (token,orgId,channelName) => {
+export const createChannel = async (token,orgId,channelName,channelType) => {
   try {
+    // console.log('in create channel api', token,orgId,channelName,channelType);
     var response = await fetch('https://api.intospace.io/chat/team', {
       method: 'POST',
       headers: {
@@ -8,13 +9,13 @@ export const createChannel = async (token,orgId,channelName) => {
       },
       body: JSON.stringify({
         requestId: '123456781',
-        type: 'PRIVATE',
+        type: channelType,
         orgId: orgId,
         name: channelName,
       }),
     });
     var result = await response.json();
-    return result?.orgs;
+    return result
   } catch (error) {
     console.log(error);
   }

@@ -31,7 +31,9 @@ const initialState = {
           }
         }  
         return {...state, channels : state?.channels}  
-
+      
+        case Actions.CREATE_NEW_CHANNEL_SUCCESS:
+          return {...state, channels: [action.payload,...state?.channels]}
       default:
         return state;
     }
