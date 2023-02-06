@@ -176,6 +176,7 @@ const ChatScreen = ({
               );
               onChangeMessage('');
               setreplyOnMessage(false)
+              setrepliedMsgDetails(null)
             }}
           />
         </View>
