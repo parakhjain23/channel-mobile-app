@@ -9,17 +9,18 @@ export function chatReducer(state = initialState, action) {
     case Actions.FETCH_CHAT_START:
       return {
         ...state,
-        data: {...state.data, [action.teamId]: {isloading: true, messages: []}},
+        data: {...state.data, [action.teamId]: {isloading: true, messages: [], parentMessages: []}},
       };
     case Actions.FETCH_CHAT_SUCCESS:
       return {
         ...state,
         data: {
           ...state.data,
-          [action.teamId]: {messages: action?.payload, isloading: false , apiCalled : true},
+          [action.teamId]: {messages: action?.messages, parentMessages: action?.parentMessages , isloading: false , apiCalled : true},
         },
       };
     case Actions.ADD_NEW_MESSAGE:
+      console.log(action,"this is action");
       return {
         ...state,
         data: {
@@ -28,6 +29,9 @@ export function chatReducer(state = initialState, action) {
             messages: state?.data[action?.teamId]?.messages
               ? [action?.message, ...state?.data[action?.teamId]?.messages]
               : [action?.message],  
+            parentMessages: state?.data[action?.teamId]?.parentMessages 
+              ? [action?.parentMessage,...state?.data[action?.teamId]?.parentMessages]
+              : [action?.parentMessage]
           },
         },
       };

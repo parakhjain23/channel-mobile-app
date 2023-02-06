@@ -24,7 +24,8 @@ export function getChatsSuccess(data,teamId){
   return {
     type: Actions.FETCH_CHAT_SUCCESS,
     teamId: teamId,
-    payload: data
+    messages: data.messages,
+    parentMessages : data.parentMessages
   }
 }
 export function getChatsError(){
@@ -51,7 +52,8 @@ export function sendMessageStart(message,teamId,orgId,senderId,token){
 export function addNewMessage(message){
   return {
     type: Actions.ADD_NEW_MESSAGE,
-    message,
     teamId: message?.teamId,
+    message : message,
+    parentMessage : message?.parentMessage
   }
 }
