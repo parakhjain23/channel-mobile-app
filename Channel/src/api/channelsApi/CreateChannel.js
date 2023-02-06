@@ -1,3 +1,5 @@
+import { Alert } from "react-native";
+
 export const createChannel = async (token,orgId,channelName,channelType) => {
   try {
     // console.log('in create channel api', token,orgId,channelName,channelType);
@@ -15,6 +17,10 @@ export const createChannel = async (token,orgId,channelName,channelType) => {
       }),
     });
     var result = await response.json();
+    if(result?.name=="Conflict"){
+      Alert.alert("Channel Already exits");
+      return;
+    }
     return result
   } catch (error) {
     console.log(error);

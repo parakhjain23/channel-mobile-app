@@ -34,52 +34,7 @@ const RenderChatCard = ({
     chat?.senderId == userInfoState?.user?.id
       ? 'You'
       : orgState?.userIdAndNameMapping[chat?.senderId];
-  return chat?.parentId !=null  ? <TouchableOpacity onLongPress={onLongPress}>
-      <View style={styles.repliedContainer}>
-      <View
-          style={[
-            styles.message,
-            {
-              alignSelf: FlexAlign,
-              borderWidth: 1,
-              borderColor: 'gray',
-              borderRadius: 10,
-              padding: 8,
-            },
-          ]}>
-          <Text>{chat?.parentMessage?.content}</Text>
-          <View style={styles.timeContainer}>
-            <Text style={styles.time}>
-              {date.getHours() + ':' + date.getMinutes()}
-            </Text>
-          </View>
-        </View>
-        <View style={[styles.senderName, { alignSelf: FlexAlign }]}>
-          <Text>{SenderName}</Text>
-        </View>
-      </View>
-      <View style={styles.messageContainer}>
-        <View
-          style={[
-            styles.message,
-            {
-              alignSelf: FlexAlign,
-              borderWidth: 1,
-              borderColor: 'gray',
-              borderRadius: 10,
-              padding: 8,
-            },
-          ]}>
-          <Text>{chat?.content}</Text>
-          <View style={styles.timeContainer}>
-            <Text style={styles.time}>
-              {date.getHours() + ':' + date.getMinutes()}
-            </Text>
-          </View>
-        </View>
-      </View>
-    </TouchableOpacity>
-    :
+  return (
     <TouchableOpacity onLongPress={onLongPress}>
       {optionsVisible && (
         <View style={styles.optionsContainer}>
@@ -105,11 +60,13 @@ const RenderChatCard = ({
               borderColor: 'gray',
               borderRadius: 10,
               padding: 8,
-              flexDirection:'column'
+              flexDirection: 'column',
             },
           ]}>
-          {chat?.isRepliedMessage && (
-            <View style={{borderWidth:1, borderColor:'gray', borderRadius:10,flex:1}}><Text>{chat?.parentMessage?.content}</Text></View>
+          {chat?.parentId != null && (
+            <View>
+              <Text>{chat?.parentMessage?.content}</Text>
+            </View>
           )}
           <Text>{chat?.content}</Text>
           <View style={styles.timeContainer}>
@@ -120,6 +77,7 @@ const RenderChatCard = ({
         </View>
       </View>
     </TouchableOpacity>
+  );
 };
 const ChatScreen = ({
   route,

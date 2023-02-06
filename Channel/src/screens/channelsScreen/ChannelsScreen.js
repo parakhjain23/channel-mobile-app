@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Button,
   FlatList,
   Text,
@@ -16,7 +17,7 @@ import {useNavigation} from '@react-navigation/native';
 import {FAB, RadioButton, TextInput} from 'react-native-paper';
 import {Modalize} from 'react-native-modalize';
 import {CHANNEL_TYPE} from '../../constants/Constants';
-import { createNewChannelStart } from '../../redux/actions/channels/CreateNewChannelAction';
+import {createNewChannelStart} from '../../redux/actions/channels/CreateNewChannelAction';
 
 const RenderChannels = ({item, navigation, props}) => {
   const Name =
@@ -60,17 +61,24 @@ const RenderChannels = ({item, navigation, props}) => {
     </TouchableOpacity>
   );
 };
-const CreateChannelModel = ({modalizeRef,props}) => {
-  const [title, setTitle] = React.useState('');
+const CreateChannelModel = ({modalizeRef, props}) => {
+  const [title, setTitle] = useState('');
   const [channelType, setChannelType] = useState('PUBLIC');
+  const {TextInputRef} = useRef(false)
   return (
     <Modalize
       ref={modalizeRef}
       modalStyle={{top: '12%'}}
       childrenStyle={{flex: 1}}>
       <View style={{margin: 12}}>
-        <TextInput label={'Title'} mode={'outlined'} onChangeText={setTitle}/>
-        <View style={{flexDirection: 'row', justifyContent: 'space-around',flexWrap:'wrap',marginVertical:20}}>
+        <TextInput ref={TextInputRef} label={'Title'} mode={'outlined'} onChangeText={setTitle} />
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            flexWrap: 'wrap',
+            marginVertical: 20,
+          }}>
           {CHANNEL_TYPE?.map((item, index) => {
             return (
               <TouchableOpacity
@@ -87,7 +95,18 @@ const CreateChannelModel = ({modalizeRef,props}) => {
           })}
         </View>
       </View>
-      <Button title="Create Channel" onPress={()=>{props.createNewChannelAction(props?.userInfoState?.accessToken,props?.orgsState?.currentOrgId, title,channelType);modalizeRef?.current?.close()}}/>
+      <Button
+        title="Create Channel"
+        onPress={() => {
+          props.createNewChannelAction(
+            props?.userInfoState?.accessToken,
+            props?.orgsState?.currentOrgId,
+            title,
+            channelType,
+          );
+          modalizeRef?.current?.close();
+        }}
+      />
     </Modalize>
   );
 };
@@ -101,7 +120,7 @@ const ChannelsScreen = props => {
   const onOpen = () => {
     modalizeRef.current?.open();
   };
- 
+
   const navigation = useNavigation();
   return (
     <View style={{flex: 1, padding: 5}}>
@@ -155,7 +174,8 @@ const mapDispatchToProps = dispatch => {
   return {
     getChannelsStartAction: (token, orgId, userId) =>
       dispatch(getChannelsStart(token, orgId, userId)),
-    createNewChannelAction: (token,orgId,title,channelType) => dispatch(createNewChannelStart(token,orgId,title,channelType))
+    createNewChannelAction: (token, orgId, title, channelType) =>
+      dispatch(createNewChannelStart(token, orgId, title, channelType)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelsScreen);
