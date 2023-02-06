@@ -34,7 +34,6 @@ export function chatReducer(state = initialState, action) {
     
     case Actions.DELETE_MESSAGE_SUCCESS:
       for(let i=0;i<state?.data[action.teamId]?.messages?.length;i++){
-        console.log(state?.data[action.teamId]?.messages[i]._id );
         if(state?.data[action.teamId]?.messages[i]._id == action.msgIdToDelete){
           state?.data[action.teamId]?.messages?.splice(i,1)
           break;

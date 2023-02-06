@@ -49,7 +49,6 @@ export function sendMessageStart(message,teamId,orgId,senderId,token){
 }
 
 export function addNewMessage(message){
-  console.log(message,"=-=-=-=-=-=-");
   return {
     type: Actions.ADD_NEW_MESSAGE,
     message,

@@ -17,17 +17,16 @@ const SocketService = socket => {
     store.dispatch(moveChannelToTop(newData?.teamId));
   });
   socket.on('chat/message patched', data => {
-    console.log("someone reply on message",data);
     if (data?.deleted) {
       store.dispatch(deleteMessageSuccess(data));
     }
   });
   socket.on('chat/message updated', data => {
-    console.log("A USER updated A MESSAGE",data);
     if (data?.deleted) {
       store.dispatch(deleteMessageSuccess(data));
     }
   });
+
   socket.on('chat/team created',data=>{
     store.dispatch(createNewChannelSuccess(data))
   })
