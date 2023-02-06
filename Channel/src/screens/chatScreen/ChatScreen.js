@@ -20,7 +20,7 @@ const RenderChatCard = ({chat, userInfoState, orgState ,deleteMessageAction}) =>
     chat?.senderId == userInfoState?.user?.id
       ? 'You'
       : orgState?.userIdAndNameMapping[chat?.senderId];
-  return chat?.isRepliedMessage ? <TouchableOpacity onLongPress={onLongPress}>
+  return chat?.parentId !=null  ? <TouchableOpacity onLongPress={onLongPress}>
       <View style={styles.repliedContainer}>
       <View
           style={[
@@ -29,8 +29,8 @@ const RenderChatCard = ({chat, userInfoState, orgState ,deleteMessageAction}) =>
               alignSelf: FlexAlign,
               borderWidth: 1,
               borderColor: 'gray',
-              borderRadius: 0,
-              padding: 5,
+              borderRadius: 10,
+              padding: 8,
             },
           ]}>
           <Text>{chat?.parentMessage?.content}</Text>

@@ -6,14 +6,8 @@ import {store} from '../redux/Store';
 const SocketService = socket => {
   socket.on('chat/message created', data => {
     console.log("chat message created",data);
-    var newData = {...data}
-    if(newData?.parentId == null){
-      newData.isRepliedMessage = false
-    }else{
-      newData.isRepliedMessage = true
-    }
-    store.dispatch(addNewMessage(newData));
-    store.dispatch(moveChannelToTop(newData?.teamId));
+    store.dispatch(addNewMessage(data));
+    store.dispatch(moveChannelToTop(data?.teamId));
   });
   socket.on('chat/message patched', data => {
     console.log("someone reply on message",data);
