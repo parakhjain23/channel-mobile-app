@@ -17,7 +17,8 @@ export function getChatsStart(teamId,token,skip){
   return {
     type: Actions.FETCH_CHAT_START,
     teamId,
-    token,skip
+    token,
+    skip
   }
 }
 export function getChatsSuccess(data,teamId){

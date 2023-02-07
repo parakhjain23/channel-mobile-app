@@ -132,10 +132,11 @@ const ChatScreen = ({
       chatState?.data[teamId]?.messages == [] ||
       !chatState?.data[teamId]?.apiCalled
     ) {
+      console.log("=-=-=-=-=-");
       fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
     }
   }, []);
-  console.log(chatState?.data[teamId]?.messages.length);
+  console.log(chatState?.data[teamId]?.parentMessages,"=-=-=-=-");
   return (
     <View style={{flex: 1}}>
       <View style={{flex: 7}}>

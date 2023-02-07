@@ -10,50 +10,49 @@ export function chatReducer(state = initialState, action) {
       return {
         ...state,
         data: {
-          ...state.data,
+          ...state?.data,
           [action.teamId]: {
             isloading: true,
             messages: state?.data[action?.teamId]?.messages
               ? state?.data[action?.teamId]?.messages
               : [],
+            parentMessages: state?.data[action?.teamId]?.parentMessages ?
+              {...state?.data?.[action?.teamId]?.parentMessages} : 
+              {}  
           },
         },
       };
 
     case Actions.FETCH_CHAT_SUCCESS:
-      console.log(action?.parentMessages,'pare');
-      var parMessages = {};
+      var tempParentMessages = {};
       var parentId = null;
-      for (let i = 0; i < action?.parentMessages.length; i++) {
+      for (let i = 0; i < action?.parentMessages?.length; i++) {
         parentId = action?.parentMessages[i]?._id;
-        parMessages[parentId] = action?.parentMessages[i];
+        tempParentMessages[parentId] = action?.parentMessages[i];
       }
       return {
         ...state,
         data: {
-          ...state.data,
+          ...state?.data,
           [action.teamId]: {
             messages: [
-              ...state?.data[action.teamId]?.messages,
+              ...state?.data[action?.teamId]?.messages,
               ...action?.messages,
             ],
-            parentMessages:
-              state?.data[action.teamId]?.parentMessages == undefined
-                ? parMessages
-                : {
-                    ...state.data[action.teamId].parentMessages,
-                    ...parMessages
-                  },
+            parentMessages:{
+                  ...state?.data[action?.teamId]?.parentMessages,
+                  ...tempParentMessages
+                },
             isloading: false,
             apiCalled: true,
           },
         },
       };
     case Actions.ADD_NEW_MESSAGE:
-      var parMessages = {};
+      var tempParentMessage = {};
       var parentId = null;
       parentId = action?.parentMessage?._id;
-      parMessages[parentId] = action?.parentMessage;
+      tempParentMessage[parentId] = action?.parentMessage;
       return {
         ...state,
         data: {
@@ -62,22 +61,19 @@ export function chatReducer(state = initialState, action) {
             messages: state?.data[action?.teamId]?.messages
               ? [action?.message, ...state?.data[action?.teamId]?.messages]
               : [action?.message],
-            parentMessages: state?.data[action.teamId]?.parentMessages == undefined ? {[action?.parentMessage?._id]:action?.parentMessage}
-            : {
-              ...state.data[action.teamId].parentMessages,[action?.parentMessage?._id]:action?.parentMessage
-            }
-            // parentMessages:
-            //   state?.data[action.teamId]?.parentMessages == undefined
-            //     ? parMessages
-            //     : {
-            //         ...state.data[action.teamId].parentMessages,
-            //         [parentId]: parMessages[parentId],
-            //       },
+            parentMessages:
+              state?.data[action?.teamId]?.parentMessages == undefined
+                ? tempParentMessage
+                : {
+                    ...state.data[action?.teamId]?.parentMessages,
+                    [parentId]: tempParentMessage[parentId],
+                  },
           },
         },
       };
 
     case Actions.DELETE_MESSAGE_SUCCESS:
+      console.log("=--=-");
       for (let i = 0; i < state?.data[action.teamId]?.messages?.length; i++) {
         if (
           state?.data[action.teamId]?.messages[i]._id == action.msgIdToDelete
