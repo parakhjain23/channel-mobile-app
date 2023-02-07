@@ -6,7 +6,7 @@ import {store} from '../redux/Store';
 
 const SocketService = socket => {
   socket.on('chat/message created', data => {
-    console.log("chat message created");
+    console.log("chat message created",data);
     store.dispatch(addNewMessage(data));
     store.dispatch(moveChannelToTop(data?.teamId));
   });
