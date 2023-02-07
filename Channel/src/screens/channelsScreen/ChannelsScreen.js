@@ -94,24 +94,30 @@ const CreateChannelModel = ({modalizeRef, props}) => {
                 <RadioButton
                   value={item?.type}
                   status={channelType === item?.type ? 'checked' : 'unchecked'}
+                  onPress={()=>setChannelType(item?.type)}
                 />
               </TouchableOpacity>
             );
           })}
         </View>
+        <Button
+          title="Create Channel"
+          onPress={() => {
+            if(title===''){
+              Alert.alert('Please Enter the title')
+            }
+            else{
+              props.createNewChannelAction(
+                props?.userInfoState?.accessToken,
+                props?.orgsState?.currentOrgId,
+                title,
+                channelType,
+              );
+              modalizeRef?.current?.close();
+            }
+          }}
+        />
       </View>
-      <Button
-        title="Create Channel"
-        onPress={() => {
-          props.createNewChannelAction(
-            props?.userInfoState?.accessToken,
-            props?.orgsState?.currentOrgId,
-            title,
-            channelType,
-          );
-          modalizeRef?.current?.close();
-        }}
-      />
     </Modalize>
   );
 };
@@ -121,7 +127,6 @@ const ChannelsScreen = props => {
     setsearchValue(value);
   };
   const modalizeRef = useRef(null);
-
   const onOpen = () => {
     modalizeRef.current?.open();
   };

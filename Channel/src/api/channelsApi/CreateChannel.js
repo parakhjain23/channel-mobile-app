@@ -17,9 +17,8 @@ export const createChannel = async (token,orgId,channelName,channelType) => {
       }),
     });
     var result = await response.json();
-    if(result?.name=="Conflict"){
-      Alert.alert("Channel Already exits");
-      return;
+    if(result?.name=='GeneralError' || result?.name=='Conflict'){
+      Alert.alert(result?.message)
     }
     return result
   } catch (error) {
