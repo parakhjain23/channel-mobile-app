@@ -72,7 +72,6 @@ const RenderChatCard = ({
               borderColor: 'gray',
               borderRadius: 10,
               padding: 8,
-              flexDirection: 'column',
             },
           ]}>
           {parentId != null && (
@@ -113,6 +112,7 @@ const ChatScreen = ({
       fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
     }
   }, []);
+  console.log(chatState?.data[teamId]?.messages.length);
   return (
     <View style={{flex: 1}}>
       <View style={{flex: 7}}>
@@ -133,6 +133,9 @@ const ChatScreen = ({
             />
           )}
           inverted
+          ListFooterComponent={<ActivityIndicator/>}
+          onEndReached={()=>{fetchChatsOfTeamAction(teamId,userInfoState?.accessToken,chatState?.data[teamId]?.messages.length)}}
+          onEndReachedThreshold={0.2}
           // contentContainerStyle={{ flexDirection: 'column-reverse' }}
         />
         {/* )} */}
@@ -191,8 +194,8 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => {
   return {
-    fetchChatsOfTeamAction: (teamId, token) =>
-      dispatch(getChatsStart(teamId, token)),
+    fetchChatsOfTeamAction: (teamId, token, skip) =>
+      dispatch(getChatsStart(teamId, token, skip)),
     sendMessageAction: (message, teamId, orgId, senderId, token, parentId) =>
       dispatch(sendMessageStart(message, teamId, orgId, senderId, token, parentId)),
     deleteMessageAction: (accessToken, msgId) =>

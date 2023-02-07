@@ -4,20 +4,20 @@ import { sendMessageApi } from '../../../api/messages/sendMessageApi';
 import * as Actions from '../../Enums';
 import { moveChannelToTop } from '../channels/ChannelsAction';
 
-export function* getChats({teamId,token}){
+export function* getChats({teamId,token,skip}){
   try {
-    var response = yield call(getMessagesOfTeamApi,teamId,token) 
+    var response = yield call(getMessagesOfTeamApi,teamId,token,skip) 
     yield put(getChatsSuccess(response,teamId))
   } catch (error) {
     console.log(error);
   }
 }
 
-export function getChatsStart(teamId,token){
+export function getChatsStart(teamId,token,skip){
   return {
     type: Actions.FETCH_CHAT_START,
     teamId,
-    token
+    token,skip
   }
 }
 export function getChatsSuccess(data,teamId){
