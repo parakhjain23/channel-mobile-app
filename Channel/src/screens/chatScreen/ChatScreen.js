@@ -102,6 +102,15 @@ const RenderChatCard = ({
     </TouchableOpacity>
   );
 };
+const ListFooterComponent = () => {
+  const [animate,setAnimate] = useState(true);
+  useEffect(()=>{
+    setTimeout(() => {
+      setAnimate(false);
+    }, 3000);
+  })
+  return <ActivityIndicator animating={animate} size={'small'}/>
+}
 const ChatScreen = ({
   route,
   userInfoState,
@@ -115,6 +124,8 @@ const ChatScreen = ({
   const [message, onChangeMessage] = React.useState(null);
   const [replyOnMessage, setreplyOnMessage] = useState(false)
   const [repliedMsgDetails, setrepliedMsgDetails] = useState('')
+  const skip = chatState?.data[teamId]?.messages.length!=undefined ? chatState?.data[teamId]?.messages.length : 0;
+
   useEffect(() => {
     if (
       chatState?.data[teamId]?.messages == undefined ||
@@ -145,8 +156,8 @@ const ChatScreen = ({
             />
           )}
           inverted
-          ListFooterComponent={<ActivityIndicator/>}
-          onEndReached={()=>{fetchChatsOfTeamAction(teamId,userInfoState?.accessToken,chatState?.data[teamId]?.messages.length)}}
+          ListFooterComponent={ListFooterComponent}
+          onEndReached={()=>{fetchChatsOfTeamAction(teamId,userInfoState?.accessToken,skip)}}
           onEndReachedThreshold={0.2}
           // contentContainerStyle={{ flexDirection: 'column-reverse' }}
         />

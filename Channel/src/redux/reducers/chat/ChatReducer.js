@@ -9,17 +9,25 @@ export function chatReducer(state = initialState, action) {
     case Actions.FETCH_CHAT_START:
       return {
         ...state,
-        data: {...state.data, [action.teamId]: {isloading: true, messages: []}},
+        data: {
+          ...state.data,
+          [action.teamId]: {
+            isloading: true,
+            messages: state?.data[action?.teamId]?.messages
+              ? state?.data[action?.teamId]?.messages
+              : [],
+          },
+        },
       };
 
     case Actions.FETCH_CHAT_SUCCESS:
+      console.log(action?.parentMessages,'pare');
       var parMessages = {};
       var parentId = null;
       for (let i = 0; i < action?.parentMessages.length; i++) {
         parentId = action?.parentMessages[i]?._id;
         parMessages[parentId] = action?.parentMessages[i];
       }
-      console.log('action', action.messages);
       return {
         ...state,
         data: {
@@ -29,7 +37,13 @@ export function chatReducer(state = initialState, action) {
               ...state?.data[action.teamId]?.messages,
               ...action?.messages,
             ],
-            parentMessages: parMessages,
+            parentMessages:
+              state?.data[action.teamId]?.parentMessages == undefined
+                ? parMessages
+                : {
+                    ...state.data[action.teamId].parentMessages,
+                    ...parMessages
+                  },
             isloading: false,
             apiCalled: true,
           },
@@ -48,13 +62,17 @@ export function chatReducer(state = initialState, action) {
             messages: state?.data[action?.teamId]?.messages
               ? [action?.message, ...state?.data[action?.teamId]?.messages]
               : [action?.message],
-            parentMessages:
-              state?.data[action.teamId]?.parentMessages == undefined
-                ? parMessages
-                : {
-                    ...state.data[action.teamId].parentMessages,
-                    [parentId]: parMessages[parentId],
-                  },
+            parentMessages: state?.data[action.teamId]?.parentMessages == undefined ? {[action?.parentMessage?._id]:action?.parentMessage}
+            : {
+              ...state.data[action.teamId].parentMessages,[action?.parentMessage?._id]:action?.parentMessage
+            }
+            // parentMessages:
+            //   state?.data[action.teamId]?.parentMessages == undefined
+            //     ? parMessages
+            //     : {
+            //         ...state.data[action.teamId].parentMessages,
+            //         [parentId]: parMessages[parentId],
+            //       },
           },
         },
       };
