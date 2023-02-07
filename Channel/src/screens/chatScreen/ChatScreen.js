@@ -17,6 +17,16 @@ import {
 } from '../../redux/actions/chat/ChatActions';
 import {deleteMessageStart} from '../../redux/actions/chat/DeleteChatAction';
 
+const AddRemoveJoinedMsg = ({senderName,content , orgState}) =>{
+  const id = content.split(" ").pop().slice(2, -2);
+  const name = orgState?.userIdAndNameMapping[id];
+  const activityName = content.split(" ")[0];
+  const textToShow = content == 'joined this channel' ? senderName +" "+ content : senderName +" "+ activityName +" "+ name
+  return <View style={[styles.messageContainer,{flexDirection:'row',justifyContent:'center'}]}>
+    <Text>{textToShow}</Text>
+  </View>
+}
+
 const RenderChatCard = ({
   chat,
   userInfoState,
@@ -59,7 +69,7 @@ const RenderChatCard = ({
           </TouchableOpacity>
         </View>
       )}
-      <View style={styles.messageContainer}>
+      {!chat?.isActivity ? <View style={styles.messageContainer}>
         <View style={[styles.senderName, {alignSelf: FlexAlign}]}>
           <Text>{SenderName}</Text>
         </View>
@@ -87,6 +97,8 @@ const RenderChatCard = ({
           </View>
         </View>
       </View>
+      : <AddRemoveJoinedMsg senderName={SenderName} content={chat?.content} orgState={orgState}/>
+    }
     </TouchableOpacity>
   );
 };
@@ -179,6 +191,7 @@ const ChatScreen = ({
               );
               onChangeMessage('');
               setreplyOnMessage(false)
+              setrepliedMsgDetails(null)
             }}
           />
         </View>

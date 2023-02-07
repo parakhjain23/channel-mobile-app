@@ -32,6 +32,7 @@ export function orgsReducer(state = initialState, action) {
       action?.allUser?.map((item)=>{
         idAndNameMap[item?.id] = `${item?.firstName+" "+item?.lastName}`
       })
+      console.log(idAndNameMap,"=--=-=-=-=-");
       return {...state, userIdAndNameMapping: idAndNameMap}  
     default:
       return state;
