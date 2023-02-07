@@ -147,6 +147,8 @@ const ChannelsScreen = props => {
                 props={props}
               />
             )}
+            keyboardDismissMode="on-drag"
+            keyboardShouldPersistTaps="always"
           />
           <SearchBox
             searchValue={searchValue}
