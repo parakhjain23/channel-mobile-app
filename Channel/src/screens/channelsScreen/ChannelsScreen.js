@@ -18,6 +18,7 @@ import {FAB, RadioButton, TextInput} from 'react-native-paper';
 import {Modalize} from 'react-native-modalize';
 import {CHANNEL_TYPE} from '../../constants/Constants';
 import {createNewChannelStart} from '../../redux/actions/channels/CreateNewChannelAction';
+import {getChannelsByQueryStart} from '../../redux/actions/channels/ChannelsByQueryAction';
 
 const RenderChannels = ({item, navigation, props}) => {
   const Name =
@@ -61,6 +62,38 @@ const RenderChannels = ({item, navigation, props}) => {
     </TouchableOpacity>
   );
 };
+const RenderSearchChannels = ({item,navigation,props}) => {
+  const Name = item?._source?.type=='U' ? item?._source?.displayName : item?._source?.title
+  return (
+    <TouchableOpacity
+      style={{
+        borderWidth: 0.5,
+        borderColor: 'gray',
+        borderRadius: 5,
+        height: 60,
+        width: '100%',
+        flexDirection: 'column',
+        justifyContent: 'center',
+      }}
+      onPress={() =>
+        navigation.navigate('Chat', {chatHeaderTitle: Name, teamId: item?._id})
+      }>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          padding: 13,
+        }}>
+        <Icon name="chevron-right" />
+        <Text style={{fontSize: 16, fontWeight: '400', color: 'black'}}>
+          {' '}
+          {Name}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
+}
 const CreateChannelModel = ({modalizeRef, props}) => {
   const [title, setTitle] = useState('');
   const [channelType, setChannelType] = useState('PUBLIC');
@@ -94,7 +127,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
                 <RadioButton
                   value={item?.type}
                   status={channelType === item?.type ? 'checked' : 'unchecked'}
-                  onPress={()=>setChannelType(item?.type)}
+                  onPress={() => setChannelType(item?.type)}
                 />
               </TouchableOpacity>
             );
@@ -103,10 +136,9 @@ const CreateChannelModel = ({modalizeRef, props}) => {
         <Button
           title="Create Channel"
           onPress={() => {
-            if(title===''){
-              Alert.alert('Please Enter the title')
-            }
-            else{
+            if (title === '') {
+              Alert.alert('Please Enter the title');
+            } else {
               props.createNewChannelAction(
                 props?.userInfoState?.accessToken,
                 props?.orgsState?.currentOrgId,
@@ -121,24 +153,56 @@ const CreateChannelModel = ({modalizeRef, props}) => {
     </Modalize>
   );
 };
+
 const ChannelsScreen = props => {
   const [searchValue, setsearchValue] = useState('');
+  const navigation = useNavigation();
+  const modalizeRef = useRef(null);
+  useEffect(() => {
+    if (searchValue != '') {
+      props.getChannelsByQueryStartAction(searchValue,props?.userInfoState?.user?.id,props?.orgsState?.currentOrgId);
+    }
+  }, [searchValue]);
   const changeText = value => {
     setsearchValue(value);
   };
-  const modalizeRef = useRef(null);
   const onOpen = () => {
     modalizeRef.current?.open();
   };
-
-  const navigation = useNavigation();
   return (
     <View style={{flex: 1, padding: 5}}>
       {props?.channelsState?.isLoading ? (
         <ActivityIndicator size={'large'} color={'black'} />
       ) : (
         <>
-          <FlatList
+          {searchValue != '' ? (
+            <FlatList
+              data={props?.channelsByQueryState?.channels}
+              renderItem={({item}) => (
+                <RenderSearchChannels
+                  item={item}
+                  navigation={navigation}
+                  props={props}
+                />
+              )}
+              keyboardDismissMode="on-drag"
+              keyboardShouldPersistTaps="always"
+            />
+          ) : (
+            <FlatList
+              data={props?.channelsState?.channels}
+              renderItem={({item}) => (
+                <RenderChannels
+                  item={item}
+                  navigation={navigation}
+                  props={props}
+                />
+              )}
+              keyboardDismissMode="on-drag"
+              keyboardShouldPersistTaps="always"
+            />
+          )}
+          {/* <FlatList
             data={props?.channelsState?.channels}
             renderItem={({item}) => (
               <RenderChannels
@@ -149,7 +213,7 @@ const ChannelsScreen = props => {
             )}
             keyboardDismissMode="on-drag"
             keyboardShouldPersistTaps="always"
-          />
+          /> */}
           <SearchBox
             searchValue={searchValue}
             changeText={changeText}
@@ -182,12 +246,15 @@ const ChannelsScreen = props => {
 const mapStateToProps = state => ({
   orgsState: state.orgsReducer,
   channelsState: state.channelsReducer,
+  channelsByQueryState: state.channelsByQueryReducer,
   userInfoState: state.userInfoReducer,
 });
 const mapDispatchToProps = dispatch => {
   return {
     getChannelsStartAction: (token, orgId, userId) =>
       dispatch(getChannelsStart(token, orgId, userId)),
+    getChannelsByQueryStartAction: (query, userToken, orgId) =>
+      dispatch(getChannelsByQueryStart(query, userToken, orgId)),
     createNewChannelAction: (token, orgId, title, channelType) =>
       dispatch(createNewChannelStart(token, orgId, title, channelType)),
   };

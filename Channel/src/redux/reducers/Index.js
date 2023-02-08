@@ -6,6 +6,7 @@ import { orgsReducer } from './orgs/GetOrgDetailsReducer';
 import {channelsReducer} from './channels/ChannelsReducer';
 import { chatReducer } from './chat/ChatReducer';
 import { socketReducer } from './socket/SocketReducer';
+import { channelsByQueryReducer } from './channels/ChannelsByQueryReducer';
 
 const persistConfig = {
   key: 'root',
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
   channelsReducer,
   chatReducer,
   socketReducer,
+  channelsByQueryReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
