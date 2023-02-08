@@ -11,6 +11,7 @@ const SocketService = socket => {
     store.dispatch(moveChannelToTop(data?.teamId));
   });
   socket.on('chat/message patched', data => {
+    console.log('deleted');
     if (data?.deleted) {
       store.dispatch(deleteMessageSuccess(data));
     }

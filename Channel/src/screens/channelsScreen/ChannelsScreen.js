@@ -7,7 +7,6 @@ import {
   Keyboard,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import {connect} from 'react-redux';
@@ -103,6 +102,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
   const [channelType, setChannelType] = useState('PUBLIC');
   return (
     <Modalize
+    avoidKeyboardLikeIOS={true}
       scrollViewProps={{keyboardShouldPersistTaps: 'always'}}
       ref={modalizeRef}
       modalStyle={{top: '12%'}}

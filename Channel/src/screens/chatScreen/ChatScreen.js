@@ -55,7 +55,7 @@ const RenderChatCard = ({
           <TouchableOpacity
             onPress={() => {
               setOptionsVisible(false),
-                deleteMessageAction(userInfoState?.accessToken, chat?._id);
+                deleteMessageAction(userInfoState?.accessToken,chat?._id);
             }}>
             <Text style={styles.option}>Delete</Text>
           </TouchableOpacity>

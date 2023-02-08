@@ -1,6 +1,6 @@
 export const deleteMessageApi= async(token,msgId)=>{
     try {
-        var response = await fetch(`https://api.intospace.io/chat/message/${msgId} `,{
+        var response = await fetch(`https://api.intospace.io/chat/message/${msgId}`,{
             method:'PATCH',
             headers: {
                 Authorization: token,
