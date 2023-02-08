@@ -4,9 +4,10 @@ import {
   Alert,
   Button,
   FlatList,
+  Keyboard,
   Text,
-  // TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import {connect} from 'react-redux';
@@ -62,8 +63,11 @@ const RenderChannels = ({item, navigation, props}) => {
     </TouchableOpacity>
   );
 };
-const RenderSearchChannels = ({item,navigation,props}) => {
-  const Name = item?._source?.type=='U' ? item?._source?.displayName : item?._source?.title
+const RenderSearchChannels = ({item, navigation, props}) => {
+  const Name =
+    item?._source?.type == 'U'
+      ? item?._source?.displayName
+      : '#'+item?._source?.title;
   return (
     <TouchableOpacity
       style={{
@@ -93,19 +97,18 @@ const RenderSearchChannels = ({item,navigation,props}) => {
       </View>
     </TouchableOpacity>
   );
-}
+};
 const CreateChannelModel = ({modalizeRef, props}) => {
   const [title, setTitle] = useState('');
   const [channelType, setChannelType] = useState('PUBLIC');
-  const {TextInputRef} = useRef(false);
   return (
     <Modalize
+      scrollViewProps={{keyboardShouldPersistTaps: 'always'}}
       ref={modalizeRef}
       modalStyle={{top: '12%'}}
       childrenStyle={{flex: 1}}>
       <View style={{margin: 12}}>
         <TextInput
-          ref={TextInputRef}
           label={'Title'}
           mode={'outlined'}
           onChangeText={setTitle}
@@ -160,7 +163,11 @@ const ChannelsScreen = props => {
   const modalizeRef = useRef(null);
   useEffect(() => {
     if (searchValue != '') {
-      props.getChannelsByQueryStartAction(searchValue,props?.userInfoState?.user?.id,props?.orgsState?.currentOrgId);
+      props.getChannelsByQueryStartAction(
+        searchValue,
+        props?.userInfoState?.user?.id,
+        props?.orgsState?.currentOrgId,
+      );
     }
   }, [searchValue]);
   const changeText = value => {
