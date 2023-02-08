@@ -158,9 +158,8 @@ const ChannelsScreen = props => {
           <View
             style={{
               position: 'absolute',
-              width: '100%',
               bottom: 80,
-              right: 0,
+              right: 10,
               alignItems: 'flex-end',
             }}>
             <FAB
@@ -170,7 +169,6 @@ const ChannelsScreen = props => {
               uppercase={false}
               style={{
                 backgroundColor: '#4db8ff',
-                margin:10
               }}
               label={`New\nChannel`}
             />
