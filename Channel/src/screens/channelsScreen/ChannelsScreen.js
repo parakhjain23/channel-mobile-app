@@ -103,13 +103,19 @@ const CreateChannelModel = ({modalizeRef, props}) => {
   const [channelType, setChannelType] = useState('PUBLIC');
   return (
     <Modalize
-      scrollViewProps={{keyboardShouldPersistTaps: 'always'}}
+    adjustToContentHeight
       ref={modalizeRef}
       modalStyle={{top: '12%'}}
-      childrenStyle={{flex: 1}}>
-      <View style={{margin: 12}}>
+      scrollViewProps={{keyboardShouldPersistTaps:'always'}}
+      >
+      <View style={{margin: 12,height:500}}>
         <TextInput
           label={'Title'}
+          mode={'outlined'}
+          onChangeText={setTitle}
+        />
+        <TextInput
+          label={'Members'}
           mode={'outlined'}
           onChangeText={setTitle}
         />
