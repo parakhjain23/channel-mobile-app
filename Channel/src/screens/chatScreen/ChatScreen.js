@@ -107,7 +107,7 @@ const ListFooterComponent = () => {
   useEffect(()=>{
     setTimeout(() => {
       setAnimate(false);
-    }, 3000);
+    }, 1000);
   })
   return <ActivityIndicator animating={animate} size={'small'}/>
 }
@@ -155,7 +155,7 @@ const ChatScreen = ({
             />
           )}
           inverted
-          ListFooterComponent={ListFooterComponent}
+          ListFooterComponent={chatState?.data[teamId]?.messages?.length>15 && ListFooterComponent}
           onEndReached={()=>{fetchChatsOfTeamAction(teamId,userInfoState?.accessToken,skip)}}
           onEndReachedThreshold={0.2}
           // contentContainerStyle={{ flexDirection: 'column-reverse' }}
