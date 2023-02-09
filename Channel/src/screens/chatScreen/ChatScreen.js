@@ -89,7 +89,12 @@ const ChatCard = ({
                   <Image source={{uri: image}} style={styles.avatar} />
                 )}
                 <View style={styles.textContainer}>
-                  <Text style={[styles.nameText,styles.text]}>{SenderName}</Text>
+                  <View style={{flexDirection: 'row',alignItems:'center'}}>
+                    <Text style={[styles.nameText, styles.text]}>
+                      {SenderName}
+                    </Text>
+                    <Text style={[styles.timeText, styles.text,{marginHorizontal:10}]}>{time}</Text>
+                  </View>
                   {parentId != null && (
                     <View style={styles.repliedContainer}>
                       <Text style={styles.text}>
@@ -100,9 +105,11 @@ const ChatCard = ({
                       </Text>
                     </View>
                   )}
-                  <Text style={[styles.messageText,styles.text]}>{chat?.content}</Text>
+                  <Text style={[styles.messageText, styles.text]}>
+                    {chat?.content}
+                  </Text>
                 </View>
-                <Text style={[styles.timeText,styles.text]}>{time}</Text>
+                {/* <Text style={[styles.timeText, styles.text]}>{time}</Text> */}
                 {sentByMe ? (
                   <Image source={{uri: image}} style={styles.avatar} />
                 ) : null}
@@ -213,7 +220,7 @@ const ChatScreen = ({
               <TouchableOpacity onPress={() => setreplyOnMessage(false)}>
                 <View style={styles.replyMessageInInput}>
                   <Text style={styles.text}>{repliedMsgDetails?.content}</Text>
-                  <MaterialIcons name='cancel' size={16} />
+                  <MaterialIcons name="cancel" size={16} />
                 </View>
               </TouchableOpacity>
             )}
@@ -273,7 +280,7 @@ const mapDispatchToProps = dispatch => {
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);
 const styles = StyleSheet.create({
-  text:{
+  text: {
     color: 'black',
   },
   inputWithReply: {
@@ -292,7 +299,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   replyMessageInInput: {
-    flexDirection:'row',
+    flexDirection: 'row',
     justifyContent: 'space-between',
     margin: 5,
     borderWidth: 0.25,
