@@ -62,7 +62,7 @@ const RenderChannels = ({item, navigation, props}) => {
     </TouchableOpacity>
   );
 };
-const RenderSearchChannels = ({item, navigation, props}) => {
+const RenderSearchChannels = ({item, navigation, props,setsearchValue}) => {
   const Name =
     item?._source?.type == 'U'
       ? item?._source?.title
@@ -90,6 +90,7 @@ const RenderSearchChannels = ({item, navigation, props}) => {
             item?._source?.userId,
           );
         }
+        setsearchValue('')
         navigation.navigate('Chat', {chatHeaderTitle: Name, teamId: teamId, reciverUserId: item?._source?.userId});
       }}>
       <View
@@ -281,6 +282,7 @@ const ChannelsScreen = props => {
                   item={item}
                   navigation={navigation}
                   props={props}
+                  setsearchValue={setsearchValue}
                 />
               )}
               keyboardDismissMode="on-drag"
