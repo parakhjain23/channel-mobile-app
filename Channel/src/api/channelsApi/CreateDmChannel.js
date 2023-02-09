@@ -1,6 +1,6 @@
 import { Alert } from "react-native";
 
-export const createChannel = async (token,orgId,channelName,channelType,userIds) => {
+export const createDmChannel = async (token,orgId,channelName,reciverUserId) => {
   try {
     var response = await fetch('https://api.intospace.io/chat/team', {
       method: 'POST',
@@ -10,10 +10,10 @@ export const createChannel = async (token,orgId,channelName,channelType,userIds)
       },
       body: JSON.stringify({
         requestId: '123456781',
-        type: channelType,
+        type: "DIRECT_MESSAGE",
         orgId: orgId,
         name: channelName,
-        userIds: userIds
+        userId: `${reciverUserId}`
       }),
     });
     var result = await response.json();

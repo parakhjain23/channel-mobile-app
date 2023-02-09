@@ -22,16 +22,18 @@ import {
 import {deleteMessageStart} from '../../redux/actions/chat/DeleteChatAction';
 
 const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
-  const id = content.split(' ').pop().slice(2, -2);
-  const name = orgState?.userIdAndNameMapping[id];
+  const id = content.match(/\{\{(.*?)\}\}/);
+  const extractedId = id ? id[1] : null;
+  const splitInput = content.split('}}');
+  const name = orgState?.userIdAndNameMapping[extractedId] +" "+  splitInput[1];;
   const activityName = content.split(' ')[0];
-  const textToShow =
+  const newContent =
     content == 'joined this channel'
       ? senderName + ' ' + content
       : senderName + ' ' + activityName + ' ' + name;
   return (
     <View style={[styles.actionText]}>
-      <Text style={styles.text}>{textToShow}</Text>
+      <Text style={styles.text}>{newContent}</Text>
     </View>
   );
 };
@@ -158,8 +160,12 @@ const ChatScreen = ({
   chatState,
   orgState,
   deleteMessageAction,
+  channelsState
 }) => {
-  const {teamId} = route.params;
+  var {teamId,reciverUserId} = route.params;
+  if(teamId == undefined){
+    teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId]
+  }
   const [message, onChangeMessage] = React.useState(null);
   const [replyOnMessage, setreplyOnMessage] = useState(false);
   const [repliedMsgDetails, setrepliedMsgDetails] = useState('');
@@ -180,9 +186,9 @@ const ChatScreen = ({
   return (
     <View style={{flex: 1}}>
       <View style={{flex: 7}}>
-        {/* {chatState?.data[teamId]?.isloading ? (
+        {teamId == undefined ? (
           <ActivityIndicator />
-        ) : ( */}
+        ) : (
         <FlatList
           data={chatState?.data[teamId]?.messages || []}
           renderItem={({item}) => (
@@ -207,7 +213,7 @@ const ChatScreen = ({
           onEndReachedThreshold={0.2}
           // contentContainerStyle={{ flexDirection: 'column-reverse' }}
         />
-        {/* )} */}
+        )} 
       </View>
       <View style={{margin: 10, justifyContent: 'center'}}>
         <View style={{flexDirection: 'row'}}>
@@ -265,6 +271,7 @@ const mapStateToProps = state => ({
   userInfoState: state.userInfoReducer,
   orgState: state.orgsReducer,
   chatState: state.chatReducer,
+  channelsState: state.channelsReducer,
 });
 const mapDispatchToProps = dispatch => {
   return {
