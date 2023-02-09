@@ -31,7 +31,7 @@ const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
       : senderName + ' ' + activityName + ' ' + name;
   return (
     <View style={[styles.actionText]}>
-      <Text>{textToShow}</Text>
+      <Text style={styles.text}>{textToShow}</Text>
     </View>
   );
 };
@@ -89,10 +89,10 @@ const ChatCard = ({
                   <Image source={{uri: image}} style={styles.avatar} />
                 )}
                 <View style={styles.textContainer}>
-                  <Text style={styles.nameText}>{SenderName}</Text>
+                  <Text style={[styles.nameText,styles.text]}>{SenderName}</Text>
                   {parentId != null && (
                     <View style={styles.repliedContainer}>
-                      <Text>
+                      <Text style={styles.text}>
                         {
                           chatState?.data[chat.teamId]?.parentMessages[parentId]
                             ?.content
@@ -100,9 +100,9 @@ const ChatCard = ({
                       </Text>
                     </View>
                   )}
-                  <Text style={styles.messageText}>{chat?.content}</Text>
+                  <Text style={[styles.messageText,styles.text]}>{chat?.content}</Text>
                 </View>
-                <Text style={styles.timeText}>{time}</Text>
+                <Text style={[styles.timeText,styles.text]}>{time}</Text>
                 {sentByMe ? (
                   <Image source={{uri: image}} style={styles.avatar} />
                 ) : null}
@@ -117,7 +117,7 @@ const ChatCard = ({
                           chat?._id,
                         );
                     }}>
-                    <Text>Delete</Text>
+                    <Text style={styles.text}>Delete</Text>
                   </TouchableOpacity>
                 )}
               </View>
@@ -212,7 +212,7 @@ const ChatScreen = ({
             {replyOnMessage && (
               <TouchableOpacity onPress={() => setreplyOnMessage(false)}>
                 <View style={styles.replyMessageInInput}>
-                  <Text>{repliedMsgDetails?.content}</Text>
+                  <Text style={styles.text}>{repliedMsgDetails?.content}</Text>
                   <MaterialIcons name='cancel' size={16} />
                 </View>
               </TouchableOpacity>
@@ -273,6 +273,9 @@ const mapDispatchToProps = dispatch => {
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);
 const styles = StyleSheet.create({
+  text:{
+    color: 'black',
+  },
   inputWithReply: {
     padding: 10,
   },
