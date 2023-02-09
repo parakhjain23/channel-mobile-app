@@ -21,10 +21,12 @@ import {
 import {deleteMessageStart} from '../../redux/actions/chat/DeleteChatAction';
 
 const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
-  const id = content.split(' ').pop().slice(2, -2);
-  const name = orgState?.userIdAndNameMapping[id];
+  const id = content.match(/\{\{(.*?)\}\}/);
+  const extractedId = id ? id[1] : null;
+  const splitInput = content.split('}}');
+  const name = orgState?.userIdAndNameMapping[extractedId] +" "+  splitInput[1];;
   const activityName = content.split(' ')[0];
-  const textToShow =
+  const newContent =
     content == 'joined this channel'
       ? senderName + ' ' + content
       : senderName + ' ' + activityName + ' ' + name;
@@ -34,7 +36,7 @@ const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
         styles.messageContainer,
         {flexDirection: 'row', justifyContent: 'center'},
       ]}>
-      <Text>{textToShow}</Text>
+      <Text>{newContent}</Text>
     </View>
   );
 };
