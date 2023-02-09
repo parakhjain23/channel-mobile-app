@@ -1,10 +1,13 @@
 export const getChannelsByQueryApi = async (query, userToken, orgId) => {
-  // console.log(query, userToken, orgId, 'in api');
+  console.log(query, userToken, orgId, 'in api');
   try {
     var response = await fetch(
       `https://delve-api.intospace.io/search/prod-space?query=${query}&API_KEY=TmkzBMbr3Z1eiLjMOQ0kqhqp4f0GVCzR1w&size=15&userToken=${userToken}`,
       {
         method: 'POST',
+        headers:{
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
           terms: {
             type: ['U','T'],
