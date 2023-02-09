@@ -4,6 +4,7 @@ import {
   Alert,
   FlatList,
   Image,
+  Keyboard,
   StyleSheet,
   Text,
   TextInput,
@@ -31,12 +32,8 @@ const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
       ? senderName + ' ' + content
       : senderName + ' ' + activityName + ' ' + name;
   return (
-    <View
-      style={[
-        styles.messageContainer,
-        {flexDirection: 'row', justifyContent: 'center'},
-      ]}>
-      <Text>{newContent}</Text>
+    <View style={[styles.actionText]}>
+      <Text>{textToShow}</Text>
     </View>
   );
 };
@@ -49,7 +46,7 @@ const ChatCard = ({
   chatState,
   setreplyOnMessage,
   setrepliedMsgDetails,
-  // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
+  image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
   const [optionsVisible, setOptionsVisible] = useState(false);
   const swipeableRef = useRef(null);
@@ -78,50 +75,57 @@ const ChatCard = ({
   };
   return (
     <>
-      {optionsVisible && (
-        <View style={styles.optionsContainer}>
-          <TouchableOpacity
-            onPress={() => {
-              setOptionsVisible(false),
-                deleteMessageAction(userInfoState?.accessToken, chat?._id);
-            }}>
-            <Text style={styles.option}>Delete</Text>
-          </TouchableOpacity>
-        </View>
-      )}
       {!chat?.isActivity ? (
-          <GestureHandlerRootView><Swipeable
-          ref={swipeableRef}
-          renderLeftActions={LeftSwipeActions}
-          onSwipeableLeftOpen={swipeFromLeftOpen}>
-          <View
-            style={[
-              styles.container,
-              sentByMe ? styles.sentByMe : styles.received,
-            ]}>
-            {/* {sentByMe ? null : (
-        <Image source={{uri: image}} style={styles.avatar} />
-      )} */}
-            <View style={styles.textContainer}>
-              <Text style={styles.nameText}>{SenderName}</Text>
-              {parentId != null && (
-                <View style={styles.repliedContainer}>
-                  <Text>
-                    {
-                      chatState?.data[chat.teamId]?.parentMessages[parentId]
-                        ?.content
-                    }
-                  </Text>
+        <TouchableOpacity onLongPress={sentByMe ? onLongPress : null}>
+          <GestureHandlerRootView>
+            <Swipeable
+              ref={swipeableRef}
+              renderLeftActions={LeftSwipeActions}
+              onSwipeableLeftOpen={swipeFromLeftOpen}>
+              <View
+                style={[
+                  styles.container,
+                  sentByMe ? styles.sentByMe : styles.received,
+                ]}>
+                {sentByMe ? null : (
+                  <Image source={{uri: image}} style={styles.avatar} />
+                )}
+                <View style={styles.textContainer}>
+                  <Text style={styles.nameText}>{SenderName}</Text>
+                  {parentId != null && (
+                    <View style={styles.repliedContainer}>
+                      <Text>
+                        {
+                          chatState?.data[chat.teamId]?.parentMessages[parentId]
+                            ?.content
+                        }
+                      </Text>
+                    </View>
+                  )}
+                  <Text style={styles.messageText}>{chat?.content}</Text>
                 </View>
-              )}
-              <Text style={styles.messageText}>{chat?.content}</Text>
-            </View>
-            <Text style={styles.timeText}>{time}</Text>
-            {/* {sentByMe ? (
-        <Image source={{uri: image}} style={styles.avatar} />
-      ) : null} */}
-          </View>
-        </Swipeable></GestureHandlerRootView>
+                <Text style={styles.timeText}>{time}</Text>
+                {sentByMe ? (
+                  <Image source={{uri: image}} style={styles.avatar} />
+                ) : null}
+              </View>
+              <View style={sentByMe ? styles.sentByMe : styles.received}>
+                {optionsVisible && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      setOptionsVisible(false),
+                        deleteMessageAction(
+                          userInfoState?.accessToken,
+                          chat?._id,
+                        );
+                    }}>
+                    <Text>Delete</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            </Swipeable>
+          </GestureHandlerRootView>
+        </TouchableOpacity>
       ) : (
         <AddRemoveJoinedMsg
           senderName={SenderName}
@@ -130,124 +134,6 @@ const ChatCard = ({
         />
       )}
     </>
-    // <Swipeable
-    //   ref={swipeableRef}
-    //   renderLeftActions={LeftSwipeActions}
-    //   onSwipeableLeftOpen={swipeFromLeftOpen}>
-    //   <View
-    //     style={[
-    //       styles.container,
-    //       sentByMe ? styles.sentByMe : styles.received,
-    //     ]}>
-    //     {/* {sentByMe ? null : (
-    //       <Image source={{uri: image}} style={styles.avatar} />
-    //     )} */}
-    //     <View style={styles.textContainer}>
-    //       <Text style={styles.nameText}>{SenderName}</Text>
-    //       {parentId != null && (
-    //         <View style={styles.repliedContainer}>
-    //           <Text>
-    //             {
-    //               chatState?.data[chat.teamId]?.parentMessages[parentId]
-    //                 ?.content
-    //             }
-    //           </Text>
-    //         </View>
-    //       )}
-    //       <Text style={styles.messageText}>{chat?.content}</Text>
-    //     </View>
-    //     <Text style={styles.timeText}>{time}</Text>
-    //     {/* {sentByMe ? (
-    //       <Image source={{uri: image}} style={styles.avatar} />
-    //     ) : null} */}
-    //   </View>
-    // </Swipeable>
-  );
-};
-const RenderChatCard = ({
-  chat,
-  userInfoState,
-  orgState,
-  deleteMessageAction,
-  chatState,
-  setreplyOnMessage,
-  setrepliedMsgDetails,
-}) => {
-  const [optionsVisible, setOptionsVisible] = useState(false);
-  const onLongPress = () => {
-    setOptionsVisible(true);
-  };
-  const parentId = chat?.parentId;
-  const date = new Date(chat.updatedAt);
-  const FlexAlign =
-    chat?.senderId == userInfoState?.user?.id ? 'flex-end' : 'flex-start';
-  const SenderName =
-    chat?.senderId == userInfoState?.user?.id
-      ? 'You'
-      : orgState?.userIdAndNameMapping[chat?.senderId];
-  return (
-    <TouchableOpacity onLongPress={onLongPress}>
-      {optionsVisible && (
-        <View style={styles.optionsContainer}>
-          <TouchableOpacity
-            onPress={() => {
-              setOptionsVisible(false),
-                deleteMessageAction(userInfoState?.accessToken, chat?._id);
-            }}>
-            <Text style={styles.option}>Delete</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setOptionsVisible(false);
-              setrepliedMsgDetails(chat);
-              setreplyOnMessage(true);
-            }}>
-            <Text style={styles.option}>reply</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-      {!chat?.isActivity ? (
-        <View style={styles.messageContainer}>
-          <View style={[styles.senderName, {alignSelf: FlexAlign}]}>
-            <Text>{SenderName}</Text>
-          </View>
-          <View
-            style={[
-              styles.message,
-              {
-                alignSelf: FlexAlign,
-                borderWidth: 1,
-                // borderColor: 'gray',
-                borderRadius: 10,
-                padding: 8,
-              },
-            ]}>
-            {parentId != null && (
-              <View>
-                <Text>
-                  {
-                    chatState?.data[chat.teamId]?.parentMessages[parentId]
-                      ?.content
-                  }
-                </Text>
-              </View>
-            )}
-            <Text>{chat?.content}</Text>
-            <View style={styles.timeContainer}>
-              <Text style={styles.time}>
-                {date.getHours() + ':' + date.getMinutes()}
-              </Text>
-            </View>
-          </View>
-        </View>
-      ) : (
-        <AddRemoveJoinedMsg
-          senderName={SenderName}
-          content={chat?.content}
-          orgState={orgState}
-        />
-      )}
-    </TouchableOpacity>
   );
 };
 const ListFooterComponent = () => {
@@ -298,7 +184,6 @@ const ChatScreen = ({
         ) : (
         <FlatList
           data={chatState?.data[teamId]?.messages || []}
-          // renderItem={ChatCard}
           renderItem={({item}) => (
             <ChatCard
               chat={item}
@@ -323,37 +208,34 @@ const ChatScreen = ({
         />
         )} 
       </View>
-      <View style={{flex: 1, margin: 10, justifyContent: 'center'}}>
-        {replyOnMessage && (
-          <TouchableOpacity onPress={() => setreplyOnMessage(false)}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                marginTop: 10,
-                borderWidth: 1,
-                height: 30,
-              }}>
-              <Text>{repliedMsgDetails?.content}</Text>
-            </View>
-          </TouchableOpacity>
-        )}
+      <View style={{margin: 10, justifyContent: 'center'}}>
         <View style={{flexDirection: 'row'}}>
-          <TextInput
-            editable
-            multiline
-            numberOfLines={4}
-            onChangeText={text => onChangeMessage(text)}
-            value={message}
-            style={{
-              padding: 10,
-              borderWidth: 1,
-              borderRadius: 20,
-              borderColor: 'grey',
-              flex: 1,
-            }}
-            onSubmitEditing={() => onChangeMessage('')}
-          />
+          <View
+            style={[
+              replyOnMessage && styles.inputWithReplyContainer,
+              {width: '90%'},
+            ]}>
+            {replyOnMessage && (
+              <TouchableOpacity onPress={() => setreplyOnMessage(false)}>
+                <View style={styles.replyMessageInInput}>
+                  <Text>{repliedMsgDetails?.content}</Text>
+                  <MaterialIcons name='cancel' size={16} />
+                </View>
+              </TouchableOpacity>
+            )}
+            <TextInput
+              editable
+              multiline
+              onChangeText={text => onChangeMessage(text)}
+              value={message}
+              style={[
+                replyOnMessage
+                  ? styles.inputWithReply
+                  : styles.inputWithoutReply,
+              ]}
+              onSubmitEditing={() => onChangeMessage('')}
+            />
+          </View>
           <View style={{justifyContent: 'center', margin: 10}}>
             <MaterialIcons
               name="send"
@@ -398,8 +280,29 @@ const mapDispatchToProps = dispatch => {
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);
 const styles = StyleSheet.create({
-  messageContainer: {
-    margin: 10,
+  inputWithReply: {
+    padding: 10,
+  },
+  inputWithoutReply: {
+    padding: 20,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: 'grey',
+  },
+  inputWithReplyContainer: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 10,
+  },
+  replyMessageInInput: {
+    flexDirection:'row',
+    justifyContent: 'space-between',
+    margin: 5,
+    borderWidth: 0.25,
+    borderRadius: 5,
+    padding: 5,
+    backgroundColor: '#d9d9d9',
   },
   repliedContainer: {
     padding: 5,
@@ -407,34 +310,14 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 4,
   },
-  senderName: {
-    alignSelf: 'flex-start',
-  },
-  message: {
-    width: '70%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-  },
-  timeContainer: {
-    justifyContent: 'flex-end',
-  },
-  time: {
-    fontSize: 10,
-  },
-  optionsContainer: {
-    // position: 'relative',
-    flex: 1,
-    flexDirection: 'row',
-    padding: 8,
-    borderRadius: 10,
-    width: 100,
-    backgroundColor: 'red',
-    alignSelf: 'flex-end',
-  },
   option: {
     margin: 8,
     backgroundColor: 'yellow',
+  },
+  actionText: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 10,
   },
   container: {
     borderWidth: 1,
