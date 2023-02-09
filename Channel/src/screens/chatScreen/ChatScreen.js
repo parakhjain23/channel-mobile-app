@@ -1,14 +1,17 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   Alert,
   FlatList,
+  Image,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import {Swipeable} from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
 import {
@@ -17,16 +20,150 @@ import {
 } from '../../redux/actions/chat/ChatActions';
 import {deleteMessageStart} from '../../redux/actions/chat/DeleteChatAction';
 
-const AddRemoveJoinedMsg = ({senderName,content , orgState}) =>{
-  const id = content.split(" ").pop().slice(2, -2);
+const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
+  const id = content.split(' ').pop().slice(2, -2);
   const name = orgState?.userIdAndNameMapping[id];
-  const activityName = content.split(" ")[0];
-  const textToShow = content == 'joined this channel' ? senderName +" "+ content : senderName +" "+ activityName +" "+ name
-  return <View style={[styles.messageContainer,{flexDirection:'row',justifyContent:'center'}]}>
-    <Text>{textToShow}</Text>
-  </View>
-}
+  const activityName = content.split(' ')[0];
+  const textToShow =
+    content == 'joined this channel'
+      ? senderName + ' ' + content
+      : senderName + ' ' + activityName + ' ' + name;
+  return (
+    <View
+      style={[
+        styles.messageContainer,
+        {flexDirection: 'row', justifyContent: 'center'},
+      ]}>
+      <Text>{textToShow}</Text>
+    </View>
+  );
+};
 
+const ChatCard = ({
+  chat,
+  userInfoState,
+  orgState,
+  deleteMessageAction,
+  chatState,
+  setreplyOnMessage,
+  setrepliedMsgDetails,
+  // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
+}) => {
+  const [optionsVisible, setOptionsVisible] = useState(false);
+  const swipeableRef = useRef(null);
+  const onLongPress = () => {
+    setOptionsVisible(true);
+  };
+  const parentId = chat?.parentId;
+  const date = new Date(chat?.updatedAt);
+  const time = date.getHours() + ':' + date.getMinutes();
+  const sentByMe = chat?.senderId == userInfoState?.user?.id;
+  const SenderName =
+    chat?.senderId == userInfoState?.user?.id
+      ? 'You'
+      : orgState?.userIdAndNameMapping[chat?.senderId];
+  const swipeFromLeftOpen = () => {
+    setrepliedMsgDetails(chat);
+    setreplyOnMessage(true);
+    swipeableRef?.current?.close();
+  };
+  const LeftSwipeActions = () => {
+    return (
+      <View style={{width: '10%', justifyContent: 'center', zIndex: 0}}>
+        <Icon name="reply" size={20} />
+      </View>
+    );
+  };
+  return (
+    <>
+      {optionsVisible && (
+        <View style={styles.optionsContainer}>
+          <TouchableOpacity
+            onPress={() => {
+              setOptionsVisible(false),
+                deleteMessageAction(userInfoState?.accessToken, chat?._id);
+            }}>
+            <Text style={styles.option}>Delete</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      {!chat?.isActivity ? (
+        <TouchableOpacity onLongPress={onLongPress}>
+          <Swipeable
+            ref={swipeableRef}
+            renderLeftActions={LeftSwipeActions}
+            onSwipeableLeftOpen={swipeFromLeftOpen}>
+            <View
+              style={[
+                styles.container,
+                sentByMe ? styles.sentByMe : styles.received,
+              ]}>
+              {/* {sentByMe ? null : (
+          <Image source={{uri: image}} style={styles.avatar} />
+        )} */}
+              <View style={styles.textContainer}>
+                <Text style={styles.nameText}>{SenderName}</Text>
+                {parentId != null && (
+                  <View style={styles.repliedContainer}>
+                    <Text>
+                      {
+                        chatState?.data[chat.teamId]?.parentMessages[parentId]
+                          ?.content
+                      }
+                    </Text>
+                  </View>
+                )}
+                <Text style={styles.messageText}>{chat?.content}</Text>
+              </View>
+              <Text style={styles.timeText}>{time}</Text>
+              {/* {sentByMe ? (
+          <Image source={{uri: image}} style={styles.avatar} />
+        ) : null} */}
+            </View>
+          </Swipeable>
+        </TouchableOpacity>
+      ) : (
+        <AddRemoveJoinedMsg
+          senderName={SenderName}
+          content={chat?.content}
+          orgState={orgState}
+        />
+      )}
+    </>
+    // <Swipeable
+    //   ref={swipeableRef}
+    //   renderLeftActions={LeftSwipeActions}
+    //   onSwipeableLeftOpen={swipeFromLeftOpen}>
+    //   <View
+    //     style={[
+    //       styles.container,
+    //       sentByMe ? styles.sentByMe : styles.received,
+    //     ]}>
+    //     {/* {sentByMe ? null : (
+    //       <Image source={{uri: image}} style={styles.avatar} />
+    //     )} */}
+    //     <View style={styles.textContainer}>
+    //       <Text style={styles.nameText}>{SenderName}</Text>
+    //       {parentId != null && (
+    //         <View style={styles.repliedContainer}>
+    //           <Text>
+    //             {
+    //               chatState?.data[chat.teamId]?.parentMessages[parentId]
+    //                 ?.content
+    //             }
+    //           </Text>
+    //         </View>
+    //       )}
+    //       <Text style={styles.messageText}>{chat?.content}</Text>
+    //     </View>
+    //     <Text style={styles.timeText}>{time}</Text>
+    //     {/* {sentByMe ? (
+    //       <Image source={{uri: image}} style={styles.avatar} />
+    //     ) : null} */}
+    //   </View>
+    // </Swipeable>
+  );
+};
 const RenderChatCard = ({
   chat,
   userInfoState,
@@ -34,13 +171,13 @@ const RenderChatCard = ({
   deleteMessageAction,
   chatState,
   setreplyOnMessage,
-  setrepliedMsgDetails
+  setrepliedMsgDetails,
 }) => {
   const [optionsVisible, setOptionsVisible] = useState(false);
   const onLongPress = () => {
     setOptionsVisible(true);
   };
-  const parentId = chat?.parentId
+  const parentId = chat?.parentId;
   const date = new Date(chat.updatedAt);
   const FlexAlign =
     chat?.senderId == userInfoState?.user?.id ? 'flex-end' : 'flex-start';
@@ -55,62 +192,73 @@ const RenderChatCard = ({
           <TouchableOpacity
             onPress={() => {
               setOptionsVisible(false),
-                deleteMessageAction(userInfoState?.accessToken,chat?._id);
+                deleteMessageAction(userInfoState?.accessToken, chat?._id);
             }}>
             <Text style={styles.option}>Delete</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              setOptionsVisible(false)
-              setrepliedMsgDetails(chat)
-              setreplyOnMessage(true)
+              setOptionsVisible(false);
+              setrepliedMsgDetails(chat);
+              setreplyOnMessage(true);
             }}>
             <Text style={styles.option}>reply</Text>
           </TouchableOpacity>
         </View>
       )}
-      {!chat?.isActivity ? <View style={styles.messageContainer}>
-        <View style={[styles.senderName, {alignSelf: FlexAlign}]}>
-          <Text>{SenderName}</Text>
-        </View>
-        <View
-          style={[
-            styles.message,
-            {
-              alignSelf: FlexAlign,
-              borderWidth: 1,
-              borderColor: 'gray',
-              borderRadius: 10,
-              padding: 8,
-            },
-          ]}>
-          {parentId != null && (
-            <View>
-              <Text>{chatState?.data[chat.teamId]?.parentMessages[parentId]?.content}</Text>
+      {!chat?.isActivity ? (
+        <View style={styles.messageContainer}>
+          <View style={[styles.senderName, {alignSelf: FlexAlign}]}>
+            <Text>{SenderName}</Text>
+          </View>
+          <View
+            style={[
+              styles.message,
+              {
+                alignSelf: FlexAlign,
+                borderWidth: 1,
+                // borderColor: 'gray',
+                borderRadius: 10,
+                padding: 8,
+              },
+            ]}>
+            {parentId != null && (
+              <View>
+                <Text>
+                  {
+                    chatState?.data[chat.teamId]?.parentMessages[parentId]
+                      ?.content
+                  }
+                </Text>
+              </View>
+            )}
+            <Text>{chat?.content}</Text>
+            <View style={styles.timeContainer}>
+              <Text style={styles.time}>
+                {date.getHours() + ':' + date.getMinutes()}
+              </Text>
             </View>
-          )}
-          <Text>{chat?.content}</Text>
-          <View style={styles.timeContainer}>
-            <Text style={styles.time}>
-              {date.getHours() + ':' + date.getMinutes()}
-            </Text>
           </View>
         </View>
-      </View>
-      : <AddRemoveJoinedMsg senderName={SenderName} content={chat?.content} orgState={orgState}/>
-    }
+      ) : (
+        <AddRemoveJoinedMsg
+          senderName={SenderName}
+          content={chat?.content}
+          orgState={orgState}
+        />
+      )}
     </TouchableOpacity>
   );
 };
 const ListFooterComponent = () => {
-  const [animate,setAnimate] = useState(true);
-  useEffect(()=>{
+  const [animate, setAnimate] = useState(true);
+  useEffect(() => {
     setTimeout(() => {
       setAnimate(false);
     }, 1000);
-  })
-  return <ActivityIndicator animating={animate} size={'small'}/>
-}
+  });
+  return <ActivityIndicator animating={animate} size={'small'} />;
+};
 const ChatScreen = ({
   route,
   userInfoState,
@@ -122,9 +270,12 @@ const ChatScreen = ({
 }) => {
   const {teamId} = route.params;
   const [message, onChangeMessage] = React.useState(null);
-  const [replyOnMessage, setreplyOnMessage] = useState(false)
-  const [repliedMsgDetails, setrepliedMsgDetails] = useState('')
-  const skip = chatState?.data[teamId]?.messages.length!=undefined ? chatState?.data[teamId]?.messages.length : 0;
+  const [replyOnMessage, setreplyOnMessage] = useState(false);
+  const [repliedMsgDetails, setrepliedMsgDetails] = useState('');
+  const skip =
+    chatState?.data[teamId]?.messages.length != undefined
+      ? chatState?.data[teamId]?.messages.length
+      : 0;
 
   useEffect(() => {
     if (
@@ -143,8 +294,9 @@ const ChatScreen = ({
         ) : ( */}
         <FlatList
           data={chatState?.data[teamId]?.messages || []}
+          // renderItem={ChatCard}
           renderItem={({item}) => (
-            <RenderChatCard
+            <ChatCard
               chat={item}
               userInfoState={userInfoState}
               orgState={orgState}
@@ -155,56 +307,68 @@ const ChatScreen = ({
             />
           )}
           inverted
-          ListFooterComponent={chatState?.data[teamId]?.messages?.length>15 && ListFooterComponent}
-          onEndReached={()=>{fetchChatsOfTeamAction(teamId,userInfoState?.accessToken,skip)}}
+          ListFooterComponent={
+            chatState?.data[teamId]?.messages?.length > 15 &&
+            ListFooterComponent
+          }
+          onEndReached={() => {
+            fetchChatsOfTeamAction(teamId, userInfoState?.accessToken, skip);
+          }}
           onEndReachedThreshold={0.2}
           // contentContainerStyle={{ flexDirection: 'column-reverse' }}
         />
         {/* )} */}
       </View>
-      <View style={{flex: 1, margin: 10, justifyContent:'center'}}>
-        {
-          replyOnMessage && <TouchableOpacity onPress={()=>setreplyOnMessage(false)}>
-            <View style={{flexDirection:'row',justifyContent:'center',marginTop:10,borderWidth:1,height:30}}>
-            <Text>{repliedMsgDetails?.content}</Text>
-          </View>
+      <View style={{flex: 1, margin: 10, justifyContent: 'center'}}>
+        {replyOnMessage && (
+          <TouchableOpacity onPress={() => setreplyOnMessage(false)}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                marginTop: 10,
+                borderWidth: 1,
+                height: 30,
+              }}>
+              <Text>{repliedMsgDetails?.content}</Text>
+            </View>
           </TouchableOpacity>
-        }
-        <View style={{flexDirection:'row'}}>
-        <TextInput
-          editable
-          multiline
-          numberOfLines={4}
-          onChangeText={text => onChangeMessage(text)}
-          value={message}
-          style={{
-            padding: 10,
-            borderWidth: 1,
-            borderRadius: 20,
-            borderColor: 'grey',
-            flex: 1,
-          }}
-          onSubmitEditing={() => onChangeMessage('')}
-        />
-        <View style={{justifyContent: 'center', margin: 10}}>
-          <MaterialIcons
-            name="send"
-            size={20}
-            onPress={() => {
-              sendMessageAction(
-                message.trim(),
-                teamId,
-                orgState?.currentOrgId,
-                userInfoState?.user?.id,
-                userInfoState?.accessToken,
-                repliedMsgDetails?._id || null
-              );
-              onChangeMessage('');
-              setreplyOnMessage(false)
-              setrepliedMsgDetails(null)
+        )}
+        <View style={{flexDirection: 'row'}}>
+          <TextInput
+            editable
+            multiline
+            numberOfLines={4}
+            onChangeText={text => onChangeMessage(text)}
+            value={message}
+            style={{
+              padding: 10,
+              borderWidth: 1,
+              borderRadius: 20,
+              borderColor: 'grey',
+              flex: 1,
             }}
+            onSubmitEditing={() => onChangeMessage('')}
           />
-        </View>
+          <View style={{justifyContent: 'center', margin: 10}}>
+            <MaterialIcons
+              name="send"
+              size={20}
+              onPress={() => {
+                sendMessageAction(
+                  message.trim(),
+                  teamId,
+                  orgState?.currentOrgId,
+                  userInfoState?.user?.id,
+                  userInfoState?.accessToken,
+                  repliedMsgDetails?._id || null,
+                );
+                onChangeMessage('');
+                setreplyOnMessage(false);
+                setrepliedMsgDetails(null);
+              }}
+            />
+          </View>
         </View>
       </View>
     </View>
@@ -220,7 +384,9 @@ const mapDispatchToProps = dispatch => {
     fetchChatsOfTeamAction: (teamId, token, skip) =>
       dispatch(getChatsStart(teamId, token, skip)),
     sendMessageAction: (message, teamId, orgId, senderId, token, parentId) =>
-      dispatch(sendMessageStart(message, teamId, orgId, senderId, token, parentId)),
+      dispatch(
+        sendMessageStart(message, teamId, orgId, senderId, token, parentId),
+      ),
     deleteMessageAction: (accessToken, msgId) =>
       dispatch(deleteMessageStart(accessToken, msgId)),
   };
@@ -231,7 +397,10 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   repliedContainer: {
-    margin: 5,
+    padding: 5,
+    backgroundColor: '#d9d9d9',
+    borderRadius: 5,
+    marginBottom: 4,
   },
   senderName: {
     alignSelf: 'flex-start',
@@ -261,5 +430,48 @@ const styles = StyleSheet.create({
   option: {
     margin: 8,
     backgroundColor: 'yellow',
+  },
+  container: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 10,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    marginBottom: 15,
+    maxWidth: '90%',
+  },
+  sentByMe: {
+    alignSelf: 'flex-end',
+    marginRight: 10,
+  },
+  received: {
+    alignSelf: 'flex-start',
+    marginLeft: 10,
+  },
+  avatar: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    marginHorizontal: 4,
+  },
+  textContainer: {
+    padding: 8,
+    borderRadius: 8,
+    flexDirection: 'column',
+    maxWidth: '70%',
+  },
+  nameText: {
+    fontWeight: 'bold',
+    fontSize: 12,
+    marginBottom: 4,
+  },
+  messageText: {
+    fontSize: 14,
+  },
+  timeText: {
+    fontSize: 10,
+    color: '#666',
+    marginRight: 3,
+    marginBottom: 4,
   },
 });
