@@ -84,8 +84,6 @@ const RenderSearchChannels = ({item, navigation, props}) => {
       }}
       onPress={() => {
         if (teamId == undefined) {
-          console.log(item, 'this is search item data');
-          console.log(teamId,"this is team id");  
           props?.createDmChannelAction(
             props?.userInfoState?.accessToken,
             props?.orgsState?.currentOrgId,

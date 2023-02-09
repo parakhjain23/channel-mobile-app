@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Swipeable} from 'react-native-gesture-handler';
+import {GestureHandlerRootView, Swipeable} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
@@ -88,40 +88,38 @@ const ChatCard = ({
         </View>
       )}
       {!chat?.isActivity ? (
-        <TouchableOpacity onLongPress={onLongPress}>
-          <Swipeable
-            ref={swipeableRef}
-            renderLeftActions={LeftSwipeActions}
-            onSwipeableLeftOpen={swipeFromLeftOpen}>
-            <View
-              style={[
-                styles.container,
-                sentByMe ? styles.sentByMe : styles.received,
-              ]}>
-              {/* {sentByMe ? null : (
-          <Image source={{uri: image}} style={styles.avatar} />
-        )} */}
-              <View style={styles.textContainer}>
-                <Text style={styles.nameText}>{SenderName}</Text>
-                {parentId != null && (
-                  <View style={styles.repliedContainer}>
-                    <Text>
-                      {
-                        chatState?.data[chat.teamId]?.parentMessages[parentId]
-                          ?.content
-                      }
-                    </Text>
-                  </View>
-                )}
-                <Text style={styles.messageText}>{chat?.content}</Text>
-              </View>
-              <Text style={styles.timeText}>{time}</Text>
-              {/* {sentByMe ? (
-          <Image source={{uri: image}} style={styles.avatar} />
-        ) : null} */}
+          <GestureHandlerRootView><Swipeable
+          ref={swipeableRef}
+          renderLeftActions={LeftSwipeActions}
+          onSwipeableLeftOpen={swipeFromLeftOpen}>
+          <View
+            style={[
+              styles.container,
+              sentByMe ? styles.sentByMe : styles.received,
+            ]}>
+            {/* {sentByMe ? null : (
+        <Image source={{uri: image}} style={styles.avatar} />
+      )} */}
+            <View style={styles.textContainer}>
+              <Text style={styles.nameText}>{SenderName}</Text>
+              {parentId != null && (
+                <View style={styles.repliedContainer}>
+                  <Text>
+                    {
+                      chatState?.data[chat.teamId]?.parentMessages[parentId]
+                        ?.content
+                    }
+                  </Text>
+                </View>
+              )}
+              <Text style={styles.messageText}>{chat?.content}</Text>
             </View>
-          </Swipeable>
-        </TouchableOpacity>
+            <Text style={styles.timeText}>{time}</Text>
+            {/* {sentByMe ? (
+        <Image source={{uri: image}} style={styles.avatar} />
+      ) : null} */}
+          </View>
+        </Swipeable></GestureHandlerRootView>
       ) : (
         <AddRemoveJoinedMsg
           senderName={SenderName}
@@ -273,7 +271,6 @@ const ChatScreen = ({
   if(teamId == undefined){
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId]
   }
-  console.log(teamId,"this is team id in chat screen");
   const [message, onChangeMessage] = React.useState(null);
   const [replyOnMessage, setreplyOnMessage] = useState(false);
   const [repliedMsgDetails, setrepliedMsgDetails] = useState('');

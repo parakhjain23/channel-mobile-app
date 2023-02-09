@@ -13,15 +13,8 @@ export function* createNewDmChannel({token,orgId,channelName,reciverUserId}){
   }
 
 export function createNewDmChannelStart(token,orgId,channelName,reciverUserId){
-    console.log(token,orgId,channelName,reciverUserId,"details in crreate start");
   return {
     type: Actions.CREATE_NEW_DM_CHANNEL_START,
     token,orgId,channelName,reciverUserId
   }
 }
-export function createNewChannelSuccess(data){
-    return {
-      type: Actions.CREATE_NEW_CHANNEL_SUCCESS,
-      payload: data
-    }
-  }
