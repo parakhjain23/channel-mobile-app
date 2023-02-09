@@ -76,8 +76,8 @@ const ChatCard = ({
   return (
     <>
       {!chat?.isActivity ? (
-        <TouchableOpacity onLongPress={sentByMe ? onLongPress : null}>
           <GestureHandlerRootView>
+        <TouchableOpacity onLongPress={sentByMe ? onLongPress : null}>
             <Swipeable
               ref={swipeableRef}
               renderLeftActions={LeftSwipeActions}
@@ -131,8 +131,8 @@ const ChatCard = ({
                 )}
               </View>
             </Swipeable>
-          </GestureHandlerRootView>
         </TouchableOpacity>
+          </GestureHandlerRootView>
       ) : (
         <AddRemoveJoinedMsg
           senderName={SenderName}
