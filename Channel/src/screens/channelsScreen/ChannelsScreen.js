@@ -64,9 +64,10 @@ const RenderChannels = ({item, navigation, props}) => {
   );
 };
 const RenderSearchChannels = ({item, navigation, props}) => {
+  console.log(item?._source);
   const Name =
     item?._source?.type == 'U'
-      ? item?._source?.displayName
+      ? item?._source?.title
       : '#' + item?._source?.title;
   const teamId = item?._id?.includes('_')
     ? props?.channelsState?.userIdAndTeamIdMapping[item?._source?.userId]
