@@ -2,6 +2,7 @@ import {moveChannelToTop} from '../redux/actions/channels/ChannelsAction';
 import { createNewChannelSuccess } from '../redux/actions/channels/CreateNewChannelAction';
 import {addNewMessage} from '../redux/actions/chat/ChatActions';
 import {deleteMessageSuccess} from '../redux/actions/chat/DeleteChatAction';
+import { newUserJoinedAOrg } from '../redux/actions/org/GetAllUsersOfOrg';
 import { userInfoReducer } from '../redux/reducers/user/UserInfo';
 import {store} from '../redux/Store';
 
@@ -28,5 +29,9 @@ const SocketService = socket => {
     store.dispatch(createNewChannelSuccess(data,store.getState().userInfoReducer?.user?.id))
   })
 
+  socket.on('orgUser created',data=>{
+    console.log("new user Joined Org",data);
+    store.dispatch(newUserJoinedAOrg(data))
+  })
 };
 export default SocketService;

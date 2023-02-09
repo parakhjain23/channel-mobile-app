@@ -33,6 +33,13 @@ export function orgsReducer(state = initialState, action) {
         idAndNameMap[item?.id] = `${item?.firstName+" "+item?.lastName}`
       })
       return {...state, userIdAndNameMapping: idAndNameMap}  
+    
+    case Actions.NEW_USER_JOINED_ORG:
+      var idAndNameMap = {};
+      action?.user?.map((item)=>{
+        idAndNameMap[item?.id] = `${item?.firstName+" "+item?.lastName}`
+      })
+      return {...state, userIdAndNameMapping: {...state?.userIdAndNameMapping,...idAndNameMap}}  
     default:
       return state;
   }

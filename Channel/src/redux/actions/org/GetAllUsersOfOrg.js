@@ -17,3 +17,11 @@ export function getAllUsersOfOrgSuccess(data){
     allUser : data,
   }
 }
+
+export function newUserJoinedAOrg(data){
+  return {
+    type: Actions.NEW_USER_JOINED_ORG,
+    user : data,
+  }
+}
+
