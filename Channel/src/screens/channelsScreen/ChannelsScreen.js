@@ -172,7 +172,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
       ref={modalizeRef}
       modalStyle={{top: '12%'}}>
       <View style={{margin: 12}}>
-        <TextInput label={'Title'} mode={'outlined'} onChangeText={setTitle} />
+        <TextInput label={'Title'} mode={'outlined'} onChangeText={setTitle} autoFocus={true}/>
         <TextInput
           label={'Members'}
           mode={'outlined'}

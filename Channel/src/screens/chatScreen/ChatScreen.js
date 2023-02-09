@@ -33,7 +33,7 @@ const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
       : senderName + ' ' + activityName + ' ' + name;
   return (
     <View style={[styles.actionText]}>
-      <Text style={styles.text}>{textToShow}</Text>
+      <Text style={styles.text}>{newContent}</Text>
     </View>
   );
 };
