@@ -5,7 +5,6 @@ import * as Actions from '../../Enums';
 
 export function* createNewDmChannel({token,orgId,channelName,reciverUserId}){
     try {
-    console.log(token,orgId,channelName,reciverUserId,"details in crreate generator functions");
       var response = yield call(createDmChannel,token,orgId,channelName,reciverUserId)
     } catch (error) {
       console.log(error);
