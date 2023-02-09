@@ -15,7 +15,17 @@ const initialState = {
         return {...state, isLoading : true}
 
       case Actions.FETCH_CHANNELS_SUCCESS :
-        return {...state, channels: action.channels , isLoading : false}
+        var userIdAndTeamIdMapping={}
+        var key = null
+      for(let i =0; i<action?.channels?.length; i++){
+        if(action?.channels[i]?.type == 'DIRECT_MESSAGE'){
+          key = action?.channels[i].userIds[0] != action?.userId
+          ? action?.channels[i]?.userIds[0]
+          : action?.channels[i].userIds[1]
+          userIdAndTeamIdMapping[key]= action?.channels[i]?._id
+        }
+      }
+        return {...state, channels: action.channels , isLoading : false, userIdAndTeamIdMapping : userIdAndTeamIdMapping}
 
       case Actions.FETCH_CHANNELS_ERROR :
         return {...state, channels:[], isLoading: false}
@@ -33,7 +43,16 @@ const initialState = {
         return {...state, channels : state?.channels}  
       
         case Actions.CREATE_NEW_CHANNEL_SUCCESS:
-          return {...state, channels: [action.payload,...state?.channels]}
+          console.log(action,"=-=-=--=-=-=--=-=-==");
+          var userIdAndTeamIdMapping ={}
+          if(action?.channel?.type == 'DIRECT_MESSAGE'){
+          key = action?.channel.userIds[0] != action?.userId
+          ? action?.channel?.userIds[0]
+          : action?.channel.userIds[1]
+          userIdAndTeamIdMapping[key]=action?.channel?._id
+         }
+         console.log(userIdAndTeamIdMapping,"=-=-=-=-=-");
+          return {...state, channels: [action.payload,...state?.channels] , userIdAndTeamIdMapping : {...state?.userIdAndTeamIdMapping,...userIdAndTeamIdMapping}}
       default:
         return state;
     }

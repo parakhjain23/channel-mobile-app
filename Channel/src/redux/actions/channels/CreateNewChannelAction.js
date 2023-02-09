@@ -16,9 +16,10 @@ export function createNewChannelStart(token,orgId,channelName,channelType){
     token,orgId,channelName,channelType
   }
 }
-export function createNewChannelSuccess(data){
+export function createNewChannelSuccess(data,userId){
     return {
       type: Actions.CREATE_NEW_CHANNEL_SUCCESS,
-      payload: data
+      channel: data,
+      userId
     }
   }

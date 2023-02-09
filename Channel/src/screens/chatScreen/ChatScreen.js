@@ -55,7 +55,7 @@ const RenderChatCard = ({
           <TouchableOpacity
             onPress={() => {
               setOptionsVisible(false),
-                deleteMessageAction(userInfoState?.accessToken, chat?._id);
+                deleteMessageAction(userInfoState?.accessToken,chat?._id);
             }}>
             <Text style={styles.option}>Delete</Text>
           </TouchableOpacity>
@@ -107,7 +107,7 @@ const ListFooterComponent = () => {
   useEffect(()=>{
     setTimeout(() => {
       setAnimate(false);
-    }, 3000);
+    }, 1000);
   })
   return <ActivityIndicator animating={animate} size={'small'}/>
 }
@@ -119,8 +119,13 @@ const ChatScreen = ({
   chatState,
   orgState,
   deleteMessageAction,
+  channelsState
 }) => {
-  const {teamId} = route.params;
+  var {teamId,reciverUserId} = route.params;
+  if(teamId == undefined){
+    teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId]
+  }
+  console.log(teamId,"this is team id in chat screen");
   const [message, onChangeMessage] = React.useState(null);
   const [replyOnMessage, setreplyOnMessage] = useState(false)
   const [repliedMsgDetails, setrepliedMsgDetails] = useState('')
@@ -138,9 +143,9 @@ const ChatScreen = ({
   return (
     <View style={{flex: 1}}>
       <View style={{flex: 7}}>
-        {/* {chatState?.data[teamId]?.isloading ? (
+        {teamId == undefined ? (
           <ActivityIndicator />
-        ) : ( */}
+        ) : (
         <FlatList
           data={chatState?.data[teamId]?.messages || []}
           renderItem={({item}) => (
@@ -155,12 +160,12 @@ const ChatScreen = ({
             />
           )}
           inverted
-          ListFooterComponent={ListFooterComponent}
+          ListFooterComponent={chatState?.data[teamId]?.messages?.length>15 && ListFooterComponent}
           onEndReached={()=>{fetchChatsOfTeamAction(teamId,userInfoState?.accessToken,skip)}}
           onEndReachedThreshold={0.2}
           // contentContainerStyle={{ flexDirection: 'column-reverse' }}
         />
-        {/* )} */}
+        )} 
       </View>
       <View style={{flex: 1, margin: 10, justifyContent:'center'}}>
         {
@@ -214,6 +219,7 @@ const mapStateToProps = state => ({
   userInfoState: state.userInfoReducer,
   orgState: state.orgsReducer,
   chatState: state.chatReducer,
+  channelsState: state.channelsReducer,
 });
 const mapDispatchToProps = dispatch => {
   return {

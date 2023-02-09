@@ -7,7 +7,6 @@ import {
   Keyboard,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import {connect} from 'react-redux';
@@ -20,6 +19,7 @@ import {Modalize} from 'react-native-modalize';
 import {CHANNEL_TYPE} from '../../constants/Constants';
 import {createNewChannelStart} from '../../redux/actions/channels/CreateNewChannelAction';
 import {getChannelsByQueryStart} from '../../redux/actions/channels/ChannelsByQueryAction';
+import {createNewDmChannelStart} from '../../redux/actions/channels/CreateNewDmChannelAction';
 
 const RenderChannels = ({item, navigation, props}) => {
   const Name =
@@ -67,9 +67,12 @@ const RenderSearchChannels = ({item, navigation, props}) => {
   const Name =
     item?._source?.type == 'U'
       ? item?._source?.displayName
-      : '#'+item?._source?.title;
-  return (
-    <TouchableOpacity
+      : '#' + item?._source?.title;
+  const teamId = item?._id?.includes('_')
+    ? props?.channelsState?.userIdAndTeamIdMapping[item?._source?.userId]
+    : item?._id;
+    return (
+      <TouchableOpacity
       style={{
         borderWidth: 0.5,
         borderColor: 'gray',
@@ -79,9 +82,19 @@ const RenderSearchChannels = ({item, navigation, props}) => {
         flexDirection: 'column',
         justifyContent: 'center',
       }}
-      onPress={() =>
-        navigation.navigate('Chat', {chatHeaderTitle: Name, teamId: item?._id})
-      }>
+      onPress={() => {
+        if (teamId == undefined) {
+          console.log(item, 'this is search item data');
+          console.log(teamId,"this is team id");  
+          props?.createDmChannelAction(
+            props?.userInfoState?.accessToken,
+            props?.orgsState?.currentOrgId,
+            Name,
+            item?._source?.userId,
+          );
+        }
+        navigation.navigate('Chat', {chatHeaderTitle: Name, teamId: teamId, reciverUserId: item?._source?.userId});
+      }}>
       <View
         style={{
           flexDirection: 'row',
@@ -103,17 +116,12 @@ const CreateChannelModel = ({modalizeRef, props}) => {
   const [channelType, setChannelType] = useState('PUBLIC');
   return (
     <Modalize
-    adjustToContentHeight
+      avoidKeyboardLikeIOS={true}
+      scrollViewProps={{keyboardShouldPersistTaps: 'always'}}
       ref={modalizeRef}
-      modalStyle={{top: '12%'}}
-      scrollViewProps={{keyboardShouldPersistTaps:'always'}}
-      >
-      <View style={{margin: 12,height:500}}>
-        <TextInput
-          label={'Title'}
-          mode={'outlined'}
-          onChangeText={setTitle}
-        />
+      modalStyle={{top: '12%'}}>
+      <View style={{margin: 12, height: 500}}>
+        <TextInput label={'Title'} mode={'outlined'} onChangeText={setTitle} />
         <TextInput
           label={'Members'}
           mode={'outlined'}
@@ -270,6 +278,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(getChannelsByQueryStart(query, userToken, orgId)),
     createNewChannelAction: (token, orgId, title, channelType) =>
       dispatch(createNewChannelStart(token, orgId, title, channelType)),
+    createDmChannelAction: (token, orgId, title, reciverUserId) =>
+      dispatch(createNewDmChannelStart(token, orgId, title, reciverUserId)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelsScreen);
