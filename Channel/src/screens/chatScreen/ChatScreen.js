@@ -4,6 +4,7 @@ import {
   Alert,
   FlatList,
   Image,
+  Keyboard,
   StyleSheet,
   Text,
   TextInput,
@@ -29,11 +30,7 @@ const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
       ? senderName + ' ' + content
       : senderName + ' ' + activityName + ' ' + name;
   return (
-    <View
-      style={[
-        styles.messageContainer,
-        {flexDirection: 'row', justifyContent: 'center'},
-      ]}>
+    <View style={[styles.actionText]}>
       <Text>{textToShow}</Text>
     </View>
   );
@@ -181,7 +178,6 @@ const ChatScreen = ({
         ) : ( */}
         <FlatList
           data={chatState?.data[teamId]?.messages || []}
-          // renderItem={ChatCard}
           renderItem={({item}) => (
             <ChatCard
               chat={item}
@@ -206,37 +202,34 @@ const ChatScreen = ({
         />
         {/* )} */}
       </View>
-      <View style={{flex: 1, margin: 10, justifyContent: 'center'}}>
-        {replyOnMessage && (
-          <TouchableOpacity onPress={() => setreplyOnMessage(false)}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                marginTop: 10,
-                borderWidth: 1,
-                height: 30,
-              }}>
-              <Text>{repliedMsgDetails?.content}</Text>
-            </View>
-          </TouchableOpacity>
-        )}
+      <View style={{margin: 10, justifyContent: 'center'}}>
         <View style={{flexDirection: 'row'}}>
-          <TextInput
-            editable
-            multiline
-            numberOfLines={4}
-            onChangeText={text => onChangeMessage(text)}
-            value={message}
-            style={{
-              padding: 10,
-              borderWidth: 1,
-              borderRadius: 20,
-              borderColor: 'grey',
-              flex: 1,
-            }}
-            onSubmitEditing={() => onChangeMessage('')}
-          />
+          <View
+            style={[
+              replyOnMessage && styles.inputWithReplyContainer,
+              {width: '90%'},
+            ]}>
+            {replyOnMessage && (
+              <TouchableOpacity onPress={() => setreplyOnMessage(false)}>
+                <View style={styles.replyMessageInInput}>
+                  <Text>{repliedMsgDetails?.content}</Text>
+                  <MaterialIcons name='cancel' size={16} />
+                </View>
+              </TouchableOpacity>
+            )}
+            <TextInput
+              editable
+              multiline
+              onChangeText={text => onChangeMessage(text)}
+              value={message}
+              style={[
+                replyOnMessage
+                  ? styles.inputWithReply
+                  : styles.inputWithoutReply,
+              ]}
+              onSubmitEditing={() => onChangeMessage('')}
+            />
+          </View>
           <View style={{justifyContent: 'center', margin: 10}}>
             <MaterialIcons
               name="send"
@@ -280,6 +273,30 @@ const mapDispatchToProps = dispatch => {
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);
 const styles = StyleSheet.create({
+  inputWithReply: {
+    padding: 10,
+  },
+  inputWithoutReply: {
+    padding: 20,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: 'grey',
+  },
+  inputWithReplyContainer: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 10,
+  },
+  replyMessageInInput: {
+    flexDirection:'row',
+    justifyContent: 'space-between',
+    margin: 5,
+    borderWidth: 0.25,
+    borderRadius: 5,
+    padding: 5,
+    backgroundColor: '#d9d9d9',
+  },
   repliedContainer: {
     padding: 5,
     backgroundColor: '#d9d9d9',
@@ -289,6 +306,11 @@ const styles = StyleSheet.create({
   option: {
     margin: 8,
     backgroundColor: 'yellow',
+  },
+  actionText: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 10,
   },
   container: {
     borderWidth: 1,
