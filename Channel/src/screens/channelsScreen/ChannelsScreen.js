@@ -6,7 +6,7 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Button
+  Button,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {getChannelsStart} from '../../redux/actions/channels/ChannelsAction';
@@ -62,7 +62,7 @@ const RenderChannels = ({item, navigation, props}) => {
     </TouchableOpacity>
   );
 };
-const RenderSearchChannels = ({item, navigation, props,setsearchValue}) => {
+const RenderSearchChannels = ({item, navigation, props, setsearchValue}) => {
   const Name =
     item?._source?.type == 'U'
       ? item?._source?.title
@@ -70,8 +70,8 @@ const RenderSearchChannels = ({item, navigation, props,setsearchValue}) => {
   const teamId = item?._id?.includes('_')
     ? props?.channelsState?.userIdAndTeamIdMapping[item?._source?.userId]
     : item?._id;
-    return (
-      <TouchableOpacity
+  return (
+    <TouchableOpacity
       style={{
         borderWidth: 0.5,
         borderColor: 'gray',
@@ -90,8 +90,12 @@ const RenderSearchChannels = ({item, navigation, props,setsearchValue}) => {
             item?._source?.userId,
           );
         }
-        setsearchValue('')
-        navigation.navigate('Chat', {chatHeaderTitle: Name, teamId: teamId, reciverUserId: item?._source?.userId});
+        setsearchValue('');
+        navigation.navigate('Chat', {
+          chatHeaderTitle: Name,
+          teamId: teamId,
+          reciverUserId: item?._source?.userId,
+        });
       }}>
       <View
         style={{
@@ -109,63 +113,64 @@ const RenderSearchChannels = ({item, navigation, props,setsearchValue}) => {
     </TouchableOpacity>
   );
 };
-const RenderUsersToAdd = ({item,setUserIds,userIds,setsearchedUser}) => {
-  const Name =
-    item?._source?.type == 'U'
-      && item?._source?.title
-    return item?._source?.type == 'U' && <TouchableOpacity
-      style={{
-        borderWidth: 0.5,
-        borderColor: 'gray',
-        borderRadius: 5,
-        height: 60,
-        width: '100%',
-        flexDirection: 'column',
-        justifyContent: 'center',
-      }}
-      onPress={() => {
-        setUserIds([...userIds,item?._source?.userId])
-        setsearchedUser('')
-      }}>
-      <View
+const RenderUsersToAdd = ({item, setUserIds, userIds, setsearchedUser}) => {
+  const Name = item?._source?.type == 'U' && item?._source?.title;
+  return (
+    item?._source?.type == 'U' && (
+      <TouchableOpacity
         style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          padding: 13,
+          borderWidth: 0.5,
+          borderColor: 'gray',
+          borderRadius: 5,
+          height: 60,
+          width: '100%',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        }}
+        onPress={() => {
+          setUserIds([...userIds, item?._source?.userId]);
+          setsearchedUser('');
         }}>
-        <Icon name="chevron-right" />
-        <Text style={{fontSize: 16, fontWeight: '400', color: 'black'}}>
-          {' '}
-          {Name}
-        </Text>
-      </View>
-    </TouchableOpacity>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            padding: 13,
+          }}>
+          <Icon name="chevron-right" />
+          <Text style={{fontSize: 16, fontWeight: '400', color: 'black'}}>
+            {' '}
+            {Name}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    )
+  );
 };
 const CreateChannelModel = ({modalizeRef, props}) => {
   const [title, setTitle] = useState('');
   const [channelType, setChannelType] = useState('PUBLIC');
-  const [userIds,setUserIds] = useState([])
-  const [searchedUser, setsearchedUser] = useState('')
+  const [userIds, setUserIds] = useState([]);
+  const [searchedUser, setsearchedUser] = useState('');
   useEffect(() => {
-    if(searchedUser !=''){
-        props.getChannelsByQueryStartAction(
-          searchedUser,
-          props?.userInfoState?.user?.id,
-          props?.orgsState?.currentOrgId,
-        );
+    if (searchedUser != '') {
+      props.getChannelsByQueryStartAction(
+        searchedUser,
+        props?.userInfoState?.user?.id,
+        props?.orgsState?.currentOrgId,
+      );
     }
-  }, [searchedUser])
-  
-  const changeText = (value)=>{
-    setsearchedUser(value)
-  }
+  }, [searchedUser]);
+
+  const changeText = value => {
+    setsearchedUser(value);
+  };
   return (
     <Modalize
       scrollViewProps={{keyboardShouldPersistTaps: 'always'}}
       ref={modalizeRef}
-      modalStyle={{top: '12%'}}
-      >
+      modalStyle={{top: '12%'}}>
       <View style={{margin: 12}}>
         <TextInput label={'Title'} mode={'outlined'} onChangeText={setTitle} />
         <TextInput
@@ -173,8 +178,9 @@ const CreateChannelModel = ({modalizeRef, props}) => {
           mode={'outlined'}
           onChangeText={changeText}
         />
-       
-         {searchedUser != '' &&
+
+        {searchedUser != '' && (
+          <View style={{height:200}}>
             <FlatList
               data={props?.channelsByQueryState?.channels}
               renderItem={({item}) => (
@@ -187,22 +193,40 @@ const CreateChannelModel = ({modalizeRef, props}) => {
               )}
               keyboardDismissMode="on-drag"
               keyboardShouldPersistTaps="always"
-            />}
-            {userIds.length !=0 &&
-                  userIds?.map((userId)=>{
-                    return <View style={{marginVertical:6,height:30,justifyContent:'flex-start',flexDirection:'row'}}> 
-                      <View style={{width:'80%',flexDirection:'column',justifyContent:'center'}}>
-                      <Text style={{fontSize:16,fontWeight:'400',color:'black'}}>
-                      {props?.orgsState?.userIdAndNameMapping[userId]}
-                      </Text>
-                      </View>
-                      <Button title='remove' onPress={()=>{
-                       var updatedUserIds = userIds.filter((id) => id !== userId);
-                       setUserIds(updatedUserIds);
-                      }}/>
-                    </View>
-                  })
-                }
+            />
+          </View>
+        )}
+        {userIds.length != 0 &&
+          userIds?.map(userId => {
+            return (
+              <View
+                style={{
+                  marginVertical: 6,
+                  height: 30,
+                  justifyContent: 'flex-start',
+                  flexDirection: 'row',
+                }}>
+                <View
+                  style={{
+                    width: '80%',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                  }}>
+                  <Text
+                    style={{fontSize: 16, fontWeight: '400', color: 'black'}}>
+                    {props?.orgsState?.userIdAndNameMapping[userId]}
+                  </Text>
+                </View>
+                <Button
+                  title="remove"
+                  onPress={() => {
+                    var updatedUserIds = userIds.filter(id => id !== userId);
+                    setUserIds(updatedUserIds);
+                  }}
+                />
+              </View>
+            );
+          })}
         <View
           style={{
             flexDirection: 'row',
@@ -237,10 +261,10 @@ const CreateChannelModel = ({modalizeRef, props}) => {
                 props?.orgsState?.currentOrgId,
                 title,
                 channelType,
-                userIds
+                userIds,
               );
               modalizeRef?.current?.close();
-              setUserIds([])
+              setUserIds([]);
             }
           }}
         />
@@ -356,10 +380,12 @@ const mapDispatchToProps = dispatch => {
     getChannelsByQueryStartAction: (query, userToken, orgId) =>
       dispatch(getChannelsByQueryStart(query, userToken, orgId)),
     createNewChannelAction: (token, orgId, title, channelType, userIds) =>
-      dispatch(createNewChannelStart(token, orgId, title, channelType,userIds)),
+      dispatch(
+        createNewChannelStart(token, orgId, title, channelType, userIds),
+      ),
     createDmChannelAction: (token, orgId, title, reciverUserId) =>
       dispatch(createNewDmChannelStart(token, orgId, title, reciverUserId)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelsScreen);
- //9826018514 RTO IMP NO DONT DELETE
+//9826018514 RTO IMP NO DONT DELETE
