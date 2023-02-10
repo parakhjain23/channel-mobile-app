@@ -1,157 +1,23 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
   ActivityIndicator,
-  Alert,
   FlatList,
-  Image,
-  Keyboard,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-import {GestureHandlerRootView, Swipeable} from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
+import ListFooterComponent from '../../components/ListFooterComponent';
 import {
   getChatsStart,
   sendMessageStart,
 } from '../../redux/actions/chat/ChatActions';
 import {deleteMessageStart} from '../../redux/actions/chat/DeleteChatAction';
+import ChatCard from './ChatCard';
 
-const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
-  const id = content.match(/\{\{(.*?)\}\}/);
-  const extractedId = id ? id[1] : null;
-  const splitInput = content.split('}}');
-  const name = orgState?.userIdAndNameMapping[extractedId] +" "+  splitInput[1];;
-  const activityName = content.split(' ')[0];
-  const newContent =
-    content == 'joined this channel'
-      ? senderName + ' ' + content
-      : senderName + ' ' + activityName + ' ' + name;
-  return (
-    <View style={[styles.actionText]}>
-      <Text style={styles.text}>{newContent}</Text>
-    </View>
-  );
-};
-
-const ChatCard = ({
-  chat,
-  userInfoState,
-  orgState,
-  deleteMessageAction,
-  chatState,
-  setreplyOnMessage,
-  setrepliedMsgDetails,
-  // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
-}) => {
-  const [optionsVisible, setOptionsVisible] = useState(false);
-  const swipeableRef = useRef(null);
-  const onLongPress = () => {
-    setOptionsVisible(true);
-  };
-  const parentId = chat?.parentId;
-  const date = new Date(chat?.updatedAt);
-  const time = date.getHours() + ':' + date.getMinutes();
-  const sentByMe = chat?.senderId == userInfoState?.user?.id;
-  const SenderName =
-    chat?.senderId == userInfoState?.user?.id
-      ? 'You'
-      : orgState?.userIdAndNameMapping[chat?.senderId];
-  const swipeFromLeftOpen = () => {
-    setrepliedMsgDetails(chat);
-    setreplyOnMessage(true);
-    swipeableRef?.current?.close();
-  };
-  const LeftSwipeActions = () => {
-    return (
-      <View style={{width: '10%', justifyContent: 'center', zIndex: 0}}>
-        <Icon name="reply" size={20} />
-      </View>
-    );
-  };
-  return (
-    <>
-      {!chat?.isActivity ? (
-          <GestureHandlerRootView>
-        <TouchableOpacity onLongPress={sentByMe ? onLongPress : null}>
-            <Swipeable
-              ref={swipeableRef}
-              renderLeftActions={LeftSwipeActions}
-              onSwipeableLeftOpen={swipeFromLeftOpen}>
-              <View
-                style={[
-                  styles.container,
-                  sentByMe ? styles.sentByMe : styles.received,
-                ]}>
-                {/* {sentByMe ? null : (
-                  <Image source={{uri: image}} style={styles.avatar} />
-                )} */}
-                <View style={styles.textContainer}>
-                  <View style={{flexDirection: 'row',alignItems:'center'}}>
-                    <Text style={[styles.nameText, styles.text]}>
-                      {SenderName}
-                    </Text>
-                    <Text style={[styles.timeText, styles.text,{marginHorizontal:10}]}>{time}</Text>
-                  </View>
-                  {parentId != null && (
-                    <View style={styles.repliedContainer}>
-                      <Text style={styles.text}>
-                        {
-                          chatState?.data[chat.teamId]?.parentMessages[parentId]
-                            ?.content
-                        }
-                      </Text>
-                    </View>
-                  )}
-                  <Text style={[styles.messageText, styles.text]}>
-                    {chat?.content}
-                  </Text>
-                </View>
-                {/* <Text style={[styles.timeText, styles.text]}>{time}</Text> */}
-                {/* {sentByMe ? (
-                  <Image source={{uri: image}} style={styles.avatar} />
-                ) : null} */}
-              </View>
-              <View style={sentByMe ? styles.sentByMe : styles.received}>
-                {optionsVisible && (
-                  <TouchableOpacity
-                    onPress={() => {
-                      setOptionsVisible(false),
-                        deleteMessageAction(
-                          userInfoState?.accessToken,
-                          chat?._id,
-                        );
-                    }}>
-                    <Text style={styles.text}>Delete</Text>
-                  </TouchableOpacity>
-                )}
-              </View>
-            </Swipeable>
-        </TouchableOpacity>
-          </GestureHandlerRootView>
-      ) : (
-        <AddRemoveJoinedMsg
-          senderName={SenderName}
-          content={chat?.content}
-          orgState={orgState}
-        />
-      )}
-    </>
-  );
-};
-const ListFooterComponent = () => {
-  const [animate, setAnimate] = useState(true);
-  useEffect(() => {
-    setTimeout(() => {
-      setAnimate(false);
-    }, 1000);
-  });
-  return <ActivityIndicator animating={animate} size={'small'} />;
-};
 const ChatScreen = ({
   route,
   userInfoState,
@@ -160,15 +26,16 @@ const ChatScreen = ({
   chatState,
   orgState,
   deleteMessageAction,
-  channelsState
+  channelsState,
 }) => {
-  var {teamId,reciverUserId} = route.params;
-  if(teamId == undefined){
-    teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId]
+  var {teamId, reciverUserId} = route.params;
+  if (teamId == undefined) {
+    teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
   }
   const [message, onChangeMessage] = React.useState(null);
   const [replyOnMessage, setreplyOnMessage] = useState(false);
   const [repliedMsgDetails, setrepliedMsgDetails] = useState('');
+
   const skip =
     chatState?.data[teamId]?.messages.length != undefined
       ? chatState?.data[teamId]?.messages.length
@@ -183,37 +50,48 @@ const ChatScreen = ({
       fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
     }
   }, []);
+  const renderItem = useCallback(
+    ({item, index}) => (
+      console.log(index),
+      (
+        <ChatCard
+          chat={item}
+          userInfoState={userInfoState}
+          orgState={orgState}
+          deleteMessageAction={deleteMessageAction}
+          chatState={chatState}
+          setreplyOnMessage={setreplyOnMessage}
+          setrepliedMsgDetails={setrepliedMsgDetails}
+        />
+      )
+    ),
+    [
+      chatState,
+      userInfoState,
+      orgState,
+      deleteMessageAction,
+      setreplyOnMessage,
+      setrepliedMsgDetails,
+    ],
+  );
+  const onEndReached = useCallback(() => {
+    fetchChatsOfTeamAction(teamId, userInfoState?.accessToken, skip);
+  }, [teamId, userInfoState, skip, fetchChatsOfTeamAction]);
   return (
     <View style={{flex: 1}}>
       <View style={{flex: 7}}>
         {teamId == undefined ? (
           <ActivityIndicator />
         ) : (
-        <FlatList
-          data={chatState?.data[teamId]?.messages || []}
-          renderItem={({item}) => (
-            <ChatCard
-              chat={item}
-              userInfoState={userInfoState}
-              orgState={orgState}
-              deleteMessageAction={deleteMessageAction}
-              chatState={chatState}
-              setreplyOnMessage={setreplyOnMessage}
-              setrepliedMsgDetails={setrepliedMsgDetails}
-            />
-          )}
-          inverted
-          ListFooterComponent={
-            chatState?.data[teamId]?.messages?.length > 15 &&
-            ListFooterComponent
-          }
-          onEndReached={() => {
-            fetchChatsOfTeamAction(teamId, userInfoState?.accessToken, skip);
-          }}
-          onEndReachedThreshold={0.2}
-          // contentContainerStyle={{ flexDirection: 'column-reverse' }}
-        />
-        )} 
+          <FlatList
+            data={chatState?.data[teamId]?.messages || []}
+            renderItem={renderItem}
+            inverted
+            ListFooterComponent={chatState?.data[teamId]?.messages?.length>15 && ListFooterComponent}
+            onEndReached={onEndReached}
+            onEndReachedThreshold={0.2}
+          />
+        )}
       </View>
       <View style={{margin: 10, justifyContent: 'center'}}>
         <View style={{flexDirection: 'row'}}>
