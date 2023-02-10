@@ -35,7 +35,14 @@ const ChatScreen = ({
   const [message, onChangeMessage] = React.useState(null);
   const [replyOnMessage, setreplyOnMessage] = useState(false);
   const [repliedMsgDetails, setrepliedMsgDetails] = useState('');
-
+  const [localMessage, setLocalMessage] = useState([]);
+  console.log(localMessage,'=-=-=-=-');
+  const data = chatState?.data[teamId]?.messages
+    ? [...localMessage, ...chatState?.data[teamId]?.messages]
+    : [...localMessage, ...[]];
+  useEffect(() => {
+    setLocalMessage([]);
+  }, [chatState?.data[teamId]?.messages]);
   const skip =
     chatState?.data[teamId]?.messages.length != undefined
       ? chatState?.data[teamId]?.messages.length
@@ -84,10 +91,13 @@ const ChatScreen = ({
           <ActivityIndicator />
         ) : (
           <FlatList
-            data={chatState?.data[teamId]?.messages || []}
+            data={data}
             renderItem={renderItem}
             inverted
-            ListFooterComponent={chatState?.data[teamId]?.messages?.length>15 && ListFooterComponent}
+            ListFooterComponent={
+              chatState?.data[teamId]?.messages?.length > 15 &&
+              ListFooterComponent
+            }
             onEndReached={onEndReached}
             onEndReachedThreshold={0.2}
           />
@@ -126,14 +136,31 @@ const ChatScreen = ({
               name="send"
               size={20}
               onPress={() => {
-                sendMessageAction(
-                  message.trim(),
-                  teamId,
-                  orgState?.currentOrgId,
-                  userInfoState?.user?.id,
-                  userInfoState?.accessToken,
-                  repliedMsgDetails?._id || null,
-                );
+                setLocalMessage([
+                  {
+                    _id: '74636676346c776d66616734',
+                    content: message,
+                    createdAt: '2023-02-06T07:23:08.299Z',
+                    deleted: false,
+                    isActivity: false,
+                    isLink: false,
+                    isParent: false,
+                    orgId: orgState?.currentOrgId,
+                    parentId: null,
+                    senderId: 'Qn09wauelBpsFNdO',
+                    senderType: 'USER',
+                    teamId: teamId,
+                  },
+                  ...localMessage,
+                ]),
+                  sendMessageAction(
+                    message.trim(),
+                    teamId,
+                    orgState?.currentOrgId,
+                    userInfoState?.user?.id,
+                    userInfoState?.accessToken,
+                    repliedMsgDetails?._id || null,
+                  );
                 onChangeMessage('');
                 setreplyOnMessage(false);
                 setrepliedMsgDetails(null);
