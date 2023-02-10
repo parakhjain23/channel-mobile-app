@@ -46,7 +46,7 @@ const ChatCard = ({
   chatState,
   setreplyOnMessage,
   setrepliedMsgDetails,
-  image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
+  // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
   const [optionsVisible, setOptionsVisible] = useState(false);
   const swipeableRef = useRef(null);
@@ -87,9 +87,9 @@ const ChatCard = ({
                   styles.container,
                   sentByMe ? styles.sentByMe : styles.received,
                 ]}>
-                {sentByMe ? null : (
+                {/* {sentByMe ? null : (
                   <Image source={{uri: image}} style={styles.avatar} />
-                )}
+                )} */}
                 <View style={styles.textContainer}>
                   <View style={{flexDirection: 'row',alignItems:'center'}}>
                     <Text style={[styles.nameText, styles.text]}>
@@ -112,9 +112,9 @@ const ChatCard = ({
                   </Text>
                 </View>
                 {/* <Text style={[styles.timeText, styles.text]}>{time}</Text> */}
-                {sentByMe ? (
+                {/* {sentByMe ? (
                   <Image source={{uri: image}} style={styles.avatar} />
-                ) : null}
+                ) : null} */}
               </View>
               <View style={sentByMe ? styles.sentByMe : styles.received}>
                 {optionsVisible && (
