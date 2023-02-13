@@ -35,6 +35,11 @@ const ChatScreen = ({
   const [message, onChangeMessage] = React.useState(null);
   const [replyOnMessage, setreplyOnMessage] = useState(false);
   const [repliedMsgDetails, setrepliedMsgDetails] = useState('');
+  const [localMsg, setlocalMsg] = useState([]);
+  useEffect(() => {
+    localMsg?.shift();
+  }, [chatState?.data[teamId]?.messages]);
+  console.log(localMsg, '-=-=-=-=-');
   const skip =
     chatState?.data[teamId]?.messages.length != undefined
       ? chatState?.data[teamId]?.messages.length
@@ -76,23 +81,31 @@ const ChatScreen = ({
   const onEndReached = useCallback(() => {
     fetchChatsOfTeamAction(teamId, userInfoState?.accessToken, skip);
   }, [teamId, userInfoState, skip, fetchChatsOfTeamAction]);
+  const date = new Date()
+  const time = date.getHours()+":"+date.getMinutes()
+  console.log(time,';;;');
   return (
     <View style={{flex: 1}}>
       <View style={{flex: 7}}>
         {teamId == undefined ? (
           <ActivityIndicator />
         ) : (
-          <FlatList
-            data={chatState?.data[teamId]?.messages}
-            renderItem={renderItem}
-            inverted
-            ListFooterComponent={
-              chatState?.data[teamId]?.messages?.length > 15 &&
-              ListFooterComponent
-            }
-            onEndReached={onEndReached}
-            onEndReachedThreshold={0.2}
-          />
+          <>
+            <FlatList
+              data={chatState?.data[teamId]?.messages || []}
+              renderItem={renderItem}
+              inverted
+              ListFooterComponent={
+                chatState?.data[teamId]?.messages?.length > 15 &&
+                ListFooterComponent
+              }
+              onEndReached={onEndReached}
+              onEndReachedThreshold={0.2}
+            />
+            {localMsg?.length > 0 && (
+              <FlatList data={localMsg} renderItem={renderItem} />
+            )}
+          </>
         )}
       </View>
       <View style={{margin: 10, justifyContent: 'center'}}>
@@ -128,6 +141,25 @@ const ChatScreen = ({
               name="send"
               size={20}
               onPress={() => {
+                setlocalMsg([
+                  ...localMsg,
+                  {
+                    _id: '70356973726265363273736f',
+                    appId: '62b53b61b5b4a2001fb9af37',
+                    content: message,
+                    createdAt: time,
+                    isLink: false,
+                    mentions: [],
+                    orgId: orgState?.currentOrgId,
+                    parentId: repliedMsgDetails?._id,
+                    requestId: '73d31f2e-9039-401c-83cd-909953c264f1',
+                    senderId: userInfoState?.user?.id,
+                    senderType: 'APP',
+                    showInMainConversation: true,
+                    teamId: '63e09e1f0916f000183a9d87',
+                    updatedAt: '2023-02-13T09:03:23.042Z',
+                  },
+                ]),
                   sendMessageAction(
                     message.trim(),
                     teamId,
