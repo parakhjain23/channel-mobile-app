@@ -35,14 +35,6 @@ const ChatScreen = ({
   const [message, onChangeMessage] = React.useState(null);
   const [replyOnMessage, setreplyOnMessage] = useState(false);
   const [repliedMsgDetails, setrepliedMsgDetails] = useState('');
-  const [localMessage, setLocalMessage] = useState([]);
-  console.log(localMessage,'=-=-=-=-');
-  const data = chatState?.data[teamId]?.messages
-    ? [...localMessage, ...chatState?.data[teamId]?.messages]
-    : [...localMessage, ...[]];
-  useEffect(() => {
-    setLocalMessage([]);
-  }, [chatState?.data[teamId]?.messages]);
   const skip =
     chatState?.data[teamId]?.messages.length != undefined
       ? chatState?.data[teamId]?.messages.length
@@ -59,8 +51,8 @@ const ChatScreen = ({
   }, []);
   const renderItem = useCallback(
     ({item, index}) => (
-      console.log(index),
       (
+        console.log(index),
         <ChatCard
           chat={item}
           userInfoState={userInfoState}
@@ -91,7 +83,7 @@ const ChatScreen = ({
           <ActivityIndicator />
         ) : (
           <FlatList
-            data={data}
+            data={chatState?.data[teamId]?.messages}
             renderItem={renderItem}
             inverted
             ListFooterComponent={
@@ -136,23 +128,6 @@ const ChatScreen = ({
               name="send"
               size={20}
               onPress={() => {
-                setLocalMessage([
-                  {
-                    _id: '74636676346c776d66616734',
-                    content: message,
-                    createdAt: '2023-02-06T07:23:08.299Z',
-                    deleted: false,
-                    isActivity: false,
-                    isLink: false,
-                    isParent: false,
-                    orgId: orgState?.currentOrgId,
-                    parentId: null,
-                    senderId: 'Qn09wauelBpsFNdO',
-                    senderType: 'USER',
-                    teamId: teamId,
-                  },
-                  ...localMessage,
-                ]),
                   sendMessageAction(
                     message.trim(),
                     teamId,
