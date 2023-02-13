@@ -1,18 +1,14 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginScreen from '../screens/loginScreen/LoginScreen';
 import {connect, useDispatch} from 'react-redux';
-import {createDrawerNavigator} from '@react-navigation/drawer';
 import DrawerNavigation from './DrawerNavigation';
 import ChatScreen from '../screens/chatScreen/ChatScreen';
-import { initializeSocket } from '../redux/actions/socket/socketActions';
-import { createSocket } from '../utils/Socket';
-import { addNewMessage } from '../redux/actions/chat/ChatActions';
+import {initializeSocket} from '../redux/actions/socket/socketActions';
 // import {useNavigation, useTheme} from '@react-navigation/native';
 
-const ProtectedNavigation = ({userInfoSate,orgsState}) => {
+const ProtectedNavigation = ({userInfoSate, orgsState}) => {
   const Stack = createNativeStackNavigator();
-  const Drawer = createDrawerNavigator();
   //   const navigate = useNavigation();
   //   const {colors} = useTheme();
   //   const getShopingCartHeader = {
@@ -27,9 +23,11 @@ const ProtectedNavigation = ({userInfoSate,orgsState}) => {
   //   };
   const dispatch = useDispatch();
   useEffect(() => {
-      dispatch(initializeSocket(userInfoSate?.accessToken,orgsState?.currentOrgId));
-  }, [userInfoSate?.accessToken,orgsState?.currentOrgId])
-  
+    dispatch(
+      initializeSocket(userInfoSate?.accessToken, orgsState?.currentOrgId),
+    );
+  }, [userInfoSate?.accessToken, orgsState?.currentOrgId]);
+
   return !userInfoSate?.isSignedIn ? (
     <Stack.Navigator>
       <Stack.Screen
@@ -39,21 +37,21 @@ const ProtectedNavigation = ({userInfoSate,orgsState}) => {
       />
     </Stack.Navigator>
   ) : (
-      <Stack.Navigator initialRouteName="Org">
-        <Stack.Screen
-          name="Org"
-          component={DrawerNavigation}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Chat"
-          component={ChatScreen}
-          options={({route}) => ({
-            headerTitle: route?.params?.chatHeaderTitle,
-            headerShown: true,
-          })}
-        />
-      </Stack.Navigator>
+    <Stack.Navigator initialRouteName="Org">
+      <Stack.Screen
+        name="Org"
+        component={DrawerNavigation}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Chat"
+        component={ChatScreen}
+        options={({route}) => ({
+          headerTitle: route?.params?.chatHeaderTitle,
+          headerShown: true,
+        })}
+      />
+    </Stack.Navigator>
   );
 };
 
