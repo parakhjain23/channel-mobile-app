@@ -39,11 +39,11 @@ export function createSocket(accessToken, orgId) {
     console.log('Disconnected');
   });
   return socket;
-};
+}
 
-export function closeSocket(){
- if(socket.connected()){
-  socket.off()
-  socket.close()
- }
+export function closeSocket() {
+  if (socket.connected) {
+    socket.off();
+    socket.close();
+  }
 }
