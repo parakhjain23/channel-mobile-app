@@ -3,12 +3,15 @@ import { createNewChannelSuccess } from '../redux/actions/channels/CreateNewChan
 import {addNewMessage} from '../redux/actions/chat/ChatActions';
 import {deleteMessageSuccess} from '../redux/actions/chat/DeleteChatAction';
 import { newUserJoinedAOrg } from '../redux/actions/org/GetAllUsersOfOrg';
-import { userInfoReducer } from '../redux/reducers/user/UserInfo';
 import {store} from '../redux/Store';
+import { PlayLocalSoundFile } from './Sounds';
 
 const SocketService = socket => {
   socket.on('chat/message created', data => {
     console.log("chat message created",data);
+    if(data?.senderId != store?.getState()?.userInfoReducer?.user?.id){
+      PlayLocalSoundFile()
+    }
     store.dispatch(addNewMessage(data));
     store.dispatch(moveChannelToTop(data?.teamId));
   });
