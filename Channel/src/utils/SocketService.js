@@ -2,16 +2,24 @@ import {moveChannelToTop} from '../redux/actions/channels/ChannelsAction';
 import {createNewChannelSuccess} from '../redux/actions/channels/CreateNewChannelAction';
 import {addNewMessage} from '../redux/actions/chat/ChatActions';
 import {deleteMessageSuccess} from '../redux/actions/chat/DeleteChatAction';
-import {newUserJoinedAOrg} from '../redux/actions/org/GetAllUsersOfOrg';
+import { newUserJoinedAOrg } from '../redux/actions/org/GetAllUsersOfOrg';
 import {store} from '../redux/Store';
-import {createSocket} from './Socket';
+import { createSocket } from './Socket';
+import { PlayLocalSoundFile } from './Sounds';
 
 const SocketService = socket => {
+  socket.on('connect', () => {
+    console.log('Connected in socket service');
+  });
   socket.on('reconnect', function () {
-    createSocket(store.getState()?.userInfoReducer?.accessToken,store.getState()?.orgsReducer?.currentOrgId)
+    console.log('in reconnect socket event');
+    // createSocket(store.getState()?.userInfoReducer?.accessToken,store.getState()?.orgsReducer?.currentOrgId)
   });
   socket.on('chat/message created', data => {
-    console.log('chat message created', data);
+    console.log("chat message created",data);
+    if(data?.senderId != store?.getState()?.userInfoReducer?.user?.id){
+      PlayLocalSoundFile()
+    }
     store.dispatch(addNewMessage(data));
     store.dispatch(moveChannelToTop(data?.teamId));
   });

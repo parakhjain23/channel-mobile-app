@@ -57,7 +57,6 @@ const ChatScreen = ({
   }, []);
   const renderItem = useCallback(
     ({item, index}) => (
-      console.log(index),
       (
         <ChatCardMemo
           chat={item}
@@ -178,7 +177,7 @@ const ChatScreen = ({
                     isLink: false,
                     mentions: [],
                     orgId: orgState?.currentOrgId,
-                    parentId: null,
+                    parentId: repliedMsgDetails?._id,
                     requestId: '73d31f2e-9039-401c-83cd-909953c264f1',
                     senderId: userInfoState?.user?.id,
                     senderType: 'APP',
