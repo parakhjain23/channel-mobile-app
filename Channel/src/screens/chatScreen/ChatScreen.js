@@ -16,7 +16,7 @@ import {
   sendMessageStart,
 } from '../../redux/actions/chat/ChatActions';
 import {deleteMessageStart} from '../../redux/actions/chat/DeleteChatAction';
-import ChatCard from './ChatCard';
+import {ChatCardMemo, LocalChatCardMemo} from './ChatCard';
 
 const ChatScreen = ({
   route,
@@ -36,10 +36,11 @@ const ChatScreen = ({
   const [replyOnMessage, setreplyOnMessage] = useState(false);
   const [repliedMsgDetails, setrepliedMsgDetails] = useState('');
   const [localMsg, setlocalMsg] = useState([]);
+  const memoizedData = useMemo(() => chatState?.data[teamId]?.messages || []);
   useEffect(() => {
     localMsg?.shift();
+    console.log(localMsg, '-=-=-=-');
   }, [chatState?.data[teamId]?.messages]);
-  console.log(localMsg, '-=-=-=-=-');
   const skip =
     chatState?.data[teamId]?.messages.length != undefined
       ? chatState?.data[teamId]?.messages.length
@@ -58,7 +59,31 @@ const ChatScreen = ({
     ({item, index}) => (
       console.log(index),
       (
-        <ChatCard
+        <ChatCardMemo
+          chat={item}
+          userInfoState={userInfoState}
+          orgState={orgState}
+          deleteMessageAction={deleteMessageAction}
+          chatState={chatState}
+          setreplyOnMessage={setreplyOnMessage}
+          setrepliedMsgDetails={setrepliedMsgDetails}
+        />
+      )
+    ),
+    [
+      chatState,
+      userInfoState,
+      orgState,
+      deleteMessageAction,
+      setreplyOnMessage,
+      setrepliedMsgDetails,
+    ],
+  );
+  const renderItemLocal = useCallback(
+    ({item, index}) => (
+      console.log(index, 'local'),
+      (
+        <LocalChatCardMemo
           chat={item}
           userInfoState={userInfoState}
           orgState={orgState}
@@ -81,18 +106,16 @@ const ChatScreen = ({
   const onEndReached = useCallback(() => {
     fetchChatsOfTeamAction(teamId, userInfoState?.accessToken, skip);
   }, [teamId, userInfoState, skip, fetchChatsOfTeamAction]);
-  const date = new Date()
-  const time = date.getHours()+":"+date.getMinutes()
-  console.log(time,';;;');
+  const date = new Date();
   return (
     <View style={{flex: 1}}>
-      <View style={{flex: 7}}>
+      <View style={{flex: 1}}>
         {teamId == undefined ? (
           <ActivityIndicator />
         ) : (
           <>
             <FlatList
-              data={chatState?.data[teamId]?.messages || []}
+              data={memoizedData}
               renderItem={renderItem}
               inverted
               ListFooterComponent={
@@ -103,12 +126,15 @@ const ChatScreen = ({
               onEndReachedThreshold={0.2}
             />
             {localMsg?.length > 0 && (
-              <FlatList data={localMsg} renderItem={renderItem} />
+              <FlatList
+                data={localMsg}
+                renderItem={renderItemLocal}
+              />
             )}
           </>
         )}
       </View>
-      <View style={{margin: 10, justifyContent: 'center'}}>
+      <View style={{margin: 10}}>
         <View style={{flexDirection: 'row'}}>
           <View
             style={[
@@ -136,10 +162,11 @@ const ChatScreen = ({
               onSubmitEditing={() => onChangeMessage('')}
             />
           </View>
-          <View style={{justifyContent: 'center', margin: 10}}>
+          <View style={{justifyContent: 'flex-end'}}>
             <MaterialIcons
               name="send"
-              size={20}
+              size={25}
+              style={{color: 'black', padding: 10}}
               onPress={() => {
                 setlocalMsg([
                   ...localMsg,
@@ -147,7 +174,7 @@ const ChatScreen = ({
                     _id: '70356973726265363273736f',
                     appId: '62b53b61b5b4a2001fb9af37',
                     content: message,
-                    createdAt: time,
+                    createdAt: date,
                     isLink: false,
                     mentions: [],
                     orgId: orgState?.currentOrgId,
@@ -157,7 +184,7 @@ const ChatScreen = ({
                     senderType: 'APP',
                     showInMainConversation: true,
                     teamId: '63e09e1f0916f000183a9d87',
-                    updatedAt: '2023-02-13T09:03:23.042Z',
+                    updatedAt: date,
                   },
                 ]),
                   sendMessageAction(
@@ -206,8 +233,8 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   inputWithoutReply: {
-    padding: 20,
-    alignItems: 'center',
+    minHeight: 40,
+    paddingHorizontal: 10,
     borderWidth: 1,
     borderRadius: 10,
     borderColor: 'grey',
