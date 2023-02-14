@@ -4,7 +4,8 @@ import LoginScreen from '../screens/loginScreen/LoginScreen';
 import {connect, useDispatch} from 'react-redux';
 import DrawerNavigation from './DrawerNavigation';
 import ChatScreen from '../screens/chatScreen/ChatScreen';
-import {initializeSocket} from '../redux/actions/socket/socketActions';
+import {initializeSocket, subscribeToNotifications} from '../redux/actions/socket/socketActions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import {useNavigation, useTheme} from '@react-navigation/native';
 
 const ProtectedNavigation = ({userInfoSate, orgsState}) => {
@@ -23,9 +24,18 @@ const ProtectedNavigation = ({userInfoSate, orgsState}) => {
   //   };
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(
-      initializeSocket(userInfoSate?.accessToken, orgsState?.currentOrgId),
-    );
+    if(userInfoSate?.accessToken){
+      dispatch(
+        initializeSocket(userInfoSate?.accessToken, orgsState?.currentOrgId),
+      );
+      AsyncStorage.getItem('FCM_TOKEN')
+      .then(token => {
+        dispatch(subscribeToNotifications(userInfoSate?.accessToken,token))
+      })
+      .catch(error => {
+        console.log('Error retrieving FCM_TOkEN from AsyncStorage: ', error);
+      });
+    }
   }, [userInfoSate?.accessToken, orgsState?.currentOrgId]);
 
   return !userInfoSate?.isSignedIn ? (

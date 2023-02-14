@@ -39,7 +39,6 @@ const ChatScreen = ({
   useEffect(() => {
     localMsg?.shift();
   }, [chatState?.data[teamId]?.messages]);
-  console.log(localMsg, '-=-=-=-=-');
   const skip =
     chatState?.data[teamId]?.messages.length != undefined
       ? chatState?.data[teamId]?.messages.length
@@ -57,7 +56,6 @@ const ChatScreen = ({
   const renderItem = useCallback(
     ({item, index}) => (
       (
-        console.log(index),
         <ChatCard
           chat={item}
           userInfoState={userInfoState}
@@ -83,7 +81,6 @@ const ChatScreen = ({
   }, [teamId, userInfoState, skip, fetchChatsOfTeamAction]);
   const date = new Date()
   const time = date.getHours()+":"+date.getMinutes()
-  console.log(time,';;;');
   return (
     <View style={{flex: 1}}>
       <View style={{flex: 7}}>

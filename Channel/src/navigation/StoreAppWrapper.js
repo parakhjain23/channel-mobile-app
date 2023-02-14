@@ -4,8 +4,6 @@ import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import SplashScreen from '../screens/splashScreen/SplashScreen';
 import AppWrapper from './AppWraper';
-import { initializeSocket } from '../redux/actions/socket/socketActions';
-
 
 const StoreAppWrapper = () => {
   const [showSplashScreen, setShowSplashScreen] = useState(true);
