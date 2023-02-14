@@ -28,13 +28,13 @@ const ProtectedNavigation = ({userInfoSate, orgsState}) => {
       dispatch(
         initializeSocket(userInfoSate?.accessToken, orgsState?.currentOrgId),
       );
-      AsyncStorage.getItem('FCM_TOKEN')
-      .then(token => {
-        dispatch(subscribeToNotifications(userInfoSate?.accessToken,token))
-      })
-      .catch(error => {
-        console.log('Error retrieving FCM_TOkEN from AsyncStorage: ', error);
-      });
+      // AsyncStorage.getItem('FCM_TOKEN')
+      // .then(token => {
+      //   dispatch(subscribeToNotifications(userInfoSate?.accessToken,token))
+      // })
+      // .catch(error => {
+      //   console.log('Error retrieving FCM_TOkEN from AsyncStorage: ', error);
+      // });
     }
   }, [userInfoSate?.accessToken, orgsState?.currentOrgId]);
 
