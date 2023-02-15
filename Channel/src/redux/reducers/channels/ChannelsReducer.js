@@ -55,12 +55,16 @@ export function channelsReducer(state = initialState, action) {
 
     case Actions.CREATE_NEW_CHANNEL_SUCCESS:
       var userIdAndTeamIdMapping = {};
+      var teamIdAndNameMapping ={}
       if (action?.channel?.type == 'DIRECT_MESSAGE') {
         key =
           action?.channel.userIds[0] != action?.userId
             ? action?.channel?.userIds[0]
             : action?.channel.userIds[1];
         userIdAndTeamIdMapping[key] = action?.channel?._id;
+      }else if(action?.channel.type == 'PUBLIC' || action?.channel?.type == 'DEFAULT'){
+        key = action?.channel._id 
+        teamIdAndNameMapping[key] = action?.channel?.name
       }
       return {
         ...state,
@@ -69,6 +73,10 @@ export function channelsReducer(state = initialState, action) {
           ...state?.userIdAndTeamIdMapping,
           ...userIdAndTeamIdMapping,
         },
+        teamIdAndNameMapping:{
+          ...state?.teamIdAndNameMapping,
+          ...teamIdAndNameMapping
+        }
       };
     
     case Actions.SET_ACTIVE_CHANNEL_TEAMID:
