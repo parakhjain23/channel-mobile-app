@@ -16,7 +16,7 @@ import {
   sendMessageStart,
 } from '../../redux/actions/chat/ChatActions';
 import {deleteMessageStart} from '../../redux/actions/chat/DeleteChatAction';
-import ChatCard from './ChatCard';
+import {ChatCardMemo, LocalChatCardMemo} from './ChatCard';
 
 const ChatScreen = ({
   route,
@@ -35,13 +35,15 @@ const ChatScreen = ({
   const [message, onChangeMessage] = React.useState(null);
   const [replyOnMessage, setreplyOnMessage] = useState(false);
   const [repliedMsgDetails, setrepliedMsgDetails] = useState('');
-  const [localMessage, setLocalMessage] = useState([]);
-  console.log(localMessage,'=-=-=-=-');
-  const data = chatState?.data[teamId]?.messages
-    ? [...localMessage, ...chatState?.data[teamId]?.messages]
-    : [...localMessage, ...[]];
+  const [localMsg, setlocalMsg] = useState([]);
+
+  const memoizedData = useMemo(
+    () => chatState?.data[teamId]?.messages || [],
+    [chatState?.data[teamId]?.messages],
+  );
   useEffect(() => {
-    setLocalMessage([]);
+    localMsg?.shift();
+    console.log(localMsg, '-=-=-=-');
   }, [chatState?.data[teamId]?.messages]);
   const skip =
     chatState?.data[teamId]?.messages.length != undefined
@@ -61,7 +63,31 @@ const ChatScreen = ({
     ({item, index}) => (
       console.log(index),
       (
-        <ChatCard
+        <ChatCardMemo
+          chat={item}
+          userInfoState={userInfoState}
+          orgState={orgState}
+          deleteMessageAction={deleteMessageAction}
+          chatState={chatState}
+          setreplyOnMessage={setreplyOnMessage}
+          setrepliedMsgDetails={setrepliedMsgDetails}
+        />
+      )
+    ),
+    [
+      chatState,
+      userInfoState,
+      orgState,
+      deleteMessageAction,
+      setreplyOnMessage,
+      setrepliedMsgDetails,
+    ],
+  );
+  const renderItemLocal = useCallback(
+    ({item, index}) => (
+      console.log(index, 'local'),
+      (
+        <LocalChatCardMemo
           chat={item}
           userInfoState={userInfoState}
           orgState={orgState}
@@ -84,26 +110,32 @@ const ChatScreen = ({
   const onEndReached = useCallback(() => {
     fetchChatsOfTeamAction(teamId, userInfoState?.accessToken, skip);
   }, [teamId, userInfoState, skip, fetchChatsOfTeamAction]);
+  const date = new Date();
   return (
     <View style={{flex: 1}}>
-      <View style={{flex: 7}}>
+      <View style={{flex: 1}}>
         {teamId == undefined ? (
           <ActivityIndicator />
         ) : (
-          <FlatList
-            data={data}
-            renderItem={renderItem}
-            inverted
-            ListFooterComponent={
-              chatState?.data[teamId]?.messages?.length > 15 &&
-              ListFooterComponent
-            }
-            onEndReached={onEndReached}
-            onEndReachedThreshold={0.2}
-          />
+          <>
+            <FlatList
+              data={memoizedData}
+              renderItem={renderItem}
+              inverted
+              ListFooterComponent={
+                chatState?.data[teamId]?.messages?.length > 15 &&
+                ListFooterComponent
+              }
+              onEndReached={onEndReached}
+              onEndReachedThreshold={0.2}
+            />
+            {localMsg?.length > 0 && (
+              <FlatList data={localMsg} renderItem={renderItemLocal} />
+            )}
+          </>
         )}
       </View>
-      <View style={{margin: 10, justifyContent: 'center'}}>
+      <View style={{margin: 10}}>
         <View style={{flexDirection: 'row'}}>
           <View
             style={[
@@ -128,30 +160,32 @@ const ChatScreen = ({
                   ? styles.inputWithReply
                   : styles.inputWithoutReply,
               ]}
-              onSubmitEditing={() => onChangeMessage('')}
             />
           </View>
-          <View style={{justifyContent: 'center', margin: 10}}>
+          <View style={{justifyContent: 'flex-end'}}>
             <MaterialIcons
               name="send"
-              size={20}
+              size={25}
+              style={{color: 'black', padding: 10}}
               onPress={() => {
-                setLocalMessage([
+                setlocalMsg([
+                  ...localMsg,
                   {
-                    _id: '74636676346c776d66616734',
+                    _id: '70356973726265363273736f',
+                    appId: '62b53b61b5b4a2001fb9af37',
                     content: message,
-                    createdAt: '2023-02-06T07:23:08.299Z',
-                    deleted: false,
-                    isActivity: false,
+                    createdAt: date,
                     isLink: false,
-                    isParent: false,
+                    mentions: [],
                     orgId: orgState?.currentOrgId,
                     parentId: null,
-                    senderId: 'Qn09wauelBpsFNdO',
-                    senderType: 'USER',
-                    teamId: teamId,
+                    requestId: '73d31f2e-9039-401c-83cd-909953c264f1',
+                    senderId: userInfoState?.user?.id,
+                    senderType: 'APP',
+                    showInMainConversation: true,
+                    teamId: '63e09e1f0916f000183a9d87',
+                    updatedAt: date,
                   },
-                  ...localMessage,
                 ]),
                   sendMessageAction(
                     message.trim(),
@@ -162,8 +196,8 @@ const ChatScreen = ({
                     repliedMsgDetails?._id || null,
                   );
                 onChangeMessage('');
-                setreplyOnMessage(false);
-                setrepliedMsgDetails(null);
+                replyOnMessage && setreplyOnMessage(false);
+                repliedMsgDetails && setrepliedMsgDetails(null);
               }}
             />
           </View>
@@ -199,8 +233,8 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   inputWithoutReply: {
-    padding: 20,
-    alignItems: 'center',
+    minHeight: 40,
+    paddingHorizontal: 10,
     borderWidth: 1,
     borderRadius: 10,
     borderColor: 'grey',
