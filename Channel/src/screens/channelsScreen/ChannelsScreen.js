@@ -12,13 +12,14 @@ import {connect} from 'react-redux';
 import {getChannelsStart} from '../../redux/actions/channels/ChannelsAction';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SearchBox from '../../components/searchBox';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {FAB, RadioButton, TextInput} from 'react-native-paper';
 import {Modalize} from 'react-native-modalize';
 import {CHANNEL_TYPE} from '../../constants/Constants';
 import {createNewChannelStart} from '../../redux/actions/channels/CreateNewChannelAction';
 import {getChannelsByQueryStart} from '../../redux/actions/channels/ChannelsByQueryAction';
 import {createNewDmChannelStart} from '../../redux/actions/channels/CreateNewDmChannelAction';
+import { resetActiveChannelTeamId, setActiveChannelTeamId } from '../../redux/actions/channels/SetActiveChannelId';
 
 const RenderChannels = ({item, navigation, props}) => {
   const Name =
@@ -44,7 +45,8 @@ const RenderChannels = ({item, navigation, props}) => {
         justifyContent: 'center',
       }}
       onPress={() =>
-        navigation.navigate('Chat', {chatHeaderTitle: Name, teamId: item?._id})
+{        props?.setActiveChannelTeamIdAction(item?._id)
+        navigation.navigate('Chat', {chatHeaderTitle: Name, teamId: item?._id})}
       }>
       <View
         style={{
@@ -277,6 +279,12 @@ const ChannelsScreen = props => {
   const [searchValue, setsearchValue] = useState('');
   const navigation = useNavigation();
   const modalizeRef = useRef(null);
+  const isFocused = useIsFocused()
+  useEffect(()=>{
+    if(isFocused){
+      props?.resetActiveChannelTeamIdAction()
+    }
+  },[isFocused])
   useEffect(() => {
     if (searchValue != '') {
       props.getChannelsByQueryStartAction(
@@ -385,6 +393,8 @@ const mapDispatchToProps = dispatch => {
       ),
     createDmChannelAction: (token, orgId, title, reciverUserId) =>
       dispatch(createNewDmChannelStart(token, orgId, title, reciverUserId)),
+    setActiveChannelTeamIdAction : (teamId) => dispatch(setActiveChannelTeamId(teamId)),
+    resetActiveChannelTeamIdAction : () => dispatch(resetActiveChannelTeamId())
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelsScreen);

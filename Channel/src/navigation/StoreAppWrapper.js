@@ -9,7 +9,6 @@ import Notifee, {
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { subscribeToNotifications } from '../redux/actions/socket/socketActions';
-import { PermissionsAndroid } from 'react-native';
 
 
 const StoreAppWrapper = ({userInfoState}) => {
@@ -18,12 +17,11 @@ const StoreAppWrapper = ({userInfoState}) => {
     useEffect(() => {
         setNotificationListeners();
         initPushNotification();
-      },[])
+      },[]) 
       const initPushNotification = async () => {
         console.log("inside init push notification");
         try {
           await Notifee.requestPermission()
-          await Notifee.deleteChannel('fcm_channel');
           await Notifee.createChannel({
             id: 'fcm_channel',
             importance: AndroidImportance.HIGH,

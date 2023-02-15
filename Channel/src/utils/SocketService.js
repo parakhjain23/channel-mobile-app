@@ -4,6 +4,7 @@ import {addNewMessage} from '../redux/actions/chat/ChatActions';
 import {deleteMessageSuccess} from '../redux/actions/chat/DeleteChatAction';
 import { newUserJoinedAOrg } from '../redux/actions/org/GetAllUsersOfOrg';
 import {store} from '../redux/Store';
+import { handleNotificationFromEvents } from './HandleNotification';
 import { createSocket } from './Socket';
 import { PlayLocalSoundFile } from './Sounds';
 
@@ -19,6 +20,9 @@ const SocketService = socket => {
     console.log("chat message created",data);
     if(data?.senderId != store?.getState()?.userInfoReducer?.user?.id){
       PlayLocalSoundFile()
+      if(data?.teamId != store.getState().channelsReducer?.activeChannelTeamId){
+        handleNotificationFromEvents(data)
+      }
     }
     store.dispatch(addNewMessage(data));
     store.dispatch(moveChannelToTop(data?.teamId));
