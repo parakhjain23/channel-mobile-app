@@ -61,7 +61,6 @@ const ChatScreen = ({
   }, []);
   const renderItem = useCallback(
     ({item, index}) => (
-      console.log(index),
       (
         <ChatCardMemo
           chat={item}
