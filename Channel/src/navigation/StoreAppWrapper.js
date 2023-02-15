@@ -51,7 +51,6 @@ const StoreAppWrapper = ({userInfoState}) => {
           const token = await messaging().getToken()
           await AsyncStorage.setItem('FCM_TOKEN',token)
           await AsyncStorage.getItem('FCM_TOKEN').then(token=>{
-            console.log(token,"=-=-");
             if(userInfoState?.accessToken){
                 dispatch(subscribeToNotifications(userInfoState?.accessToken,token))
             }
