@@ -79,6 +79,7 @@ const StoreAppWrapper = ({userInfoState,channelsState}) => {
           });
           const rMessage = await messaging().getInitialNotification();
           if (rMessage) {
+            console.log(rMessage,"this is rmessage");
             openChat(rMessage);
             console.log("open app notification from firebase");
           }
