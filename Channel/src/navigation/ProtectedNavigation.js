@@ -6,7 +6,7 @@ import DrawerNavigation from './DrawerNavigation';
 import ChatScreen from '../screens/chatScreen/ChatScreen';
 import {initializeSocket, subscribeToNotifications} from '../redux/actions/socket/socketActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import {useNavigation, useTheme} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 const ProtectedNavigation = ({userInfoSate, orgsState}) => {
   const Stack = createNativeStackNavigator();

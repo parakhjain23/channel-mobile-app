@@ -30,7 +30,6 @@ export function channelsReducer(state = initialState, action) {
           teamIdAndNameMapping[key] = action?.channels[i]?.name
         }
       }
-      console.log(teamIdAndNameMapping,"-=-=-=-=-=-=-=-");
       return {
         ...state,
         channels: action.channels,

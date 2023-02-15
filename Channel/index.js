@@ -15,7 +15,6 @@ PushNotification.configure({
     AsyncStorage.setItem('FCM_TOKEN', JSON.stringify(token.token));
   },
   onNotification: function (notification) {
-    console.log("newwwwwwwwwwwwwwwwww");
     notification.finish(PushNotificationIOS.FetchResult.NoData);
   },
   onRegistrationError: function (err) {

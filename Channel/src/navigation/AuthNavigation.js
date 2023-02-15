@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import ProtectedNavigation from './ProtectedNavigation';
+import { navigationRef } from './RootNavigation';
 
 const linking = {
   prefixes: ['channel://'],
@@ -20,7 +21,7 @@ const linking = {
 
 const AuthNavigation = () => {
   return (
-    <NavigationContainer
+    <NavigationContainer ref={navigationRef}
       linking={linking}>
         <ProtectedNavigation/>
     </NavigationContainer>

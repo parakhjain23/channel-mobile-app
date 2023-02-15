@@ -22,7 +22,6 @@ export function initializeSocket(accessToken,orgId) {
 }
 
 export function subscribeToNotifications(accessToken,deviceId) {
-  console.log("inside actions");
   return {
     type: SUBSCRIBE_TO_NOTIFICATIONS,
     accessToken,deviceId
