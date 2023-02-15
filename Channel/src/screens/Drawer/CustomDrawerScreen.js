@@ -17,11 +17,11 @@ import signOut from '../../redux/actions/user/userAction';
 
 
 
-const CustomeDrawerScreen = ({orgsState, userInfoState, getChannelsAction,switchOrgAction,signOutAction}) => {
+const CustomeDrawerScreen = ({orgsState, userInfoState, channelsState, getChannelsAction,switchOrgAction,signOutAction}) => {
   const data = orgsState?.orgs;
   const navigation = useNavigation();
   useEffect(() => {
-    if (userInfoState?.user != null) {
+    if (userInfoState?.user != null && channelsState?.channels?.length==0) {
       getChannelsAction(
         userInfoState?.accessToken,
         orgsState?.currentOrgId,
@@ -125,6 +125,7 @@ const CustomeDrawerScreen = ({orgsState, userInfoState, getChannelsAction,switch
 const mapStateToProps = state => ({
   orgsState: state.orgsReducer,
   userInfoState: state.userInfoReducer,
+  channelsState: state.channelsReducer,
 });
 const mapDispatchToProps = dispatch => {
   return {

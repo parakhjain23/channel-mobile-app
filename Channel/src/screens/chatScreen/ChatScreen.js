@@ -128,6 +128,7 @@ const ChatScreen = ({
               }
               onEndReached={onEndReached}
               onEndReachedThreshold={0.2}
+              keyboardShouldPersistTaps="always"
             />
             {localMsg?.length > 0 && (
               <FlatList data={localMsg} renderItem={renderItemLocal} />

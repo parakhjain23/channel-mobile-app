@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
   Button,
+  RefreshControl,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {getChannelsStart} from '../../redux/actions/channels/ChannelsAction';
@@ -19,7 +20,10 @@ import {CHANNEL_TYPE} from '../../constants/Constants';
 import {createNewChannelStart} from '../../redux/actions/channels/CreateNewChannelAction';
 import {getChannelsByQueryStart} from '../../redux/actions/channels/ChannelsByQueryAction';
 import {createNewDmChannelStart} from '../../redux/actions/channels/CreateNewDmChannelAction';
-import { resetActiveChannelTeamId, setActiveChannelTeamId } from '../../redux/actions/channels/SetActiveChannelId';
+import {
+  resetActiveChannelTeamId,
+  setActiveChannelTeamId,
+} from '../../redux/actions/channels/SetActiveChannelId';
 
 const RenderChannels = ({item, navigation, props}) => {
   const Name =
@@ -44,10 +48,10 @@ const RenderChannels = ({item, navigation, props}) => {
         flexDirection: 'column',
         justifyContent: 'center',
       }}
-      onPress={() =>
-{        props?.setActiveChannelTeamIdAction(item?._id)
-        navigation.navigate('Chat', {chatHeaderTitle: Name, teamId: item?._id})}
-      }>
+      onPress={() => {
+        props?.setActiveChannelTeamIdAction(item?._id);
+        navigation.navigate('Chat', {chatHeaderTitle: Name, teamId: item?._id});
+      }}>
       <View
         style={{
           flexDirection: 'row',
@@ -174,7 +178,12 @@ const CreateChannelModel = ({modalizeRef, props}) => {
       ref={modalizeRef}
       modalStyle={{top: '12%'}}>
       <View style={{margin: 12}}>
-        <TextInput label={'Title'} mode={'outlined'} onChangeText={setTitle} autoFocus={true}/>
+        <TextInput
+          label={'Title'}
+          mode={'outlined'}
+          onChangeText={setTitle}
+          autoFocus={true}
+        />
         <TextInput
           label={'Members'}
           mode={'outlined'}
@@ -182,7 +191,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
         />
 
         {searchedUser != '' && (
-          <View style={{height:200}}>
+          <View style={{height: 200}}>
             <FlatList
               data={props?.channelsByQueryState?.channels}
               renderItem={({item}) => (
@@ -277,14 +286,15 @@ const CreateChannelModel = ({modalizeRef, props}) => {
 
 const ChannelsScreen = props => {
   const [searchValue, setsearchValue] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation();
   const modalizeRef = useRef(null);
-  const isFocused = useIsFocused()
-  useEffect(()=>{
-    if(isFocused){
-      props?.resetActiveChannelTeamIdAction()
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    if (isFocused) {
+      props?.resetActiveChannelTeamIdAction();
     }
-  },[isFocused])
+  }, [isFocused]);
   useEffect(() => {
     if (searchValue != '') {
       props.getChannelsByQueryStartAction(
@@ -300,6 +310,14 @@ const ChannelsScreen = props => {
   const onOpen = () => {
     modalizeRef.current?.open();
   };
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      props.getChannelsAction(props?.userInfoState?.accessToken,props?.orgsState?.currentOrgId,props?.userInfoState?.user?.id)
+      setRefreshing(false);
+    }, 1000);
+  }, []);
+
   return (
     <View style={{flex: 1, padding: 5}}>
       {props?.channelsState?.isLoading ? (
@@ -330,22 +348,13 @@ const ChannelsScreen = props => {
                   props={props}
                 />
               )}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
               keyboardDismissMode="on-drag"
               keyboardShouldPersistTaps="always"
             />
           )}
-          {/* <FlatList
-            data={props?.channelsState?.channels}
-            renderItem={({item}) => (
-              <RenderChannels
-                item={item}
-                navigation={navigation}
-                props={props}
-              />
-            )}
-            keyboardDismissMode="on-drag"
-            keyboardShouldPersistTaps="always"
-          /> */}
           <SearchBox
             searchValue={searchValue}
             changeText={changeText}
@@ -383,7 +392,7 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => {
   return {
-    getChannelsStartAction: (token, orgId, userId) =>
+    getChannelsAction: (token, orgId, userId) =>
       dispatch(getChannelsStart(token, orgId, userId)),
     getChannelsByQueryStartAction: (query, userToken, orgId) =>
       dispatch(getChannelsByQueryStart(query, userToken, orgId)),
@@ -393,8 +402,9 @@ const mapDispatchToProps = dispatch => {
       ),
     createDmChannelAction: (token, orgId, title, reciverUserId) =>
       dispatch(createNewDmChannelStart(token, orgId, title, reciverUserId)),
-    setActiveChannelTeamIdAction : (teamId) => dispatch(setActiveChannelTeamId(teamId)),
-    resetActiveChannelTeamIdAction : () => dispatch(resetActiveChannelTeamId())
+    setActiveChannelTeamIdAction: teamId =>
+      dispatch(setActiveChannelTeamId(teamId)),
+    resetActiveChannelTeamIdAction: () => dispatch(resetActiveChannelTeamId()),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelsScreen);
