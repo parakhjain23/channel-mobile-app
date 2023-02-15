@@ -36,7 +36,11 @@ const ChatScreen = ({
   const [replyOnMessage, setreplyOnMessage] = useState(false);
   const [repliedMsgDetails, setrepliedMsgDetails] = useState('');
   const [localMsg, setlocalMsg] = useState([]);
-  const memoizedData = useMemo(() => chatState?.data[teamId]?.messages || []);
+
+  const memoizedData = useMemo(
+    () => chatState?.data[teamId]?.messages || [],
+    [chatState?.data[teamId]?.messages],
+  );
   useEffect(() => {
     localMsg?.shift();
     console.log(localMsg, '-=-=-=-');
@@ -126,10 +130,7 @@ const ChatScreen = ({
               onEndReachedThreshold={0.2}
             />
             {localMsg?.length > 0 && (
-              <FlatList
-                data={localMsg}
-                renderItem={renderItemLocal}
-              />
+              <FlatList data={localMsg} renderItem={renderItemLocal} />
             )}
           </>
         )}
@@ -159,7 +160,6 @@ const ChatScreen = ({
                   ? styles.inputWithReply
                   : styles.inputWithoutReply,
               ]}
-              onSubmitEditing={() => onChangeMessage('')}
             />
           </View>
           <View style={{justifyContent: 'flex-end'}}>
@@ -196,8 +196,8 @@ const ChatScreen = ({
                     repliedMsgDetails?._id || null,
                   );
                 onChangeMessage('');
-                setreplyOnMessage(false);
-                setrepliedMsgDetails(null);
+                replyOnMessage && setreplyOnMessage(false);
+                repliedMsgDetails && setrepliedMsgDetails(null);
               }}
             />
           </View>
