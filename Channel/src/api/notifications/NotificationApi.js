@@ -32,21 +32,7 @@ const notificationApi = async (token, deviceId) => {
 
     fetch('https://api.intospace.io/users/deviceGroups', requestOptions)
       .then(response => response.text())
-      .then(result => console.log(""))
       .catch(error => console.log('error', error));
-    // var response = await fetch('https://api.intospace.io/users/deviceGroups', {
-    //   method: 'POST',
-    //   headers: {
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    //   body:JSON.stringify({
-    //     deviceId: {
-    //       chat: deviceId,
-    //     }})
-    // });
-    // var result = await response.json();
-    // console.log(result,"=-=-=-=-");
-    // return result;
   } catch (error) {
     console.log(error);
   }

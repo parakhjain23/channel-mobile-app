@@ -3,6 +3,10 @@ import {store} from '../redux/Store';
 
 export const handleNotificationFromEvents = async data => {
   console.log("handleNotificationsfrom events ",data);
+  data["mentions"]=`[]`
+  data["parentId"]=`${data.parentId}`
+  data["showInMainConversation"]=`${data.showInMainConversation}`
+  data["isLink"]=`${data.isLink}`
     var title 
     var body
     if(data?.receiver){
@@ -12,12 +16,11 @@ export const handleNotificationFromEvents = async data => {
       title = store.getState().channelsReducer?.teamIdAndNameMapping[data?.teamId]
       body = store.getState().orgsReducer?.userIdAndNameMapping[data.senderId] + " : "+ data?.content 
     }
-    // var title  =  store.getState().orgsReducer?.userIdAndNameMapping[data.senderId]
     await Notifee.displayNotification({
       title: title,
       body: body,
       id: 'foreground',
-      data: {teamId : data?.teamId , name : `${title}`},
+      data: data,
       android: {
         channelId: 'foreground',
         // smallIcon: '@mipmap/ic_launcher',
