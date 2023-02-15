@@ -11,7 +11,6 @@ import PushNotificationIOS from '@react-native-community/push-notification-ios'
 
 PushNotification.configure({
   onRegister: function (token) {
-    console.log(token);
     AsyncStorage.setItem('FCM_TOKEN', JSON.stringify(token.token));
   },
   onNotification: function (notification) {

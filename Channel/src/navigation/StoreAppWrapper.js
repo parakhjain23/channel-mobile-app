@@ -12,8 +12,10 @@ import { subscribeToNotifications } from '../redux/actions/socket/socketActions'
 import { handleNotificationFirebase } from '../utils/HandleNotification';
 import { openChat } from './ProtectedNavigation';
 import * as RootNavigation from '../navigation/RootNavigation'
+import { sendMessageStart } from '../redux/actions/chat/ChatActions';
+import { store } from '../redux/Store';
 
-const StoreAppWrapper = ({userInfoState}) => {
+const StoreAppWrapper = ({userInfoState,channelsState}) => {
   const [showSplashScreen, setShowSplashScreen] = useState(true);
     const dispatch = useDispatch()
     // const navigation = useNavigation()
@@ -87,19 +89,23 @@ const StoreAppWrapper = ({userInfoState}) => {
         }
       };
       const actionListeners = async event => {
+        console.log(event,"this is event in action listeners functions978787878787878");
         if (event.type == 1) {
           const message = event.detail.notification;
           openChat(message);
         }
         switch (event?.detail?.pressAction?.id) {
           case 'mark_as_read':
-            console.log('mark as read');
-            // store.dispatch(MarkAsRead(params.chatId));
             Notifee.cancelNotification(event?.detail?.notification?.id);
             break;
           case 'reply':
-            console.log('reply');
-            // store.dispatch(reply(params.chatId, event?.detail?.input));
+            var message = event.detail.input
+            var teamId = event.detail.notification?.data?.teamId
+            var orgId = event.detail.notification?.data?.orgId
+            var senderId = event.detail.notification?.data?.senderId
+            var token = userInfoState?.accessToken
+            var parentId = null
+            store.dispatch(sendMessageStart(message,teamId,orgId,senderId,token,parentId));
             Notifee.cancelNotification(event?.detail?.notification?.id);
             break;
           default:
@@ -108,7 +114,9 @@ const StoreAppWrapper = ({userInfoState}) => {
       };
       const openChat = (message)=>{
         try {
-          RootNavigation?.navigate('Chat',{chatHeaderTitle: message?.data?.name, teamId: message?.data?.teamId})
+          var teamId = message?.data?.teamId
+          var name = message?.data?.name ? message?.data?.name : channelsState?.teamIdAndNameMapping[teamId]
+          RootNavigation?.navigate('Chat',{chatHeaderTitle: name, teamId: teamId})
         } catch (error) {
           console.log(error);
         }
@@ -122,7 +130,8 @@ const StoreAppWrapper = ({userInfoState}) => {
 };
 const mapStateToProps = state =>{
   return {
-    userInfoState : state.userInfoReducer
+    userInfoState : state.userInfoReducer,
+    channelsState : state.channelsReducer
   }
 }
 export default connect(mapStateToProps)(StoreAppWrapper);

@@ -97,7 +97,7 @@ const ChatCard = ({
                       {time}
                     </Text>
                   </View>
-                  {parentId != null && (
+                  {(parentId != null || parentId !=undefined)  && (
                     <View style={styles.repliedContainer}>
                       <Text style={styles.text}>
                         {

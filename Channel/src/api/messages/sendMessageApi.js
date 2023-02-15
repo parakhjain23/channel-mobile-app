@@ -26,7 +26,6 @@ export const sendMessageApi = async (
         appId: '62b53b61b5b4a2001fb9af37',
       }),
     });
-    const result = await response.json();
   } catch (error) {
     console.log(error);
   }
