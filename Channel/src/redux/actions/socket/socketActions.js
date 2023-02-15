@@ -3,6 +3,7 @@ import * as SocketActions from '../../SocketEnums';
 import SocketService from '../../../utils/SocketService';
 import { call, put } from 'redux-saga/effects';
 import { createSocket } from '../../../utils/Socket';
+import { SUBSCRIBE_TO_NOTIFICATIONS } from '../../Enums';
 
 export function* createSocketMiddleware({accessToken,orgId}) {
   try {
@@ -20,4 +21,9 @@ export function initializeSocket(accessToken,orgId) {
   };
 }
 
-
+export function subscribeToNotifications(accessToken,deviceId) {
+  return {
+    type: SUBSCRIBE_TO_NOTIFICATIONS,
+    accessToken,deviceId
+  };
+}

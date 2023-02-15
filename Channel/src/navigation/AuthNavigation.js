@@ -1,10 +1,7 @@
 import React, { useEffect } from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import ProtectedNavigation from './ProtectedNavigation';
-import { createSocket } from '../utils/Socket';
-import { connect } from 'react-redux';
-// import { StatusBar, useColorScheme } from 'react-native';
-// import { DARK_THEME, LIGHT_THEME } from '../constant/styles';
+import { navigationRef } from './RootNavigation';
 
 const linking = {
   prefixes: ['channel://'],
@@ -24,7 +21,7 @@ const linking = {
 
 const AuthNavigation = () => {
   return (
-    <NavigationContainer
+    <NavigationContainer ref={navigationRef}
       linking={linking}>
         <ProtectedNavigation/>
     </NavigationContainer>

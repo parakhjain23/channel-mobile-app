@@ -3,6 +3,7 @@ import * as Actions from '../../Enums';
 const initialState = {
   channels: [],
   isLoading: false,
+  activeChannelTeamId : null
 };
 
 export function channelsReducer(state = initialState, action) {
@@ -15,6 +16,7 @@ export function channelsReducer(state = initialState, action) {
 
     case Actions.FETCH_CHANNELS_SUCCESS:
       var userIdAndTeamIdMapping = {};
+      var teamIdAndNameMapping ={}
       var key = null;
       for (let i = 0; i < action?.channels?.length; i++) {
         if (action?.channels[i]?.type == 'DIRECT_MESSAGE') {
@@ -23,6 +25,9 @@ export function channelsReducer(state = initialState, action) {
               ? action?.channels[i]?.userIds[0]
               : action?.channels[i].userIds[1];
           userIdAndTeamIdMapping[key] = action?.channels[i]?._id;
+        }else if(action?.channels[i]?.type == 'PUBLIC' || action?.channels[i]?.type == 'DEFAULT'){
+          key = action?.channels[i]._id 
+          teamIdAndNameMapping[key] = action?.channels[i]?.name
         }
       }
       return {
@@ -30,6 +35,7 @@ export function channelsReducer(state = initialState, action) {
         channels: action.channels,
         isLoading: false,
         userIdAndTeamIdMapping: userIdAndTeamIdMapping,
+        teamIdAndNameMapping: teamIdAndNameMapping
       };
 
     case Actions.FETCH_CHANNELS_ERROR:
@@ -64,6 +70,12 @@ export function channelsReducer(state = initialState, action) {
           ...userIdAndTeamIdMapping,
         },
       };
+    
+    case Actions.SET_ACTIVE_CHANNEL_TEAMID:
+      return {...state, activeChannelTeamId : action?.teamId} 
+    
+    case Actions.RESET_ACTIVE_CHANNEL_TEAMID:
+      return{...state, activeChannelTeamId : null}  
     default:
       return state;
   }
