@@ -24,6 +24,7 @@ import {
   resetActiveChannelTeamId,
   setActiveChannelTeamId,
 } from '../../redux/actions/channels/SetActiveChannelId';
+import NoChannelsFound from './NoChannelsFound';
 
 const RenderChannels = ({item, navigation, props}) => {
   const Name =
@@ -313,7 +314,11 @@ const ChannelsScreen = props => {
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
     setTimeout(() => {
-      props.getChannelsAction(props?.userInfoState?.accessToken,props?.orgsState?.currentOrgId,props?.userInfoState?.user?.id)
+      props.getChannelsAction(
+        props?.userInfoState?.accessToken,
+        props?.orgsState?.currentOrgId,
+        props?.userInfoState?.user?.id,
+      );
       setRefreshing(false);
     }, 1000);
   }, []);
@@ -323,21 +328,25 @@ const ChannelsScreen = props => {
       {props?.channelsState?.isLoading ? (
         <ActivityIndicator size={'large'} color={'black'} />
       ) : (
-        <>
+        <View style={{flex:1}}>
           {searchValue != '' ? (
-            <FlatList
-              data={props?.channelsByQueryState?.channels}
-              renderItem={({item}) => (
-                <RenderSearchChannels
-                  item={item}
-                  navigation={navigation}
-                  props={props}
-                  setsearchValue={setsearchValue}
-                />
-              )}
-              keyboardDismissMode="on-drag"
-              keyboardShouldPersistTaps="always"
-            />
+            props?.channelsByQueryState?.channels?.length > 0 ? (
+              <FlatList
+                data={props?.channelsByQueryState?.channels}
+                renderItem={({item}) => (
+                  <RenderSearchChannels
+                    item={item}
+                    navigation={navigation}
+                    props={props}
+                    setsearchValue={setsearchValue}
+                  />
+                )}
+                keyboardDismissMode="on-drag"
+                keyboardShouldPersistTaps="always"
+              />
+            ) : (
+              <NoChannelsFound modalizeRef={modalizeRef}/>
+            )
           ) : (
             <FlatList
               data={props?.channelsState?.channels}
@@ -355,11 +364,13 @@ const ChannelsScreen = props => {
               keyboardShouldPersistTaps="always"
             />
           )}
-          <SearchBox
-            searchValue={searchValue}
-            changeText={changeText}
-            isSearchFocus={false}
-          />
+          <View style={{position:'absolute',bottom:0,width:'100%'}}>
+            <SearchBox
+              searchValue={searchValue}
+              changeText={changeText}
+              isSearchFocus={false}
+            />
+          </View>
           <View
             style={{
               position: 'absolute',
@@ -378,7 +389,7 @@ const ChannelsScreen = props => {
               label={`New\nChannel`}
             />
           </View>
-        </>
+        </View>
       )}
       <CreateChannelModel modalizeRef={modalizeRef} props={props} />
     </View>
