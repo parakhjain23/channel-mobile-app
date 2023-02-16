@@ -152,42 +152,6 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:118321990441:android:39a9410b1d21bfbe7d0538",
-        "android_client_info": {
-          "package_name": "com.space.chat"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "118321990441-g38hso1fbbrub3l56fnm6tlvo2bknasg.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAxt2E5oq2Rc1d4PcwDGj5wUlRAH_-uLaI"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "118321990441-5869r9updb1nri8t2rb3lu1jcioi9cid.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "118321990441-ag5jr1qhv9hag166hdsdmt5s71jmduop.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.channel"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:118321990441:android:aa5c98df3f964fd27d0538",
         "android_client_info": {
           "package_name": "com.spaceconnect"
@@ -491,6 +455,42 @@
         "mobilesdk_app_id": "1:118321990441:android:7f1e58e27a6828037d0538",
         "android_client_info": {
           "package_name": "io.intospace.spacemeet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "118321990441-g38hso1fbbrub3l56fnm6tlvo2bknasg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxt2E5oq2Rc1d4PcwDGj5wUlRAH_-uLaI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "118321990441-5869r9updb1nri8t2rb3lu1jcioi9cid.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "118321990441-ag5jr1qhv9hag166hdsdmt5s71jmduop.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.channel"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:118321990441:android:8b20b6b8b935692a7d0538",
+        "android_client_info": {
+          "package_name": "walkover.space.chat"
         }
       },
       "oauth_client": [
