@@ -168,6 +168,7 @@ const ChatScreen = ({
               size={25}
               style={{color: 'black', padding: 10}}
               onPress={() => {
+                onChangeMessage(''),
                 setlocalMsg([
                   ...localMsg,
                   {
@@ -195,7 +196,7 @@ const ChatScreen = ({
                     userInfoState?.accessToken,
                     repliedMsgDetails?._id || null,
                   );
-                onChangeMessage('');
+                // onChangeMessage('');
                 replyOnMessage && setreplyOnMessage(false);
                 repliedMsgDetails && setrepliedMsgDetails(null);
               }}

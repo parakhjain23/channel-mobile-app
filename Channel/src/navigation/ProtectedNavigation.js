@@ -7,6 +7,7 @@ import ChatScreen from '../screens/chatScreen/ChatScreen';
 import {initializeSocket, subscribeToNotifications} from '../redux/actions/socket/socketActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import ExploreChannels from '../screens/channelsScreen/ExploreChannels';
 
 const ProtectedNavigation = ({userInfoSate, orgsState}) => {
   const Stack = createNativeStackNavigator();
@@ -60,6 +61,10 @@ const ProtectedNavigation = ({userInfoSate, orgsState}) => {
           headerTitle: route?.params?.chatHeaderTitle,
           headerShown: true,
         })}
+      />
+      <Stack.Screen
+        name="ExploreChannels"
+        component={ExploreChannels}
       />
     </Stack.Navigator>
   );

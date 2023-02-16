@@ -345,7 +345,7 @@ const ChannelsScreen = props => {
                 keyboardShouldPersistTaps="always"
               />
             ) : (
-              <NoChannelsFound modalizeRef={modalizeRef}/>
+              <NoChannelsFound modalizeRef={modalizeRef} setsearchValue={setsearchValue}/>
             )
           ) : (
             <FlatList
