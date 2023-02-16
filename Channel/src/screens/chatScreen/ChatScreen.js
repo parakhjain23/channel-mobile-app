@@ -43,7 +43,6 @@ const ChatScreen = ({
   );
   useEffect(() => {
     localMsg?.shift();
-    console.log(localMsg, '-=-=-=-');
   }, [chatState?.data[teamId]?.messages]);
   const skip =
     chatState?.data[teamId]?.messages.length != undefined
