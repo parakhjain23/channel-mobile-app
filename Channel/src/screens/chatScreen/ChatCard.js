@@ -36,6 +36,7 @@ const ChatCard = ({
     setOptionsVisible(true);
   };
   const parentId = chat?.parentId;
+  chat?.content == 'allen' && console.log(parentId,"=-=-=-=-=-=-==-=-=-");
   const date = new Date(chat?.updatedAt);
   const time = date.getHours() + ':' + date.getMinutes();
   const sentByMe = chat?.senderId == userInfoState?.user?.id;

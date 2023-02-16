@@ -7,14 +7,16 @@ export const handleNotificationFromEvents = async data => {
   data["parentId"]=`${data.parentId}`
   data["showInMainConversation"]=`${data.showInMainConversation}`
   data["isLink"]=`${data.isLink}`
+  var channelType = store.getState().channelsReducer?.teamIdAndTypeMapping[data?.teamId]
     var title 
     var body
-    if(data?.receiver){
-     title  =  store.getState().orgsReducer?.userIdAndNameMapping[data.senderId]
-     body = data?.content
-    }else{
+    console.log(data,"=-=-=-=-this is data-=-=-=-");
+    if(channelType == 'DIRECT_MESSAGE'){
+      title = store.getState().orgsReducer?.userIdAndNameMapping[data?.senderId]
+      body = data?.content
+    }else if(channelType == 'PUBLIC' || channelType == 'PRIVATE' || channelType == 'DEFAULT'){
       title = store.getState().channelsReducer?.teamIdAndNameMapping[data?.teamId]
-      body = store.getState().orgsReducer?.userIdAndNameMapping[data.senderId] + " : "+ data?.content 
+      body = store.getState().orgsReducer?.userIdAndNameMapping[data.senderId] + " : "+ data?.content
     }
     await Notifee.displayNotification({
       title: title,

@@ -17,16 +17,21 @@ export function channelsReducer(state = initialState, action) {
     case Actions.FETCH_CHANNELS_SUCCESS:
       var userIdAndTeamIdMapping = {};
       var teamIdAndNameMapping ={}
+      var teamIdAndTypeMapping={}
       var key = null;
+      var teamId = null
       for (let i = 0; i < action?.channels?.length; i++) {
         if (action?.channels[i]?.type == 'DIRECT_MESSAGE') {
           key =
             action?.channels[i].userIds[0] != action?.userId
               ? action?.channels[i]?.userIds[0]
               : action?.channels[i].userIds[1];
-          userIdAndTeamIdMapping[key] = action?.channels[i]?._id;
-        }else if(action?.channels[i]?.type == 'PUBLIC' || action?.channels[i]?.type == 'DEFAULT'){
-          key = action?.channels[i]._id 
+          teamId= action?.channels[i]?._id    
+          userIdAndTeamIdMapping[key] = teamId;
+          teamIdAndTypeMapping[teamId]=action?.channels[i]?.type
+        }else if(action?.channels[i]?.type == 'PUBLIC' || action?.channels[i]?.type == 'DEFAULT' || action?.channels[i]?.type == 'PRIVATE'){
+          key = action?.channels[i]._id
+          teamIdAndTypeMapping[key]=action?.channels[i]?.type
           teamIdAndNameMapping[key] = action?.channels[i]?.name
         }
       }
@@ -35,7 +40,8 @@ export function channelsReducer(state = initialState, action) {
         channels: action.channels,
         isLoading: false,
         userIdAndTeamIdMapping: userIdAndTeamIdMapping,
-        teamIdAndNameMapping: teamIdAndNameMapping
+        teamIdAndNameMapping: teamIdAndNameMapping,
+        teamIdAndTypeMapping: teamIdAndTypeMapping
       };
 
     case Actions.FETCH_CHANNELS_ERROR:
@@ -56,14 +62,18 @@ export function channelsReducer(state = initialState, action) {
     case Actions.CREATE_NEW_CHANNEL_SUCCESS:
       var userIdAndTeamIdMapping = {};
       var teamIdAndNameMapping ={}
+      var teamIdAndTypeMapping={}
       if (action?.channel?.type == 'DIRECT_MESSAGE') {
         key =
           action?.channel.userIds[0] != action?.userId
             ? action?.channel?.userIds[0]
             : action?.channel.userIds[1];
-        userIdAndTeamIdMapping[key] = action?.channel?._id;
-      }else if(action?.channel.type == 'PUBLIC' || action?.channel?.type == 'DEFAULT'){
+        teamId=action?.channel?._id    
+        userIdAndTeamIdMapping[key] = teamId;
+        teamIdAndTypeMapping[teamId]=action?.channel?.type
+      }else if(action?.channel.type == 'PUBLIC' || action?.channel?.type == 'DEFAULT' || action?.channel?.type == 'PRIVATE'){
         key = action?.channel._id 
+        teamIdAndTypeMapping[key]=action?.channel?.type
         teamIdAndNameMapping[key] = action?.channel?.name
       }
       return {
@@ -71,11 +81,15 @@ export function channelsReducer(state = initialState, action) {
         channels: [action.channel, ...state?.channels],
         userIdAndTeamIdMapping: {
           ...state?.userIdAndTeamIdMapping,
-          ...userIdAndTeamIdMapping,
+        ...userIdAndTeamIdMapping
         },
         teamIdAndNameMapping:{
           ...state?.teamIdAndNameMapping,
           ...teamIdAndNameMapping
+        },
+        teamIdAndTypeMapping:{
+          ...state?.teamIdAndTypeMapping,
+          ...teamIdAndTypeMapping
         }
       };
     

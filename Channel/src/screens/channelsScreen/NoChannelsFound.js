@@ -11,7 +11,7 @@ const NoChannelsFound = props => {
         <Text style={{fontSize: 18, textAlign: 'center'}}>
           No channels found
         </Text>
-        <Button title="Explore All Channels" onPress={onOpen} />
+        <Button title="Explore All Channels" onPress={()=>{}} />
         <Button
           title="Create New Channel"
           onPress={() => props?.modalizeRef?.current?.open()}

@@ -15,7 +15,7 @@ import * as RootNavigation from '../navigation/RootNavigation'
 import { sendMessageStart } from '../redux/actions/chat/ChatActions';
 import { store } from '../redux/Store';
 
-const StoreAppWrapper = ({userInfoState,channelsState}) => {
+const StoreAppWrapper = ({userInfoState,channelsState,orgsState}) => {
   const [showSplashScreen, setShowSplashScreen] = useState(true);
     const dispatch = useDispatch()
     // const navigation = useNavigation()
@@ -66,7 +66,9 @@ const StoreAppWrapper = ({userInfoState,channelsState}) => {
           });
           messaging().onMessage(async message => {
             console.log('OnMessage Receivedddddddddddd app is in foreground but socket is disconnect', message);
-            handleNotificationFirebase(message)
+            if(message?.data?.senderId != userInfoState?.user?.id){
+              handleNotificationFirebase(message)
+            }
             // store.dispatch(HandleNotification(message));
           });
           messaging().onNotificationOpenedApp(message => {
@@ -75,7 +77,9 @@ const StoreAppWrapper = ({userInfoState,channelsState}) => {
           });
           messaging().setBackgroundMessageHandler(async message => {
             console.log('background message Received by firebase',message);
-            handleNotificationFirebase(message)
+            if(message?.data?.senderId != userInfoState?.user?.id){
+              handleNotificationFirebase(message)
+            }
           });
           const rMessage = await messaging().getInitialNotification();
           if (rMessage) {
@@ -105,7 +109,7 @@ const StoreAppWrapper = ({userInfoState,channelsState}) => {
             var orgId = event.detail.notification?.data?.orgId
             var senderId = event.detail.notification?.data?.senderId
             var token = userInfoState?.accessToken
-            var parentId = null
+            var parentId = event?.detail?.notification?.data?.parentId
             store.dispatch(sendMessageStart(message,teamId,orgId,senderId,token,parentId));
             Notifee.cancelNotification(event?.detail?.notification?.id);
             break;
@@ -115,8 +119,12 @@ const StoreAppWrapper = ({userInfoState,channelsState}) => {
       };
       const openChat = (message)=>{
         try {
+          console.log(message,"in OPEN CHAT");
           var teamId = message?.data?.teamId
-          var name = message?.data?.name ? message?.data?.name : channelsState?.teamIdAndNameMapping[teamId]
+          var name
+          channelsState?.teamIdAndTypeMapping[teamId] == 'DIRECT_MESSAGE' ? name= orgsState?.userIdAndNameMapping[message?.data?.senderId] :
+          name = channelsState?.teamIdAndNameMapping[teamId]
+          // var name = message?.data?.name ? message?.data?.name : channelsState?.teamIdAndNameMapping[teamId]
           RootNavigation?.navigate('Chat',{chatHeaderTitle: name, teamId: teamId})
         } catch (error) {
           console.log(error);
@@ -132,7 +140,8 @@ const StoreAppWrapper = ({userInfoState,channelsState}) => {
 const mapStateToProps = state =>{
   return {
     userInfoState : state.userInfoReducer,
-    channelsState : state.channelsReducer
+    channelsState : state.channelsReducer,
+    orgsState : state.orgsReducer
   }
 }
 export default connect(mapStateToProps)(StoreAppWrapper);
