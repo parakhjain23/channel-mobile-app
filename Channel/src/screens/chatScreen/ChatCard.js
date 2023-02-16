@@ -35,8 +35,7 @@ const ChatCard = ({
   const onLongPress = () => {
     setOptionsVisible(true);
   };
-  const parentId = chat?.parentId;
-  chat?.content == 'allen' && console.log(parentId,"=-=-=-=-=-=-==-=-=-");
+  var parentId = chat?.parentId;
   const date = new Date(chat?.updatedAt);
   const time = date.getHours() + ':' + date.getMinutes();
   const sentByMe = chat?.senderId == userInfoState?.user?.id;
@@ -87,7 +86,7 @@ const ChatCard = ({
                       {time}
                     </Text>
                   </View>
-                  {(parentId != null || parentId !=undefined)  && (
+                  {parentId != null && (
                     <View style={styles.repliedContainer}>
                       <Text style={styles.text}>
                         {

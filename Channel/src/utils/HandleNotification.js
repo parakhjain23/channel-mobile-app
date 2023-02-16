@@ -4,13 +4,12 @@ import {store} from '../redux/Store';
 export const handleNotificationFromEvents = async data => {
   console.log("handleNotificationsfrom events ",data);
   data["mentions"]=`[]`
-  data["parentId"]=`${data.parentId}`
-  data["showInMainConversation"]=`${data.showInMainConversation}`
-  data["isLink"]=`${data.isLink}`
+  data["showInMainConversation"]=`${data?.showInMainConversation}`
+  data["isLink"]=`${data?.isLink}`
+  data["parentId"] == null ? delete data["parentId"] : data["parentId"] =`${data?.parentId}`
   var channelType = store.getState().channelsReducer?.teamIdAndTypeMapping[data?.teamId]
     var title 
     var body
-    console.log(data,"=-=-=-=-this is data-=-=-=-");
     if(channelType == 'DIRECT_MESSAGE'){
       title = store.getState().orgsReducer?.userIdAndNameMapping[data?.senderId]
       body = data?.content
@@ -26,7 +25,7 @@ export const handleNotificationFromEvents = async data => {
       android: {
         channelId: 'foreground',
         // smallIcon: '@mipmap/ic_launcher',
-        // largeIcon: 'https://control.msg91.com/app/assets/images/logo.png',
+        largeIcon: require('../assests/images/appIcon/icon.png'),
         importance: AndroidImportance.HIGH,
         pressAction: {
           id: 'default',
@@ -62,7 +61,7 @@ export const handleNotificationFromEvents = async data => {
       android: {
         channelId: 'fcm_channel',
         // smallIcon: '@mipmap/ic_launcher',
-        // largeIcon: 'https://control.msg91.com/app/assets/images/logo.png',
+        largeIcon: require('../assests/images/appIcon/icon.png'),
         importance: AndroidImportance.HIGH,
         pressAction: {
           id: 'default',

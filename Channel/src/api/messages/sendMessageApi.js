@@ -7,10 +7,6 @@ export const sendMessageApi = async (
   parentId
 ) => {
   try {
-    var Pid = parentId
-    if(Pid == "null"){
-      Pid = null
-    }
     var response = await fetch('https://api.intospace.io/chat/message', {
       method: 'POST',
       headers: {
@@ -24,12 +20,14 @@ export const sendMessageApi = async (
         requestId: '73d31f2e-9039-401c-83cd-909953c264f1',
         orgId: orgId,
         senderId: senderId,
-        parentId: Pid,
+        parentId: parentId,
         createdAt: '2022-05-23T07:02:37.051Z',
         senderType: 'APP',
         appId: '62b53b61b5b4a2001fb9af37',
       }),
     });
+    const result = await response.json()
+    console.log(result,"-=-=-=API SEND RESULT");
   } catch (error) {
     console.log(error);
   }

@@ -95,8 +95,8 @@ const StoreAppWrapper = ({userInfoState,channelsState,orgsState}) => {
       };
       const actionListeners = async event => {
         console.log(event,"this is event in action listeners functions978787878787878");
-        if (event.type == 1) {
-          const message = event.detail.notification;
+        if (event?.type == 1) {
+          const message = event?.detail?.notification;
           openChat(message);
         }
         switch (event?.detail?.pressAction?.id) {
@@ -104,12 +104,12 @@ const StoreAppWrapper = ({userInfoState,channelsState,orgsState}) => {
             Notifee.cancelNotification(event?.detail?.notification?.id);
             break;
           case 'reply':
-            var message = event.detail.input
-            var teamId = event.detail.notification?.data?.teamId
-            var orgId = event.detail.notification?.data?.orgId
-            var senderId = event.detail.notification?.data?.senderId
+            var message = event?.detail?.input
+            var teamId = event?.detail?.notification?.data?.teamId
+            var orgId = event?.detail?.notification?.data?.orgId
+            var senderId = event?.detail?.notification?.data?.senderId
             var token = userInfoState?.accessToken
-            var parentId = event?.detail?.notification?.data?.parentId
+            var parentId = event?.detail?.notification?.data?.parentId  
             store.dispatch(sendMessageStart(message,teamId,orgId,senderId,token,parentId));
             Notifee.cancelNotification(event?.detail?.notification?.id);
             break;
@@ -124,7 +124,6 @@ const StoreAppWrapper = ({userInfoState,channelsState,orgsState}) => {
           var name
           channelsState?.teamIdAndTypeMapping[teamId] == 'DIRECT_MESSAGE' ? name= orgsState?.userIdAndNameMapping[message?.data?.senderId] :
           name = channelsState?.teamIdAndNameMapping[teamId]
-          // var name = message?.data?.name ? message?.data?.name : channelsState?.teamIdAndNameMapping[teamId]
           RootNavigation?.navigate('Chat',{chatHeaderTitle: name, teamId: teamId})
         } catch (error) {
           console.log(error);
