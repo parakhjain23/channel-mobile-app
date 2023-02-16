@@ -126,6 +126,7 @@ const ChatScreen = ({
               }
               onEndReached={onEndReached}
               onEndReachedThreshold={0.2}
+              keyboardDismissMode="on-drag"
               keyboardShouldPersistTaps="always"
             />
             {localMsg?.length > 0 && (
