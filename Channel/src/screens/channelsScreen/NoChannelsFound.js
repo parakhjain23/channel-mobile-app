@@ -1,43 +1,52 @@
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import React, {useRef} from 'react';
-import {Button, Text, View} from 'react-native';
+import {Button, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 
-const NoChannelsFound = ({modalizeRef,props}) => {
-  const navigation = useNavigation()
-  // const modalizeRef = useRef(null);
-
-  // const ExploreChannelModal = ({modalizeRef}) => {
-  //   console.log('in explore');
-  //   return (
-  //     <Modalize
-  //       scrollViewProps={{keyboardShouldPersistTaps: 'always'}}
-  //       ref={modalizeRef}
-  //       modalStyle={{top: '12%'}}>
-  //       <View style={{margin: 12}}>
-  //         <Text>hello</Text>
-  //       </View>
-  //     </Modalize>
-  //   );
-  // };
-  // const onOpen = () => {
-  //   console.log('in onopen');
-  //   modalizeRef?.current?.open();
-  // };
+const NoChannelsFound = ({modalizeRef, setsearchValue, props}) => {
+  const navigation = useNavigation();
   return (
-    <View style={{flex:1,justifyContent:'center'}}>
+    <View style={{flex: 1, justifyContent: 'center'}}>
       <View style={{alignSelf: 'center', justifyContent: 'center'}}>
-        <Text style={{fontSize: 18, textAlign: 'center'}}>
+        <Text style={[styles.centerText, {fontSize: 18}]}>
           No channels found
         </Text>
-        <Button title="Explore All Channels" onPress={()=>navigation.navigate('ExploreChannels',{props:props})} />
-        <Button
-          title="Create New Channel"
-          onPress={() => modalizeRef?.current?.open()}
-        />
+        <TouchableOpacity
+          onPress={() => {
+            setsearchValue('');
+            navigation.navigate('ExploreChannels', {props: props});
+          }}>
+          <Text
+            style={[
+              styles.centerText,
+              {fontSize: 18, color: 'hsl(206,100%,40%)', margin: 5},
+            ]}>
+            Explore All Channels
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setsearchValue('');
+            modalizeRef?.current?.open();
+          }}>
+          <Text
+            style={[
+              styles.centerText,
+              {fontSize: 18, color: 'hsl(206,100%,40%)', margin: 5},
+            ]}>
+            Create New Channel
+          </Text>
+        </TouchableOpacity>
       </View>
-      {/* <ExploreChannelModal modalizeRef={modalizeRef} /> */}
     </View>
   );
 };
 export default NoChannelsFound;
+const styles = StyleSheet.create({
+  text: {
+    color: 'black',
+  },
+  centerText: {
+    textAlign: 'center',
+  },
+});
