@@ -41,10 +41,11 @@ const RenderChannels = ({item, navigation, props}) => {
   return (
     <TouchableOpacity
       style={{
-        borderWidth: 0.5,
+        // borderBottomWidth: 0.5,
+        borderWidth:0.5,
         borderColor: 'gray',
-        borderRadius: 5,
-        height: 60,
+        // borderRadius: 5,
+        minHeight: 60,
         width: '100%',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -324,7 +325,7 @@ const ChannelsScreen = props => {
   }, []);
 
   return (
-    <View style={{flex: 1, padding: 5}}>
+    <View style={{flex: 1}}>
       {props?.channelsState?.isLoading ? (
         <ActivityIndicator size={'large'} color={'black'} />
       ) : (
