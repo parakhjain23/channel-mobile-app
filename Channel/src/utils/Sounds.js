@@ -9,6 +9,7 @@ export function PlayLocalSoundFile() {
     } else {
       mySound.play(success => {
         if (success) {
+          console.log("soundplayed");
           return true;
         } else {
           console.log('Issue playing file');

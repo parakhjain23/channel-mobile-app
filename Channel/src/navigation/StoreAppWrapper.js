@@ -14,6 +14,7 @@ import { openChat } from './ProtectedNavigation';
 import * as RootNavigation from '../navigation/RootNavigation'
 import { sendMessageStart } from '../redux/actions/chat/ChatActions';
 import { store } from '../redux/Store';
+import { resetActiveChannelTeamId, setActiveChannelTeamId } from '../redux/actions/channels/SetActiveChannelId';
 
 const StoreAppWrapper = ({userInfoState,channelsState,orgsState}) => {
   const [showSplashScreen, setShowSplashScreen] = useState(true);
@@ -143,4 +144,5 @@ const mapStateToProps = state =>{
     orgsState : state.orgsReducer
   }
 }
+
 export default connect(mapStateToProps)(StoreAppWrapper);
