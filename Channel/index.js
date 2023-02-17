@@ -29,4 +29,4 @@ import PushNotificationIOS from '@react-native-community/push-notification-ios'
 // });
 AppRegistry.registerComponent(appName, () => App);
 
-AsyncStorage.clear()
+// AsyncStorage.clear()

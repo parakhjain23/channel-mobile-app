@@ -65,7 +65,7 @@ export const handleNotificationFromEvents = async data => {
       // You can customize the titles and the IDs of the actions to match your needs
       attachments: [
         {
-          url: 'https://walkover.space.chat/mark_as_read',
+          url: 'https://control.msg91.com/app/assets/images/logo.png',
           identifier: 'mark_as_read',
           title: 'Mark as Read',
           options: {
@@ -73,7 +73,7 @@ export const handleNotificationFromEvents = async data => {
           },
         },
         {
-          url: 'https://walkover.space.chat/reply',
+          url: 'https://control.msg91.com/app/assets/images/logo.pnga',
           identifier: 'reply',
           title: 'Reply',
           options: {

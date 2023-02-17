@@ -60,7 +60,7 @@ const NotificationSetup =()=>{
               'OnMessage Receivedddddddddddd app is in foreground but socket is disconnect',
               message,
             );
-            if (message?.data?.senderId != userInfoState?.user?.id) {
+            if (message?.data?.senderId != store.getState()?.userInfoReducer.user?.id) {
               handleNotificationFirebase(message);
             }
             // store.dispatch(HandleNotification(message));
@@ -71,7 +71,7 @@ const NotificationSetup =()=>{
           });
           messaging().setBackgroundMessageHandler(async message => {
             console.log('background message Received by firebase', message);
-            if (message?.data?.senderId != userInfoState?.user?.id) {
+            if (message?.data?.senderId != store.getState()?.userInfoReducer?.user?.id) {
               handleNotificationFirebase(message);
             }
           });

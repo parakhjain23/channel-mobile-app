@@ -1,4 +1,6 @@
 #import <Firebase.h>
+#import <RNCPushNotificationIOS.h>
+#import <UserNotifications/UserNotifications.h>
 #import <React/RCTLinkingManager.h>
 #import "AppDelegate.h"
 
