@@ -114,14 +114,8 @@ const NotificationSetup =()=>{
       };
       const openChat = message => {
         try {
-          console.log(message, 'in OPEN CHAT');
           var teamId = message?.data?.teamId;
           var name = null;
-          console.log(store.getState().channelsReducer);
-          console.log(
-            store.getState().channelsReducer?.teamIdAndTypeMapping,
-            '=-=-INSIDE STORE APP WRAPER=-=-=',
-          );
             store.getState()?.channelsReducer?.teamIdAndTypeMapping[teamId] == 'DIRECT_MESSAGE'
             ? (name = store.getState().orgsReducer?.userIdAndNameMapping[message?.data?.senderId])
             : (name =  store.getState()?.channelsReducer?.teamIdAndNameMapping[teamId]);

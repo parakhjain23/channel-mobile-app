@@ -18,7 +18,6 @@ const SocketService = socket => {
   });
   socket.on('chat/message created', data => {
     console.log("chat message created",data);
-    console.log(store.getState().channelsReducer?.activeChannelTeamId,"=-=-=");
     store.dispatch(addNewMessage(data));
     store.dispatch(moveChannelToTop(data?.teamId));
     if(data?.senderId != store?.getState()?.userInfoReducer?.user?.id){

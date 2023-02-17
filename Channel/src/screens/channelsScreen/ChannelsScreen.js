@@ -301,7 +301,6 @@ const ChannelsScreen = props => {
       props?.resetActiveChannelTeamIdAction();
     }
   }, [isFocused]);
-  console.log(props?.channelsState?.activeChannelTeamId);
   useEffect(() => {
     if (searchValue != '') {
       props.getChannelsByQueryStartAction(

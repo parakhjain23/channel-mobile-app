@@ -88,7 +88,6 @@ const ChatScreen = ({
   );
   const renderItemLocal = useCallback(
     ({item, index}) => (
-      console.log(index, 'local'),
       (
         <LocalChatCardMemo
           chat={item}
