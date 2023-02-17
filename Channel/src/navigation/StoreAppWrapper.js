@@ -1,24 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {connect, Provider, useDispatch} from 'react-redux';
+import React, { useState} from 'react';
+import {connect, useDispatch} from 'react-redux';
 import SplashScreen from '../screens/splashScreen/SplashScreen';
 import AppWrapper from './AppWraper';
-import Notifee, {
-  AndroidImportance,
-  AndroidVisibility,
-} from '@notifee/react-native';
-import messaging from '@react-native-firebase/messaging';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {subscribeToNotifications} from '../redux/actions/socket/socketActions';
-import {handleNotificationFirebase} from '../utils/HandleNotification';
-import {openChat} from './ProtectedNavigation';
-import * as RootNavigation from '../navigation/RootNavigation';
-import {sendMessageStart} from '../redux/actions/chat/ChatActions';
-import {store} from '../redux/Store';
-import {
-  resetActiveChannelTeamId,
-  setActiveChannelTeamId,
-} from '../redux/actions/channels/SetActiveChannelId';
-import NotificationSetup from '../utils/NotificationSetup';
+
 
 const StoreAppWrapper = ({userInfoState, channelsState, orgsState}) => {
   const [showSplashScreen, setShowSplashScreen] = useState(true);
