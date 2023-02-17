@@ -1,4 +1,4 @@
-package com.channel;
+package walkover.space.chat;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
