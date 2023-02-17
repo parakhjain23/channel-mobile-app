@@ -64,7 +64,7 @@ const RenderChannels = ({item, navigation, props}) => {
           justifyContent: 'flex-start',
           padding: 13,
         }}>
-        <Icon name={iconName} size={14} />
+        <Icon name={iconName} size={14} color="#696969"/>
         <Text style={{fontSize: 16, fontWeight:nameFontWeight, color: 'black'}}>
           {' '}
           {Name}
@@ -295,9 +295,9 @@ const ChannelsScreen = props => {
   const navigation = useNavigation();
   const modalizeRef = useRef(null);
   const isFocused = useIsFocused();
+  console.log('in channel screen ');
   useEffect(() => {
     if (isFocused) {
-      console.log("inside is focusedddd");
       props?.resetActiveChannelTeamIdAction();
     }
   }, [isFocused]);
@@ -318,14 +318,14 @@ const ChannelsScreen = props => {
   };
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
+    await props.getChannelsAction(
+      props?.userInfoState?.accessToken,
+      props?.orgsState?.currentOrgId,
+      props?.userInfoState?.user?.id,
+    );
     setTimeout(() => {
-      props.getChannelsAction(
-        props?.userInfoState?.accessToken,
-        props?.orgsState?.currentOrgId,
-        props?.userInfoState?.user?.id,
-      );
       setRefreshing(false);
-    }, 1000);
+    }, 2000);
   }, []);
 
   return (
