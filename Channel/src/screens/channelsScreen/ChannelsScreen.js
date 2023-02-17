@@ -317,12 +317,12 @@ const ChannelsScreen = props => {
   };
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
+    props.getChannelsAction(
+      props?.userInfoState?.accessToken,
+      props?.orgsState?.currentOrgId,
+      props?.userInfoState?.user?.id,
+    );
     setTimeout(() => {
-      props.getChannelsAction(
-        props?.userInfoState?.accessToken,
-        props?.orgsState?.currentOrgId,
-        props?.userInfoState?.user?.id,
-      );
       setRefreshing(false);
     }, 1000);
   }, []);
