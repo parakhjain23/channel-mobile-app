@@ -1,4 +1,4 @@
-package com.channel.newarchitecture;
+package walkover.space.chat.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.channel.BuildConfig;
-import com.channel.newarchitecture.components.MainComponentsRegistry;
-import com.channel.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import walkover.space.chat.BuildConfig;
+import walkover.space.chat.newarchitecture.components.MainComponentsRegistry;
+import walkover.space.chat.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 
