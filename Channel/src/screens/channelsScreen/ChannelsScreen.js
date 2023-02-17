@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -8,6 +8,7 @@ import {
   View,
   Button,
   RefreshControl,
+  ScrollView,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {getChannelsStart} from '../../redux/actions/channels/ChannelsAction';
@@ -38,14 +39,18 @@ const RenderChannels = ({item, navigation, props}) => {
           }`
         ]
       : item?.name;
-   const iconName = item?.type == 'DIRECT_MESSAGE' ? "user" : "hashtag"   
-   var nameFontWeight
-   props?.channelsState?.highlightChannel[item?._id]!= undefined  ? nameFontWeight = props?.channelsState?.highlightChannel[item?._id] ? '600' :'400' :'400'
+  const iconName = item?.type == 'DIRECT_MESSAGE' ? 'user' : 'hashtag';
+  var nameFontWeight;
+  props?.channelsState?.highlightChannel[item?._id] != undefined
+    ? (nameFontWeight = props?.channelsState?.highlightChannel[item?._id]
+        ? '600'
+        : '400')
+    : '400';
   return (
     <TouchableOpacity
       style={{
         // borderBottomWidth: 0.5,
-        borderWidth:0.5,
+        borderWidth: 0.5,
         borderColor: 'gray',
         // borderRadius: 5,
         minHeight: 60,
@@ -64,8 +69,9 @@ const RenderChannels = ({item, navigation, props}) => {
           justifyContent: 'flex-start',
           padding: 13,
         }}>
-        <Icon name={iconName} size={14} color="#696969"/>
-        <Text style={{fontSize: 16, fontWeight:nameFontWeight, color: 'black'}}>
+        <Icon name={iconName} size={14} color="#696969" />
+        <Text
+          style={{fontSize: 16, fontWeight: nameFontWeight, color: 'black'}}>
           {' '}
           {Name}
         </Text>
@@ -130,11 +136,10 @@ const RenderUsersToAdd = ({item, setUserIds, userIds, setsearchedUser}) => {
     item?._source?.type == 'U' && (
       <TouchableOpacity
         style={{
-          borderWidth: 0.5,
+          borderWidth: 0.4,
           borderColor: 'gray',
-          borderRadius: 5,
-          height: 60,
-          width: '100%',
+          borderRadius: 3,
+          minHeight: 60,
           flexDirection: 'column',
           justifyContent: 'center',
         }}
@@ -160,7 +165,7 @@ const RenderUsersToAdd = ({item, setUserIds, userIds, setsearchedUser}) => {
   );
 };
 const CreateChannelModel = ({modalizeRef, props}) => {
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState("");
   const [channelType, setChannelType] = useState('PUBLIC');
   const [userIds, setUserIds] = useState([]);
   const [searchedUser, setsearchedUser] = useState('');
@@ -181,8 +186,10 @@ const CreateChannelModel = ({modalizeRef, props}) => {
     <Modalize
       scrollViewProps={{keyboardShouldPersistTaps: 'always'}}
       ref={modalizeRef}
-      modalStyle={{top: '12%'}}>
-      <View style={{margin: 12}}>
+      onClose={() => setsearchedUser('')}
+      // avoidKeyboardLikeIOS={true}
+      modalStyle={{flex: 1, marginTop: '5%'}}>
+      <View style={{margin: 12, flex: 1}}>
         <TextInput
           label={'Title'}
           mode={'outlined'}
@@ -196,36 +203,33 @@ const CreateChannelModel = ({modalizeRef, props}) => {
         />
 
         {searchedUser != '' && (
-          <View style={{height: 200}}>
-            <FlatList
-              data={props?.channelsByQueryState?.channels}
-              renderItem={({item}) => (
+          <ScrollView style={{height: 200}} keyboardShouldPersistTaps="always">
+            {props?.channelsByQueryState?.channels?.map((item, index) => {
+              return (
                 <RenderUsersToAdd
+                  key={index}
                   item={item}
                   setUserIds={setUserIds}
                   userIds={userIds}
                   setsearchedUser={setsearchedUser}
                 />
-              )}
-              keyboardDismissMode="on-drag"
-              keyboardShouldPersistTaps="always"
-            />
-          </View>
+              );
+            })}
+          </ScrollView>
         )}
         {userIds.length != 0 &&
-          userIds?.map(userId => {
+          userIds?.map((userId, index) => {
             return (
               <View
+                key={index}
                 style={{
-                  marginVertical: 6,
-                  height: 30,
-                  justifyContent: 'flex-start',
+                  marginVertical: 5,
+                  // height: 30,
+                  justifyContent: 'space-between',
                   flexDirection: 'row',
                 }}>
                 <View
                   style={{
-                    width: '80%',
-                    flexDirection: 'column',
                     justifyContent: 'center',
                   }}>
                   <Text
@@ -234,7 +238,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
                   </Text>
                 </View>
                 <Button
-                  title="remove"
+                  title="Remove"
                   onPress={() => {
                     var updatedUserIds = userIds.filter(id => id !== userId);
                     setUserIds(updatedUserIds);
@@ -267,6 +271,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
           })}
         </View>
         <Button
+          disabled={title.trim()==''?true:false}
           title="Create Channel"
           onPress={() => {
             if (title === '') {
@@ -279,8 +284,8 @@ const CreateChannelModel = ({modalizeRef, props}) => {
                 channelType,
                 userIds,
               );
-              modalizeRef?.current?.close();
               setUserIds([]);
+              modalizeRef?.current?.close();
             }
           }}
         />
@@ -333,7 +338,7 @@ const ChannelsScreen = props => {
       {props?.channelsState?.isLoading ? (
         <ActivityIndicator size={'large'} color={'black'} />
       ) : (
-        <View style={{flex:1}}>
+        <View style={{flex: 1}}>
           {searchValue != '' ? (
             props?.channelsByQueryState?.channels?.length > 0 ? (
               <FlatList
@@ -350,7 +355,10 @@ const ChannelsScreen = props => {
                 keyboardShouldPersistTaps="always"
               />
             ) : (
-              <NoChannelsFound modalizeRef={modalizeRef} setsearchValue={setsearchValue}/>
+              <NoChannelsFound
+                modalizeRef={modalizeRef}
+                setsearchValue={setsearchValue}
+              />
             )
           ) : (
             <FlatList
@@ -369,7 +377,7 @@ const ChannelsScreen = props => {
               keyboardShouldPersistTaps="always"
             />
           )}
-          <View style={{position:'absolute',bottom:0,width:'100%'}}>
+          <View style={{position: 'absolute', bottom: 0, width: '100%'}}>
             <SearchBox
               searchValue={searchValue}
               changeText={changeText}
