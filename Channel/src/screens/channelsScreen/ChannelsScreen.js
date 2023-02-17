@@ -297,7 +297,6 @@ const ChannelsScreen = props => {
   const isFocused = useIsFocused();
   useEffect(() => {
     if (isFocused) {
-      console.log("inside is focusedddd");
       props?.resetActiveChannelTeamIdAction();
     }
   }, [isFocused]);
