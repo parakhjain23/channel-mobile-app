@@ -6,12 +6,14 @@ const initialState = {
   isLoading: false,
   activeChannelTeamId : null,
   highlightChannel : {},
+  userIdAndTeamIdMapping:{},
+  teamIdAndNameMapping:{},
+  teamIdAndTypeMapping:{}
 };
 
 export function channelsReducer(state = initialState, action) {
   switch (action.type) {
     case Actions.FETCH_CHANNELS_START:
-      console.log('in fetch channels start');
       return {...state, isLoading: true,userIdAndTeamIdMapping:{},teamIdAndNameMapping:{},teamIdAndTypeMapping:{}};
 
     case Actions.UPDATE_CURRENT_ORG_ID:
