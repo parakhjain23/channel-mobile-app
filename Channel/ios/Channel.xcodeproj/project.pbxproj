@@ -14,7 +14,7 @@
 		488493F0C8D1199B244CACC1 /* libPods-Channel-ChannelTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 07A4657F6A41740B3D17981C /* libPods-Channel-ChannelTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A24B63BE497BF4A73FC98366 /* libPods-Channel.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0363C55BB3B9D12EDC550CB3 /* libPods-Channel.a */; };
-		E5BC4A0429810C1300EA84FB /* BuildFile in Resources */ = {isa = PBXBuildFile; };
+		E5BC4A0429810C1300EA84FB /* (null) in Resources */ = {isa = PBXBuildFile; };
 		E5BC4A182981104100EA84FB /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5BC4A082981104100EA84FB /* Fontisto.ttf */; };
 		E5BC4A192981104100EA84FB /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5BC4A092981104100EA84FB /* Octicons.ttf */; };
 		E5BC4A1A2981104100EA84FB /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5BC4A0A2981104100EA84FB /* Feather.ttf */; };
@@ -305,7 +305,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E5BC4A202981104100EA84FB /* Ionicons.ttf in Resources */,
-				E5BC4A0429810C1300EA84FB /* BuildFile in Resources */,
+				E5BC4A0429810C1300EA84FB /* (null) in Resources */,
 				E5BC4A1A2981104100EA84FB /* Feather.ttf in Resources */,
 				E5BC4A232981104100EA84FB /* FontAwesome.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
@@ -579,6 +579,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F3U6Z5L2EJ;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Channel/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -605,6 +606,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F3U6Z5L2EJ;
 				INFOPLIST_FILE = Channel/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

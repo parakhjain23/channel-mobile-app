@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, Vibration, View} from 'react-native';
 import {GestureHandlerRootView, Swipeable} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -142,7 +142,6 @@ const LocalChatCard = ({
   setrepliedMsgDetails,
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
-  console.log('in localCard');
   const [optionsVisible, setOptionsVisible] = useState(false);
   const swipeableRef = useRef(null);
   const onLongPress = () => {

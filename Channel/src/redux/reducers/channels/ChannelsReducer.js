@@ -6,6 +6,9 @@ const initialState = {
   isLoading: false,
   activeChannelTeamId : null,
   highlightChannel : {},
+  userIdAndTeamIdMapping:{},
+  teamIdAndNameMapping:{},
+  teamIdAndTypeMapping:{}
 };
 
 export function channelsReducer(state = initialState, action) {
