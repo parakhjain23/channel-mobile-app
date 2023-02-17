@@ -11,7 +11,8 @@ const initialState = {
 export function channelsReducer(state = initialState, action) {
   switch (action.type) {
     case Actions.FETCH_CHANNELS_START:
-      return {...state, isLoading: true};
+      console.log('in fetch channels start');
+      return {...state, isLoading: true,userIdAndTeamIdMapping:{},teamIdAndNameMapping:{},teamIdAndTypeMapping:{}};
 
     case Actions.UPDATE_CURRENT_ORG_ID:
       return {...state, isLoading: true};
@@ -30,7 +31,7 @@ export function channelsReducer(state = initialState, action) {
               : action?.channels[i].userIds[1];
           teamId= action?.channels[i]?._id    
           userIdAndTeamIdMapping[key] = teamId;
-        }else if(action?.channels[i]?.type == 'PUBLIC' || action?.channels[i]?.type == 'DEFAULT' || action?.channels[i]?.type == 'PRIVATE'){
+        }else{
           key = action?.channels[i]._id
           teamIdAndNameMapping[key] = action?.channels[i]?.name
         }
