@@ -7,7 +7,7 @@ export function setActiveChannelTeamId(teamId){
     }
   }
 
-export function resetActiveChannelTeamId(teamId){
+export function resetActiveChannelTeamId(){
     return {
       type: Actions.RESET_ACTIVE_CHANNEL_TEAMID,
     }

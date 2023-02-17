@@ -1,15 +1,18 @@
 import * as Actions from '../../Enums';
+import { store } from '../../Store';
 
 const initialState = {
   channels: [],
   isLoading: false,
-  activeChannelTeamId : null
+  activeChannelTeamId : null,
+  highlightChannel : {},
 };
 
 export function channelsReducer(state = initialState, action) {
   switch (action.type) {
     case Actions.FETCH_CHANNELS_START:
-      return {...state, isLoading: true};
+      console.log('in fetch channels start');
+      return {...state, isLoading: true,userIdAndTeamIdMapping:{},teamIdAndNameMapping:{},teamIdAndTypeMapping:{}};
 
     case Actions.UPDATE_CURRENT_ORG_ID:
       return {...state, isLoading: true};
@@ -17,7 +20,7 @@ export function channelsReducer(state = initialState, action) {
     case Actions.FETCH_CHANNELS_SUCCESS:
       var userIdAndTeamIdMapping = {};
       var teamIdAndNameMapping ={}
-      var teamIdAndTypeMapping={}
+      var tempteamIdAndTypeMapping={}
       var key = null;
       var teamId = null
       for (let i = 0; i < action?.channels?.length; i++) {
@@ -28,12 +31,11 @@ export function channelsReducer(state = initialState, action) {
               : action?.channels[i].userIds[1];
           teamId= action?.channels[i]?._id    
           userIdAndTeamIdMapping[key] = teamId;
-          teamIdAndTypeMapping[teamId]=action?.channels[i]?.type
-        }else if(action?.channels[i]?.type == 'PUBLIC' || action?.channels[i]?.type == 'DEFAULT' || action?.channels[i]?.type == 'PRIVATE'){
+        }else{
           key = action?.channels[i]._id
-          teamIdAndTypeMapping[key]=action?.channels[i]?.type
           teamIdAndNameMapping[key] = action?.channels[i]?.name
         }
+        tempteamIdAndTypeMapping[action?.channels[i]?._id]=action?.channels[i]?.type
       }
       return {
         ...state,
@@ -41,13 +43,19 @@ export function channelsReducer(state = initialState, action) {
         isLoading: false,
         userIdAndTeamIdMapping: userIdAndTeamIdMapping,
         teamIdAndNameMapping: teamIdAndNameMapping,
-        teamIdAndTypeMapping: teamIdAndTypeMapping
+        teamIdAndTypeMapping: tempteamIdAndTypeMapping
       };
 
     case Actions.FETCH_CHANNELS_ERROR:
       return {...state, channels: [], isLoading: false};
 
     case Actions.MOVE_CHANNEL_TO_TOP:
+      var tempHighlightChannels ={}
+      if(state?.activeChannelTeamId != action.channelId){
+        tempHighlightChannels[action.channelId] =true
+      }else{
+        tempHighlightChannels[action.channelId]=false
+      } 
       if (state?.channels[0]?._id != action?.channelId) {
         for (let i = 0; i < state?.channels?.length; i++) {
           if (state?.channels[i]?._id == action?.channelId) {
@@ -57,7 +65,7 @@ export function channelsReducer(state = initialState, action) {
           }
         }
       }
-      return {...state, channels: state?.channels};
+      return {...state, channels: state?.channels, highlightChannel : {...state.highlightChannel,...tempHighlightChannels}};
 
     case Actions.CREATE_NEW_CHANNEL_SUCCESS:
       var userIdAndTeamIdMapping = {};
@@ -94,7 +102,9 @@ export function channelsReducer(state = initialState, action) {
       };
     
     case Actions.SET_ACTIVE_CHANNEL_TEAMID:
-      return {...state, activeChannelTeamId : action?.teamId} 
+      var tempHighlightChannels={...state.highlightChannel}
+      tempHighlightChannels[action?.teamId]=false
+      return {...state, activeChannelTeamId : action?.teamId, highlightChannel : tempHighlightChannels} 
     
     case Actions.RESET_ACTIVE_CHANNEL_TEAMID:
       return{...state, activeChannelTeamId : null}  

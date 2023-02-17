@@ -38,6 +38,9 @@ const RenderChannels = ({item, navigation, props}) => {
           }`
         ]
       : item?.name;
+   const iconName = item?.type == 'DIRECT_MESSAGE' ? "user" : "hashtag"   
+   var nameFontWeight
+   props?.channelsState?.highlightChannel[item?._id]!= undefined  ? nameFontWeight = props?.channelsState?.highlightChannel[item?._id] ? '600' :'400' :'400'
   return (
     <TouchableOpacity
       style={{
@@ -61,8 +64,8 @@ const RenderChannels = ({item, navigation, props}) => {
           justifyContent: 'flex-start',
           padding: 13,
         }}>
-        <Icon name="chevron-right" />
-        <Text style={{fontSize: 16, fontWeight: '400', color: 'black'}}>
+        <Icon name={iconName} size={14} />
+        <Text style={{fontSize: 16, fontWeight:nameFontWeight, color: 'black'}}>
           {' '}
           {Name}
         </Text>
@@ -294,6 +297,7 @@ const ChannelsScreen = props => {
   const isFocused = useIsFocused();
   useEffect(() => {
     if (isFocused) {
+      console.log("inside is focusedddd");
       props?.resetActiveChannelTeamIdAction();
     }
   }, [isFocused]);

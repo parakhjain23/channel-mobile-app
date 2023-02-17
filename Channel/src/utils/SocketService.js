@@ -18,14 +18,14 @@ const SocketService = socket => {
   });
   socket.on('chat/message created', data => {
     console.log("chat message created",data);
+    store.dispatch(addNewMessage(data));
+    store.dispatch(moveChannelToTop(data?.teamId));
     if(data?.senderId != store?.getState()?.userInfoReducer?.user?.id){
       PlayLocalSoundFile()
       if(data?.teamId != store.getState().channelsReducer?.activeChannelTeamId){
         handleNotificationFromEvents(data)
       }
     }
-    store.dispatch(addNewMessage(data));
-    store.dispatch(moveChannelToTop(data?.teamId));
   });
   socket.on('chat/message patched', data => {
     console.log('deleted');

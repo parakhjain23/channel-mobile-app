@@ -44,7 +44,6 @@ export function* sendMessage({message,teamId,orgId,senderId,token,parentId}){
   }
 }
 export function sendMessageStart(message,teamId,orgId,senderId,token,parentId){
-  console.log(parentId,typeof(parentId),'-=-=-');
   return {
     type: Actions.SEND_MESSAGE_START,
     message,teamId,orgId,senderId,token,parentId
