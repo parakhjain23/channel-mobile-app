@@ -5,7 +5,7 @@ const initialState = {
   channels: [],
   isLoading: false,
   activeChannelTeamId : null,
-  highlightChannel : {}
+  highlightChannel : {},
 };
 
 export function channelsReducer(state = initialState, action) {
@@ -19,7 +19,7 @@ export function channelsReducer(state = initialState, action) {
     case Actions.FETCH_CHANNELS_SUCCESS:
       var userIdAndTeamIdMapping = {};
       var teamIdAndNameMapping ={}
-      var teamIdAndTypeMapping={}
+      var tempteamIdAndTypeMapping={}
       var key = null;
       var teamId = null
       for (let i = 0; i < action?.channels?.length; i++) {
@@ -30,12 +30,11 @@ export function channelsReducer(state = initialState, action) {
               : action?.channels[i].userIds[1];
           teamId= action?.channels[i]?._id    
           userIdAndTeamIdMapping[key] = teamId;
-          teamIdAndTypeMapping[teamId]=action?.channels[i]?.type
         }else if(action?.channels[i]?.type == 'PUBLIC' || action?.channels[i]?.type == 'DEFAULT' || action?.channels[i]?.type == 'PRIVATE'){
           key = action?.channels[i]._id
-          teamIdAndTypeMapping[key]=action?.channels[i]?.type
           teamIdAndNameMapping[key] = action?.channels[i]?.name
         }
+        tempteamIdAndTypeMapping[action?.channels[i]?._id]=action?.channels[i]?.type
       }
       return {
         ...state,
@@ -43,7 +42,7 @@ export function channelsReducer(state = initialState, action) {
         isLoading: false,
         userIdAndTeamIdMapping: userIdAndTeamIdMapping,
         teamIdAndNameMapping: teamIdAndNameMapping,
-        teamIdAndTypeMapping: teamIdAndTypeMapping
+        teamIdAndTypeMapping: tempteamIdAndTypeMapping
       };
 
     case Actions.FETCH_CHANNELS_ERROR:
@@ -51,7 +50,6 @@ export function channelsReducer(state = initialState, action) {
 
     case Actions.MOVE_CHANNEL_TO_TOP:
       var tempHighlightChannels ={}
-      console.log(state?.activeChannelTeamId,action?.channelId,"9898989898");
       if(state?.activeChannelTeamId != action.channelId){
         tempHighlightChannels[action.channelId] =true
       }else{
@@ -66,7 +64,6 @@ export function channelsReducer(state = initialState, action) {
           }
         }
       }
-      console.log(tempHighlightChannels,"=-=-=-=-");
       return {...state, channels: state?.channels, highlightChannel : {...state.highlightChannel,...tempHighlightChannels}};
 
     case Actions.CREATE_NEW_CHANNEL_SUCCESS:

@@ -95,7 +95,6 @@ const StoreAppWrapper = ({userInfoState,channelsState,orgsState}) => {
         }
       };
       const actionListeners = async event => {
-        console.log(event,"this is event in action listeners functions978787878787878");
         if (event?.type == 1) {
           const message = event?.detail?.notification;
           openChat(message);
@@ -122,8 +121,10 @@ const StoreAppWrapper = ({userInfoState,channelsState,orgsState}) => {
         try {
           console.log(message,"in OPEN CHAT");
           var teamId = message?.data?.teamId
-          var name
-          channelsState?.teamIdAndTypeMapping[teamId] == 'DIRECT_MESSAGE' ? name= orgsState?.userIdAndNameMapping[message?.data?.senderId] :
+          var name = null
+          console.log(channelsState);
+          console.log(channelsState?.teamIdAndTypeMapping,"=-=-INSIDE STORE APP WRAPER=-=-=");
+          channelsState?.teamIdAndTypeMapping[teamId] == 'DIRECT_MESSAGE' ? name = orgsState?.userIdAndNameMapping[message?.data?.senderId] :
           name = channelsState?.teamIdAndNameMapping[teamId]
           RootNavigation?.navigate('Chat',{chatHeaderTitle: name, teamId: teamId})
         } catch (error) {
@@ -137,12 +138,10 @@ const StoreAppWrapper = ({userInfoState,channelsState,orgsState}) => {
   
   );
 };
-const mapStateToProps = state =>{
-  return {
-    userInfoState : state.userInfoReducer,
-    channelsState : state.channelsReducer,
-    orgsState : state.orgsReducer
-  }
-}
+const mapStateToProps = state => ({
+  orgsState: state.orgsReducer,
+  channelsState: state.channelsReducer,
+  userInfoState: state.userInfoReducer,
+});
 
 export default connect(mapStateToProps)(StoreAppWrapper);
