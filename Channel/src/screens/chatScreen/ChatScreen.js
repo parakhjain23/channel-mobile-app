@@ -11,6 +11,7 @@ import {
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
 import ListFooterComponent from '../../components/ListFooterComponent';
+import { setActiveChannelTeamId } from '../../redux/actions/channels/SetActiveChannelId';
 import {
   getChatsStart,
   sendMessageStart,
@@ -27,6 +28,7 @@ const ChatScreen = ({
   orgState,
   deleteMessageAction,
   channelsState,
+  setActiveChannelTeamIdAction
 }) => {
   var {teamId, reciverUserId} = route.params;
   if (teamId == undefined) {
@@ -36,7 +38,10 @@ const ChatScreen = ({
   const [replyOnMessage, setreplyOnMessage] = useState(false);
   const [repliedMsgDetails, setrepliedMsgDetails] = useState('');
   const [localMsg, setlocalMsg] = useState([]);
-
+  useEffect(() => {
+    setActiveChannelTeamIdAction(teamId)
+  }, [])
+  
   const memoizedData = useMemo(
     () => chatState?.data[teamId]?.messages || [],
     [chatState?.data[teamId]?.messages],
@@ -223,6 +228,7 @@ const mapDispatchToProps = dispatch => {
       ),
     deleteMessageAction: (accessToken, msgId) =>
       dispatch(deleteMessageStart(accessToken, msgId)),
+      setActiveChannelTeamIdAction:(teamId)=>dispatch(setActiveChannelTeamId(teamId))
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);

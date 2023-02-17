@@ -5,6 +5,7 @@ import {PersistGate} from 'redux-persist/lib/integration/react';
 import StoreAppWrapper from './src/navigation/StoreAppWrapper';
 import {persistor, store} from './src/redux/Store';
 import Notifee from '@notifee/react-native'
+import NotificationSetup from './src/utils/NotificationSetup';
 const App = () => {
   useEffect(() => {
    Request()
@@ -13,6 +14,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
+        <NotificationSetup />
         <StoreAppWrapper />
       </PersistGate>
     </Provider>
