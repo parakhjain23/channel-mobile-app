@@ -268,11 +268,16 @@ const ChannelsScreen = props => {
             }}>
             <FAB
               onPress={onOpen}
-              color={'black'}
+              color={'white'}
               animated={true}
               uppercase={false}
               style={{
-                backgroundColor: '#4db8ff',
+                backgroundColor: '#333333', // change the background color to light grey
+              }}
+              labelStyle={{
+                fontSize: 12,
+                textAlign: 'center',
+                lineHeight: 14,
               }}
               label={`New\nChannel`}
             />
