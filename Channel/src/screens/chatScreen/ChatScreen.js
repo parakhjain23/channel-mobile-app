@@ -113,13 +113,14 @@ const ChatScreen = ({
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={70}
       style={{flex: 1}}>
       <View style={{flex: 1}}>
         <View style={{flex: 1}}>
           {chatState?.data[teamId]?.isloading == true || teamId == undefined ? (
             <ActivityIndicator />
           ) : (
-            <>
+            <View>
               <FlatList
                 data={memoizedData}
                 renderItem={renderItem}
@@ -138,7 +139,7 @@ const ChatScreen = ({
               {localMsg?.length > 0 && (
                 <FlatList data={localMsg} renderItem={renderItemLocal} />
               )}
-            </>
+            </View>
           )}
         </View>
 
