@@ -8,7 +8,7 @@ const SplashScreen = ({setShowSplashScreen,fetchChatResetAction}) => {
   useEffect(() => {
     setTimeout(() => {
       // websock()
-      // fetchChatResetAction()
+      fetchChatResetAction()
       setShowSplashScreen(false);
     }, 1000);
   });

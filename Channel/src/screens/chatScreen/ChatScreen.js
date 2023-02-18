@@ -120,7 +120,7 @@ const ChatScreen = ({
           {chatState?.data[teamId]?.isloading == true || teamId == undefined ? (
             <ActivityIndicator />
           ) : (
-            <View>
+            <>
               <FlatList
                 data={memoizedData}
                 renderItem={renderItem}
@@ -139,7 +139,7 @@ const ChatScreen = ({
               {localMsg?.length > 0 && (
                 <FlatList data={localMsg} renderItem={renderItemLocal} />
               )}
-            </View>
+            </>
           )}
         </View>
 

@@ -52,6 +52,7 @@ export function channelsReducer(state = initialState, action) {
       return {...state, channels: [], isLoading: false};
 
     case Actions.MOVE_CHANNEL_TO_TOP:
+      console.log('move to top');
       var tempHighlightChannels ={}
       if(state?.activeChannelTeamId != action.channelId){
         tempHighlightChannels[action.channelId] =true
