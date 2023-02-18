@@ -111,16 +111,18 @@ const ChatScreen = ({
   }, [teamId, userInfoState, skip, fetchChatsOfTeamAction]);
   const date = new Date();
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    <View style={{flex:1}}>
+      <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
       keyboardVerticalOffset={70}
-      style={{flex: 1}}>
+      style={{flex: 1}}
+      >
       <View style={{flex: 1}}>
-        <View style={{flex: 1}}>
+        <View style={{flex: 9}}>
           {chatState?.data[teamId]?.isloading == true || teamId == undefined ? (
             <ActivityIndicator />
           ) : (
-            <>
+            <View>
               <FlatList
                 data={memoizedData}
                 renderItem={renderItem}
@@ -139,7 +141,7 @@ const ChatScreen = ({
               {localMsg?.length > 0 && (
                 <FlatList data={localMsg} renderItem={renderItemLocal} />
               )}
-            </>
+            </View>
           )}
         </View>
 
@@ -216,6 +218,7 @@ const ChatScreen = ({
         </View>
       </View>
     </KeyboardAvoidingView>
+    </View>
   );
 };
 const mapStateToProps = state => ({
