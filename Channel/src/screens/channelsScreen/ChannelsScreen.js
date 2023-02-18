@@ -245,9 +245,9 @@ const ChannelsScreen = props => {
             <FlatList
               data={props?.channelsState?.channels}
               renderItem={renderItemChannels}
-              refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-              }
+              // refreshControl={
+              //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              // }
               keyboardDismissMode="on-drag"
               keyboardShouldPersistTaps="always"
             />
