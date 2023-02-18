@@ -13,7 +13,7 @@ const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
   const newContent =
     content == 'joined this channel'
       ? senderName + ' ' + content
-      : senderName + ' ' + activityName + ' ' + name;
+      : (content == 'closed this channel' ? senderName+' '+activityName+' '+"this channel" : senderName + ' ' + activityName + ' ' + name) ;
   return (
     <View style={[styles.actionText]}>
       <Text style={styles.text}>{newContent}</Text>
