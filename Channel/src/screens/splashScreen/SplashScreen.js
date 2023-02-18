@@ -1,11 +1,14 @@
 import React, {useEffect} from 'react';
 import {Image, Text, View} from 'react-native';
+import { connect } from 'react-redux';
+import { getChatsReset } from '../../redux/actions/chat/ChatActions';
 import { websock } from '../Socket';
 
-const SplashScreen = ({setShowSplashScreen}) => {
+const SplashScreen = ({setShowSplashScreen,fetchChatResetAction}) => {
   useEffect(() => {
     setTimeout(() => {
       // websock()
+      // fetchChatResetAction()
       setShowSplashScreen(false);
     }, 1000);
   });
@@ -16,5 +19,9 @@ const SplashScreen = ({setShowSplashScreen}) => {
     </View>
   );
 };
-
-export default SplashScreen;
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchChatResetAction: () => dispatch(getChatsReset())
+  }
+}
+export default connect(null,mapDispatchToProps)(SplashScreen);

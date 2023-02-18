@@ -12,13 +12,13 @@ export function chatReducer(state = initialState, action) {
         data: {
           ...state?.data,
           [action.teamId]: {
-            isloading: true,
+            isloading:  state?.data[action?.teamId]?.messages==[] ? true : false,
             messages: state?.data[action?.teamId]?.messages
               ? state?.data[action?.teamId]?.messages
               : [],
-            parentMessages: state?.data[action?.teamId]?.parentMessages ?
-              {...state?.data?.[action?.teamId]?.parentMessages} : 
-              {}  
+            parentMessages: state?.data[action?.teamId]?.parentMessages
+              ? {...state?.data?.[action?.teamId]?.parentMessages}
+              : {},
           },
         },
       };
@@ -39,15 +39,18 @@ export function chatReducer(state = initialState, action) {
               ...state?.data[action?.teamId]?.messages,
               ...action?.messages,
             ],
-            parentMessages:{
-                  ...state?.data[action?.teamId]?.parentMessages,
-                  ...tempParentMessages
-                },
+            parentMessages: {
+              ...state?.data[action?.teamId]?.parentMessages,
+              ...tempParentMessages,
+            },
             isloading: false,
             apiCalled: true,
           },
         },
       };
+
+    case Actions.FETCH_CHAT_RESET:
+      return initialState;
     case Actions.ADD_NEW_MESSAGE:
       var tempParentMessage = {};
       var parentId = null;

@@ -12,7 +12,7 @@ import {
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
 import ListFooterComponent from '../../components/ListFooterComponent';
-import { setActiveChannelTeamId } from '../../redux/actions/channels/SetActiveChannelId';
+import {setActiveChannelTeamId} from '../../redux/actions/channels/SetActiveChannelId';
 import {
   getChatsStart,
   sendMessageStart,
@@ -29,7 +29,7 @@ const ChatScreen = ({
   orgState,
   deleteMessageAction,
   channelsState,
-  setActiveChannelTeamIdAction
+  setActiveChannelTeamIdAction,
 }) => {
   var {teamId, reciverUserId} = route.params;
   if (teamId == undefined) {
@@ -40,9 +40,9 @@ const ChatScreen = ({
   const [repliedMsgDetails, setrepliedMsgDetails] = useState('');
   const [localMsg, setlocalMsg] = useState([]);
   useEffect(() => {
-    setActiveChannelTeamIdAction(teamId)
-  }, [])
-  
+    setActiveChannelTeamIdAction(teamId);
+  }, []);
+
   const memoizedData = useMemo(
     () => chatState?.data[teamId]?.messages || [],
     [chatState?.data[teamId]?.messages],
@@ -54,13 +54,13 @@ const ChatScreen = ({
     chatState?.data[teamId]?.messages.length != undefined
       ? chatState?.data[teamId]?.messages.length
       : 0;
-
   useEffect(() => {
     if (
       chatState?.data[teamId]?.messages == undefined ||
       chatState?.data[teamId]?.messages == [] ||
       !chatState?.data[teamId]?.apiCalled
     ) {
+      console.log('hello');
       fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
     }
   }, []);
@@ -87,17 +87,15 @@ const ChatScreen = ({
   );
   const renderItemLocal = useCallback(
     ({item, index}) => (
-      (
-        <LocalChatCardMemo
-          chat={item}
-          userInfoState={userInfoState}
-          orgState={orgState}
-          deleteMessageAction={deleteMessageAction}
-          chatState={chatState}
-          setreplyOnMessage={setreplyOnMessage}
-          setrepliedMsgDetails={setrepliedMsgDetails}
-        />
-      )
+      <LocalChatCardMemo
+        chat={item}
+        userInfoState={userInfoState}
+        orgState={orgState}
+        deleteMessageAction={deleteMessageAction}
+        chatState={chatState}
+        setreplyOnMessage={setreplyOnMessage}
+        setrepliedMsgDetails={setrepliedMsgDetails}
+      />
     ),
     [
       chatState,
@@ -118,7 +116,7 @@ const ChatScreen = ({
       style={{flex: 1}}>
       <View style={{flex: 1}}>
         <View style={{flex: 1}}>
-          {teamId == undefined ? (
+          {chatState?.data[teamId]?.isloading == true || teamId == undefined ? (
             <ActivityIndicator />
           ) : (
             <>
@@ -130,7 +128,9 @@ const ChatScreen = ({
                   chatState?.data[teamId]?.messages?.length > 15 &&
                   ListFooterComponent
                 }
-                onEndReached={onEndReached}
+                onEndReached={
+                  chatState?.data[teamId]?.messages?.length > 20 && onEndReached
+                }
                 onEndReachedThreshold={0.2}
                 keyboardDismissMode="on-drag"
                 keyboardShouldPersistTaps="always"
@@ -233,7 +233,8 @@ const mapDispatchToProps = dispatch => {
       ),
     deleteMessageAction: (accessToken, msgId) =>
       dispatch(deleteMessageStart(accessToken, msgId)),
-      setActiveChannelTeamIdAction:(teamId)=>dispatch(setActiveChannelTeamId(teamId))
+    setActiveChannelTeamIdAction: teamId =>
+      dispatch(setActiveChannelTeamId(teamId)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);

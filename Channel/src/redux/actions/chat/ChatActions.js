@@ -29,6 +29,11 @@ export function getChatsSuccess(data,teamId){
     parentMessages : data.parentMessages
   }
 }
+export function getChatsReset(){
+  return {
+    type: Actions.FETCH_CHAT_RESET,
+  }
+}
 export function getChatsError(){
     return {
         type:Actions.FETCH_CHAT_ERROR
