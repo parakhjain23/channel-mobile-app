@@ -3,6 +3,7 @@ import {store} from '../redux/Store';
 
 export const handleNotificationFromEvents = async data => {
   console.log('handleNotificationsfrom events ', data);
+  data['isAcitivity']=`{${data?.isAcitivity}}`
   data['mentions'] = `[]`;
   data['showInMainConversation'] = `${data?.showInMainConversation}`;
   data['isLink'] = `${data?.isLink}`;
@@ -81,6 +82,7 @@ export const handleNotificationFromEvents = async data => {
           },
         },
       ],
+      categoryId: 'channel'
     },
   });
 };
@@ -125,6 +127,7 @@ export const handleNotificationFirebase = async firebaseData => {
       // You can customize the titles and the IDs of the actions to match your needs
       attachments: [
         {
+          url: 'https://control.msg91.com/app/assets/images/logo.png',
           identifier: 'mark_as_read',
           title: 'Mark as Read',
           options: {
@@ -132,6 +135,7 @@ export const handleNotificationFirebase = async firebaseData => {
           },
         },
         {
+          url: 'https://control.msg91.com/app/assets/images/logo.png',
           identifier: 'reply',
           title: 'Reply',
           options: {

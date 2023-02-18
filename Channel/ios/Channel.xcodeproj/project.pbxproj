@@ -31,6 +31,7 @@
 		E5BC4A252981104100EA84FB /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5BC4A152981104100EA84FB /* EvilIcons.ttf */; };
 		E5BC4A262981104100EA84FB /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5BC4A162981104100EA84FB /* SimpleLineIcons.ttf */; };
 		E5BC4A272981104100EA84FB /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5BC4A172981104100EA84FB /* MaterialIcons.ttf */; };
+		EC7B323729A0A7150087A7F5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EC7B323629A0A7140087A7F5 /* GoogleService-Info.plist */; };
 		ECA5F0AF299A5BBF0018B217 /* ding.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = ECA5F0AE299A5BBE0018B217 /* ding.mp3 */; };
 /* End PBXBuildFile section */
 
@@ -78,6 +79,7 @@
 		E5BC4A162981104100EA84FB /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		E5BC4A172981104100EA84FB /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
 		EC617CC8299FA8250087000B /* Channel.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Channel.entitlements; path = Channel/Channel.entitlements; sourceTree = "<group>"; };
+		EC7B323629A0A7140087A7F5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		ECA5F0AE299A5BBE0018B217 /* ding.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ding.mp3; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -154,6 +156,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				EC7B323629A0A7140087A7F5 /* GoogleService-Info.plist */,
 				ECA5F0AE299A5BBE0018B217 /* ding.mp3 */,
 				13B07FAE1A68108700A75B9A /* Channel */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -326,6 +329,7 @@
 				E5BC4A1E2981104100EA84FB /* AntDesign.ttf in Resources */,
 				E5BC4A242981104100EA84FB /* Zocial.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				EC7B323729A0A7150087A7F5 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

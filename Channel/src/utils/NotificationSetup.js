@@ -81,6 +81,38 @@ const NotificationSetup =()=>{
             openChat(rMessage);
             console.log('open app notification from firebase');
           }
+          const categories = [
+            {
+              id: 'channel',
+              actions: [
+                {
+                  id: 'mark_as_read',
+                  title: 'Mark as Read',
+                  options: {
+                    foreground: true,
+                    authenticationRequired: false,
+                    destructive: false,
+                  },
+                },
+                {
+                  id: 'reply',
+                  title: 'Reply',
+                  input: true,
+                  options: {
+                    foreground: true,
+                    authenticationRequired: false,
+                    destructive: true,
+                  },
+                  textInput: {
+                    buttonTitle: 'Send',
+                    placeholder: 'Type a message',
+                  },
+                },
+              ],
+            },
+          ];
+          
+          Notifee.setNotificationCategories(categories);
           Notifee.onForegroundEvent(actionListeners);
           Notifee.onBackgroundEvent(actionListeners);
         } catch (error) {
@@ -88,7 +120,9 @@ const NotificationSetup =()=>{
         }
       };
       const actionListeners = async event => {
+        console.log(event,"this is eveent");
         if (event?.type == 1) {
+          console.log("inside action listeners,-=-=-=");
           const message = event?.detail?.notification;
           openChat(message);
         }
