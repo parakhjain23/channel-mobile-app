@@ -112,11 +112,11 @@ const ChatScreen = ({
   const date = new Date();
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={70}
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 70 :50}
       style={{flex: 1}}>
       <View style={{flex: 1}}>
-        <View style={{flex: 1}}>
+        <View style={{flex: 9}}>
           {chatState?.data[teamId]?.isloading == true || teamId == undefined ? (
             <ActivityIndicator />
           ) : (
