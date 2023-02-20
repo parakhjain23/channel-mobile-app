@@ -107,113 +107,115 @@ const ChatScreen = ({
   }, [teamId, userInfoState, skip, fetchChatsOfTeamAction]);
   const date = new Date();
   return (
-    <View style={{flex:1}}>
+    <View style={{flex: 1}}>
       <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : null}
-      keyboardVerticalOffset={70}
-      style={{flex: 1}}
-      >
-      <View style={{flex: 1}}>
-        <View style={{flex: 9}}>
-          {chatState?.data[teamId]?.isloading == true || teamId == undefined ? (
-            <ActivityIndicator />
-          ) : (
-            <>
-              <FlatList
-                data={memoizedData}
-                renderItem={renderItem}
-                inverted
-                ListFooterComponent={
-                  chatState?.data[teamId]?.messages?.length > 15 &&
-                  ListFooterComponent
-                }
-                onEndReached={
-                  chatState?.data[teamId]?.messages?.length > 20 && onEndReached
-                }
-                onEndReachedThreshold={0.2}
-                keyboardDismissMode="on-drag"
-                keyboardShouldPersistTaps="always"
-              />
-              {localMsg?.length > 0 && (
-                <FlatList data={localMsg} renderItem={renderItemLocal} />
-              )}
-            </>
-          )}
-        </View>
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        keyboardVerticalOffset={70}
+        style={{flex: 1}}>
+        <View style={{flex: 1}}>
+          <View style={{flex: 9}}>
+            {teamId == undefined ||chatState?.data[teamId]?.isloading==true
+             ? (
+              <ActivityIndicator />
+            ) : (
+              <>
+                <FlatList
+                  data={memoizedData}
+                  renderItem={renderItem}
+                  inverted
+                  ListFooterComponent={
+                    chatState?.data[teamId]?.messages?.length > 15 &&
+                    ListFooterComponent
+                  }
+                  onEndReached={
+                    chatState?.data[teamId]?.messages?.length > 20 &&
+                    onEndReached
+                  }
+                  onEndReachedThreshold={0.2}
+                  keyboardDismissMode="on-drag"
+                  keyboardShouldPersistTaps="always"
+                />
+                {localMsg?.length > 0 && (
+                  <FlatList data={localMsg} renderItem={renderItemLocal} />
+                )}
+              </>
+            )}
+          </View>
 
-        <View style={{margin: 10}}>
-          <View style={{flexDirection: 'row'}}>
-            <View
-              style={[
-                replyOnMessage && styles.inputWithReplyContainer,
-                {width: '90%'},
-              ]}>
-              {replyOnMessage && (
-                <TouchableOpacity onPress={() => setreplyOnMessage(false)}>
-                  <View style={styles.replyMessageInInput}>
-                    <Text style={styles.text}>
-                      {repliedMsgDetails?.content}
-                    </Text>
-                    <MaterialIcons name="cancel" size={16} />
-                  </View>
-                </TouchableOpacity>
-              )}
-              <TextInput
-                editable
-                multiline
-                onChangeText={text => onChangeMessage(text)}
-                value={message}
+          <View style={{margin: 10}}>
+            <View style={{flexDirection: 'row'}}>
+              <View
                 style={[
-                  replyOnMessage
-                    ? styles.inputWithReply
-                    : styles.inputWithoutReply,
-                ]}
-              />
-            </View>
-            <View style={{justifyContent: 'flex-end'}}>
-              <MaterialIcons
-                name="send"
-                size={25}
-                style={{color: 'black', padding: 10}}
-                onPress={() => {
-                  onChangeMessage(''),
-                    setlocalMsg([
-                      ...localMsg,
-                      {
-                        _id: '70356973726265363273736f',
-                        appId: '62b53b61b5b4a2001fb9af37',
-                        content: message,
-                        createdAt: date,
-                        isLink: false,
-                        mentions: [],
-                        orgId: orgState?.currentOrgId,
-                        parentId: repliedMsgDetails?._id,
-                        requestId: '73d31f2e-9039-401c-83cd-909953c264f1',
-                        senderId: userInfoState?.user?.id,
-                        senderType: 'APP',
-                        showInMainConversation: true,
-                        teamId: '63e09e1f0916f000183a9d87',
-                        updatedAt: date,
-                      },
-                    ]),
-                    sendMessageAction(
-                      message.trim(),
-                      teamId,
-                      orgState?.currentOrgId,
-                      userInfoState?.user?.id,
-                      userInfoState?.accessToken,
-                      repliedMsgDetails?._id || null,
-                    );
-                  // onChangeMessage('');
-                  replyOnMessage && setreplyOnMessage(false);
-                  repliedMsgDetails && setrepliedMsgDetails(null);
-                }}
-              />
+                  replyOnMessage && styles.inputWithReplyContainer,
+                  {width: '90%'},
+                ]}>
+                {replyOnMessage && (
+                  <TouchableOpacity onPress={() => setreplyOnMessage(false)}>
+                    <View style={styles.replyMessageInInput}>
+                      <Text style={styles.text}>
+                        {repliedMsgDetails?.content}
+                      </Text>
+                      <MaterialIcons name="cancel" size={16} />
+                    </View>
+                  </TouchableOpacity>
+                )}
+                <TextInput
+                  editable
+                  multiline
+                  onChangeText={text => onChangeMessage(text)}
+                  value={message}
+                  style={[
+                    replyOnMessage
+                      ? styles.inputWithReply
+                      : styles.inputWithoutReply,
+                  ]}
+                />
+              </View>
+              <View style={{justifyContent: 'flex-end'}}>
+                <MaterialIcons
+                  name="send"
+                  size={25}
+                  style={{color: 'black', padding: 10}}
+                  onPress={() => {
+                    message?.trim() != '' &&
+                      (onChangeMessage(''),
+                      setlocalMsg([
+                        ...localMsg,
+                        {
+                          _id: '70356973726265363273736f',
+                          appId: '62b53b61b5b4a2001fb9af37',
+                          content: message,
+                          createdAt: date,
+                          isLink: false,
+                          mentions: [],
+                          orgId: orgState?.currentOrgId,
+                          parentId: repliedMsgDetails?._id,
+                          requestId: '73d31f2e-9039-401c-83cd-909953c264f1',
+                          senderId: userInfoState?.user?.id,
+                          senderType: 'APP',
+                          showInMainConversation: true,
+                          teamId: '63e09e1f0916f000183a9d87',
+                          updatedAt: date,
+                        },
+                      ]),
+                      sendMessageAction(
+                        message.trim(),
+                        teamId,
+                        orgState?.currentOrgId,
+                        userInfoState?.user?.id,
+                        userInfoState?.accessToken,
+                        repliedMsgDetails?._id || null,
+                      ),
+                      // onChangeMessage('');
+                      replyOnMessage && setreplyOnMessage(false),
+                      repliedMsgDetails && setrepliedMsgDetails(null));
+                  }}
+                />
+              </View>
             </View>
           </View>
         </View>
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
     </View>
   );
 };

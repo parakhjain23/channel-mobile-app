@@ -12,7 +12,7 @@ export function chatReducer(state = initialState, action) {
         data: {
           ...state?.data,
           [action.teamId]: {
-            isloading:  state?.data[action?.teamId]?.messages==[] ? true : false,
+            isloading:  state?.data[action?.teamId]?.messages?.length==0 ? true : false,
             messages: state?.data[action?.teamId]?.messages
               ? state?.data[action?.teamId]?.messages
               : [],
