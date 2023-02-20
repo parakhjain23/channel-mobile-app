@@ -70,7 +70,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
         />
 
         {searchedUser != '' && (
-          <ScrollView style={{height: 200}} keyboardShouldPersistTaps="always">
+          <ScrollView style={{maxHeight: 200}} keyboardShouldPersistTaps="always">
             {props?.channelsByQueryState?.channels?.map((item, index) => {
               return (
                 <RenderUsersToAdd
