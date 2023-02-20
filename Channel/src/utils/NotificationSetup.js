@@ -107,7 +107,7 @@ const NotificationSetup =()=>{
           Notifee.onForegroundEvent(actionListeners);
           Notifee.onBackgroundEvent(actionListeners);
         } catch (error) {
-          console.log(error, 'this is error');
+          console.warn(error, 'this is error');
         }
       };
       const actionListeners = async event => {
@@ -144,7 +144,7 @@ const NotificationSetup =()=>{
             : (name =  store.getState()?.channelsReducer?.teamIdAndNameMapping[teamId]);
           RootNavigation?.navigate('Chat', {chatHeaderTitle: name, teamId: teamId});
         } catch (error) {
-          console.log(error);
+          console.warn(error);
         }
       };
       return null

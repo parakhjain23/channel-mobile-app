@@ -8,7 +8,7 @@ let socket = io('wss://api.intospace.io', {
 export function createSocket(accessToken, orgId) {
   if (socket?.connected) {
     socket.disconnect();
-    console.log('socket off');
+    console.warn('socket off');
     socket = io('wss://api.intospace.io', {
       forceNew: true,
       transports: ['websocket', 'polling'],
@@ -27,16 +27,16 @@ export function createSocket(accessToken, orgId) {
         deviceType: 'WEB',
       },
       (error, authResult) => {
-        console.log('ERROR', error);
+        console.warn('ERROR', error);
       },
     );
     socket.on('connect', () => {
-      console.log('Connected');
+      console.warn('Connected');
     });
   }
 
   socket.on('disconnect', () => {
-    console.log('Disconnected');
+    console.warn('Disconnected');
   });
   return socket;
 }
