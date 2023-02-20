@@ -39,10 +39,6 @@ const ChatScreen = ({
   const [replyOnMessage, setreplyOnMessage] = useState(false);
   const [repliedMsgDetails, setrepliedMsgDetails] = useState('');
   const [localMsg, setlocalMsg] = useState([]);
-  useEffect(() => {
-    setActiveChannelTeamIdAction(teamId);
-  }, []);
-
   const memoizedData = useMemo(
     () => chatState?.data[teamId]?.messages || [],
     [chatState?.data[teamId]?.messages],
@@ -62,6 +58,7 @@ const ChatScreen = ({
     ) {
       fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
     }
+    setActiveChannelTeamIdAction(teamId);
   }, []);
   const renderItem = useCallback(
     ({item, index}) => (
