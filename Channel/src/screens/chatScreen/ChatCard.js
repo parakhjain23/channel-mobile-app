@@ -63,7 +63,9 @@ const ChatCard = ({
             <Swipeable
               ref={swipeableRef}
               renderLeftActions={LeftSwipeActions}
-              onSwipeableLeftOpen={swipeFromLeftOpen}>
+              // onSwipeableLeftOpen={swipeFromLeftOpen}
+              onSwipeableWillOpen={swipeFromLeftOpen}
+              >
               <View
                 style={[
                   styles.container,

@@ -117,8 +117,8 @@ const ChatScreen = ({
         style={{flex: 1}}>
         <View style={{flex: 1}}>
           <View style={{flex: 9}}>
-            {chatState?.data[teamId]?.isloading == true ||
-            teamId == undefined ? (
+            {teamId == undefined ||chatState?.data[teamId]?.isloading==true
+             ? (
               <ActivityIndicator />
             ) : (
               <>
