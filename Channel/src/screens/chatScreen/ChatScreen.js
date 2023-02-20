@@ -60,7 +60,6 @@ const ChatScreen = ({
       chatState?.data[teamId]?.messages == [] ||
       !chatState?.data[teamId]?.apiCalled
     ) {
-      console.log('hello');
       fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
     }
   }, []);

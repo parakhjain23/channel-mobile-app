@@ -167,7 +167,6 @@ const ChannelsScreen = props => {
   const navigation = useNavigation();
   const modalizeRef = useRef(null);
   const isFocused = useIsFocused();
-  console.log('in channel screen ');
   useEffect(() => {
     if (isFocused) {
       props?.resetActiveChannelTeamIdAction();
@@ -201,7 +200,6 @@ const ChannelsScreen = props => {
   }, []);
   const renderItemChannels = useCallback(
     ({item, index}) => {
-      console.log(index);
       return (
         <RenderChannels item={item} navigation={navigation} props={props} />
       );

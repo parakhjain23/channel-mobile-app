@@ -3,7 +3,7 @@ import {Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const ChannelCard = ({item, navigation, props}) => {
-  console.log('channelcard');
+  // console.log('channelcard');
   const Name =
     item?.type == 'DIRECT_MESSAGE'
       ? props?.orgsState?.userIdAndNameMapping &&
@@ -56,7 +56,7 @@ const ChannelCard = ({item, navigation, props}) => {
   );
 };
 const SearchChannelCard = ({item, navigation, props, setsearchValue}) => {
-  console.log('search channelcard');
+  // console.log('search channelcard');
   const Name =
     item?._source?.type == 'U'
       ? item?._source?.title

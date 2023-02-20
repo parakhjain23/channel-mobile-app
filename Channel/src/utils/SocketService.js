@@ -20,7 +20,6 @@ const SocketService = socket => {
     if(data?.senderId != store?.getState()?.userInfoReducer?.user?.id){
       PlayLocalSoundFile()
       if(data?.teamId != store.getState().channelsReducer?.activeChannelTeamId){
-        console.log("inside if");
         handleNotificationFromEvents(data)
       }
     }

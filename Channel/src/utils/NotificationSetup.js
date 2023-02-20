@@ -56,30 +56,21 @@ const NotificationSetup =()=>{
             }
           });
           messaging().onMessage(async message => {
-            console.log(
-              'OnMessage Receivedddddddddddd app is in foreground but socket is disconnect',
-              message,
-            );
             if (message?.data?.senderId != store.getState()?.userInfoReducer.user?.id) {
               handleNotificationFirebase(message);
             }
-            // store.dispatch(HandleNotification(message));
           });
           messaging().onNotificationOpenedApp(message => {
             openChat(message);
-            console.log('open appp on clicking on notification');
           });
           messaging().setBackgroundMessageHandler(async message => {
-            console.log('background message Received by firebase', message);
             if (message?.data?.senderId != store.getState()?.userInfoReducer?.user?.id) {
               handleNotificationFirebase(message);
             }
           });
           const rMessage = await messaging().getInitialNotification();
           if (rMessage) {
-            console.log(rMessage, 'this is rmessage');
             openChat(rMessage);
-            console.log('open app notification from firebase');
           }
           const categories = [
             {
@@ -120,9 +111,7 @@ const NotificationSetup =()=>{
         }
       };
       const actionListeners = async event => {
-        console.log(event,"this is eveent");
         if (event?.type == 1) {
-          console.log("inside action listeners,-=-=-=");
           const message = event?.detail?.notification;
           openChat(message);
         }

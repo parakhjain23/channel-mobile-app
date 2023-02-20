@@ -25,7 +25,6 @@ const ExploreChannels = props => {
     fetchAllChannels();
   }, []);
   const RenderChannels = ({item, navigation, props}) => {
-    console.log('render', item);
     return (
       <TouchableOpacity
         style={{

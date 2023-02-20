@@ -1,15 +1,12 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginScreen from '../screens/loginScreen/LoginScreen';
-import {connect, useDispatch} from 'react-redux';
+import {connect} from 'react-redux';
 import DrawerNavigation from './DrawerNavigation';
 import ChatScreen from '../screens/chatScreen/ChatScreen';
-import {initializeSocket, subscribeToNotifications} from '../redux/actions/socket/socketActions';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
 import ExploreChannels from '../screens/channelsScreen/ExploreChannels';
 
-const ProtectedNavigation = ({userInfoSate, orgsState}) => {
+const ProtectedNavigation = ({userInfoSate}) => {
   const Stack = createNativeStackNavigator();
   //   const navigate = useNavigation();
   //   const {colors} = useTheme();
@@ -23,21 +20,6 @@ const ProtectedNavigation = ({userInfoSate, orgsState}) => {
   //     },
   //     statusBarTranslucent:true
   //   };
-  const dispatch = useDispatch();
-  useEffect(() => {
-    if(userInfoSate?.accessToken){
-      dispatch(
-        initializeSocket(userInfoSate?.accessToken, orgsState?.currentOrgId),
-      );
-      // AsyncStorage.getItem('FCM_TOKEN')
-      // .then(token => {
-      //   dispatch(subscribeToNotifications(userInfoSate?.accessToken,token))
-      // })
-      // .catch(error => {
-      //   console.log('Error retrieving FCM_TOkEN from AsyncStorage: ', error);
-      // });
-    }
-  }, [userInfoSate?.accessToken, orgsState?.currentOrgId]);
 
   return !userInfoSate?.isSignedIn ? (
     <Stack.Navigator>
@@ -72,6 +54,5 @@ const ProtectedNavigation = ({userInfoSate, orgsState}) => {
 
 const mapStateToProps = state => ({
   userInfoSate: state.userInfoReducer,
-  orgsState: state.orgsReducer,
 });
 export default connect(mapStateToProps)(ProtectedNavigation);
