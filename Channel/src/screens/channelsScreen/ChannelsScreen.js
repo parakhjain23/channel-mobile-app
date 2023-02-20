@@ -204,7 +204,7 @@ const ChannelsScreen = props => {
         <RenderChannels item={item} navigation={navigation} props={props} />
       );
     },
-    [props?.channelsState?.channels,props?.channelsState],
+    [props?.channelsState?.channels,props?.channelsState,props?.orgsState?.userIdAndNameMapping],
   );
   const renderItemSearchChannels = useCallback(
     ({item}) => {
