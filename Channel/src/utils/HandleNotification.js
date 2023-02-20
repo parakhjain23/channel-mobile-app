@@ -4,7 +4,7 @@ import {store} from '../redux/Store';
 export const handleNotificationFromEvents = async data => {
   // console.warn('handleNotificationsfrom events ', data);
   data['attachment']=`${data?.attachment}`
-  data['isAcitivity']=`{${data?.isAcitivity}}`
+  data['isActivity']=`{${data?.isActivity}}`
   data['mentions'] = `[]`;
   data['showInMainConversation'] = `${data?.showInMainConversation}`;
   data['isLink'] = `${data?.isLink}`;
