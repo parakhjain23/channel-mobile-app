@@ -9,12 +9,9 @@ import { createSocket } from './Socket';
 import { PlayLocalSoundFile } from './Sounds';
 
 const SocketService = socket => {
-  socket.on('connect', () => {
-    console.log('Connected in socket service');
-  });
   socket.on('reconnect', function () {
     console.log('in reconnect socket event');
-    // createSocket(store.getState()?.userInfoReducer?.accessToken,store.getState()?.orgsReducer?.currentOrgId)
+    createSocket(store.getState()?.userInfoReducer?.accessToken,store.getState()?.orgsReducer?.currentOrgId)
   });
   socket.on('chat/message created', data => {
     console.log("chat message created",data);
