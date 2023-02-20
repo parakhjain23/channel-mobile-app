@@ -67,7 +67,7 @@ export const handleNotificationFromEvents = async data => {
       // You can customize the titles and the IDs of the actions to match your needs
       attachments: [
         {
-          url: 'https://control.msg91.com/app/assets/images/logo.png',
+          url: 'https://s3.ap-south-1.amazonaws.com/walkover.things-of-brand.assets/2b4c042bbe9ec62b13f698f163434389',
           identifier: 'mark_as_read',
           title: 'Mark as Read',
           options: {
@@ -75,7 +75,7 @@ export const handleNotificationFromEvents = async data => {
           },
         },
         {
-          url: 'https://control.msg91.com/app/assets/images/logo.pnga',
+          url: 'https://s3.ap-south-1.amazonaws.com/walkover.things-of-brand.assets/2b4c042bbe9ec62b13f698f163434389',
           identifier: 'reply',
           title: 'Reply',
           options: {
