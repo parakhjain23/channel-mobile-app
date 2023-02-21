@@ -5,7 +5,7 @@ import * as Actions from '../../Enums';
 export function* getChannels({accessToken,orgId,userId}){
   try {
     var response = yield call(getChannelsApi,accessToken,orgId,userId) 
-    yield put(getChannelsSuccess(response,userId))
+    yield put(getChannelsSuccess(response,userId,accessToken,orgId))
   } catch (error) {
     console.log(error);
   }
@@ -19,11 +19,11 @@ export function getChannelsStart(token,orgId,userId){
     userId:userId
   }
 }
-export function getChannelsSuccess(data,userId){
+export function getChannelsSuccess(data,userId,accessToken,orgId){
   return {
     type: Actions.FETCH_CHANNELS_SUCCESS,
     channels:data,
-    userId:userId
+    userId:userId,accessToken,orgId
   }
 }
 export function getChannelsError(){
