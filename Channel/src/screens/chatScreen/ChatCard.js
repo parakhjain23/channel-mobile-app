@@ -3,7 +3,8 @@ import {StyleSheet, Text, TouchableOpacity, Vibration, View} from 'react-native'
 import {GestureHandlerRootView, Swipeable} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
+const AddRemoveJoinedMsg = ({senderName, content, orgState,xyz}) => {
+  console.log(content,xyz);
   const id = content.match(/\{\{(.*?)\}\}/);
   const extractedId = id ? id[1] : null;
   const splitInput = content.split('}}');
@@ -57,7 +58,6 @@ const ChatCard = ({
   };
   return (
     <>
-      {!chat?.isActivity ? (
         <GestureHandlerRootView>
           <TouchableOpacity onLongPress={sentByMe ? onLongPress : null}>
             <Swipeable
@@ -124,13 +124,6 @@ const ChatCard = ({
             </Swipeable>
           </TouchableOpacity>
         </GestureHandlerRootView>
-      ) : (
-        <AddRemoveJoinedMsg
-          senderName={SenderName}
-          content={chat?.content}
-          orgState={orgState}
-        />
-      )}
     </>
   );
 };

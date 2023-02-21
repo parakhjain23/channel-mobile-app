@@ -13,6 +13,6 @@ export const deleteMessageApi= async(token,msgId)=>{
         var result = await response.json();
         return result
     }catch (error) {
-        console.warn(error);
+        console.log(error);
     }
 }

@@ -107,12 +107,13 @@ const NotificationSetup =()=>{
           Notifee.onForegroundEvent(actionListeners);
           Notifee.onBackgroundEvent(actionListeners);
         } catch (error) {
-          console.warn(error, 'this is error');
+          console.log(error, 'this is error');
         }
       };
       const actionListeners = async event => {
         if (event?.type == 1) {
           const message = event?.detail?.notification;
+          console.log(message,"this is message in open chat");
           openChat(message);
         }
         switch (event?.detail?.pressAction?.id) {
@@ -144,7 +145,7 @@ const NotificationSetup =()=>{
             : (name =  store.getState()?.channelsReducer?.teamIdAndNameMapping[teamId]);
           RootNavigation?.navigate('Chat', {chatHeaderTitle: name, teamId: teamId});
         } catch (error) {
-          console.warn(error);
+          console.log(error);
         }
       };
       return null

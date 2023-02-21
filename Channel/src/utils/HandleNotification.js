@@ -2,9 +2,8 @@ import Notifee, {AndroidImportance} from '@notifee/react-native';
 import {store} from '../redux/Store';
 
 export const handleNotificationFromEvents = async data => {
-  // console.warn('handleNotificationsfrom events ', data);
   data['attachment']=`${data?.attachment}`
-  data['isActivity']=`{${data?.isActivity}}`
+  data['isActivity']=data?.isActivity ? `${data?.isActivity}` :'false'
   data['mentions'] = `[]`;
   data['showInMainConversation'] = `${data?.showInMainConversation}`;
   data['isLink'] = `${data?.isLink}`;
@@ -88,7 +87,7 @@ export const handleNotificationFromEvents = async data => {
   });
 };
 export const handleNotificationFirebase = async firebaseData => {
-  // console.warn('handleNotificationsFIREBASE data', firebaseData);
+  // console.log('handleNotificationsFIREBASE data', firebaseData);
   var title = firebaseData?.notification?.title;
   var body = firebaseData?.notification?.body;
   await Notifee.displayNotification({

@@ -27,8 +27,8 @@ export const sendMessageApi = async (
       }),
     });
     const result = await response.json()
-    console.warn(result,"-=-=-=API SEND RESULT");
+    console.log(result,"-=-=-=API SEND RESULT");
   } catch (error) {
-    console.warn(error);
+    console.log(error);
   }
 };
