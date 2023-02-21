@@ -7,7 +7,7 @@ export function* getOrgDetails({accessToken}){
     var response = yield call(fetchOrgsApi, accessToken)
     yield put(getOrgDetailsSuccess(response))
   } catch (error) {
-    console.warn(error);
+    console.log(error);
   }
 }
 

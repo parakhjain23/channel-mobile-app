@@ -22,6 +22,6 @@ export const createDmChannel = async (token,orgId,channelName,reciverUserId) => 
     }
     return result
   } catch (error) {
-    console.warn(error);
+    console.log(error);
   }
 };

@@ -7,7 +7,7 @@ export function* getAllUsersOfOrg({accessToken,orgId}){
     var response = yield call(getAllUsersOfOrgApi,accessToken,orgId)
     yield put(getAllUsersOfOrgSuccess(response))
   } catch (error) {
-    console.warn(error);
+    console.log(error);
   }
 }
 

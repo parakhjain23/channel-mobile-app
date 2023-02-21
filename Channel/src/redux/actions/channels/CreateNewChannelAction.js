@@ -6,7 +6,7 @@ export function* createNewChannel({token,orgId,channelName,channelType,userIds})
     try {
       yield call(createChannel,token,orgId,channelName,channelType,userIds)
     } catch (error) {
-      console.warn(error);
+      console.log(error);
     }
   }
 
