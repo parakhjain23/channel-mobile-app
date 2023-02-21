@@ -3,6 +3,7 @@ import { store } from '../../Store';
 
 const initialState = {
   channels: [],
+  recentChannels:[],
   isLoading: false,
   activeChannelTeamId : null,
   highlightChannel : {},
@@ -23,6 +24,7 @@ export function channelsReducer(state = initialState, action) {
       var userIdAndTeamIdMapping = {};
       var teamIdAndNameMapping ={}
       var tempteamIdAndTypeMapping={}
+      var channelIdAndDataMapping={}
       var key = null;
       var teamId = null
       for (let i = 0; i < action?.channels?.length; i++) {
@@ -38,6 +40,7 @@ export function channelsReducer(state = initialState, action) {
           teamIdAndNameMapping[key] = action?.channels[i]?.name
         }
         tempteamIdAndTypeMapping[action?.channels[i]?._id]=action?.channels[i]?.type
+        channelIdAndDataMapping[action?.channels[i]?._id]=action.data[i]
       }
       return {
         ...state,
@@ -45,9 +48,21 @@ export function channelsReducer(state = initialState, action) {
         isLoading: false,
         userIdAndTeamIdMapping: userIdAndTeamIdMapping,
         teamIdAndNameMapping: teamIdAndNameMapping,
-        teamIdAndTypeMapping: tempteamIdAndTypeMapping
+        teamIdAndTypeMapping: tempteamIdAndTypeMapping,
+        channelIdAndDataMapping: channelIdAndDataMapping
       };
-
+    
+    case Actions.GET_RECENT_CHANNELS_SUCCESS:
+      // var tempRecentChannels = []
+      var tempData = {}
+      var key = null
+      for(let i=0;i<action?.recentChannels?.length;i++){
+        key = action?.recentChannels[i]?.teamId
+        tempData[key]=state?.channels[key]
+      }
+      console.log([tempData],"this is recent data after update");
+      return {...state,recentChannels:[tempData]}  
+    
     case Actions.FETCH_CHANNELS_ERROR:
       return {...state, channels: [], isLoading: false};
 
