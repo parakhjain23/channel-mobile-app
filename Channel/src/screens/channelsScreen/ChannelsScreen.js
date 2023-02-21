@@ -241,7 +241,7 @@ const ChannelsScreen = props => {
             )
           ) : (
             <FlatList
-              data={props?.channelsState?.channels}
+              data={props?.channelsState?.recentChannels ||  props?.channelsState?.channels}
               renderItem={renderItemChannels}
               // refreshControl={
               //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

@@ -40,8 +40,9 @@ export function channelsReducer(state = initialState, action) {
           teamIdAndNameMapping[key] = action?.channels[i]?.name
         }
         tempteamIdAndTypeMapping[action?.channels[i]?._id]=action?.channels[i]?.type
-        channelIdAndDataMapping[action?.channels[i]?._id]=action.data[i]
+        channelIdAndDataMapping[action?.channels[i]?._id]=action.channels[i]
       }
+      console.log(channelIdAndDataMapping,"this is channel id and data mapping on success ");
       return {
         ...state,
         channels: action.channels,
@@ -52,16 +53,17 @@ export function channelsReducer(state = initialState, action) {
         channelIdAndDataMapping: channelIdAndDataMapping
       };
     
-    case Actions.GET_RECENT_CHANNELS_SUCCESS:
+    case Actions.FETCH_RECENT_CHANNELS_SUCCESS:
+      console.log(action,"=-=-=-=-=-=");
       // var tempRecentChannels = []
-      var tempData = {}
+      var tempData = []
       var key = null
       for(let i=0;i<action?.recentChannels?.length;i++){
         key = action?.recentChannels[i]?.teamId
-        tempData[key]=state?.channels[key]
+        tempData.push(state?.channelIdAndDataMapping[key])
       }
-      console.log([tempData],"this is recent data after update");
-      return {...state,recentChannels:[tempData]}  
+      console.log(tempData,"this is recent data after update");
+      return {...state,recentChannels:tempData}  
     
     case Actions.FETCH_CHANNELS_ERROR:
       return {...state, channels: [], isLoading: false};
