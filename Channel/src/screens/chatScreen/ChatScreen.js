@@ -23,6 +23,7 @@ import {ChatCardMemo, LocalChatCardMemo} from './ChatCard';
 const ChatScreen = ({
   route,
   userInfoState,
+  networkState,
   fetchChatsOfTeamAction,
   sendMessageAction,
   chatState,
@@ -177,7 +178,7 @@ const ChatScreen = ({
                   size={25}
                   style={{color: 'black', padding: 10}}
                   onPress={() => {
-                    message?.trim() != '' &&
+                    networkState?.isInternetConnected && (message?.trim() != '' &&
                       (onChangeMessage(''),
                       setlocalMsg([
                         ...localMsg,
@@ -199,7 +200,7 @@ const ChatScreen = ({
                         },
                       ]),
                       sendMessageAction(
-                        message.trim(),
+                        message,
                         teamId,
                         orgState?.currentOrgId,
                         userInfoState?.user?.id,
@@ -208,7 +209,7 @@ const ChatScreen = ({
                       ),
                       // onChangeMessage('');
                       replyOnMessage && setreplyOnMessage(false),
-                      repliedMsgDetails && setrepliedMsgDetails(null));
+                      repliedMsgDetails && setrepliedMsgDetails(null)))
                   }}
                 />
               </View>
@@ -220,6 +221,7 @@ const ChatScreen = ({
   );
 };
 const mapStateToProps = state => ({
+  networkState: state.networkReducer,
   userInfoState: state.userInfoReducer,
   orgState: state.orgsReducer,
   chatState: state.chatReducer,

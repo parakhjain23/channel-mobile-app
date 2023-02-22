@@ -28,6 +28,6 @@ export const sendMessageApi = async (
     });
     const result = await response.json()
   } catch (error) {
-    console.log(error);
+    console.warn(error);
   }
 };

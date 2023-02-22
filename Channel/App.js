@@ -6,6 +6,7 @@ import StoreAppWrapper from './src/navigation/StoreAppWrapper';
 import {persistor, store} from './src/redux/Store';
 import Notifee from '@notifee/react-native'
 import NotificationSetup from './src/utils/NotificationSetup';
+import InternetConnection from './src/utils/InternetConnection';
 const App = () => {
   useEffect(() => {
    Request()
@@ -14,6 +15,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
+        <InternetConnection />
         <NotificationSetup />
         <StoreAppWrapper />
       </PersistGate>

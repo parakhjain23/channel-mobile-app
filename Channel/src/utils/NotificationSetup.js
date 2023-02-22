@@ -145,7 +145,7 @@ const NotificationSetup =()=>{
             : (name =  store.getState()?.channelsReducer?.teamIdAndNameMapping[teamId]);
           RootNavigation?.navigate('Chat', {chatHeaderTitle: name, teamId: teamId});
         } catch (error) {
-          console.log(error);
+          console.warn(error);
         }
       };
       return null
