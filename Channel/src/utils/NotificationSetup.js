@@ -113,7 +113,7 @@ const NotificationSetup =()=>{
       const actionListeners = async event => {
         if (event?.type == 1) {
           const message = event?.detail?.notification;
-          console.log(message,"this is message in open chat");
+          // console.log(message,"this is message in open chat");
           openChat(message);
         }
         switch (event?.detail?.pressAction?.id) {
