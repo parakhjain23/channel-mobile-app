@@ -142,7 +142,7 @@ const ChatScreen = ({
               </>
             )}
           </View>
-
+          {!networkState?.isInternetConnected && <View><Text style={{textAlign:'center'}}>No Internet Connected!!</Text></View>}
           <View style={{margin: 10}}>
             <View style={{flexDirection: 'row'}}>
               <View
