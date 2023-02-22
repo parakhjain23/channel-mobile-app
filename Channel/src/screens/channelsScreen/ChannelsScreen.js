@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
   View,
   Button,
-  RefreshControl,
   ScrollView,
+  Animated,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {getChannelsStart} from '../../redux/actions/channels/ChannelsAction';
@@ -30,6 +30,7 @@ import {
   RenderSearchChannels,
   RenderUsersToAdd,
 } from './ChannelCard';
+import Icon, {MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
 
 const CreateChannelModel = ({modalizeRef, props}) => {
   const [title, setTitle] = useState('');
@@ -70,7 +71,9 @@ const CreateChannelModel = ({modalizeRef, props}) => {
         />
 
         {searchedUser != '' && (
-          <ScrollView style={{maxHeight: 200}} keyboardShouldPersistTaps="always">
+          <ScrollView
+            style={{maxHeight: 200}}
+            keyboardShouldPersistTaps="always">
             {props?.channelsByQueryState?.channels?.map((item, index) => {
               return (
                 <RenderUsersToAdd
@@ -167,6 +170,19 @@ const ChannelsScreen = props => {
   const navigation = useNavigation();
   const modalizeRef = useRef(null);
   const isFocused = useIsFocused();
+  const [isScrolling, setIsScrolling] = useState(false);
+  const scrollY = new Animated.Value(0);
+
+  const onScroll = Animated.event(
+    [{nativeEvent: {contentOffset: {y: scrollY}}}],
+    {
+      useNativeDriver: true,
+      listener: event => {
+        const offsetY = event.nativeEvent.contentOffset.y;
+        setIsScrolling(offsetY > 0);
+      },
+    },
+  );
   useEffect(() => {
     if (isFocused) {
       props?.resetActiveChannelTeamIdAction();
@@ -187,24 +203,28 @@ const ChannelsScreen = props => {
   const onOpen = () => {
     modalizeRef.current?.open();
   };
-  const onRefresh = React.useCallback(async () => {
-    setRefreshing(true);
-    await props.getChannelsAction(
-      props?.userInfoState?.accessToken,
-      props?.orgsState?.currentOrgId,
-      props?.userInfoState?.user?.id,
-    );
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
-  }, []);
+  // const onRefresh = React.useCallback(async () => {
+  //   setRefreshing(true);
+  //   await props.getChannelsAction(
+  //     props?.userInfoState?.accessToken,
+  //     props?.orgsState?.currentOrgId,
+  //     props?.userInfoState?.user?.id,
+  //   );
+  //   setTimeout(() => {
+  //     setRefreshing(false);
+  //   }, 2000);
+  // }, []);
   const renderItemChannels = useCallback(
     ({item, index}) => {
       return (
         <RenderChannels item={item} navigation={navigation} props={props} />
       );
     },
-    [props?.channelsState?.channels,props?.channelsState,props?.orgsState?.userIdAndNameMapping],
+    [
+      props?.channelsState?.channels,
+      props?.channelsState,
+      props?.orgsState?.userIdAndNameMapping,
+    ],
   );
   const renderItemSearchChannels = useCallback(
     ({item}) => {
@@ -240,46 +260,75 @@ const ChannelsScreen = props => {
               />
             )
           ) : (
-            <FlatList
-              data={props?.channelsState?.recentChannels ||  props?.channelsState?.channels}
+            <Animated.FlatList
+              data={
+                props?.channelsState?.recentChannels ||
+                props?.channelsState?.channels
+              }
               renderItem={renderItemChannels}
-              // refreshControl={
-              //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-              // }
+              onScroll={onScroll}
               keyboardDismissMode="on-drag"
               keyboardShouldPersistTaps="always"
             />
           )}
-          <View style={{position: 'absolute', bottom: 0, width: '100%'}}>
-            <SearchBox
-              searchValue={searchValue}
-              changeText={changeText}
-              isSearchFocus={false}
-            />
-          </View>
+          {isScrolling && (
+            <View
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                width: '100%',
+                zIndex: 1,
+                opacity: isScrolling ? 1 : 0,
+              }}>
+              <SearchBox
+                searchValue={searchValue}
+                changeText={changeText}
+                isSearchFocus={false}
+              />
+            </View>
+          )}
           <View
             style={{
               position: 'absolute',
-              bottom: 80,
+              bottom: 70,
               right: 10,
-              alignItems: 'flex-end',
+              alignSelf:'center',
             }}>
             <FAB
               onPress={onOpen}
               color={'white'}
-              animated={true}
+              animated={false}
               uppercase={false}
+              icon={() => <Icon name="add" size={20} color={'white'} />}
               style={{
                 backgroundColor: '#333333', // change the background color to light grey
+                borderRadius: 50,
+                alignSelf:'center'
               }}
               labelStyle={{
                 fontSize: 12,
                 textAlign: 'center',
                 lineHeight: 14,
               }}
-              label={`New\nChannel`}
+              // label={`New\nChannel`}
             />
           </View>
+          <TouchableOpacity
+            onPress={() => {
+              setIsScrolling(true);
+            }}>
+            <View
+              style={{
+                position: 'absolute',
+                bottom: 10,
+                right: 10,
+                backgroundColor: '#333333',
+                borderRadius: 25,
+                padding: 15,
+              }}>
+              <Icon name="search" size={22} color={'white'} />
+            </View>
+          </TouchableOpacity>
         </View>
       )}
       <CreateChannelModel modalizeRef={modalizeRef} props={props} />
