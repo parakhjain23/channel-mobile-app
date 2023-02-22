@@ -121,7 +121,8 @@ export function channelsReducer(state = initialState, action) {
       }
       return {
         ...state,
-        channels: [action.channel, ...state?.channels],
+        // channels: [action.channel, ...state?.channels],
+        recentChannels: [action.channel, ...state?.recentChannels],
         userIdAndTeamIdMapping: {
           ...state?.userIdAndTeamIdMapping,
         ...userIdAndTeamIdMapping
