@@ -9,7 +9,7 @@ import {
 import {GestureHandlerRootView, Swipeable} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const AddRemoveJoinedMsg = ({senderName, content, orgState,xyz}) => {
+const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
   const regex = /\{\{(\w+)\}\}/g;
   const result = content.replace(regex, (match, userId) => {
   return orgState?.userIdAndNameMapping[userId] || match; // return the name if it exists, or the original match if not 
@@ -170,7 +170,6 @@ const LocalChatCard = ({
   };
   return (
     <>
-      {!chat?.isActivity ? (
         <GestureHandlerRootView>
           <TouchableOpacity onLongPress={sentByMe ? onLongPress : null}>
             <Swipeable
@@ -236,13 +235,6 @@ const LocalChatCard = ({
             </Swipeable>
           </TouchableOpacity>
         </GestureHandlerRootView>
-      ) : (
-        <AddRemoveJoinedMsg
-          senderName={SenderName}
-          content={chat?.content}
-          orgState={orgState}
-        />
-      )}
     </>
   );
 };
