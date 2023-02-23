@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,22 +9,14 @@ import {
 import {GestureHandlerRootView, Swipeable} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
-  const id = content.match(/\{\{(.*?)\}\}/);
-  const extractedId = id ? id[1] : null;
-  const splitInput = content.split('}}');
-  const name =
-    orgState?.userIdAndNameMapping[extractedId] + ' ' + splitInput[1];
-  const activityName = content.split(' ')[0];
-  const newContent =
-    content == 'joined this channel'
-      ? senderName + ' ' + content
-      : content == 'closed this channel'
-      ? senderName + ' ' + activityName + ' ' + 'this channel'
-      : senderName + ' ' + activityName + ' ' + name;
+const AddRemoveJoinedMsg = ({senderName, content, orgState,xyz}) => {
+  const regex = /\{\{(\w+)\}\}/g;
+  const result = content.replace(regex, (match, userId) => {
+  return orgState?.userIdAndNameMapping[userId] || match; // return the name if it exists, or the original match if not 
+    })
   return (
     <View style={[styles.actionText]}>
-      <Text style={styles.text}>{newContent}</Text>
+      <Text style={styles.text}>{senderName} {result}</Text>
     </View>
   );
 };
@@ -39,6 +31,9 @@ const ChatCard = ({
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
   const [optionsVisible, setOptionsVisible] = useState(false);
+  useEffect(() => {
+    setOptionsVisible(false); 
+  }, [chatState?.data[chat?.teamId]?.messages])
   const swipeableRef = useRef(null);
   const onLongPress = () => {
     setOptionsVisible(!optionsVisible);
@@ -63,8 +58,10 @@ const ChatCard = ({
       </View>
     );
   };
+  const isActivity = typeof chat.isActivity === 'string' ? chat.isActivity === 'true' : chat.isActivity;
   return (
     <>
+    {!isActivity ? (
       <GestureHandlerRootView style={{flexDirection: 'row'}}>
         <TouchableOpacity
           onLongPress={sentByMe ? onLongPress : null}
@@ -126,6 +123,13 @@ const ChatCard = ({
           </Swipeable>
         </TouchableOpacity>
       </GestureHandlerRootView>
+       ) : (
+        <AddRemoveJoinedMsg
+          senderName={SenderName}
+          content={chat?.content}
+          orgState={orgState}
+        />
+      )}
     </>
   );
 };

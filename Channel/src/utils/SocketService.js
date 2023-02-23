@@ -23,13 +23,16 @@ const SocketService = socket => {
     createSocket(store.getState()?.userInfoReducer?.accessToken,store.getState()?.orgsReducer?.currentOrgId)
   });
   socket.on('chat/message created', data => {
-    // console.log("chat message created",data);
-    store.dispatch(addNewMessage(data));
-    store.dispatch(moveChannelToTop(data?.teamId));
-    if(data?.senderId != store?.getState()?.userInfoReducer?.user?.id){
+    var newData = data
+    if (!('isActivity' in newData)) {
+      newData.isActivity = false;
+    }
+    store.dispatch(addNewMessage(newData));
+    store.dispatch(moveChannelToTop(newData?.teamId));
+    if(newData?.senderId != store?.getState()?.userInfoReducer?.user?.id){
       PlayLocalSoundFile()
-      if(data?.teamId != store.getState().channelsReducer?.activeChannelTeamId){
-        handleNotificationFromEvents(data)
+      if(newData?.teamId != store.getState().channelsReducer?.activeChannelTeamId){
+        handleNotificationFromEvents(newData)
       }
     }
   });
