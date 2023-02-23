@@ -9,7 +9,8 @@ import {
 import {GestureHandlerRootView, Swipeable} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
+const AddRemoveJoinedMsg = ({senderName, content, orgState,xyz}) => {
+  console.log(typeof(xyz),"this is chat activity");
   const regex = /\{\{(\w+)\}\}/g;
   const result = content.replace(regex, (match, userId) => {
   return orgState?.userIdAndNameMapping[userId] || match; // return the name if it exists, or the original match if not 
@@ -58,9 +59,10 @@ const ChatCard = ({
       </View>
     );
   };
+  const isActivity = typeof chat.isActivity === 'string' ? chat.isActivity === 'true' : chat.isActivity;
   return (
     <>
-    {!chat?.isActivity ? (
+    {!isActivity ? (
       <GestureHandlerRootView style={{flexDirection: 'row'}}>
         <TouchableOpacity
           onLongPress={sentByMe ? onLongPress : null}
