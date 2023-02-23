@@ -76,13 +76,16 @@ const CreateChannelModel = ({modalizeRef, props}) => {
             keyboardShouldPersistTaps="always">
             {props?.channelsByQueryState?.channels?.map((item, index) => {
               return (
-                <RenderUsersToAdd
-                  key={index}
-                  item={item}
-                  setUserIds={setUserIds}
-                  userIds={userIds}
-                  setsearchedUser={setsearchedUser}
-                />
+                item?._source?.type == 'U' && (
+                  console.log(item?._source?.type),
+                  <RenderUsersToAdd
+                    key={index}
+                    item={item}
+                    setUserIds={setUserIds}
+                    userIds={userIds}
+                    setsearchedUser={setsearchedUser}
+                  />
+                )
               );
             })}
           </ScrollView>
@@ -292,7 +295,7 @@ const ChannelsScreen = props => {
               position: 'absolute',
               bottom: 70,
               right: 10,
-              alignSelf:'center',
+              alignSelf: 'center',
             }}>
             <FAB
               onPress={onOpen}
@@ -303,7 +306,7 @@ const ChannelsScreen = props => {
               style={{
                 backgroundColor: '#333333', // change the background color to light grey
                 borderRadius: 50,
-                alignSelf:'center'
+                alignSelf: 'center',
               }}
               labelStyle={{
                 fontSize: 12,

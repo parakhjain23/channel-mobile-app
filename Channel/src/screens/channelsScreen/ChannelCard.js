@@ -131,7 +131,7 @@ const UsersToAddCard = ({item, setUserIds, userIds, setsearchedUser}) => {
             justifyContent: 'flex-start',
             padding: 13,
           }}>
-          <Icon name="chevron-right" />
+          <Icon name="user" color={"black"}/>
           <Text style={{fontSize: 16, fontWeight: '400', color: 'black'}}>
             {' '}
             {Name}

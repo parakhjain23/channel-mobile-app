@@ -59,7 +59,7 @@ const CustomeDrawerScreen = ({orgsState, userInfoState, channelsState, getChanne
               }
               style={{height: 40, width: 40, marginRight: 10}}
             />
-            <Text>{item?.name}</Text>
+            <Text style={{color:'black'}}>{item?.name}</Text>
           </View>
           <View>
             <Icon name="chevron-right" />
@@ -82,10 +82,11 @@ const CustomeDrawerScreen = ({orgsState, userInfoState, channelsState, getChanne
                 fontSize: 18,
                 fontWeight: '400',
                 marginLeft: 10,
+                color:'black'
               }}>
               {userInfoState?.user?.displayName && userInfoState?.user?.displayName} {userInfoState?.user?.lastName && userInfoState?.user?.lastName}
             </Text>
-            <Text style={{marginLeft:10}}>
+            <Text style={{marginLeft:10,color:'black'}}>
               {userInfoState?.user?.email && userInfoState?.user?.email}
             </Text>
           </View>

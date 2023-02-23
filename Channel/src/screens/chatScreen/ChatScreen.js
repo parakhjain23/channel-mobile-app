@@ -181,6 +181,7 @@ const ChatScreen = ({
                     replyOnMessage
                       ? styles.inputWithReply
                       : styles.inputWithoutReply,
+                      {color:'black'}
                   ]}
                 />
               </View>
