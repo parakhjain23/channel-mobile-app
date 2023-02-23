@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -39,6 +39,9 @@ const ChatCard = ({
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
   const [optionsVisible, setOptionsVisible] = useState(false);
+  useEffect(() => {
+    setOptionsVisible(false); 
+  }, [chatState?.data[chat?.teamId]?.messages])
   const swipeableRef = useRef(null);
   const onLongPress = () => {
     setOptionsVisible(!optionsVisible);
