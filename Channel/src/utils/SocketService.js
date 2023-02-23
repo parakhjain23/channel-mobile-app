@@ -10,17 +10,14 @@ import { createSocket } from './Socket';
 import { PlayLocalSoundFile } from './Sounds';
 
 const SocketService = socket => {
+  socket.on('reconnect', function () {
+    createSocket(store.getState()?.userInfoReducer?.accessToken,store.getState()?.orgsReducer?.currentOrgId)
+  });
   socket.on('connect', () => {
-    console.log('Connected');
     store.dispatch(socketStatus(true))
   });
   socket.on('disconnect', () => {
-    console.log('Disconnected');
     store.dispatch(socketStatus(false))
-  });
-  socket.on('reconnect', function () {
-    console.log('in reconnect socket event');
-    createSocket(store.getState()?.userInfoReducer?.accessToken,store.getState()?.orgsReducer?.currentOrgId)
   });
   socket.on('chat/message created', data => {
     var newData = data
@@ -37,7 +34,6 @@ const SocketService = socket => {
     }
   });
   socket.on('chat/message patched', data => {
-    // console.log('deleted');
     if (data?.deleted) {
       store.dispatch(deleteMessageSuccess(data));
     }
@@ -49,7 +45,6 @@ const SocketService = socket => {
   });
 
   socket.on('chat/team created', data => {
-    // console.log('new team or chat created', data);
     store.dispatch(
       createNewChannelSuccess(data, store.getState().userInfoReducer?.user?.id),
     );
@@ -57,7 +52,6 @@ const SocketService = socket => {
   });
 
   socket.on('orgUser created', data => {
-    // console.log('new user Joined Org', data);
     store.dispatch(newUserJoinedAOrg(data));
   });
 };

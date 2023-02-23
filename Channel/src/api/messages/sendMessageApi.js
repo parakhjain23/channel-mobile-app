@@ -28,13 +28,12 @@ export const sendMessageApi = async (
     });
     const result = await response.json()
   } catch (error) {
-    console.log(error);
+    console.warn(error);
   }
 };
 export const sendGlobalMessageApi = async (
   messageObj
 ) => {
-  console.log('in api');
   try {
     var response = await fetch('https://api.intospace.io/chat/message', {
       method: 'POST',
@@ -57,6 +56,6 @@ export const sendGlobalMessageApi = async (
     });
     const result = await response.json()
   } catch (error) {
-    console.log(error);
+    console.warn(error);
   }
 };

@@ -9,7 +9,7 @@ export function* getChats({teamId,token,skip}){
     var response = yield call(getMessagesOfTeamApi,teamId,token,skip) 
     yield put(getChatsSuccess(response,teamId))
   } catch (error) {
-    console.log(error);
+    console.warn(error);
   }
 }
 
@@ -45,7 +45,7 @@ export function* sendMessage({message,teamId,orgId,senderId,token,parentId}){
     yield call(sendMessageApi,message,teamId,orgId,senderId,token,parentId)
     yield put(moveChannelToTop(teamId))
   } catch (error) {
-    console.log(error);
+    console.warn(error);
   }
 }
 export function sendMessageStart(message,teamId,orgId,senderId,token,parentId){

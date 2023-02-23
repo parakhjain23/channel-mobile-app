@@ -7,7 +7,7 @@ export function* getChannels({accessToken,orgId,userId}){
     var response = yield call(getChannelsApi,accessToken,orgId,userId) 
     yield put(getChannelsSuccess(response,userId,accessToken,orgId))
   } catch (error) {
-    console.log(error);
+    console.warn(error);
   }
 }
 

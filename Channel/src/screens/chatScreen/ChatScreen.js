@@ -42,8 +42,6 @@ const ChatScreen = ({
   const [replyOnMessage, setreplyOnMessage] = useState(false);
   const [repliedMsgDetails, setrepliedMsgDetails] = useState('');
   const [localMsg, setlocalMsg] = useState([]);
-  // console.log('c÷hat screen',chatState?.data[teamId]?.globalMessagesToSend);
-  console.log(networkState);
   const memoizedData = useMemo(
     () => chatState?.data[teamId]?.messages || [],
     [chatState?.data[teamId]?.messages],
@@ -59,7 +57,7 @@ const ChatScreen = ({
     if (
       chatState?.data[teamId]?.messages == undefined ||
       chatState?.data[teamId]?.messages == [] ||
-      !chatState?.data[teamId]?.apiCalled && networkState?.isInternetConnected
+      (!chatState?.data[teamId]?.apiCalled && networkState?.isInternetConnected)
     ) {
       fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
     }
@@ -236,7 +234,9 @@ const ChatScreen = ({
                           accessToken: userInfoState?.accessToken,
                           parentId: repliedMsgDetails?.id || null,
                           updatedAt: date,
-                        }));
+                        }),
+                        replyOnMessage && setreplyOnMessage(false),
+                        repliedMsgDetails && setrepliedMsgDetails(null));
                   }}
                 />
               </View>

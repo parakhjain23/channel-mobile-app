@@ -126,7 +126,6 @@ const NotificationSetup = () => {
   const actionListeners = async event => {
     if (event?.type == 1) {
       const message = event?.detail?.notification;
-      // console.log(message,"this is message in open chat");
       openChat(message);
     }
     switch (event?.detail?.pressAction?.id) {
@@ -163,7 +162,7 @@ const NotificationSetup = () => {
             store.getState()?.channelsReducer?.teamIdAndNameMapping[teamId]);
       RootNavigation?.navigate('Chat', {chatHeaderTitle: name, teamId: teamId});
     } catch (error) {
-      console.log(error);
+      console.warn(error);
     }
   };
   return null;

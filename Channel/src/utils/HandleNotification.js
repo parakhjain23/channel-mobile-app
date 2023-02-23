@@ -87,7 +87,6 @@ export const handleNotificationFromEvents = async data => {
   });
 };
 export const handleNotificationFirebase = async firebaseData => {
-  // console.log('handleNotificationsFIREBASE data', firebaseData);
   var title = firebaseData?.notification?.title;
   var body = firebaseData?.notification?.body;
   await Notifee.displayNotification({

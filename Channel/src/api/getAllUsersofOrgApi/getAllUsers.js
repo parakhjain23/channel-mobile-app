@@ -9,6 +9,6 @@ export const getAllUsersOfOrgApi= async(token,orgId)=>{
         var result = await response.json();
         return result?.users
     } catch (error) {
-        console.log(error);
+        console.warn(error);
     }
 }

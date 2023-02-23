@@ -9,7 +9,6 @@ const initialState = {
 export function socketReducer(state = initialState, action) {
   switch (action.type) {
     case SocketAction.SOCKET_STATUS :
-      console.log(action);
       return {...state,isSocketConnected : action.status}
     default:
       return state;

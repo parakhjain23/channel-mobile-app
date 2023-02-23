@@ -7,7 +7,7 @@ export function* getUserDetails({accessToken}){
         var response = yield call(getUserDetailsApi,accessToken)
         yield put(getUserDetailsSuccess(response))
     } catch (error) {
-        console.log(error);
+        console.warn(error);
     }
 }
 

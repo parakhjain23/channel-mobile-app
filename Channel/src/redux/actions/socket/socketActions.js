@@ -28,7 +28,6 @@ export function subscribeToNotifications(accessToken,deviceId) {
   };
 }
 export function socketStatus(status) {
-  console.log(status);
   return {
     type: SocketActions.SOCKET_STATUS,
     status

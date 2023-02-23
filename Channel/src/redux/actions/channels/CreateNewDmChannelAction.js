@@ -7,7 +7,7 @@ export function* createNewDmChannel({token,orgId,channelName,reciverUserId}){
     try {
       var response = yield call(createDmChannel,token,orgId,channelName,reciverUserId)
     } catch (error) {
-      console.log(error);
+      console.warn(error);
     }
   }
 
