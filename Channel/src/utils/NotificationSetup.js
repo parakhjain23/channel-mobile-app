@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {subscribeToNotifications} from '../redux/actions/socket/socketActions';
 import {store} from '../redux/Store';
 import {handleNotificationFirebase} from './HandleNotification';
-import * as RootNavigation from '../navigation/RootNavigation';
+import * as RootNavigation from '../navigation/RootNavigation'
 import {sendMessageStart} from '../redux/actions/chat/ChatActions';
 import {Platform} from 'react-native';
 
@@ -81,7 +81,9 @@ const NotificationSetup = () => {
       });
       const rMessage = await messaging().getInitialNotification();
       if (rMessage) {
-        openChat(rMessage);
+        setTimeout(() => {
+          openChat(rMessage);
+        }, 1000);
       }
       const categories = [
         {
