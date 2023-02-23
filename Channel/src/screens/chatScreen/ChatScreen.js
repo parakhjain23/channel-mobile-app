@@ -64,7 +64,7 @@ const ChatScreen = ({
       fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
     }
     setActiveChannelTeamIdAction(teamId);
-  }, []);
+  }, [networkState?.isInternetConnected]);
   const renderItem = useCallback(
     ({item, index}) => (
       <ChatCardMemo
