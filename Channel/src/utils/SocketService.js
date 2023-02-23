@@ -41,6 +41,7 @@ const SocketService = socket => {
     store.dispatch(
       createNewChannelSuccess(data, store.getState().userInfoReducer?.user?.id),
     );
+    store.dispatch(moveChannelToTop(data?.teamId));
   });
 
   socket.on('orgUser created', data => {

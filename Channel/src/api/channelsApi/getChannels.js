@@ -11,6 +11,6 @@ export const getChannelsApi= async(token,orgId,userId)=>{
         const result = await response.json()
         return result
     } catch (error) {
-        console.log(error);
+        console.warn(error);
     }
 }

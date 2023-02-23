@@ -10,7 +10,7 @@ export function PlayLocalSoundFile() {
         if (success) {
           return true;
         } else {
-          console.log(error)
+          console.warn(error)
         }
       });
     }

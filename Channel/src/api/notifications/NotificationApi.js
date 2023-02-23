@@ -4,7 +4,7 @@ export function* notifications({accessToken, deviceId}) {
   try {
     yield call(notificationApi, accessToken, deviceId);
   } catch (error) {
-    console.log(error);
+    console.warn(error);
   }
 }
 
@@ -34,6 +34,6 @@ const notificationApi = async (token, deviceId) => {
       .then(response => response.text())
       .catch(error => console.log('error', error));
   } catch (error) {
-    console.log(error);
+    console.warn(error);
   }
 };

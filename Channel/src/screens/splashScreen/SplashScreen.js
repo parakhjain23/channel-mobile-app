@@ -8,7 +8,7 @@ const SplashScreen = ({setShowSplashScreen,fetchChatResetAction,networkState}) =
   useEffect(() => {
     setTimeout(() => {
       // websock()
-      networkState?.isNetConnected && fetchChatResetAction()
+      networkState?.isInternetConnected && fetchChatResetAction()
       setShowSplashScreen(false);
     }, 1000);
   });
@@ -19,14 +19,13 @@ const SplashScreen = ({setShowSplashScreen,fetchChatResetAction,networkState}) =
     </View>
   );
 };
+const mapStateToProps = state => ({
+  networkState: state.networkReducer,
+})
 const mapDispatchToProps = dispatch => {
   return {
     fetchChatResetAction: () => dispatch(getChatsReset())
   }
 }
-const mapStateToProps = state =>(
-  {
-    networkState : state.networkReducer
-  }
-)
+
 export default connect(mapStateToProps,mapDispatchToProps)(SplashScreen);

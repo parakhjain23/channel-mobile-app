@@ -7,7 +7,7 @@ export function* getRecentChannels({accessToken,orgId,userId}){
       var response = yield call(getRecenctChannelsApi,accessToken,orgId,userId)
       yield put(getRecentChannelsSuccess(response))
     } catch (error) {
-      console.log(error);
+      console.warn(error);
     }
   }
 
