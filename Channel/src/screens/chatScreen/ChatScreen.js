@@ -32,7 +32,6 @@ const ChatScreen = ({
   deleteMessageAction,
   channelsState,
   setActiveChannelTeamIdAction,
-  networkState,
   addLocalMessagesToSendOnNetAvailableAction
 }) => {
   console.log(networkState,"this is network state")
