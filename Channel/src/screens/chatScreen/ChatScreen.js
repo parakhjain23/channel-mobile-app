@@ -12,6 +12,7 @@ import {
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
 import ListFooterComponent from '../../components/ListFooterComponent';
+import { addLocalMessageToSendOnNetAvailable } from '../../redux/actions/channels/LocalMessagesToSendOnNetActiveAction';
 import {setActiveChannelTeamId} from '../../redux/actions/channels/SetActiveChannelId';
 import {
   getChatsStart,
@@ -30,8 +31,12 @@ const ChatScreen = ({
   deleteMessageAction,
   channelsState,
   setActiveChannelTeamIdAction,
+  networkState,
+  addLocalMessagesToSendOnNetAvailableAction
 }) => {
+  console.log(networkState,"this is network state")
   var {teamId, reciverUserId} = route.params;
+  console.log(chatState?.data[teamId]?.localMessages,"=-=-=this is local messages state-=-=-");
   if (teamId == undefined) {
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
   }
@@ -47,14 +52,14 @@ const ChatScreen = ({
     localMsg?.shift();
   }, [chatState?.data[teamId]?.messages]);
   const skip =
-    chatState?.data[teamId]?.messages.length != undefined
-      ? chatState?.data[teamId]?.messages.length
+    chatState?.data[teamId]?.messages?.length != undefined
+      ? chatState?.data[teamId]?.messages?.length
       : 0;
   useEffect(() => {
     if (
-      chatState?.data[teamId]?.messages == undefined ||
+      (chatState?.data[teamId]?.messages == undefined ||
       chatState?.data[teamId]?.messages == [] ||
-      !chatState?.data[teamId]?.apiCalled
+      !chatState?.data[teamId]?.apiCalled) && networkState?.isNetConnected
     ) {
       fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
     }
@@ -135,8 +140,8 @@ const ChatScreen = ({
                   keyboardDismissMode="on-drag"
                   keyboardShouldPersistTaps="always"
                 />
-                {localMsg?.length > 0 && (
-                  <FlatList data={localMsg} renderItem={renderItemLocal} />
+                {(localMsg?.length > 0 || chatState?.data[teamId]?.localMessages?.length > 0) && (
+                  <FlatList data={chatState?.data[teamId]?.localMessages || localMsg } renderItem={renderItemLocal} />
                 )}
               </>
             )}
@@ -198,6 +203,13 @@ const ChatScreen = ({
                           updatedAt: date,
                         },
                       ]),
+                      networkState?.isNetConnected == false && addLocalMessagesToSendOnNetAvailableAction({content:message,
+                      teamId:teamId,
+                      senderId: userInfoState?.user?.id,
+                      parentId: repliedMsgDetails?._id,
+                      createdAt: date,
+                      orgId: orgState?.currentOrgId
+                      }),
                       sendMessageAction(
                         message.trim(),
                         teamId,
@@ -224,6 +236,7 @@ const mapStateToProps = state => ({
   orgState: state.orgsReducer,
   chatState: state.chatReducer,
   channelsState: state.channelsReducer,
+  networkState: state.networkReducer
 });
 const mapDispatchToProps = dispatch => {
   return {
@@ -237,6 +250,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(deleteMessageStart(accessToken, msgId)),
     setActiveChannelTeamIdAction: teamId =>
       dispatch(setActiveChannelTeamId(teamId)),
+    addLocalMessagesToSendOnNetAvailableAction:(message)=>dispatch(addLocalMessageToSendOnNetAvailable(message))  
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);

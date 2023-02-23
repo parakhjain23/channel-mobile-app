@@ -2,6 +2,7 @@ import * as Actions from '../../Enums';
 
 const initialState = {
   data: {},
+  // localMessages: []
 };
 
 export function chatReducer(state = initialState, action) {
@@ -19,6 +20,9 @@ export function chatReducer(state = initialState, action) {
             parentMessages: state?.data[action?.teamId]?.parentMessages
               ? {...state?.data?.[action?.teamId]?.parentMessages}
               : {},
+            localMessages: state?.data[action?.teamId]?.localMessages ?
+              state?.data[action?.teamId]?.localMessages :
+              []  
           },
         },
       };
@@ -43,6 +47,7 @@ export function chatReducer(state = initialState, action) {
               ...state?.data[action?.teamId]?.parentMessages,
               ...tempParentMessages,
             },
+            localMessages: state?.data[action?.teamId]?.localMessages,
             isloading: false,
             apiCalled: true,
           },
@@ -74,6 +79,20 @@ export function chatReducer(state = initialState, action) {
           },
         },
       };
+      case Actions.LOCAL_MESSAGE_TO_SAVE_IN_STATE:
+        var tempMessage = []
+        tempMessage.push(action?.data)
+        return {...state,
+          data:{
+            ...state?.data,
+            [action.data.teamId]:{
+              ...state?.data[action?.data?.teamId],
+              localMessages:
+                state?.data[action?.data?.teamId]?.localMessages?.length >0 ?[...state.data[action?.data?.teamId]?.localMessages,...tempMessage] :tempMessage  
+            }
+          }
+        }
+        // return{...state,localMessages :state.localMessages.length >0 ?[...tempMessage,...state.localMessages] :tempMessage}  
 
     case Actions.DELETE_MESSAGE_SUCCESS:
       for (let i = 0; i < state?.data[action.teamId]?.messages?.length; i++) {
@@ -87,6 +106,11 @@ export function chatReducer(state = initialState, action) {
       return {
         ...state,
       };
+    
+    case Actions.REMOVE_LOCAL_MESSAGE_FROM_STATE:
+      let filteredArray = state?.data[action?.data?.teamId]?.localMessages?.filter(obj => obj?.content !== action?.data?.content);
+      console.log(filteredArray,"this is filtered Arrau");
+      return{...state,localMessages : filteredArray}  
     case Actions.UPDATE_CURRENT_ORG_ID:
       return initialState;
 

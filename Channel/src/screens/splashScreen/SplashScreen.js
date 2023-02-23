@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import { getChatsReset } from '../../redux/actions/chat/ChatActions';
 import { websock } from '../Socket';
 
-const SplashScreen = ({setShowSplashScreen,fetchChatResetAction}) => {
+const SplashScreen = ({setShowSplashScreen,fetchChatResetAction,networkState}) => {
   useEffect(() => {
     setTimeout(() => {
       // websock()
-      fetchChatResetAction()
+      networkState?.isNetConnected && fetchChatResetAction()
       setShowSplashScreen(false);
     }, 1000);
   });
@@ -24,4 +24,9 @@ const mapDispatchToProps = dispatch => {
     fetchChatResetAction: () => dispatch(getChatsReset())
   }
 }
-export default connect(null,mapDispatchToProps)(SplashScreen);
+const mapStateToProps = state =>(
+  {
+    networkState : state.networkReducer
+  }
+)
+export default connect(mapStateToProps,mapDispatchToProps)(SplashScreen);

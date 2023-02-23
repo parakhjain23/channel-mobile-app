@@ -7,11 +7,12 @@ import {channelsReducer} from './channels/ChannelsReducer';
 import { chatReducer } from './chat/ChatReducer';
 import { socketReducer } from './socket/SocketReducer';
 import { channelsByQueryReducer } from './channels/ChannelsByQueryReducer';
+import { networkReducer } from './network/NetworkReducer'
 
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['userInfoReducer','orgsReducer','channelsReducer','chatReducer'],
+  whitelist: ['userInfoReducer','orgsReducer','channelsReducer','chatReducer','networkReducer'],
 };
 
 const rootReducer = combineReducers({
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   chatReducer,
   socketReducer,
   channelsByQueryReducer,
+  networkReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
