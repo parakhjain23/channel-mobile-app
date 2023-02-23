@@ -30,14 +30,14 @@ export function createSocket(accessToken, orgId) {
         // console.log('ERROR', error);
       },
     );
-    socket.on('connect', () => {
-      // console.log('Connected');
-    });
+    // socket.on('connect', () => {
+    //   // console.log('Connected');
+    // });
   }
 
-  socket.on('disconnect', () => {
-    // console.log('Disconnected');
-  });
+  // socket.on('disconnect', () => {
+  //   // console.log('Disconnected');
+  // });
   return socket;
 }
 

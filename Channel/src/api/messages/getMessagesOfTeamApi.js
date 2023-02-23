@@ -9,6 +9,6 @@ export const getMessagesOfTeamApi= async(teamId,token,skip)=>{
         var result = await response.json();
         return result
     } catch (error) {
-        console.warn(error);
+        console.log(error);
     }
 }

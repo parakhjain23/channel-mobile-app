@@ -1,5 +1,7 @@
+import NetInfo from '@react-native-community/netinfo';
 import React, { useEffect, useState} from 'react';
 import { connect, useDispatch } from 'react-redux';
+import { networkStatus } from '../redux/actions/network/NetworkActions';
 import { initializeSocket } from '../redux/actions/socket/socketActions';
 import SplashScreen from '../screens/splashScreen/SplashScreen';
 import AppWrapper from './AppWraper';
@@ -16,6 +18,17 @@ const StoreAppWrapper = ({userInfoSate,orgsState}) => {
       );
     }
   }, [userInfoSate?.accessToken, orgsState?.currentOrgId]);
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      // console.log('Connection type', state.type);
+      // console.log('Is connected?', state.isConnected);
+      dispatch(networkStatus(state?.isConnected));
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
   return showSplashScreen ? (
     <SplashScreen setShowSplashScreen={setShowSplashScreen} />
   ) : (

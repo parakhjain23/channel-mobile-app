@@ -1,19 +1,29 @@
-import NetInfo from "@react-native-community/netinfo";
+import NetInfo from '@react-native-community/netinfo';
 import React, {useEffect} from 'react';
-import { useDispatch } from "react-redux";
-import { networkStatus } from "../redux/actions/network/NetworkActions";
-const InternetConnection = () => {
-  const dispatch = useDispatch()
+import {connect, useDispatch} from 'react-redux';
+import {sendGlobalMessageApi} from '../api/messages/sendMessageApi';
+import {networkStatus} from '../redux/actions/network/NetworkActions';
+const InternetConnection = ({networkState, chatState, socketState}) => {
   useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener(state => {
-      // console.log('Connection type', state.type);
-      // console.log('Is connected?', state.isConnected);
-      dispatch(networkStatus(state?.isConnected))
-    });
-    return () => {
-      unsubscribe();
-    };
-  });
+    console.log('inside useeffect');
+    if (networkState?.isInternetConnected && socketState?.isSocketConnected) {
+      console.log('inside if');
+      Object.keys(chatState?.data)?.map(async teamId => {
+        console.log(chatState?.data[teamId]?.globalMessagesToSend,'=-=-=-=-=');
+        while (chatState?.data[teamId]?.globalMessagesToSend?.length) {
+          await sendGlobalMessageApi(
+            chatState?.data[teamId]?.globalMessagesToSend?.shift(),
+          );
+        }
+      });
+    }
+  }, [networkState?.isInternetConnected,socketState?.isSocketConnected]);
+
   return null;
 };
-export default InternetConnection;
+const mapStateToProps = state => ({
+  networkState: state.networkReducer,
+  chatState: state.chatReducer,
+  socketState: state.socketReducer,
+});
+export default connect(mapStateToProps)(InternetConnection);

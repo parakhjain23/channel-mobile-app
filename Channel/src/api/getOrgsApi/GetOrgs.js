@@ -9,6 +9,6 @@ export const fetchOrgsApi= async(token)=>{
         var result = await response.json();
         return result?.orgs;
     } catch (error) {
-        console.warn(error);
+        console.log(error);
     }
 }

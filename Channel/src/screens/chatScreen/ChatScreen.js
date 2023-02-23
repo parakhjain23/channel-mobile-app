@@ -16,6 +16,7 @@ import {setActiveChannelTeamId} from '../../redux/actions/channels/SetActiveChan
 import {
   getChatsStart,
   sendMessageStart,
+  setGlobalMessageToSend,
 } from '../../redux/actions/chat/ChatActions';
 import {deleteMessageStart} from '../../redux/actions/chat/DeleteChatAction';
 import {ChatCardMemo, LocalChatCardMemo} from './ChatCard';
@@ -31,6 +32,7 @@ const ChatScreen = ({
   deleteMessageAction,
   channelsState,
   setActiveChannelTeamIdAction,
+  setGlobalMessageToSendAction,
 }) => {
   var {teamId, reciverUserId} = route.params;
   if (teamId == undefined) {
@@ -40,6 +42,8 @@ const ChatScreen = ({
   const [replyOnMessage, setreplyOnMessage] = useState(false);
   const [repliedMsgDetails, setrepliedMsgDetails] = useState('');
   const [localMsg, setlocalMsg] = useState([]);
+  // console.log('c÷hat screen',chatState?.data[teamId]?.globalMessagesToSend);
+  console.log(networkState);
   const memoizedData = useMemo(
     () => chatState?.data[teamId]?.messages || [],
     [chatState?.data[teamId]?.messages],
@@ -48,14 +52,14 @@ const ChatScreen = ({
     localMsg?.shift();
   }, [chatState?.data[teamId]?.messages]);
   const skip =
-    chatState?.data[teamId]?.messages.length != undefined
-      ? chatState?.data[teamId]?.messages.length
+    chatState?.data[teamId]?.messages?.length != undefined
+      ? chatState?.data[teamId]?.messages?.length
       : 0;
   useEffect(() => {
     if (
       chatState?.data[teamId]?.messages == undefined ||
       chatState?.data[teamId]?.messages == [] ||
-      !chatState?.data[teamId]?.apiCalled
+      !chatState?.data[teamId]?.apiCalled && networkState?.isInternetConnected
     ) {
       fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
     }
@@ -115,8 +119,8 @@ const ChatScreen = ({
         style={{flex: 1}}>
         <View style={{flex: 1}}>
           <View style={{flex: 9}}>
-            {teamId == undefined ||chatState?.data[teamId]?.isloading==true
-             ? (
+            {teamId == undefined ||
+            chatState?.data[teamId]?.isloading == true ? (
               <ActivityIndicator />
             ) : (
               <>
@@ -136,13 +140,23 @@ const ChatScreen = ({
                   keyboardDismissMode="on-drag"
                   keyboardShouldPersistTaps="always"
                 />
-                {localMsg?.length > 0 && (
-                  <FlatList data={localMsg} renderItem={renderItemLocal} />
+                {(chatState?.data[teamId]?.globalMessagesToSend?.length > 0 ||
+                  localMsg?.length > 0) && (
+                  <FlatList
+                    data={
+                      chatState?.data[teamId]?.globalMessagesToSend || localMsg
+                    }
+                    renderItem={renderItemLocal}
+                  />
                 )}
               </>
             )}
           </View>
-          {!networkState?.isInternetConnected && <View><Text style={{textAlign:'center'}}>No Internet Connected!!</Text></View>}
+          {!networkState?.isInternetConnected && (
+            <View>
+              <Text style={{textAlign: 'center'}}>No Internet Connected!!</Text>
+            </View>
+          )}
           <View style={{margin: 10}}>
             <View style={{flexDirection: 'row'}}>
               <View
@@ -178,38 +192,51 @@ const ChatScreen = ({
                   size={25}
                   style={{color: 'black', padding: 10}}
                   onPress={() => {
-                    networkState?.isInternetConnected && (message?.trim() != '' &&
-                      (onChangeMessage(''),
-                      setlocalMsg([
-                        ...localMsg,
-                        {
-                          _id: '70356973726265363273736f',
-                          appId: '62b53b61b5b4a2001fb9af37',
+                    networkState?.isInternetConnected
+                      ? message?.trim() != '' &&
+                        (onChangeMessage(''),
+                        setlocalMsg([
+                          ...localMsg,
+                          {
+                            _id: '70356973726265363273736f',
+                            appId: '62b53b61b5b4a2001fb9af37',
+                            content: message,
+                            createdAt: date,
+                            isLink: false,
+                            mentions: [],
+                            orgId: orgState?.currentOrgId,
+                            parentId: repliedMsgDetails?._id,
+                            requestId: '73d31f2e-9039-401c-83cd-909953c264f1',
+                            senderId: userInfoState?.user?.id,
+                            senderType: 'APP',
+                            showInMainConversation: true,
+                            teamId: '63e09e1f0916f000183a9d87',
+                            updatedAt: date,
+                          },
+                        ]),
+                        sendMessageAction(
+                          message,
+                          teamId,
+                          orgState?.currentOrgId,
+                          userInfoState?.user?.id,
+                          userInfoState?.accessToken,
+                          repliedMsgDetails?._id || null,
+                        ),
+                        // onChangeMessage('');
+                        replyOnMessage && setreplyOnMessage(false),
+                        repliedMsgDetails && setrepliedMsgDetails(null))
+                      : message?.trim() != '' &&
+                        (onChangeMessage(''),
+                        setGlobalMessageToSendAction({
                           content: message,
-                          createdAt: date,
-                          isLink: false,
-                          mentions: [],
+                          teamId: teamId,
                           orgId: orgState?.currentOrgId,
-                          parentId: repliedMsgDetails?._id,
-                          requestId: '73d31f2e-9039-401c-83cd-909953c264f1',
                           senderId: userInfoState?.user?.id,
-                          senderType: 'APP',
-                          showInMainConversation: true,
-                          teamId: '63e09e1f0916f000183a9d87',
+                          userId: userInfoState?.user?.id,
+                          accessToken: userInfoState?.accessToken,
+                          parentId: repliedMsgDetails?.id || null,
                           updatedAt: date,
-                        },
-                      ]),
-                      sendMessageAction(
-                        message,
-                        teamId,
-                        orgState?.currentOrgId,
-                        userInfoState?.user?.id,
-                        userInfoState?.accessToken,
-                        repliedMsgDetails?._id || null,
-                      ),
-                      // onChangeMessage('');
-                      replyOnMessage && setreplyOnMessage(false),
-                      repliedMsgDetails && setrepliedMsgDetails(null)))
+                        }));
                   }}
                 />
               </View>
@@ -239,6 +266,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(deleteMessageStart(accessToken, msgId)),
     setActiveChannelTeamIdAction: teamId =>
       dispatch(setActiveChannelTeamId(teamId)),
+    setGlobalMessageToSendAction: messageObj =>
+      dispatch(setGlobalMessageToSend(messageObj)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);

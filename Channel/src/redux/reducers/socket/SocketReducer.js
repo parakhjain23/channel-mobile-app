@@ -1,21 +1,16 @@
 import { State } from "react-native-gesture-handler";
 import * as Actions from "../../Enums"
-import { INITIALIZE_SOCKET } from "../../SocketEnums";
+import { INITIALIZE_SOCKET, SOCKET_STATUS } from "../../SocketEnums";
+import * as SocketAction from "../../SocketEnums"
 const initialState = {
-  socket : null,
-  needToCloseAndReconnectSocket : false
+  isSocketConnected: false
 };
 
 export function socketReducer(state = initialState, action) {
   switch (action.type) {
-    case 'SOCKET_CREATED' :
-      return {...state,socket : action.socket}
-
-    case  Actions.UPDATE_CURRENT_ORG_ID :
-      return {...state, needToCloseAndReconnectSocket : true}
-    
-      case INITIALIZE_SOCKET :
-      return {...state, needToCloseAndReconnectSocket : false}  
+    case SocketAction.SOCKET_STATUS :
+      console.log(action);
+      return {...state,isSocketConnected : action.status}
     default:
       return state;
   }

@@ -5,7 +5,7 @@ export function* deleteMessage({accessToken,msgId}){
     try {
       var response = yield call(deleteMessageApi,accessToken,msgId) 
     } catch (error) {
-      console.warn(error);
+      console.log(error);
     }
   }
   

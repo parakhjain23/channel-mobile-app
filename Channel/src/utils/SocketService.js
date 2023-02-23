@@ -3,14 +3,23 @@ import {createNewChannelSuccess} from '../redux/actions/channels/CreateNewChanne
 import {addNewMessage} from '../redux/actions/chat/ChatActions';
 import {deleteMessageSuccess} from '../redux/actions/chat/DeleteChatAction';
 import { newUserJoinedAOrg } from '../redux/actions/org/GetAllUsersOfOrg';
+import { socketStatus } from '../redux/actions/socket/socketActions';
 import {store} from '../redux/Store';
 import { handleNotificationFromEvents } from './HandleNotification';
 import { createSocket } from './Socket';
 import { PlayLocalSoundFile } from './Sounds';
 
 const SocketService = socket => {
+  socket.on('connect', () => {
+    console.log('Connected');
+    store.dispatch(socketStatus(true))
+  });
+  socket.on('disconnect', () => {
+    console.log('Disconnected');
+    store.dispatch(socketStatus(false))
+  });
   socket.on('reconnect', function () {
-    // console.log('in reconnect socket event');
+    console.log('in reconnect socket event');
     createSocket(store.getState()?.userInfoReducer?.accessToken,store.getState()?.orgsReducer?.currentOrgId)
   });
   socket.on('chat/message created', data => {

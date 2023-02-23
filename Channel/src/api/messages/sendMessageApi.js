@@ -28,6 +28,35 @@ export const sendMessageApi = async (
     });
     const result = await response.json()
   } catch (error) {
-    console.warn(error);
+    console.log(error);
+  }
+};
+export const sendGlobalMessageApi = async (
+  messageObj
+) => {
+  console.log('in api');
+  try {
+    var response = await fetch('https://api.intospace.io/chat/message', {
+      method: 'POST',
+      headers: {
+        Authorization: messageObj?.accessToken,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        content: messageObj.content,
+        mentions: [],
+        teamId: messageObj.teamId,
+        requestId: '73d31f2e-9039-401c-83cd-909953c264f1',
+        orgId: messageObj.orgId,
+        senderId: messageObj.senderId,
+        parentId: messageObj.parentId,
+        createdAt: messageObj?.date,
+        senderType: 'APP',
+        appId: '62b53b61b5b4a2001fb9af37',
+      }),
+    });
+    const result = await response.json()
+  } catch (error) {
+    console.log(error);
   }
 };

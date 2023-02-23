@@ -5,6 +5,7 @@ const initialState = {
 };
 
 export function networkReducer(state = initialState, action) {
+
   switch (action.type) {
     case Actions.NETWORK_STATUS:
       return {...state, isInternetConnected: action.status};

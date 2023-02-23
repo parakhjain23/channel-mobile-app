@@ -22,6 +22,6 @@ export const createChannel = async (token,orgId,channelName,channelType,userIds)
     }
     return result
   } catch (error) {
-    console.warn(error);
+    console.log(error);
   }
 };
