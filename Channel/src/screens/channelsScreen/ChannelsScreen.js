@@ -133,7 +133,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
                 key={index}
                 style={{flexDirection: 'row', alignItems: 'center'}}
                 onPress={() => setChannelType(item?.type)}>
-                <Text>{item?.name}</Text>
+                <Text style={{color:'black'}}>{item?.name}</Text>
                 <RadioButton
                   value={item?.type}
                   status={channelType === item?.type ? 'checked' : 'unchecked'}

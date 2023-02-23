@@ -211,7 +211,7 @@ const LocalChatCard = ({
                   <Text style={[styles.messageText, styles.text]}>
                     {chat?.content}
                   </Text>
-                  <Icon name="access-time" />
+                  <Icon name="access-time" color={"black"}/>
                 </View>
                 {/* <Text style={[styles.timeText, styles.text]}>{time}</Text> */}
                 {/* {sentByMe ? (
