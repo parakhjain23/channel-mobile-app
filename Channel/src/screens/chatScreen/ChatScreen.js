@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -71,6 +71,7 @@ const ChatScreen = ({
   const [replyOnMessage, setreplyOnMessage] = useState(false);
   const [repliedMsgDetails, setrepliedMsgDetails] = useState('');
   const [localMsg, setlocalMsg] = useState([]);
+  const FlatListRef = useRef(null);
   const memoizedData = useMemo(
     () => chatState?.data[teamId]?.messages || [],
     [chatState?.data[teamId]?.messages],
@@ -152,6 +153,7 @@ const ChatScreen = ({
             ) : (
               <>
                 <FlatList
+                  ref={FlatListRef}
                   data={memoizedData}
                   renderItem={renderItem}
                   inverted
@@ -178,6 +180,17 @@ const ChatScreen = ({
                 )}
               </>
             )}
+            <MaterialIcons
+              name="south"
+              style={{
+                position: 'absolute',
+                bottom: 10,
+                right: 10,
+                backgroundColor: 'grey',
+                padding: 10,
+              }}
+              onPress={() => {FlatListRef?.current?.scrollToIndex({index: 0});}}
+            />
           </View>
           {!networkState?.isInternetConnected && (
             <View>
@@ -405,6 +418,6 @@ const styles = StyleSheet.create({
   },
   attachIcon: {
     marginRight: 8,
-    color:'black'
+    color: 'black',
   },
 });
