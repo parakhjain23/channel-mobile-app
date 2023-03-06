@@ -8,15 +8,18 @@ import {
 } from 'react-native';
 import {GestureHandlerRootView, Swipeable} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {Linking} from 'react-native';
 
 const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
   const regex = /\{\{(\w+)\}\}/g;
   const result = content.replace(regex, (match, userId) => {
-  return orgState?.userIdAndNameMapping[userId] || match; // return the name if it exists, or the original match if not 
-    })
+    return orgState?.userIdAndNameMapping[userId] || match; // return the name if it exists, or the original match if not
+  });
   return (
     <View style={[styles.actionText]}>
-      <Text style={styles.text}>{senderName} {result}</Text>
+      <Text style={styles.text}>
+        {senderName} {result}
+      </Text>
     </View>
   );
 };
@@ -30,10 +33,26 @@ const ChatCard = ({
   setrepliedMsgDetails,
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
   const [optionsVisible, setOptionsVisible] = useState(false);
+  function renderTextWithLinks(text) {
+    const parts = text.split(urlRegex);
+    return parts.map((part, i) =>
+      urlRegex.test(part) ? (
+        <TouchableOpacity key={i} onPress={() => Linking.openURL(part)}>
+          <Text style={{color: 'blue', textDecorationLine: 'underline'}}>
+            {part}
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        <Text key={i}>{part}</Text>
+      ),
+    );
+  }
+
   useEffect(() => {
-    setOptionsVisible(false); 
-  }, [chatState?.data[chat?.teamId]?.messages])
+    setOptionsVisible(false);
+  }, [chatState?.data[chat?.teamId]?.messages]);
   const swipeableRef = useRef(null);
   const onLongPress = () => {
     setOptionsVisible(!optionsVisible);
@@ -58,23 +77,26 @@ const ChatCard = ({
       </View>
     );
   };
-  const isActivity = typeof chat.isActivity === 'string' ? chat.isActivity === 'true' : chat.isActivity;
+  const isActivity =
+    typeof chat.isActivity === 'string'
+      ? chat.isActivity === 'true'
+      : chat.isActivity;
   return (
     <>
-    {!isActivity ? (
-      <GestureHandlerRootView style={{flexDirection: 'row'}}>
-        <TouchableOpacity
-          onLongPress={sentByMe ? onLongPress : null}
-          style={{flex: 1}}>
-          <Swipeable
-            ref={swipeableRef}
-            renderLeftActions={LeftSwipeActions}
-            onSwipeableWillOpen={swipeFromLeftOpen}>
-            <View
-              style={[
-                styles.container,
-                sentByMe ? styles.sentByMe : styles.received,
-              ]}>
+      {!isActivity ? (
+        <GestureHandlerRootView style={{flexDirection: 'row'}}>
+          <TouchableOpacity
+            onLongPress={sentByMe ? onLongPress : null}
+            style={{flex: 1}}>
+            <Swipeable
+              ref={swipeableRef}
+              renderLeftActions={LeftSwipeActions}
+              onSwipeableWillOpen={swipeFromLeftOpen}>
+              <View
+                style={[
+                  styles.container,
+                  sentByMe ? styles.sentByMe : styles.received,
+                ]}>
                 {optionsVisible && (
                   <TouchableOpacity
                     onPress={() => {
@@ -84,46 +106,51 @@ const ChatCard = ({
                           chat?._id,
                         );
                     }}
-                    style={{alignItems: 'center',alignSelf:'center',paddingHorizontal:20}}
-                    >
-                    <Icon name="delete" color={'tomato'}/>
-                    <Text style={[styles.text,{color:'tomato'}]}>Delete</Text>
+                    style={{
+                      alignItems: 'center',
+                      alignSelf: 'center',
+                      paddingHorizontal: 20,
+                    }}>
+                    <Icon name="delete" color={'tomato'} />
+                    <Text style={[styles.text, {color: 'tomato'}]}>Delete</Text>
                   </TouchableOpacity>
                 )}
-              <View style={styles.textContainer}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Text style={[styles.nameText, styles.text]}>
-                    {SenderName}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.timeText,
-                      styles.text,
-                      {marginHorizontal: 10},
-                    ]}>
-                    {time}
-                  </Text>
-                </View>
-                {parentId != null && (
-                  <View style={styles.repliedContainer}>
-                    <Text style={styles.text}>
-                      {
-                        chatState?.data[chat.teamId]?.parentMessages[parentId]
-                          ?.content
-                      }
+                <View style={styles.textContainer}>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Text style={[styles.nameText, styles.text]}>
+                      {SenderName}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.timeText,
+                        styles.text,
+                        {marginHorizontal: 10},
+                      ]}>
+                      {time}
                     </Text>
                   </View>
-                )}
-                <Text style={[styles.messageText, styles.text]}>
-                  {chat?.content}
-                </Text>
+                  {parentId != null && (
+                    <View style={styles.repliedContainer}>
+                      {/* <Text style={styles.text}> */}
+                      {renderTextWithLinks(
+                        chatState?.data[chat.teamId]?.parentMessages[parentId]
+                          ?.content,
+                      )}
+                      {/* </Text> */}
+                    </View>
+                  )}
+
+                  <Text style={[styles.messageText, styles.text]}>
+                    {/* {chat?.content} */}
+                    {renderTextWithLinks(chat?.content)}
+                  </Text>
+                </View>
+                {/* <Text style={[styles.timeText, styles.text]}>{time}</Text> */}
               </View>
-              {/* <Text style={[styles.timeText, styles.text]}>{time}</Text> */}
-            </View>
-          </Swipeable>
-        </TouchableOpacity>
-      </GestureHandlerRootView>
-       ) : (
+            </Swipeable>
+          </TouchableOpacity>
+        </GestureHandlerRootView>
+      ) : (
         <AddRemoveJoinedMsg
           senderName={SenderName}
           content={chat?.content}
@@ -170,71 +197,71 @@ const LocalChatCard = ({
   };
   return (
     <>
-        <GestureHandlerRootView>
-          <TouchableOpacity onLongPress={sentByMe ? onLongPress : null}>
-            <Swipeable
-              ref={swipeableRef}
-              renderLeftActions={LeftSwipeActions}
-              onSwipeableLeftOpen={swipeFromLeftOpen}>
-              <View
-                style={[
-                  styles.container,
-                  sentByMe ? styles.sentByMe : styles.received,
-                ]}>
-                {/* {sentByMe ? null : (
+      <GestureHandlerRootView>
+        <TouchableOpacity onLongPress={sentByMe ? onLongPress : null}>
+          <Swipeable
+            ref={swipeableRef}
+            renderLeftActions={LeftSwipeActions}
+            onSwipeableLeftOpen={swipeFromLeftOpen}>
+            <View
+              style={[
+                styles.container,
+                sentByMe ? styles.sentByMe : styles.received,
+              ]}>
+              {/* {sentByMe ? null : (
                     <Image source={{uri: image}} style={styles.avatar} />
                   )} */}
-                <View style={styles.textContainer}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text style={[styles.nameText, styles.text]}>
-                      {SenderName}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.timeText,
-                        styles.text,
-                        {marginHorizontal: 10},
-                      ]}>
-                      {time}
+              <View style={styles.textContainer}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Text style={[styles.nameText, styles.text]}>
+                    {SenderName}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.timeText,
+                      styles.text,
+                      {marginHorizontal: 10},
+                    ]}>
+                    {time}
+                  </Text>
+                </View>
+                {parentId != null && (
+                  <View style={styles.repliedContainer}>
+                    <Text style={styles.text}>
+                      {
+                        chatState?.data[chat.teamId]?.parentMessages[parentId]
+                          ?.content
+                      }
                     </Text>
                   </View>
-                  {parentId != null && (
-                    <View style={styles.repliedContainer}>
-                      <Text style={styles.text}>
-                        {
-                          chatState?.data[chat.teamId]?.parentMessages[parentId]
-                            ?.content
-                        }
-                      </Text>
-                    </View>
-                  )}
-                  <Text style={[styles.messageText, styles.text]}>
-                    {chat?.content}
-                  </Text>
-                  <Icon name="access-time" color={"black"}/>
-                </View>
-                {/* <Text style={[styles.timeText, styles.text]}>{time}</Text> */}
-                {/* {sentByMe ? (
+                )}
+                <Text style={[styles.messageText, styles.text]}>
+                  {chat?.content}
+                </Text>
+                <Icon name="access-time" color={'black'} />
+              </View>
+              {/* <Text style={[styles.timeText, styles.text]}>{time}</Text> */}
+              {/* {sentByMe ? (
                     <Image source={{uri: image}} style={styles.avatar} />
                   ) : null} */}
-              </View>
-              <View style={sentByMe ? styles.sentByMe : styles.received}>
-                {optionsVisible && (
-                  <TouchableOpacity
-                    onPress={() => {
-                      setOptionsVisible(false),
-                        deleteMessageAction(
-                          userInfoState?.accessToken,
-                          chat?._id,
-                        );
-                    }}>
-                    <Text style={styles.text}>Delete</Text>
-                  </TouchableOpacity>
-                )}
-              </View>
-            </Swipeable>
-          </TouchableOpacity>
-        </GestureHandlerRootView>
+            </View>
+            <View style={sentByMe ? styles.sentByMe : styles.received}>
+              {optionsVisible && (
+                <TouchableOpacity
+                  onPress={() => {
+                    setOptionsVisible(false),
+                      deleteMessageAction(
+                        userInfoState?.accessToken,
+                        chat?._id,
+                      );
+                  }}>
+                  <Text style={styles.text}>Delete</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </Swipeable>
+        </TouchableOpacity>
+      </GestureHandlerRootView>
     </>
   );
 };
