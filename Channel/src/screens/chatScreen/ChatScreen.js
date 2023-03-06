@@ -20,6 +20,35 @@ import {
 } from '../../redux/actions/chat/ChatActions';
 import {deleteMessageStart} from '../../redux/actions/chat/DeleteChatAction';
 import {ChatCardMemo, LocalChatCardMemo} from './ChatCard';
+import DocumentPicker from 'react-native-document-picker';
+
+const pickDocument = async () => {
+  try {
+    const result = await DocumentPicker.pick({
+      type: [DocumentPicker.types.allFiles],
+      allowMultiSelection: true,
+    });
+
+    console.log(result);
+    // try {
+    //   const data = await fetch(result[0]?.uri, {
+    //     method: 'PUT',
+    //   });
+    //   const res = JSON.stringify(data)
+    //   console.log(res,'==-=-=-=-=');
+    // } catch (error) {
+    //   console.log(error,'=-=-=-=-=');
+    // }
+  } catch (err) {
+    if (DocumentPicker.isCancel(err)) {
+      // User cancelled the picker
+      console.log('User cancelled document picker');
+    } else {
+      // Error occurred while picking the document
+      console.log('DocumentPicker Error: ', err);
+    }
+  }
+};
 
 const ChatScreen = ({
   route,
@@ -138,12 +167,12 @@ const ChatScreen = ({
                   keyboardDismissMode="on-drag"
                   keyboardShouldPersistTaps="always"
                 />
-                {(chatState?.data[teamId]?.globalMessagesToSend?.length > 0 ||
-                  localMsg?.length > 0) && (
+                {localMsg?.length > 0 && (
+                  <FlatList data={localMsg} renderItem={renderItemLocal} />
+                )}
+                {chatState?.data[teamId]?.globalMessagesToSend?.length > 0 && (
                   <FlatList
-                    data={
-                      chatState?.data[teamId]?.globalMessagesToSend || localMsg
-                    }
+                    data={chatState?.data[teamId]?.globalMessagesToSend}
                     renderItem={renderItemLocal}
                   />
                 )}
@@ -172,18 +201,26 @@ const ChatScreen = ({
                     </View>
                   </TouchableOpacity>
                 )}
-                <TextInput
-                  editable
-                  multiline
-                  onChangeText={text => onChangeMessage(text)}
-                  value={message}
-                  style={[
-                    replyOnMessage
-                      ? styles.inputWithReply
-                      : styles.inputWithoutReply,
-                      {color:'black'}
-                  ]}
-                />
+                <View style={styles.inputContainer}>
+                  <MaterialIcons
+                    name="attach-file"
+                    size={16}
+                    style={styles.attachIcon}
+                    onPress={pickDocument}
+                  />
+                  <TextInput
+                    editable
+                    multiline
+                    onChangeText={text => onChangeMessage(text)}
+                    value={message}
+                    style={[
+                      replyOnMessage
+                        ? styles.inputWithReply
+                        : styles.inputWithoutReply,
+                      {color: 'black'},
+                    ]}
+                  />
+                </View>
               </View>
               <View style={{justifyContent: 'flex-end'}}>
                 <MaterialIcons
@@ -197,18 +234,14 @@ const ChatScreen = ({
                         setlocalMsg([
                           ...localMsg,
                           {
-                            _id: '70356973726265363273736f',
-                            appId: '62b53b61b5b4a2001fb9af37',
                             content: message,
                             createdAt: date,
                             isLink: false,
                             mentions: [],
                             orgId: orgState?.currentOrgId,
                             parentId: repliedMsgDetails?._id,
-                            requestId: '73d31f2e-9039-401c-83cd-909953c264f1',
                             senderId: userInfoState?.user?.id,
                             senderType: 'APP',
-                            showInMainConversation: true,
                             teamId: '63e09e1f0916f000183a9d87',
                             updatedAt: date,
                           },
@@ -277,14 +310,17 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   inputWithReply: {
+    flex: 1,
     padding: 10,
   },
   inputWithoutReply: {
-    minHeight: 40,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderRadius: 10,
-    borderColor: 'grey',
+    flex: 1,
+    // minHeight: 40,
+    // paddingHorizontal: 10,
+    // borderWidth: 1,
+    // borderRadius: 10,
+    // borderColor: 'grey',
+    paddingVertical: 8,
   },
   inputWithReplyContainer: {
     borderWidth: 1,
@@ -357,5 +393,17 @@ const styles = StyleSheet.create({
     color: '#666',
     marginRight: 3,
     marginBottom: 4,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 4,
+    borderColor: '#ccc',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  attachIcon: {
+    marginRight: 8,
   },
 });
