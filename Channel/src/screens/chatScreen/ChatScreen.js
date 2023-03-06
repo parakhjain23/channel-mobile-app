@@ -204,7 +204,7 @@ const ChatScreen = ({
                 <View style={styles.inputContainer}>
                   <MaterialIcons
                     name="attach-file"
-                    size={16}
+                    size={20}
                     style={styles.attachIcon}
                     onPress={pickDocument}
                   />
@@ -405,5 +405,6 @@ const styles = StyleSheet.create({
   },
   attachIcon: {
     marginRight: 8,
+    color:'black'
   },
 });

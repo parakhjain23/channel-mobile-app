@@ -33,15 +33,24 @@ const ChatCard = ({
   setrepliedMsgDetails,
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
-  // const urlRegex = /(https?:\/\/[^\s]+)/g;
-  const urlRegex = /(\b(?:https?:\/\/)?[^\s]+\.(?:io|com|in)\b)/gi;
+  //RegEx for checking the url content
+  const urlRegex = /(\b(?:https?:\/\/)?[^\s]+\.(?:io|com|in|store)\b)/gi;
 
   const [optionsVisible, setOptionsVisible] = useState(false);
   function renderTextWithLinks(text) {
     const parts = text.split(urlRegex);
     return parts.map((part, i) =>
       urlRegex.test(part) ? (
-        <TouchableOpacity key={i} onPress={() => Linking.openURL(part)}>
+        <TouchableOpacity
+          key={i}
+          onPress={() => {
+            let url = part;
+            //regEx for checking if https included or not
+            if (!/^https?:\/\//i.test(url)) {
+              url = 'https://' + url;
+            }
+            Linking.openURL(url);
+          }}>
           <Text style={{color: 'blue', textDecorationLine: 'underline'}}>
             {part}
           </Text>
