@@ -167,12 +167,12 @@ const ChatScreen = ({
                   keyboardDismissMode="on-drag"
                   keyboardShouldPersistTaps="always"
                 />
-                {(chatState?.data[teamId]?.globalMessagesToSend?.length > 0 ||
-                  localMsg?.length > 0) && (
+                {localMsg?.length > 0 && (
+                  <FlatList data={localMsg} renderItem={renderItemLocal} />
+                )}
+                {chatState?.data[teamId]?.globalMessagesToSend?.length > 0 && (
                   <FlatList
-                    data={
-                      chatState?.data[teamId]?.globalMessagesToSend || localMsg
-                    }
+                    data={chatState?.data[teamId]?.globalMessagesToSend}
                     renderItem={renderItemLocal}
                   />
                 )}
@@ -234,18 +234,14 @@ const ChatScreen = ({
                         setlocalMsg([
                           ...localMsg,
                           {
-                            _id: '70356973726265363273736f',
-                            appId: '62b53b61b5b4a2001fb9af37',
                             content: message,
                             createdAt: date,
                             isLink: false,
                             mentions: [],
                             orgId: orgState?.currentOrgId,
                             parentId: repliedMsgDetails?._id,
-                            requestId: '73d31f2e-9039-401c-83cd-909953c264f1',
                             senderId: userInfoState?.user?.id,
                             senderType: 'APP',
-                            showInMainConversation: true,
                             teamId: '63e09e1f0916f000183a9d87',
                             updatedAt: date,
                           },
@@ -314,7 +310,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   inputWithReply: {
-    flex:1,
+    flex: 1,
     padding: 10,
   },
   inputWithoutReply: {
