@@ -77,7 +77,6 @@ const CreateChannelModel = ({modalizeRef, props}) => {
             {props?.channelsByQueryState?.channels?.map((item, index) => {
               return (
                 item?._source?.type == 'U' && (
-                  console.log(item?._source?.type),
                   <RenderUsersToAdd
                     key={index}
                     item={item}

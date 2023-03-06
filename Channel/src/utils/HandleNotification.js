@@ -14,20 +14,34 @@ export const handleNotificationFromEvents = async data => {
     store.getState().channelsReducer?.teamIdAndTypeMapping[data?.teamId];
   var title;
   var body;
+  var activityContent;
   if (channelType == 'DIRECT_MESSAGE') {
     title = store.getState().orgsReducer?.userIdAndNameMapping[data?.senderId];
-    body = data?.content;
-  } else if (
-    channelType == 'PUBLIC' ||
-    channelType == 'PRIVATE' ||
-    channelType == 'DEFAULT'
-  ) {
+    if(data['isActivity']=='true'){
+      const regex = /\{\{(\w+)\}\}/g;
+       activityContent  = data?.content?.replace(regex, (match, userId) => {
+        return store?.getState()?.orgsReducer?.userIdAndNameMapping[userId] || match; // return the name if it exists, or the original match if not 
+          })  
+      body = activityContent    
+    }else{
+      body = data?.content;
+    }
+  } else{
     title =
       store.getState().channelsReducer?.teamIdAndNameMapping[data?.teamId];
-    body =
-      store.getState().orgsReducer?.userIdAndNameMapping[data.senderId] +
-      ' : ' +
-      data?.content;
+      if(data['isActivity']=='true'){
+        const regex = /\{\{(\w+)\}\}/g;
+       activityContent  = data?.content?.replace(regex, (match, userId) => {
+        return store?.getState()?.orgsReducer?.userIdAndNameMapping[userId] || match; // return the name if it exists, or the original match if not 
+          })  
+        body =  store.getState().orgsReducer?.userIdAndNameMapping[data.senderId] +
+        ' : ' + activityContent
+        }else{
+          body =
+          store.getState().orgsReducer?.userIdAndNameMapping[data.senderId] +
+          ' : ' +
+          data?.content;
+        }
   }
   await Notifee.displayNotification({
     title: title,

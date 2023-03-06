@@ -49,10 +49,6 @@ export function channelsReducer(state = initialState, action) {
           action?.channels[i]?.type;
         channelIdAndDataMapping[action?.channels[i]?._id] = action.channels[i];
       }
-      console.log(state?.teamIdAndNameMapping,"-=-=-=-TEAMID AND NAME MAPPING-=-=-=-=");
-      console.log(state?.teamIdAndTypeMapping,"-=-=-=-TEAMID AND TYPE MAPPING-=-=-=-=");
-      console.log(state?.userIdAndTeamIdMapping,"-=-=-=-USERID AND TEAMID MAPPING-=-=-=-=");
-      console.log(state?.channelIdAndDataMapping,"-=-=-=-CHANNELID AND DATA MAPPING-=-=-=-=");
       return {
         ...state,
         channels: action.channels,
