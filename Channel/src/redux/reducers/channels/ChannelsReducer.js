@@ -49,6 +49,10 @@ export function channelsReducer(state = initialState, action) {
           action?.channels[i]?.type;
         channelIdAndDataMapping[action?.channels[i]?._id] = action.channels[i];
       }
+      console.log(state?.teamIdAndNameMapping,"-=-=-=-TEAMID AND NAME MAPPING-=-=-=-=");
+      console.log(state?.teamIdAndTypeMapping,"-=-=-=-TEAMID AND TYPE MAPPING-=-=-=-=");
+      console.log(state?.userIdAndTeamIdMapping,"-=-=-=-USERID AND TEAMID MAPPING-=-=-=-=");
+      console.log(state?.channelIdAndDataMapping,"-=-=-=-CHANNELID AND DATA MAPPING-=-=-=-=");
       return {
         ...state,
         channels: action.channels,
@@ -71,30 +75,8 @@ export function channelsReducer(state = initialState, action) {
     case Actions.FETCH_CHANNELS_ERROR:
       return {...state, channels: [], isLoading: false};
 
-    //Move Channels To top
-    // case Actions.MOVE_CHANNEL_TO_TOP:
-    //   var tempHighlightChannels ={}
-    //   if(state?.activeChannelTeamId != action.channelId){
-    //     tempHighlightChannels[action.channelId] =true
-    //   }else{
-    //     tempHighlightChannels[action.channelId]=false
-    //   }
-    //   if (state?.channels[0]?._id != action?.channelId) {
-    //     for (let i = 0; i < state?.channels?.length; i++) {
-    //       if (state?.channels[i]?._id == action?.channelId) {
-    //         state?.channels?.unshift(state?.channels[i]);
-    //         state?.channels?.splice(i + 1, 1);
-    //         break;
-    //       }
-    //     }
-    //   }
-    //   return {...state, channels: state?.channels, highlightChannel : {...state.highlightChannel,...tempHighlightChannels}};
-
-    //Move Recent Channels to top
     case Actions.MOVE_CHANNEL_TO_TOP:
-      console.log(action);
       var tempHighlightChannels = {};
-      console.log(state?.recentChannels);
       if (state?.activeChannelTeamId != action.channelId) {
         tempHighlightChannels[action.channelId] = true;
       } else {
@@ -147,7 +129,7 @@ export function channelsReducer(state = initialState, action) {
       }
       return {
         ...state,
-        // channels: [action.channel, ...state?.channels],
+        channels: [action.channel, ...state?.channels],
         recentChannels: [action.channel, ...state?.recentChannels],
         userIdAndTeamIdMapping: {
           ...state?.userIdAndTeamIdMapping,
