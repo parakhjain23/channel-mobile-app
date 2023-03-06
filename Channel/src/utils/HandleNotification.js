@@ -74,10 +74,6 @@ export const handleNotificationFromEvents = async data => {
       ],
     },
     ios: {
-      // Two actions (Mark as Read and Reply) for iOS
-      // The first action will be displayed as a default action when the notification is displayed
-      // The second action will be displayed as a "destructive" action (in red) when the user swipes the notification to the left
-      // You can customize the titles and the IDs of the actions to match your needs
       attachments: [
         {
           url: 'https://s3.ap-south-1.amazonaws.com/walkover.things-of-brand.assets/2b4c042bbe9ec62b13f698f163434389',
@@ -134,10 +130,6 @@ export const handleNotificationFirebase = async firebaseData => {
       ],
     },
     ios: {
-      // Two actions (Mark as Read and Reply) for iOS
-      // The first action will be displayed as a default action when the notification is displayed
-      // The second action will be displayed as a "destructive" action (in red) when the user swipes the notification to the left
-      // You can customize the titles and the IDs of the actions to match your needs
       attachments: [
         {
           url: 'https://control.msg91.com/app/assets/images/logo.png',
