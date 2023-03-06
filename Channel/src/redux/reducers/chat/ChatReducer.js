@@ -85,6 +85,7 @@ export function chatReducer(state = initialState, action) {
         data: {
           ...state?.data,
           [action.teamId]: {
+            ...state?.data[action?.teamId],
             messages: state?.data[action?.teamId]?.messages
               ? [action?.message, ...state?.data[action?.teamId]?.messages]
               : [action?.message],
