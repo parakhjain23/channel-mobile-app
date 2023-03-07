@@ -238,7 +238,7 @@ const LocalChatCard = ({
                 </View>
                 {parentId != null && (
                   <View style={styles.repliedContainer}>
-                    <Text style={styles.text}>
+                    <Text style={{color:'black'}}>
                       {
                         chatState?.data[chat.teamId]?.parentMessages[parentId]
                           ?.content

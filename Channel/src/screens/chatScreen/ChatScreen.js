@@ -8,6 +8,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Animated
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
@@ -72,6 +73,18 @@ const ChatScreen = ({
   const [repliedMsgDetails, setrepliedMsgDetails] = useState('');
   const [localMsg, setlocalMsg] = useState([]);
   const FlatListRef = useRef(null);
+  const scrollY = new Animated.Value(0);
+  const [isScrolling, setIsScrolling] = useState(false)
+  const onScroll = Animated.event(
+    [{nativeEvent: {contentOffset: {y: scrollY}}}],
+    {
+      useNativeDriver: true,
+      listener: event => {
+        const offsetY = event.nativeEvent.contentOffset.y;
+        setIsScrolling(offsetY > 0);
+      },
+    },
+  );
   const memoizedData = useMemo(
     () => chatState?.data[teamId]?.messages || [],
     [chatState?.data[teamId]?.messages],
@@ -152,7 +165,7 @@ const ChatScreen = ({
               <ActivityIndicator />
             ) : (
               <>
-                <FlatList
+                <Animated.FlatList
                   ref={FlatListRef}
                   data={memoizedData}
                   renderItem={renderItem}
@@ -168,6 +181,7 @@ const ChatScreen = ({
                   onEndReachedThreshold={0.2}
                   keyboardDismissMode="on-drag"
                   keyboardShouldPersistTaps="always"
+                  onScroll={onScroll}
                 />
                 {localMsg?.length > 0 && (
                   <FlatList data={localMsg} renderItem={renderItemLocal} />
@@ -180,17 +194,22 @@ const ChatScreen = ({
                 )}
               </>
             )}
-            <MaterialIcons
+          {isScrolling &&  <MaterialIcons
               name="south"
               style={{
                 position: 'absolute',
                 bottom: 10,
-                right: 10,
+                right: 15,
                 backgroundColor: 'grey',
-                padding: 10,
+                padding: 15,
+                borderRadius:25,
+                color:'black',
+                fontSize:19,
+                borderColor:'black',
+                borderWidth:1
               }}
               onPress={() => {FlatListRef?.current?.scrollToIndex({index: 0});}}
-            />
+            />}
           </View>
           {!networkState?.isInternetConnected && (
             <View>
