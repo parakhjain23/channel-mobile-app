@@ -45,26 +45,10 @@ const SocketService = socket => {
   });
 
   socket.on('chat/team created', data => {
-    console.log(data,"this is data");
     store.dispatch(
       createNewChannelSuccess(data, store.getState().userInfoReducer?.user?.id),
     );
     store.dispatch(moveChannelToTop(data?.teamId));
-  });
-
-  socket.on('chat/team patched', data => {
-    console.log(data,"this is patched data");
-    // store.dispatch(
-    //   createNewChannelSuccess(data, store.getState().userInfoReducer?.user?.id),
-    // );
-    // store.dispatch(moveChannelToTop(data?.teamId));
-  });
-  socket.on('chat/team updated', data => {
-    console.log(data,"this is updated data");
-    // store.dispatch(
-    //   createNewChannelSuccess(data, store.getState().userInfoReducer?.user?.id),
-    // );
-    // store.dispatch(moveChannelToTop(data?.teamId));
   });
 
   socket.on('orgUser created', data => {
