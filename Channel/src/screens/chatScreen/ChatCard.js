@@ -38,7 +38,12 @@ const ChatCard = ({
   const urlRegex = /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-]*)?(?:\?[^\s]*)?)/gi;
 
   const [optionsVisible, setOptionsVisible] = useState(false);
-  function renderTextWithLinks(text) {
+  function renderTextWithLinks(text, mentionsArr) {
+    if(mentionsArr?.length >0){
+      const regex = /<span[^>]*>(@\w+)<\/span>/g;
+      const result = text.replace(regex, '$1 ');
+      // console.log(result);
+    }
     const parts = text.split(urlRegex);
     return parts.map((part, i) =>
       urlRegex.test(part) ? (
@@ -154,7 +159,7 @@ const ChatCard = ({
 
                   <Text style={[styles.messageText, styles.text]}>
                     {/* {chat?.content} */}
-                    {renderTextWithLinks(chat?.content)}
+                    {renderTextWithLinks(chat?.content, chat?.mentions)}
                   </Text>
                 </View>
                 {/* <Text style={[styles.timeText, styles.text]}>{time}</Text> */}
@@ -239,7 +244,7 @@ const LocalChatCard = ({
                 </View>
                 {parentId != null && (
                   <View style={styles.repliedContainer}>
-                    <Text style={{color:'black'}}>
+                    <Text style={{color: 'black'}}>
                       {
                         chatState?.data[chat.teamId]?.parentMessages[parentId]
                           ?.content

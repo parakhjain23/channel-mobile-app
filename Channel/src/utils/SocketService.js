@@ -24,6 +24,7 @@ const SocketService = socket => {
     if (!('isActivity' in newData)) {
       newData.isActivity = false;
     }
+    console.log(data,"new message recived");
     store.dispatch(addNewMessage(newData));
     store.dispatch(moveChannelToTop(newData?.teamId));
     if(newData?.senderId != store?.getState()?.userInfoReducer?.user?.id){

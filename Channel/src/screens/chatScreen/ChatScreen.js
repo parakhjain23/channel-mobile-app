@@ -1,4 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import uuid from 'react-native-uuid';
 import {
   ActivityIndicator,
   FlatList,
@@ -8,7 +9,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  Animated
+  Animated,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
@@ -28,28 +29,56 @@ const pickDocument = async () => {
     const result = await DocumentPicker.pick({
       type: [DocumentPicker.types.allFiles],
       allowMultiSelection: true,
+      readContent: true,
     });
 
     console.log(result);
-    // try {
-    //   const data = await fetch(result[0]?.uri, {
-    //     method: 'PUT',
-    //   });
-    //   const res = JSON.stringify(data)
-    //   console.log(res,'==-=-=-=-=');
-    // } catch (error) {
-    //   console.log(error,'=-=-=-=-=');
-    // }
-  } catch (err) {
-    if (DocumentPicker.isCancel(err)) {
-      // User cancelled the picker
-      console.log('User cancelled document picker');
-    } else {
-      // Error occurred while picking the document
-      console.log('DocumentPicker Error: ', err);
+    const resp = await fetch(result[0]?.uri);
+    const imageBody = await resp.blob();
+    const folder = uuid.v4();
+    try {
+      //api call to get the presigned url to upload our image
+      const presignedUrl = await fetch(
+        'https://api.intospace.io/chat/fileUpload',
+        {
+          method: 'POST',
+          headers: {
+            Authorization:
+              'eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJlbWFpbCI6InJ1ZHJha3Noa2FjaGhhd2FAZ21haWwuY29tIiwiaWF0IjoxNjc4MDk0NjQzLCJleHAiOjE3MDk2NTIyNDMsImF1ZCI6Imh0dHBzOi8veW91cmRvbWFpbi5jb20iLCJpc3MiOiJmZWF0aGVycyIsInN1YiI6ImdNdjVOMEV0RUNtdTRGYTkiLCJqdGkiOiI3ODc3NWRkNC0wZTE5LTQ3ZDktYjA4YS01MmY0NGExZmRmZDYifQ.FPRgfI-2WwFj4yi_AP0yAdGPA8hfXxUrWr_OCIq9zAM',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            fileNames: [`${folder}/${result[0]?.name}`],
+          }),
+        },
+      );
+      const res = await presignedUrl.json();
+      const signedUrls = Object.values(res);
+      console.log(res);
+      try {
+          const uploadDocToS3 = await fetch(`${signedUrls[0]}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': `${result[0]?.type}`,
+            },
+            body: imageBody,
+          });
+          console.log(uploadDocToS3,"=-=-=-=-=-=-=");
+          const downloadDocUrl = JSON.stringify(uploadDocToS3);
+        } catch (error) {
+          console.log(error,"=-=-=-=-");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        console.log('User cancelled document picker');
+      } else {
+        console.log('DocumentPicker Error: ', err);
+      }
     }
-  }
-};
+}
 
 const ChatScreen = ({
   route,
@@ -74,7 +103,7 @@ const ChatScreen = ({
   const [localMsg, setlocalMsg] = useState([]);
   const FlatListRef = useRef(null);
   const scrollY = new Animated.Value(0);
-  const [isScrolling, setIsScrolling] = useState(false)
+  const [isScrolling, setIsScrolling] = useState(false);
   const onScroll = Animated.event(
     [{nativeEvent: {contentOffset: {y: scrollY}}}],
     {
@@ -194,22 +223,26 @@ const ChatScreen = ({
                 )}
               </>
             )}
-          {isScrolling &&  <MaterialIcons
-              name="south"
-              style={{
-                position: 'absolute',
-                bottom: 10,
-                right: 15,
-                backgroundColor: 'grey',
-                padding: 15,
-                borderRadius:25,
-                color:'black',
-                fontSize:19,
-                borderColor:'black',
-                borderWidth:1
-              }}
-              onPress={() => {FlatListRef?.current?.scrollToIndex({index: 0});}}
-            />}
+            {isScrolling && (
+              <MaterialIcons
+                name="south"
+                style={{
+                  position: 'absolute',
+                  bottom: 10,
+                  right: 15,
+                  backgroundColor: 'grey',
+                  padding: 15,
+                  borderRadius: 25,
+                  color: 'black',
+                  fontSize: 19,
+                  borderColor: 'black',
+                  borderWidth: 1,
+                }}
+                onPress={() => {
+                  FlatListRef?.current?.scrollToIndex({index: 0});
+                }}
+              />
+            )}
           </View>
           {!networkState?.isInternetConnected && (
             <View>
