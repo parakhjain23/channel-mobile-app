@@ -33,16 +33,47 @@ const ChatCard = ({
   setrepliedMsgDetails,
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
-  //RegEx for checking the url content
-  // const urlRegex = /(\b(?:https?:\/\/)?[^\s]+\.(?:io|com|in|store)\b)/gi;
-  const urlRegex = /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-]*)?(?:\?[^\s]*)?)/gi;
-
   const [optionsVisible, setOptionsVisible] = useState(false);
-  function renderTextWithLinks(text, mentionsArr) {
-    if(mentionsArr?.length >0){
-      const regex = /<span[^>]*>(@\w+)<\/span>/g;
-      const result = text.replace(regex, '$1 ');
-      // console.log(result);
+  const urlRegex = /(\b(?:https?:\/\/)?[^\s]+\.(?:io|com|in|store)\b)/gi;
+
+function highlight(text) {
+  console.log("=-=-=-=",text);
+  let A = orgState?.userIdAndDisplayNameMapping
+  text = text.replace(/@(\w+)/g, (match, p1) => {
+    return A[p1] ? `@${A[p1]}` : match;
+  });
+  const parts = text.split(/(\B@\w+)/);
+  return parts.map((part, i) =>
+    /^@\w+$/.test(part) ? (
+     <TouchableOpacity key={i} style={{backgroundColor:'red'}}>
+       <Text key={i} style={{color: 'blue'}}>
+        {part}
+      </Text>
+     </TouchableOpacity>
+    ) : (
+      <React.Fragment key={i}>{part}</React.Fragment>
+    )
+  );
+}
+
+function renderTextWithLinks(text, mentionsArr) {
+  let newText = text;
+  if (mentionsArr?.length > 0) {
+    const pattern = /^(.*?)(?:<span|$)|data-id="([\w\s]+)"(?:.*?)>(.*?)<\/span>|<\/span>(.*?)(?=<span|$)/gs;
+    let match;
+    let matches = '';
+    while ((match = pattern.exec(text)) !== null) {
+      if (match[1]) {
+        matches += match[1]; // push the text before the first mention
+      }
+      if (match[2]) {
+        matches += `@${match[2]}`;
+      } else if (match[4]) {
+        matches += match[4];
+      }
+      if (match[0].length === 0) {
+        pattern.lastIndex++;
+      }
     }
     const parts = text?.split(urlRegex);
     return parts?.map((part, i) =>
@@ -66,6 +97,30 @@ const ChatCard = ({
       ),
     );
   }
+  const parts = newText.split(urlRegex);
+  return parts.map((part, i) =>
+    urlRegex.test(part) ? (
+      <TouchableOpacity
+        key={i}
+        onPress={() => {
+          let url = part;
+          //regEx for checking if https included or not
+          if (!/^https?:\/\//i.test(url)) {
+            url = 'https://' + url;
+          }
+          Linking.openURL(url);
+        }}>
+        <Text style={{color: 'blue', textDecorationLine: 'underline'}}>
+          {part}
+        </Text>
+      </TouchableOpacity>
+    ) : (
+      // <React.Fragment key={i}>{highlight(part)}</React.Fragment>
+      <Text key={i}>{highlight(part)}</Text>
+    )
+  );
+}
+
 
   useEffect(() => {
     setOptionsVisible(false);
@@ -151,7 +206,8 @@ const ChatCard = ({
                       {/* <Text style={styles.text}> */}
                       {renderTextWithLinks(
                         chatState?.data[chat.teamId]?.parentMessages[parentId]
-                          ?.content,
+                          ?.content,chatState?.data[chat.teamId]?.parentMessages[parentId]
+                          ?.mentions
                       )}
                       {/* </Text> */}
                     </View>

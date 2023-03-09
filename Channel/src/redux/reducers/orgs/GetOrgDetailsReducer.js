@@ -6,7 +6,8 @@ const initialState = {
   orgs: null,
   currentOrgId:null,
   orgIdAndNameMapping: null,
-  userIdAndNameMapping: null
+  userIdAndNameMapping: null,
+  userIdAndDisplayNameMapping:null
 };
 
 export function orgsReducer(state = initialState, action) {
@@ -29,17 +30,20 @@ export function orgsReducer(state = initialState, action) {
 
     case Actions.GET_ALL_USERS_SUCCESS:
       var idAndNameMap = {};
+      var idAndDisplayNameMap={};
       action?.allUser?.map((item)=>{
         idAndNameMap[item?.id] = `${item?.firstName+" "+item?.lastName}`
+        idAndDisplayNameMap[item?.id] = `${item?.displayName}`
       })
-      return {...state, userIdAndNameMapping: idAndNameMap}  
+      return {...state, userIdAndNameMapping: idAndNameMap,userIdAndDisplayNameMapping:idAndDisplayNameMap}  
     
     case Actions.NEW_USER_JOINED_ORG:
       var idAndNameMap = {};
       action?.user?.map((item)=>{
         idAndNameMap[item?.id] = `${item?.firstName+" "+item?.lastName}`
+        idAndDisplayNameMap[item?.id] = `${item?.displayName}`
       })
-      return {...state, userIdAndNameMapping: {...state?.userIdAndNameMapping,...idAndNameMap}}  
+      return {...state, userIdAndNameMapping: {...state?.userIdAndNameMapping,...idAndNameMap},userIdAndDisplayNameMapping:{...state?.userIdAndDisplayNameMapping,...idAndDisplayNameMap}}  
     default:
       return state;
   }
