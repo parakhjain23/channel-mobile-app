@@ -4,7 +4,8 @@ export const sendMessageApi = async (
   orgId,
   senderId,
   token,
-  parentId
+  parentId,
+  attachment
 ) => {
   try {
     var response = await fetch('https://api.intospace.io/chat/message', {
@@ -14,6 +15,7 @@ export const sendMessageApi = async (
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        attachment:attachment,
         content: message,
         mentions: [],
         teamId: teamId,
@@ -26,14 +28,12 @@ export const sendMessageApi = async (
         appId: '62b53b61b5b4a2001fb9af37',
       }),
     });
-    const result = await response.json()
+    const result = await response.json();
   } catch (error) {
     console.warn(error);
   }
 };
-export const sendGlobalMessageApi = async (
-  messageObj
-) => {
+export const sendGlobalMessageApi = async messageObj => {
   try {
     var response = await fetch('https://api.intospace.io/chat/message', {
       method: 'POST',
@@ -54,7 +54,7 @@ export const sendGlobalMessageApi = async (
         appId: '62b53b61b5b4a2001fb9af37',
       }),
     });
-    const result = await response.json()
+    const result = await response.json();
   } catch (error) {
     console.warn(error);
   }

@@ -44,8 +44,8 @@ const ChatCard = ({
       const result = text.replace(regex, '$1 ');
       // console.log(result);
     }
-    const parts = text.split(urlRegex);
-    return parts.map((part, i) =>
+    const parts = text?.split(urlRegex);
+    return parts?.map((part, i) =>
       urlRegex.test(part) ? (
         <TouchableOpacity
           key={i}

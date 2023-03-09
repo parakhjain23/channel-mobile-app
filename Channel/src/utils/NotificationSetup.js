@@ -120,7 +120,7 @@ const NotificationSetup = () => {
       Notifee.onForegroundEvent(actionListeners);
       Notifee.onBackgroundEvent(actionListeners);
     } catch (error) {
-      console.log(error, 'this is error');
+      console.log(error, 'error');
     }
   };
   const actionListeners = async event => {

@@ -40,18 +40,18 @@ export function getChatsError(){
     }
 }
 
-export function* sendMessage({message,teamId,orgId,senderId,token,parentId}){
+export function* sendMessage({message,teamId,orgId,senderId,token,parentId,attachment}){
   try {
-    yield call(sendMessageApi,message,teamId,orgId,senderId,token,parentId)
+    yield call(sendMessageApi,message,teamId,orgId,senderId,token,parentId,attachment)
     yield put(moveChannelToTop(teamId))
   } catch (error) {
     console.warn(error);
   }
 }
-export function sendMessageStart(message,teamId,orgId,senderId,token,parentId){
+export function sendMessageStart(message,teamId,orgId,senderId,token,parentId,attachment){
   return {
     type: Actions.SEND_MESSAGE_START,
-    message,teamId,orgId,senderId,token,parentId
+    message,teamId,orgId,senderId,token,parentId,attachment
   }
 }
 

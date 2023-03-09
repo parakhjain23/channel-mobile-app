@@ -23,62 +23,39 @@ import {
 import {deleteMessageStart} from '../../redux/actions/chat/DeleteChatAction';
 import {ChatCardMemo, LocalChatCardMemo} from './ChatCard';
 import DocumentPicker from 'react-native-document-picker';
+import {FileUploadApi} from '../../api/attachmentsApi/FileUploadApi';
 
-const pickDocument = async () => {
+const pickDocument = async (setAttachment,accessToken) => {
   try {
-    const result = await DocumentPicker.pick({
+    const Files = await DocumentPicker.pick({
       type: [DocumentPicker.types.allFiles],
       allowMultiSelection: true,
       readContent: true,
     });
-
-    console.log(result);
-    const resp = await fetch(result[0]?.uri);
-    const imageBody = await resp.blob();
-    const folder = uuid.v4();
     try {
-      //api call to get the presigned url to upload our image
-      const presignedUrl = await fetch(
-        'https://api.intospace.io/chat/fileUpload',
-        {
-          method: 'POST',
-          headers: {
-            Authorization:
-              'eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJlbWFpbCI6InJ1ZHJha3Noa2FjaGhhd2FAZ21haWwuY29tIiwiaWF0IjoxNjc4MDk0NjQzLCJleHAiOjE3MDk2NTIyNDMsImF1ZCI6Imh0dHBzOi8veW91cmRvbWFpbi5jb20iLCJpc3MiOiJmZWF0aGVycyIsInN1YiI6ImdNdjVOMEV0RUNtdTRGYTkiLCJqdGkiOiI3ODc3NWRkNC0wZTE5LTQ3ZDktYjA4YS01MmY0NGExZmRmZDYifQ.FPRgfI-2WwFj4yi_AP0yAdGPA8hfXxUrWr_OCIq9zAM',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            fileNames: [`${folder}/${result[0]?.name}`],
-          }),
-        },
-      );
-      const res = await presignedUrl.json();
-      const signedUrls = Object.values(res);
-      console.log(res);
-      try {
-          const uploadDocToS3 = await fetch(`${signedUrls[0]}`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': `${result[0]?.type}`,
-            },
-            body: imageBody,
-          });
-          console.log(uploadDocToS3,"=-=-=-=-=-=-=");
-          const downloadDocUrl = JSON.stringify(uploadDocToS3);
-        } catch (error) {
-          console.log(error,"=-=-=-=-");
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    } catch (err) {
-      if (DocumentPicker.isCancel(err)) {
-        console.log('User cancelled document picker');
-      } else {
-        console.log('DocumentPicker Error: ', err);
-      }
+      const FileNames = await FileUploadApi(Files,accessToken);
+      const attachment = FileNames?.map((file, index) => {
+        return {
+          title: Files[index]?.name,
+          key: file,
+          resourceUrl: `https://resources.intospace.io/${file}`,
+          contentType: Files[index]?.type,
+          size: 18164,
+          encoding: '',
+        };
+      });
+      setAttachment(prevAttachment => [...prevAttachment, ...attachment]);
+    } catch (error) {
+      console.log(error, 'error');
     }
-}
+  } catch (err) {
+    if (DocumentPicker.isCancel(err)) {
+      console.log('User cancelled document picker');
+    } else {
+      console.log('DocumentPicker Error: ', err);
+    }
+  }
+};
 
 const ChatScreen = ({
   route,
@@ -100,6 +77,7 @@ const ChatScreen = ({
   const [message, onChangeMessage] = React.useState(null);
   const [replyOnMessage, setreplyOnMessage] = useState(false);
   const [repliedMsgDetails, setrepliedMsgDetails] = useState('');
+  const [attachment, setAttachment] = useState([]);
   const [localMsg, setlocalMsg] = useState([]);
   const FlatListRef = useRef(null);
   const scrollY = new Animated.Value(0);
@@ -226,18 +204,7 @@ const ChatScreen = ({
             {isScrolling && (
               <MaterialIcons
                 name="south"
-                style={{
-                  position: 'absolute',
-                  bottom: 10,
-                  right: 15,
-                  backgroundColor: 'grey',
-                  padding: 15,
-                  borderRadius: 25,
-                  color: 'black',
-                  fontSize: 19,
-                  borderColor: 'black',
-                  borderWidth: 1,
-                }}
+                style={styles.moveToBottom}
                 onPress={() => {
                   FlatListRef?.current?.scrollToIndex({index: 0});
                 }}
@@ -256,6 +223,26 @@ const ChatScreen = ({
                   replyOnMessage && styles.inputWithReplyContainer,
                   {width: '90%'},
                 ]}>
+                {attachment?.length > 0 &&
+                  attachment?.map((item, index) => {
+                    return (
+                      <TouchableOpacity key={index}>
+                        <View style={styles.replyMessageInInput}>
+                          <Text style={styles.text}>{item?.title}</Text>
+                          <MaterialIcons
+                            name="cancel"
+                            size={18}
+                            onPress={() => {
+                              const newAttachment = attachment.filter(
+                                (_, i) => i !== index,
+                              );
+                              setAttachment(newAttachment);
+                            }}
+                          />
+                        </View>
+                      </TouchableOpacity>
+                    );
+                  })}
                 {replyOnMessage && (
                   <TouchableOpacity onPress={() => setreplyOnMessage(false)}>
                     <View style={styles.replyMessageInInput}>
@@ -271,7 +258,7 @@ const ChatScreen = ({
                     name="attach-file"
                     size={20}
                     style={styles.attachIcon}
-                    onPress={pickDocument}
+                    onPress={() => pickDocument(setAttachment,userInfoState?.accessToken)}
                   />
                   <TextInput
                     editable
@@ -294,8 +281,9 @@ const ChatScreen = ({
                   style={{color: 'black', padding: 10}}
                   onPress={() => {
                     networkState?.isInternetConnected
-                      ? message?.trim() != '' &&
+                      ? (message?.trim() != '' || attachment?.length > 0) &&
                         (onChangeMessage(''),
+                        setAttachment([]),
                         setlocalMsg([
                           ...localMsg,
                           {
@@ -318,6 +306,7 @@ const ChatScreen = ({
                           userInfoState?.user?.id,
                           userInfoState?.accessToken,
                           repliedMsgDetails?._id || null,
+                          attachment,
                         ),
                         // onChangeMessage('');
                         replyOnMessage && setreplyOnMessage(false),
@@ -357,9 +346,25 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchChatsOfTeamAction: (teamId, token, skip) =>
       dispatch(getChatsStart(teamId, token, skip)),
-    sendMessageAction: (message, teamId, orgId, senderId, token, parentId) =>
+    sendMessageAction: (
+      message,
+      teamId,
+      orgId,
+      senderId,
+      token,
+      parentId,
+      attachment,
+    ) =>
       dispatch(
-        sendMessageStart(message, teamId, orgId, senderId, token, parentId),
+        sendMessageStart(
+          message,
+          teamId,
+          orgId,
+          senderId,
+          token,
+          parentId,
+          attachment,
+        ),
       ),
     deleteMessageAction: (accessToken, msgId) =>
       dispatch(deleteMessageStart(accessToken, msgId)),
@@ -416,6 +421,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 10,
   },
+  moveToBottom: {
+    position: 'absolute',
+    bottom: 10,
+    right: 15,
+    backgroundColor: '#cccccc',
+    padding: 15,
+    borderRadius: 25,
+    color: 'black',
+    fontSize: 19,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.46,
+    shadowRadius: 11.14,
+
+    elevation: 17,
+  },
   container: {
     borderWidth: 1,
     borderColor: 'gray',
@@ -464,12 +488,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderRadius: 4,
-    borderColor: '#ccc',
-    paddingHorizontal: 8,
+    borderColor: '#b3b3b3',
+    paddingHorizontal: 5,
     paddingVertical: 4,
   },
   attachIcon: {
     marginRight: 8,
     color: 'black',
+    backgroundColor: '#cccccc',
+    padding: 8,
+    borderRadius: 25,
   },
 });
