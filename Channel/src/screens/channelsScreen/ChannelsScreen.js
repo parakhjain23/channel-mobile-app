@@ -242,7 +242,7 @@ const ChannelsScreen = props => {
     [props?.channelsByQueryState?.channels],
   );
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1,backgroundColor:'white'}}>
       {props?.channelsState?.isLoading ? (
         <ActivityIndicator size={'large'} color={'black'} />
       ) : (
