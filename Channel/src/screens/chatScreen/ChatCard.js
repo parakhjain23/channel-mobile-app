@@ -34,7 +34,8 @@ const ChatCard = ({
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
   //RegEx for checking the url content
-  const urlRegex = /(\b(?:https?:\/\/)?[^\s]+\.(?:io|com|in|store)\b)/gi;
+  // const urlRegex = /(\b(?:https?:\/\/)?[^\s]+\.(?:io|com|in|store)\b)/gi;
+  const urlRegex = /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-]*)?(?:\?[^\s]*)?)/gi;
 
   const [optionsVisible, setOptionsVisible] = useState(false);
   function renderTextWithLinks(text) {
