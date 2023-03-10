@@ -1,23 +1,26 @@
 import React from 'react';
-import { View, Image, Text, StyleSheet } from 'react-native';
+import { View, Image, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import {IMAGE_BASE_URL} from '../../constants/Constants';
 
 
 const ContactDetailsPage = ({userInfoState}) => {
     // var {name,phone,email,imageUrl} = route.params
+    console.log(userInfoState?.searchedUserProfile);
   return (
     <View style={styles.container}>
         <View style={{marginTop:20,flexDirection:'row',justifyContent:'center'}}>
         <Image
             source={{uri: `${IMAGE_BASE_URL}${userInfoState?.searchedUserProfile?.avatarKey}`}}
-            style={{width: 120, height: 120, borderRadius: 60, marginBottom: 20}}
+            style={{width: 150, height: 150, borderRadius:5, marginBottom: 20}}
           />
         </View>
       <View style={{}}>
         <Text style={styles.name}>Name :- {userInfoState?.searchedUserProfile?.firstName} {userInfoState?.searchedUserProfile?.lastName}</Text>
         <Text style={styles.email}>Email :- {userInfoState?.searchedUserProfile?.email}</Text>
+        <TouchableOpacity onPress={()=>Linking.openURL(`tel:${userInfoState?.searchedUserProfile?.mobileNumber}`)}>
         <Text style={styles.phone}>Phone :- {userInfoState?.searchedUserProfile?.mobileNumber}</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

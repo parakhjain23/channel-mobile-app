@@ -57,7 +57,7 @@ const ProtectedNavigation = ({userInfoSate}) => {
         name="UserProfiles"
         component={ContactDetailsPage}
         options={({route}) => ({
-          headerTitle:  + " Profile",
+          headerTitle: route?.params?.displayName + " Profile",
           headerShown: true,
         })}
       />
