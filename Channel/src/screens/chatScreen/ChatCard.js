@@ -34,7 +34,7 @@ const ChatCard = ({
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
   const [optionsVisible, setOptionsVisible] = useState(false);
-  const urlRegex = /(\b(?:https?:\/\/)?[^\s]+\.(?:io|com|in|store)\b)/gi;
+const urlRegex = /(\b(?:https?:\/\/)?[^\s]+\.(?:io|com|in|store)\b)/gi;
 
 function highlight(text) {
   console.log("=-=-=-=",text);
@@ -59,7 +59,7 @@ function highlight(text) {
 function renderTextWithLinks(text, mentionsArr) {
   let newText = text;
   if (mentionsArr?.length > 0) {
-    const pattern = /^(.*?)(?:<span|$)|data-id="([\w\s]+)"(?:.*?)>(.*?)<\/span>|<\/span>(.*?)(?=<span|$)/gs;
+    const pattern = /^(.*?)(?:<span|$)|data-value="([\w\s]+)"(?:.*?)>(.*?)<\/span>|<\/span>(.*?)(?=<span|$)/gs;
     let match;
     let matches = '';
     while ((match = pattern.exec(text)) !== null) {
@@ -75,27 +75,7 @@ function renderTextWithLinks(text, mentionsArr) {
         pattern.lastIndex++;
       }
     }
-    const parts = text?.split(urlRegex);
-    return parts?.map((part, i) =>
-      urlRegex.test(part) ? (
-        <TouchableOpacity
-          key={i}
-          onPress={() => {
-            let url = part;
-            //regEx for checking if https included or not
-            if (!/^https?:\/\//i.test(url)) {
-              url = 'https://' + url;
-            }
-            Linking.openURL(url);
-          }}>
-          <Text style={{color: 'blue', textDecorationLine: 'underline'}}>
-            {part}
-          </Text>
-        </TouchableOpacity>
-      ) : (
-        <Text key={i}>{part}</Text>
-      ),
-    );
+    newText = matches;
   }
   const parts = newText.split(urlRegex);
   return parts.map((part, i) =>
