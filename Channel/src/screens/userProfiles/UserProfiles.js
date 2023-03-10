@@ -6,7 +6,6 @@ import {IMAGE_BASE_URL} from '../../constants/Constants';
 
 const ContactDetailsPage = ({userInfoState}) => {
     // var {name,phone,email,imageUrl} = route.params
-    console.log(userInfoState?.searchedUserProfile);
   return (
     <View style={styles.container}>
         <View style={{marginTop:20,flexDirection:'row',justifyContent:'center'}}>

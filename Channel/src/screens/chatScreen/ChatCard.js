@@ -9,6 +9,8 @@ import {
 import {GestureHandlerRootView, Swipeable} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Linking} from 'react-native';
+import cheerio, {text} from 'cheerio';
+import * as RootNavigation from '../../navigation/RootNavigation'
 
 const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
   const regex = /\{\{(\w+)\}\}/g;
@@ -31,53 +33,119 @@ const ChatCard = ({
   chatState,
   setreplyOnMessage,
   setrepliedMsgDetails,
+  searchUserProfileAction
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
   const [optionsVisible, setOptionsVisible] = useState(false);
-const urlRegex = /(\b(?:https?:\/\/)?[^\s]+\.(?:io|com|in|store)\b)/gi;
-
+  const urlRegex =
+  /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-])?(?:\?[^\s])?)/gi;
+  function findKeyByValue(value) {
+    const newValue = value.substring(1);
+    for (let key in orgState?.userIdAndDisplayNameMapping) {
+      if (orgState?.userIdAndDisplayNameMapping[key] === newValue) {
+        return key;
+      }
+    }
+    return null; // Value not found in object
+  }
 function highlight(text) {
-  console.log("=-=-=-=",text);
+  // console.log("=-=-TEXT=-=",text);
+  // console.log("=-=-RESYLT PARTS=-=",resultParts);
+  // console.log(text);
+  let newText = text
   let A = orgState?.userIdAndDisplayNameMapping
-  text = text.replace(/@(\w+)/g, (match, p1) => {
+  newText = newText.replace(/@{1,2}(\w+)/g, (match, p1) => {
     return A[p1] ? `@${A[p1]}` : match;
   });
-  const parts = text.split(/(\B@\w+)/);
+  // console.log(newText,"this is new text ");
+  const parts = newText?.split(/(\B@\w+)/);
   return parts?.map((part, i) =>
     /^@\w+$/.test(part) ? (
-     <TouchableOpacity key={i} style={{backgroundColor:'red'}}>
+     <TouchableOpacity key={i} style={{backgroundColor:'red'}} onPress={async ()=>{
+      let key = findKeyByValue(part)
+      await searchUserProfileAction(key,userInfoState?.accessToken),
+      RootNavigation.navigate('UserProfiles', {
+        displayName:orgState?.userIdAndDisplayNameMapping[key],
+      })}}>
        <Text key={i} style={{color: 'blue'}}>
         {part}
       </Text>
      </TouchableOpacity>
     ) : (
-      <React.Fragment key={i}>{part}</React.Fragment>
+      // <React.Fragment key={i}>{part}</React.Fragment>
+      <Text key={i}>{part}</Text>
     )
   );
 }
 
 function renderTextWithLinks(text, mentionsArr) {
-  let newText = text;
-  if (mentionsArr?.length > 0) {
-    const pattern = /^(.*?)(?:<span|$)|data-value="([\w\s]+)"(?:.*?)>(.*?)<\/span>|<\/span>(.*?)(?=<span|$)/gs;
-    let match;
-    let matches = '';
-    while ((match = pattern.exec(text)) !== null) {
-      if (match[1]) {
-        matches += match[1]; // push the text before the first mention
+  // let newText = text;
+  // if (mentionsArr?.length > 0) {
+  //   const pattern = /^(.*?)(?:<span|$)|data-value="([\w\s]+)"(?:.*?)>(.*?)<\/span>|<\/span>(.*?)(?=<span|$)/gs;
+  //   let match;
+  //   let matches = '';
+  //   while ((match = pattern.exec(text)) !== null) {
+  //     if (match[1]) {
+  //       matches += match[1]; // push the text before the first mention
+  //     }
+  //     if (match[2]) {
+  //       matches += `@${match[2]}`;
+  //     } else if (match[4]) {
+  //       matches += match[4];
+  //     }
+  //     if (match[0].length === 0) {
+  //       pattern.lastIndex++;
+  //     }
+  //   }
+  //   newText = matches;
+  // }
+  // const parts = newText?.split(urlRegex);
+  // return parts?.map((part, i) =>
+  //   urlRegex.test(part) ? (
+  //     <TouchableOpacity
+  //       key={i}
+  //       onPress={() => {
+  //         let url = part;
+  //         //regEx for checking if https included or not
+  //         if (!/^https?:\/\//i.test(url)) {
+  //           url = 'https://' + url;
+  //         }
+  //         Linking.openURL(url);
+  //       }}>
+  //       <Text style={{color: 'blue', textDecorationLine: 'underline'}}>
+  //         {part}
+  //       </Text>
+  //     </TouchableOpacity>
+  //   ) : (
+  //     // <React.Fragment key={i}>{highlight(part)}</React.Fragment>
+  //     <Text key={i}>{highlight(part)}</Text>
+  //   )
+  // );
+  const $ = cheerio.load(`<div>${text}</div>`);
+  $('span[contenteditable="false"]').remove();
+  var result = '';
+  $('*')
+    .contents()
+    .each((index, element) => {
+      if (element.type === 'text') {
+        const message = $(element).text().trim();
+        if (message !== '') {
+          result += message + ' ';
+          // console.log(message);
+        }
+      } else if ($(element).is('span')) {
+        result +=
+          $(element)?.attr('data-denotation-char') +
+          $(element)?.attr('data-id') +
+          ' ';
+        // console.log($(element)?.attr('data-denotation-char'));
+        // // console.log($(element)?.attr('data-value'));
+        // console.log($(element)?.attr('data-id'));
       }
-      if (match[2]) {
-        matches += `@${match[2]}`;
-      } else if (match[4]) {
-        matches += match[4];
-      }
-      if (match[0].length === 0) {
-        pattern.lastIndex++;
-      }
-    }
-    newText = matches;
-  }
-  const parts = newText?.split(urlRegex);
+    });
+  result = result.trim();
+  // console.log(result);
+  const parts = result?.split(urlRegex);
   return parts?.map((part, i) =>
     urlRegex.test(part) ? (
       <TouchableOpacity
