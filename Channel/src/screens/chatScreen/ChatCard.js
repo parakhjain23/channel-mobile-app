@@ -43,7 +43,7 @@ function highlight(text) {
     return A[p1] ? `@${A[p1]}` : match;
   });
   const parts = text.split(/(\B@\w+)/);
-  return parts.map((part, i) =>
+  return parts?.map((part, i) =>
     /^@\w+$/.test(part) ? (
      <TouchableOpacity key={i} style={{backgroundColor:'red'}}>
        <Text key={i} style={{color: 'blue'}}>
@@ -77,8 +77,8 @@ function renderTextWithLinks(text, mentionsArr) {
     }
     newText = matches;
   }
-  const parts = newText.split(urlRegex);
-  return parts.map((part, i) =>
+  const parts = newText?.split(urlRegex);
+  return parts?.map((part, i) =>
     urlRegex.test(part) ? (
       <TouchableOpacity
         key={i}
