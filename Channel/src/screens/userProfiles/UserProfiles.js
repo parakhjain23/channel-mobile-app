@@ -18,9 +18,9 @@ const ContactDetailsPage = ({userInfoState}) => {
       <View style={{}}>
         <Text style={styles.name}>Name :- {userInfoState?.searchedUserProfile?.firstName} {userInfoState?.searchedUserProfile?.lastName}</Text>
         <Text style={styles.email}>Email :- {userInfoState?.searchedUserProfile?.email}</Text>
-        <TouchableOpacity onPress={()=>Linking.openURL(`tel:${userInfoState?.searchedUserProfile?.mobileNumber}`)}>
+       {userInfoState?.searchedUserProfile?.mobileNumber &&  <TouchableOpacity onPress={()=>Linking.openURL(`tel:${userInfoState?.searchedUserProfile?.mobileNumber}`)}>
         <Text style={styles.phone}>Phone :- {userInfoState?.searchedUserProfile?.mobileNumber}</Text>
-        </TouchableOpacity>
+        </TouchableOpacity>}
       </View>
     </View>
   );
