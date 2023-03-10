@@ -1,6 +1,8 @@
 import React from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {Text, TouchableOpacity, View, Button} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {connect} from 'react-redux';
+import {fetchSearchedUserProfileStart} from '../../redux/actions/user/searchUserProfileActions';
 
 const ChannelCard = ({item, navigation, props}) => {
   // console.log('channelcard');
@@ -45,7 +47,7 @@ const ChannelCard = ({item, navigation, props}) => {
           justifyContent: 'flex-start',
           padding: 13,
         }}>
-        <Icon name={iconName} size={14} color="#696969" />
+        <Icon name={iconName} size={14} color="black" />
         <Text
           style={{fontSize: 16, fontWeight: nameFontWeight, color: 'black'}}>
           {' '}
@@ -55,8 +57,15 @@ const ChannelCard = ({item, navigation, props}) => {
     </TouchableOpacity>
   );
 };
-const SearchChannelCard = ({item, navigation, props, setsearchValue}) => {
-  // console.log('search channelcard');
+const SearchChannelCard = ({
+  item,
+  navigation,
+  props,
+  setsearchValue,
+  userInfoState,
+  searchUserProfileAction,
+  orgsState
+}) => {
   const Name =
     item?._source?.type == 'U'
       ? item?._source?.title
@@ -64,6 +73,7 @@ const SearchChannelCard = ({item, navigation, props, setsearchValue}) => {
   const teamId = item?._id?.includes('_')
     ? props?.channelsState?.userIdAndTeamIdMapping[item?._source?.userId]
     : item?._id;
+  const iconName = item?._source?.type == 'U' ? 'user' : 'hashtag';
   return (
     <TouchableOpacity
       style={{
@@ -98,11 +108,23 @@ const SearchChannelCard = ({item, navigation, props, setsearchValue}) => {
           justifyContent: 'flex-start',
           padding: 13,
         }}>
-        <Icon name="chevron-right" />
+        <Icon name={iconName} color={'black'} />
         <Text style={{fontSize: 16, fontWeight: '400', color: 'black'}}>
           {' '}
           {Name}
         </Text>
+        <View style={{position: 'absolute', left: undefined, right: 20}}>
+          {item?._source?.type == 'U' && (
+            <Button
+              title="Profile"
+              onPress={async () => {
+                await searchUserProfileAction(item?._source?.userId,userInfoState?.accessToken)
+                navigation.navigate('UserProfiles', {
+                  displayName:orgsState?.userIdAndDisplayNameMapping[item?._source?.userId],
+                });
+              }}></Button>
+          )}
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -131,7 +153,7 @@ const UsersToAddCard = ({item, setUserIds, userIds, setsearchedUser}) => {
             justifyContent: 'flex-start',
             padding: 13,
           }}>
-          <Icon name="user" color={"black"}/>
+          <Icon name="user" color={'black'} />
           <Text style={{fontSize: 16, fontWeight: '400', color: 'black'}}>
             {' '}
             {Name}
@@ -141,6 +163,18 @@ const UsersToAddCard = ({item, setUserIds, userIds, setsearchedUser}) => {
     )
   );
 };
+const mapStateToProps = state => ({
+  userInfoState: state.userInfoReducer,
+  orgsState: state.orgsReducer
+});
+const mapDispatchToProps = dispatch => {
+  return {
+    searchUserProfileAction: (userId, token) =>
+      dispatch(fetchSearchedUserProfileStart(userId, token)),
+  };
+};
 export const RenderChannels = React.memo(ChannelCard);
-export const RenderSearchChannels = React.memo(SearchChannelCard);
+export const RenderSearchChannels = React.memo(
+  connect(mapStateToProps, mapDispatchToProps)(SearchChannelCard),
+);
 export const RenderUsersToAdd = React.memo(UsersToAddCard);
