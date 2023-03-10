@@ -24,8 +24,9 @@ import {deleteMessageStart} from '../../redux/actions/chat/DeleteChatAction';
 import {ChatCardMemo, LocalChatCardMemo} from './ChatCard';
 import DocumentPicker from 'react-native-document-picker';
 import {FileUploadApi} from '../../api/attachmentsApi/FileUploadApi';
+import {getChannelsByQueryStart} from '../../redux/actions/channels/ChannelsByQueryAction';
 
-const pickDocument = async (setAttachment,accessToken) => {
+const pickDocument = async (setAttachment, accessToken) => {
   try {
     const Files = await DocumentPicker.pick({
       type: [DocumentPicker.types.allFiles],
@@ -33,7 +34,7 @@ const pickDocument = async (setAttachment,accessToken) => {
       readContent: true,
     });
     try {
-      const FileNames = await FileUploadApi(Files,accessToken);
+      const FileNames = await FileUploadApi(Files, accessToken);
       const attachment = FileNames?.map((file, index) => {
         return {
           title: Files[index]?.name,
@@ -69,6 +70,8 @@ const ChatScreen = ({
   channelsState,
   setActiveChannelTeamIdAction,
   setGlobalMessageToSendAction,
+  getChannelsByQueryStartAction,
+  channelsByQueryState,
 }) => {
   var {teamId, reciverUserId} = route.params;
   if (teamId == undefined) {
@@ -82,6 +85,55 @@ const ChatScreen = ({
   const FlatListRef = useRef(null);
   const scrollY = new Animated.Value(0);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [mentions, setMentions] = useState([]);
+  const [mentionsArr, setMentionsArr] = useState([]);
+
+  const handleInputChange = text => {
+    onChangeMessage(text);
+    const mentionRegex = /@\w+/g;
+    const foundMentions = text.match(mentionRegex);
+
+    foundMentions?.length > 0
+      ? (getChannelsByQueryStartAction(
+          foundMentions?.[foundMentions?.length - 1].replace('@', ''),
+          userInfoState?.user?.id,
+          orgState?.currentOrgId,
+        ),
+        setMentions(channelsByQueryState?.channels || []))
+      : setMentions([]);
+  };
+
+  const handleMentionSelect = mention => {
+    setMentionsArr(prevUserIds => [...prevUserIds, mention?._source?.userId]);
+    onChangeMessage(prevmessage =>
+      prevmessage.replace(
+        new RegExp(`@\\w+\\s?$`),
+        `@${mention?._source?.displayName} `,
+      ),
+    );
+    setMentions([]);
+  };
+  console.log(mentionsArr, 'mention arr');
+  const renderMention = ({item, index}) =>
+    item?._source?.type == 'U' && (
+      <TouchableOpacity onPress={() => handleMentionSelect(item)}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            borderWidth: 0.7,
+            borderTopColor: 'grey',
+            margin: 2,
+            padding: 2,
+          }}>
+          <MaterialIcons name="account-circle" size={20} />
+          <Text key={index} style={{fontSize: 16, margin: 4, color: 'black'}}>
+            {item?._source?.displayName}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+
   const onScroll = Animated.event(
     [{nativeEvent: {contentOffset: {y: scrollY}}}],
     {
@@ -160,7 +212,7 @@ const ChatScreen = ({
   }, [teamId, userInfoState, skip, fetchChatsOfTeamAction]);
   const date = new Date();
   return (
-    <View style={{flex: 1,backgroundColor:'white'}}>
+    <View style={{flex: 1, backgroundColor: 'white'}}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : null}
         keyboardVerticalOffset={70}
@@ -253,17 +305,26 @@ const ChatScreen = ({
                     </View>
                   </TouchableOpacity>
                 )}
+                <FlatList
+                  data={mentions}
+                  renderItem={renderMention}
+                  style={{maxHeight: 140}}
+                  keyboardShouldPersistTaps="always"
+                />
                 <View style={styles.inputContainer}>
                   <MaterialIcons
                     name="attach-file"
                     size={20}
                     style={styles.attachIcon}
-                    onPress={() => pickDocument(setAttachment,userInfoState?.accessToken)}
+                    onPress={() =>
+                      pickDocument(setAttachment, userInfoState?.accessToken)
+                    }
                   />
                   <TextInput
                     editable
                     multiline
-                    onChangeText={text => onChangeMessage(text)}
+                    onChangeText={handleInputChange}
+                    // onChangeText={text => onChangeMessage(text)}
                     value={message}
                     style={[
                       replyOnMessage
@@ -290,7 +351,7 @@ const ChatScreen = ({
                             content: message,
                             createdAt: date,
                             isLink: false,
-                            mentions: [],
+                            mentions: mentionsArr,
                             orgId: orgState?.currentOrgId,
                             parentId: repliedMsgDetails?._id,
                             senderId: userInfoState?.user?.id,
@@ -307,8 +368,11 @@ const ChatScreen = ({
                           userInfoState?.accessToken,
                           repliedMsgDetails?._id || null,
                           attachment,
+                          mentionsArr,
                         ),
                         // onChangeMessage('');
+                        setMentionsArr(''),
+                        setMentions([]),
                         replyOnMessage && setreplyOnMessage(false),
                         repliedMsgDetails && setrepliedMsgDetails(null))
                       : message?.trim() != '' &&
@@ -341,6 +405,7 @@ const mapStateToProps = state => ({
   orgState: state.orgsReducer,
   chatState: state.chatReducer,
   channelsState: state.channelsReducer,
+  channelsByQueryState: state.channelsByQueryReducer,
 });
 const mapDispatchToProps = dispatch => {
   return {
@@ -354,6 +419,7 @@ const mapDispatchToProps = dispatch => {
       token,
       parentId,
       attachment,
+      mentionsArr,
     ) =>
       dispatch(
         sendMessageStart(
@@ -364,6 +430,7 @@ const mapDispatchToProps = dispatch => {
           token,
           parentId,
           attachment,
+          mentionsArr,
         ),
       ),
     deleteMessageAction: (accessToken, msgId) =>
@@ -372,6 +439,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(setActiveChannelTeamId(teamId)),
     setGlobalMessageToSendAction: messageObj =>
       dispatch(setGlobalMessageToSend(messageObj)),
+    getChannelsByQueryStartAction: (query, userToken, orgId) =>
+      dispatch(getChannelsByQueryStart(query, userToken, orgId)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);

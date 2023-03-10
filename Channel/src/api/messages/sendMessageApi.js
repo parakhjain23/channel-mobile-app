@@ -5,7 +5,8 @@ export const sendMessageApi = async (
   senderId,
   token,
   parentId,
-  attachment
+  attachment,
+  mentionsArr
 ) => {
   try {
     var response = await fetch('https://api.intospace.io/chat/message', {
@@ -17,7 +18,7 @@ export const sendMessageApi = async (
       body: JSON.stringify({
         attachment:attachment,
         content: message,
-        mentions: [],
+        mentions: mentionsArr,
         teamId: teamId,
         requestId: '73d31f2e-9039-401c-83cd-909953c264f1',
         orgId: orgId,
