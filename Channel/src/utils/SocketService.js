@@ -30,7 +30,7 @@ const SocketService = socket => {
     if(newData?.senderId != store?.getState()?.userInfoReducer?.user?.id){
       PlayLocalSoundFile()
       if(newData?.teamId != store.getState().channelsReducer?.activeChannelTeamId){
-        handleNotificationFromEvents(newData)
+        handleNotificationFromEvents(newData,store?.getState()?.orgsReducer?.userIdAndDisplayNameMapping)
       }
     }
   });
