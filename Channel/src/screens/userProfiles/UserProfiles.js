@@ -35,23 +35,23 @@ const ContactDetailsPage = ({userInfoState,channelsState}) => {
       </Text>
       {userInfoState?.searchedUserProfile?.mobileNumber && (
         <View>
-          <Text style={styles.phone}>
+          <Text style={[styles.phone,styles.buttonTextWhite]}>
             Phone :- {userInfoState?.searchedUserProfile?.mobileNumber}
           </Text>
-          <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-            <TouchableOpacity style={[styles.button, styles.callButton]} onPress={()=>Linking.openURL(`tel:${userInfoState?.searchedUserProfile?.mobileNumber}`)}>
+        </View>
+      )}
+       <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+            {userInfoState?.searchedUserProfile?.mobileNumber && <TouchableOpacity style={[styles.button, styles.callButton]} onPress={()=>Linking.openURL(`tel:${userInfoState?.searchedUserProfile?.mobileNumber}`)}>
               <Text style={styles.buttonText}>
                 Call {userInfoState?.searchedUserProfile?.displayName}
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity>}
             <TouchableOpacity style={[styles.button, styles.messageButton]} onPress={()=>navigation.navigate('Chat', {chatHeaderTitle: userInfoState?.searchedUserProfile?.displayName, teamId: teamId})}>
               <Text style={[styles.buttonText, styles.buttonTextWhite]}>
                 Message {userInfoState?.searchedUserProfile?.displayName}
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
-      )}
     </View>
   );
 };
