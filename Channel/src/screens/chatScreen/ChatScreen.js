@@ -306,6 +306,7 @@ const ChatScreen = ({
                 )}
                 <FlatList
                   data={mentions}
+                  keyExtractor={(index) => index.toString()}
                   renderItem={renderMention}
                   style={{maxHeight: 140}}
                   keyboardShouldPersistTaps="always"
