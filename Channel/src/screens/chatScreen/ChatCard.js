@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
+  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -49,15 +50,11 @@ const ChatCard = ({
     }
     return null;
   }
-function highlight(text,result) {
-  console.log("result arr", result);
-  console.log("this is text in highlight", text);
-  let A = orgState?.userIdAndDisplayNameMapping
+function handleMentions(text,result) {
   text = text.replace(/@{1,2}(\w+)/g, (match, p1) => {
-    return A[p1] ? `@${A[p1]}` : match;
+    return orgState?.userIdAndDisplayNameMapping[p1] ? `@${orgState?.userIdAndDisplayNameMapping[p1]}` : match;
   });
   const parts = text?.split(/(\B@\w+)/);
-  console.log("this is parts in highlight", parts);
   return parts?.map((part, i) =>
     /^@\w+$/.test(part) ? (
      <TouchableOpacity key={i} onPress={async ()=>{
@@ -93,7 +90,7 @@ function renderTextWithLinks(text, mentionsArr) {
           }
         } else if ($(element).is('span')) {
           resultStr +=
-            $(element)?.attr('data-denotation-char') +
+           '@' +
             $(element)?.attr('data-id') +
             ' ';
           // result?.push($(element)?.attr('data-denotation-char') +
@@ -104,16 +101,13 @@ function renderTextWithLinks(text, mentionsArr) {
         }
       });
     resultStr = resultStr.trim();
-console.log("this is result", result);
   const parts = resultStr?.split(urlRegex);
-console.log("this is parts",parts);
   return parts?.map((part, i) =>
     urlRegex.test(part) ? (
       <TouchableOpacity
         key={i}
         onPress={() => {
           let url = part;
-          //regEx for checking if https included or not
           if (!/^https?:\/\//i.test(url)) {
             url = 'https://' + url;
           }
@@ -124,7 +118,7 @@ console.log("this is parts",parts);
         </Text>
       </TouchableOpacity>
     ) : (
-      <Text key={i}>{highlight(part,result)}</Text>
+      <Text key={i}>{handleMentions(part,result)}</Text>
     )
   );
 }
@@ -220,6 +214,44 @@ console.log("this is parts",parts);
                       {/* </Text> */}
                     </View>
                   )}
+                  {chat?.attachment?.length > 0 &&
+                    chat?.attachment?.map((item, index) => {
+                      return item?.contentType?.includes('image') ? (
+                        <TouchableOpacity
+                          onPress={() => Linking.openURL(item?.resourceUrl)}>
+                          <Image
+                            source={{uri: item?.resourceUrl}}
+                            style={{height: 150, width: 150}}
+                          />
+                        </TouchableOpacity>
+                      ) : (
+                        <View
+                          style={{
+                            borderWidth: 0.5,
+                            borderColor: 'gray',
+                            borderRadius: 5,
+                            padding: 10,
+                          }}>
+                          <TouchableOpacity
+                            onPress={() => Linking.openURL(item?.resourceUrl)} >
+                            <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
+                              {item?.contentType?.includes('pdf') && <Image source={require('../../assests/images/attachments/pdfLogo.png')} style={{width:40,height:40,marginRight:5}} />}
+                              {item?.contentType?.includes('doc') && <Image source={require('../../assests/images/attachments/docLogo.png')} style={{width:40,height:40,marginRight:5}} />}
+
+                              <View>
+                                <Text style={{color: 'black'}}>
+                                  {item?.title?.slice(0,10)+'...'}
+                                </Text>
+                                <Text style={{color: 'black'}}>
+                                  {'...'+item?.contentType?.slice(-10)}
+                                </Text>
+                              </View>
+                              <Icon name='save' size={20} style={{margin:2}} color='black'/>
+                            </View>
+                          </TouchableOpacity>
+                        </View>
+                      );
+                    })}
 
                   <Text style={[styles.messageText, styles.text]}>
                     {/* {chat?.content} */}

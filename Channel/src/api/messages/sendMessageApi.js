@@ -1,3 +1,4 @@
+import base64 from 'react-native-base64';
 export const sendMessageApi = async (
   message,
   teamId,
@@ -6,9 +7,35 @@ export const sendMessageApi = async (
   token,
   parentId,
   attachment,
-  mentionsArr
+  mentionsArr = [],
 ) => {
   try {
+    const mentionRegex = /@(\w+)/g;
+    // Replace mentions with HTML tags
+    function mentionHTML(userId, match, username) {
+      const base64UserId = base64.encode(userId);
+      if (username == 'channel') {
+        return `<span class=\"mention\" data-index=\"0\" data-denotation-char=\"@\" data-id=\"@all\" data-username=\"channel\" data-value=\"channel\" data-identifier=\"@all\"><span contenteditable=\"false\">**<span class=\"ql-mention-denotation-char\">@</span>channel**</span></span>`;
+      }
+      return `<span class=\"mention\" data-index=\"2\" data-denotation-char=\"@\" data-id=\"${userId}\" data-username=\"${username}\" data-value=\"${username}\"><span contenteditable=\"false\">[${match}](MENTION-${base64UserId})</span></span>`;
+    }
+
+    let mentionIndex = 0;
+    if (mentionsArr?.length > 0 || message?.includes('@channel')) {
+      message = message.replace(mentionRegex, (match, username) => {
+        if(match==='@channel'){
+          mentionsArr ? mentionsArr?.push("@all") : mentionsArr=[],mentionsArr?.push("@all");
+        }
+        const mentionHtml = mentionHTML(
+          mentionsArr[mentionIndex],
+          match,
+          username,
+        );
+        mentionIndex++;
+        return mentionHtml;
+      });
+    }
+
     var response = await fetch('https://api.intospace.io/chat/message', {
       method: 'POST',
       headers: {
@@ -16,9 +43,9 @@ export const sendMessageApi = async (
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        attachment:attachment,
+        attachment: attachment,
         content: message,
-        mentions: mentionsArr,
+        mentions: mentionsArr || [],
         teamId: teamId,
         requestId: '73d31f2e-9039-401c-83cd-909953c264f1',
         orgId: orgId,
