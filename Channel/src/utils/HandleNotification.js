@@ -36,6 +36,9 @@ export const handleNotificationFromEvents = async (data,userIdAndDisplayNameMapp
     });
     data['content'] = resultStr
   }
+  if(data?.attachment.length > 0){
+    data['content'] = 'Shared an Attachment'
+  }
   var channelType =
     store.getState().channelsReducer?.teamIdAndTypeMapping[data?.teamId];
   var title;
