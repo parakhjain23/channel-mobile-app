@@ -15,7 +15,7 @@
 		805742F0B6220E89E7D449AD /* libPods-Channel-ChannelTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AE1CF1E5F54819192762E2B9 /* libPods-Channel-ChannelTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		E5805EBE29A0A4EA00126E0E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5805EBD29A0A4EA00126E0E /* GoogleService-Info.plist */; };
-		E5BC4A0429810C1300EA84FB /* BuildFile in Resources */ = {isa = PBXBuildFile; };
+		E5BC4A0429810C1300EA84FB /* (null) in Resources */ = {isa = PBXBuildFile; };
 		E5BC4A182981104100EA84FB /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5BC4A082981104100EA84FB /* Fontisto.ttf */; };
 		E5BC4A192981104100EA84FB /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5BC4A092981104100EA84FB /* Octicons.ttf */; };
 		E5BC4A1A2981104100EA84FB /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5BC4A0A2981104100EA84FB /* Feather.ttf */; };
@@ -310,7 +310,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E5BC4A202981104100EA84FB /* Ionicons.ttf in Resources */,
-				E5BC4A0429810C1300EA84FB /* BuildFile in Resources */,
+				E5BC4A0429810C1300EA84FB /* (null) in Resources */,
 				E5BC4A1A2981104100EA84FB /* Feather.ttf in Resources */,
 				E5BC4A232981104100EA84FB /* FontAwesome.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
@@ -360,7 +360,6 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Channel/Pods-Channel-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

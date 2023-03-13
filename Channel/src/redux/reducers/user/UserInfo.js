@@ -5,6 +5,7 @@ const initialState = {
   isLoading: true,
   isSignedIn: false,
   accessToken: null,
+  searchedUserProfile : null
 };
 
 export function userInfoReducer(state = initialState, action) {
@@ -17,7 +18,10 @@ export function userInfoReducer(state = initialState, action) {
 
     case Actions.SIGN_OUT:
       return {initialState};
-
+    case Actions.SEARCH_USER_PROFILE_START:
+      return{...state,searchedUserProfile:null}
+    case Actions.SEARCH_USER_PROFILE_SUCCESS:
+      return{...state,searchedUserProfile:action?.data}
     default:
       return state;
   }

@@ -10,6 +10,8 @@ import {
 import {GestureHandlerRootView, Swipeable} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Linking} from 'react-native';
+import cheerio, {text} from 'cheerio';
+import * as RootNavigation from '../../navigation/RootNavigation'
 
 const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
   const regex = /\{\{(\w+)\}\}/g;
@@ -32,42 +34,95 @@ const ChatCard = ({
   chatState,
   setreplyOnMessage,
   setrepliedMsgDetails,
+  searchUserProfileAction
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
-  //RegEx for checking the url content
-  const urlRegex =
-    /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-]*)?(?:\?[^\s]*)?)/gi;
-
   const [optionsVisible, setOptionsVisible] = useState(false);
-
-  function renderTextWithLinks(text, mentionsArr) {
-    if (mentionsArr?.length > 0) {
-      const regex = /<span[^>]*>(@\w+)<\/span>/g;
-      const result = text.replace(regex, '$1 ');
-      // console.log(result);
+  const urlRegex =
+  /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-])?(?:\?[^\s])?)/gi;
+  function findKeyByValue(value) {
+    console.log(value,"this is value");
+    const newValue = value.substring(1);
+    for (let key in orgState?.userIdAndDisplayNameMapping) {
+      if (orgState?.userIdAndDisplayNameMapping[key] === newValue) {
+        return key;
+      }
     }
-    const parts = text?.split(urlRegex);
-    return parts?.map((part, i) =>
-      urlRegex.test(part) ? (
-        <TouchableOpacity
-          key={i}
-          onPress={() => {
-            let url = part;
-            //regEx for checking if https included or not
-            if (!/^https?:\/\//i.test(url)) {
-              url = 'https://' + url;
-            }
-            Linking.openURL(url);
-          }}>
-          <Text style={{color: 'blue', textDecorationLine: 'underline'}}>
-            {part}
-          </Text>
-        </TouchableOpacity>
-      ) : (
-        <Text key={i}>{part}</Text>
-      ),
-    );
+    return null;
   }
+function handleMentions(text,result) {
+  text = text.replace(/@{1,2}(\w+)/g, (match, p1) => {
+    return orgState?.userIdAndDisplayNameMapping[p1] ? `@${orgState?.userIdAndDisplayNameMapping[p1]}` : match;
+  });
+  const parts = text?.split(/(\B@\w+)/);
+  return parts?.map((part, i) =>
+    /^@\w+$/.test(part) ? (
+     <TouchableOpacity key={i} onPress={async ()=>{
+      let key = findKeyByValue(part)
+      await searchUserProfileAction(key,userInfoState?.accessToken),
+      RootNavigation.navigate('UserProfiles', {
+        displayName:orgState?.userIdAndDisplayNameMapping[key],
+      })}}>
+       <Text key={i} style={{color: 'blue'}}>
+        {part}
+      </Text>
+     </TouchableOpacity>
+    ) : (
+      <Text key={i}>{part}</Text>
+    )
+  );
+}
+
+function renderTextWithLinks(text, mentionsArr) {
+  var result = [];
+  var resultStr=''
+    const $ = cheerio.load(`<div>${text}</div>`);
+    $('span[contenteditable="false"]').remove();
+    $('*')
+      .contents()
+      .each((index, element) => {
+        if (element.type === 'text') {
+          const message = $(element).text().trim();
+          if (message !== '') {
+            resultStr += message + ' ';
+            result.push(message)
+            // console.log(message);
+          }
+        } else if ($(element).is('span')) {
+          resultStr +=
+           '@' +
+            $(element)?.attr('data-id') +
+            ' ';
+          // result?.push($(element)?.attr('data-denotation-char') +
+          // $(element)?.attr('data-id'))
+          var id = $(element)?.attr('data-id')
+          var data = '@'+$(element)?.attr('data-value')
+          result?.push({[id]:data})
+        }
+      });
+    resultStr = resultStr.trim();
+  const parts = resultStr?.split(urlRegex);
+  return parts?.map((part, i) =>
+    urlRegex.test(part) ? (
+      <TouchableOpacity
+        key={i}
+        onPress={() => {
+          let url = part;
+          if (!/^https?:\/\//i.test(url)) {
+            url = 'https://' + url;
+          }
+          Linking.openURL(url);
+        }}>
+        <Text style={{color: 'blue', textDecorationLine: 'underline'}}>
+          {part}
+        </Text>
+      </TouchableOpacity>
+    ) : (
+      <Text key={i}>{handleMentions(part,result)}</Text>
+    )
+  );
+}
+
 
   useEffect(() => {
     setOptionsVisible(false);
@@ -153,7 +208,8 @@ const ChatCard = ({
                       {/* <Text style={styles.text}> */}
                       {renderTextWithLinks(
                         chatState?.data[chat.teamId]?.parentMessages[parentId]
-                          ?.content,
+                          ?.content,chatState?.data[chat.teamId]?.parentMessages[parentId]
+                          ?.mentions
                       )}
                       {/* </Text> */}
                     </View>

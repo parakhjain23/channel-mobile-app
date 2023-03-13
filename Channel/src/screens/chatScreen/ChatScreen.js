@@ -25,6 +25,7 @@ import {ChatCardMemo, LocalChatCardMemo} from './ChatCard';
 import DocumentPicker from 'react-native-document-picker';
 import {FileUploadApi} from '../../api/attachmentsApi/FileUploadApi';
 import {getChannelsByQueryStart} from '../../redux/actions/channels/ChannelsByQueryAction';
+import { fetchSearchedUserProfileStart } from '../../redux/actions/user/searchUserProfileActions';
 
 const pickDocument = async (setAttachment, accessToken) => {
   try {
@@ -72,6 +73,7 @@ const ChatScreen = ({
   setGlobalMessageToSendAction,
   getChannelsByQueryStartAction,
   channelsByQueryState,
+  searchUserProfileAction
 }) => {
   var {teamId, reciverUserId} = route.params;
   if (teamId == undefined) {
@@ -174,6 +176,7 @@ const ChatScreen = ({
         chatState={chatState}
         setreplyOnMessage={setreplyOnMessage}
         setrepliedMsgDetails={setrepliedMsgDetails}
+        searchUserProfileAction={searchUserProfileAction}
       />
     ),
     [
@@ -441,6 +444,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(setGlobalMessageToSend(messageObj)),
     getChannelsByQueryStartAction: (query, userToken, orgId) =>
       dispatch(getChannelsByQueryStart(query, userToken, orgId)),
+    searchUserProfileAction:(userId,token)=>dispatch(fetchSearchedUserProfileStart(userId,token))
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);

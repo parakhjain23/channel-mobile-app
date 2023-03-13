@@ -1,15 +1,41 @@
 import Notifee, {AndroidImportance} from '@notifee/react-native';
 import {store} from '../redux/Store';
+import cheerio, {text} from 'cheerio';
 
-export const handleNotificationFromEvents = async data => {
+export const handleNotificationFromEvents = async (data,userIdAndDisplayNameMapping) => {
   data['attachment']=`${data?.attachment}`
   data['isActivity']=data?.isActivity != undefined ? `${data?.isActivity}` :'false'
-  data['mentions'] = `[]`;
+  data['mentions'] = `${data?.mentions}`;
   data['showInMainConversation'] = `${data?.showInMainConversation}`;
   data['isLink'] = `${data?.isLink}`;
   data['parentId'] == null
     ? delete data['parentId']
     : (data['parentId'] = `${data?.parentId}`);
+  if(data?.mentions?.length > 0){
+    var resultStr=''
+    const $ = cheerio.load(`<div>${data?.content}</div>`);
+    $('span[contenteditable="false"]').remove();
+    $('*')
+      .contents()
+      .each((index, element) => {
+        if (element.type === 'text') {
+          const message = $(element).text().trim();
+          if (message !== '') {
+            resultStr += message + ' ';
+          }
+        } else if ($(element).is('span')) {
+          resultStr +=
+            $(element)?.attr('data-denotation-char') +
+            $(element)?.attr('data-id') +
+            ' ';
+        }
+      });
+    resultStr = resultStr.trim();
+    resultStr = resultStr.replace(/@{1,2}(\w+)/g, (match, p1) => {
+      return userIdAndDisplayNameMapping[p1] ? `@${userIdAndDisplayNameMapping[p1]}` : match;
+    });
+    data['content'] = resultStr
+  }
   var channelType =
     store.getState().channelsReducer?.teamIdAndTypeMapping[data?.teamId];
   var title;
