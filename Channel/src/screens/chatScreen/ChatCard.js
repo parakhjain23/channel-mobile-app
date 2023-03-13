@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
+  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -34,12 +35,13 @@ const ChatCard = ({
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
   //RegEx for checking the url content
-  // const urlRegex = /(\b(?:https?:\/\/)?[^\s]+\.(?:io|com|in|store)\b)/gi;
-  const urlRegex = /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-]*)?(?:\?[^\s]*)?)/gi;
+  const urlRegex =
+    /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-]*)?(?:\?[^\s]*)?)/gi;
 
   const [optionsVisible, setOptionsVisible] = useState(false);
+
   function renderTextWithLinks(text, mentionsArr) {
-    if(mentionsArr?.length >0){
+    if (mentionsArr?.length > 0) {
       const regex = /<span[^>]*>(@\w+)<\/span>/g;
       const result = text.replace(regex, '$1 ');
       // console.log(result);
@@ -156,6 +158,44 @@ const ChatCard = ({
                       {/* </Text> */}
                     </View>
                   )}
+                  {chat?.attachment?.length > 0 &&
+                    chat?.attachment?.map((item, index) => {
+                      return item?.contentType?.includes('image') ? (
+                        <TouchableOpacity
+                          onPress={() => Linking.openURL(item?.resourceUrl)}>
+                          <Image
+                            source={{uri: item?.resourceUrl}}
+                            style={{height: 150, width: 150}}
+                          />
+                        </TouchableOpacity>
+                      ) : (
+                        <View
+                          style={{
+                            borderWidth: 0.5,
+                            borderColor: 'gray',
+                            borderRadius: 5,
+                            padding: 10,
+                          }}>
+                          <TouchableOpacity
+                            onPress={() => Linking.openURL(item?.resourceUrl)} >
+                            <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
+                              {item?.contentType?.includes('pdf') && <Image source={require('../../assests/images/attachments/pdfLogo.png')} style={{width:40,height:40,marginRight:5}} />}
+                              {item?.contentType?.includes('doc') && <Image source={require('../../assests/images/attachments/docLogo.png')} style={{width:40,height:40,marginRight:5}} />}
+
+                              <View>
+                                <Text style={{color: 'black'}}>
+                                  {item?.title?.slice(0,10)+'...'}
+                                </Text>
+                                <Text style={{color: 'black'}}>
+                                  {'...'+item?.contentType?.slice(-10)}
+                                </Text>
+                              </View>
+                              <Icon name='save' size={20} style={{margin:2}} color='black'/>
+                            </View>
+                          </TouchableOpacity>
+                        </View>
+                      );
+                    })}
 
                   <Text style={[styles.messageText, styles.text]}>
                     {/* {chat?.content} */}

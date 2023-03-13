@@ -113,7 +113,6 @@ const ChatScreen = ({
     );
     setMentions([]);
   };
-  console.log(mentionsArr, 'mention arr');
   const renderMention = ({item, index}) =>
     item?._source?.type == 'U' && (
       <TouchableOpacity onPress={() => handleMentionSelect(item)}>
