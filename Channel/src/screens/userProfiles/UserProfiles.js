@@ -1,26 +1,57 @@
 import React from 'react';
-import { View, Image, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
-import { connect } from 'react-redux';
+import {
+  View,
+  Image,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Linking,
+} from 'react-native';
+import {connect} from 'react-redux';
 import {IMAGE_BASE_URL} from '../../constants/Constants';
+import {useNavigation} from '@react-navigation/native';
 
 
-const ContactDetailsPage = ({userInfoState}) => {
-    // var {name,phone,email,imageUrl} = route.params
+const ContactDetailsPage = ({userInfoState,channelsState}) => {
+  const teamId = channelsState?.userIdAndTeamIdMapping[userInfoState?.searchedUserProfile?.id]
+  const navigation = useNavigation()
   return (
     <View style={styles.container}>
-        <View style={{marginTop:20,flexDirection:'row',justifyContent:'center'}}>
+      <View
+        style={{marginTop: 20, flexDirection: 'row', justifyContent: 'center'}}>
         <Image
-            source={{uri: `${IMAGE_BASE_URL}${userInfoState?.searchedUserProfile?.avatarKey}`}}
-            style={{width: 150, height: 150, borderRadius:5, marginBottom: 20}}
-          />
-        </View>
-      <View style={{}}>
-        <Text style={styles.name}>Name :- {userInfoState?.searchedUserProfile?.firstName} {userInfoState?.searchedUserProfile?.lastName}</Text>
-        <Text style={styles.email}>Email :- {userInfoState?.searchedUserProfile?.email}</Text>
-       {userInfoState?.searchedUserProfile?.mobileNumber &&  <TouchableOpacity onPress={()=>Linking.openURL(`tel:${userInfoState?.searchedUserProfile?.mobileNumber}`)}>
-        <Text style={styles.phone}>Phone :- {userInfoState?.searchedUserProfile?.mobileNumber}</Text>
-        </TouchableOpacity>}
+          source={{
+            uri: `${IMAGE_BASE_URL}${userInfoState?.searchedUserProfile?.avatarKey}`,
+          }}
+          style={{width: 150, height: 150, borderRadius: 5, marginBottom: 20}}
+        />
       </View>
+      <Text style={styles.name}>
+        Name :- {userInfoState?.searchedUserProfile?.firstName}{' '}
+        {userInfoState?.searchedUserProfile?.lastName}
+      </Text>
+      <Text style={styles.email}>
+        Email :- {userInfoState?.searchedUserProfile?.email}
+      </Text>
+      {userInfoState?.searchedUserProfile?.mobileNumber && (
+        <View>
+          <Text style={styles.phone}>
+            Phone :- {userInfoState?.searchedUserProfile?.mobileNumber}
+          </Text>
+          <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+            <TouchableOpacity style={[styles.button, styles.callButton]} onPress={()=>Linking.openURL(`tel:${userInfoState?.searchedUserProfile?.mobileNumber}`)}>
+              <Text style={styles.buttonText}>
+                Call {userInfoState?.searchedUserProfile?.displayName}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.button, styles.messageButton]} onPress={()=>navigation.navigate('Chat', {chatHeaderTitle: userInfoState?.searchedUserProfile?.displayName, teamId: teamId})}>
+              <Text style={[styles.buttonText, styles.buttonTextWhite]}>
+                Message {userInfoState?.searchedUserProfile?.displayName}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
@@ -40,16 +71,16 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     alignItems: 'center',
-    borderWidth:2,
-    borderColor:'black',
-    backgroundColor:'red',
+    borderWidth: 2,
+    borderColor: 'black',
+    backgroundColor: 'red',
   },
   name: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#4B4B4B',
     marginBottom: 15,
-    marginTop:15
+    marginTop: 15,
   },
   email: {
     fontSize: 18,
@@ -61,9 +92,32 @@ const styles = StyleSheet.create({
     color: '#4B4B4B',
     marginBottom: 20,
   },
+  button: {
+    height: 30,
+    width: 150,
+    borderRadius: 3,
+    borderWidth: 2,
+    borderColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 20,
+  },
+  callButton: {
+    backgroundColor: 'white',
+  },
+  messageButton: {
+    backgroundColor: 'white',
+  },
+  buttonText: {
+    fontSize: 14,
+  },
+  buttonTextWhite: {
+    color: 'black',
+  },
 });
-const mapStateToPros = state =>({
-    userInfoState :state.userInfoReducer
-})
-export default connect(mapStateToPros)(ContactDetailsPage)
+const mapStateToPros = state => ({
+  userInfoState: state.userInfoReducer,
+  channelsState : state.channelsReducer
+});
+export default connect(mapStateToPros)(ContactDetailsPage);
 // export default ContactDetailsPage;
