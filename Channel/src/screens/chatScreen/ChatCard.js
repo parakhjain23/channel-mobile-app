@@ -111,7 +111,7 @@ function renderTextWithLinks(text, mentionsArr) {
         </Text>
       </TouchableOpacity>
     ) : (
-      <Text key={i}>{handleMentions(part,result)}</Text>
+      <Text key={i} style={{color:'black'}}>{handleMentions(part,result)}</Text>
     )
   );
 }
