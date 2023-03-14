@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import uuid from 'react-native-uuid';
 import {
   ActivityIndicator,
   FlatList,
@@ -26,6 +25,7 @@ import DocumentPicker from 'react-native-document-picker';
 import {FileUploadApi} from '../../api/attachmentsApi/FileUploadApi';
 import {getChannelsByQueryStart} from '../../redux/actions/channels/ChannelsByQueryAction';
 import { fetchSearchedUserProfileStart } from '../../redux/actions/user/searchUserProfileActions';
+import uuid from 'react-native-uuid';
 
 const pickDocument = async (setAttachment, accessToken) => {
   try {
@@ -35,8 +35,11 @@ const pickDocument = async (setAttachment, accessToken) => {
       readContent: true,
     });
     try {
-      const FileNames = await FileUploadApi(Files, accessToken);
-      const attachment = FileNames?.map((file, index) => {
+      const fileNames = Files?.map(item => {
+        const folder = uuid.v4();
+        return `${folder}/${item?.name}`;
+      });
+      const attachment = fileNames?.map((file, index) => {
         return {
           title: Files[index]?.name,
           key: file,
@@ -47,6 +50,7 @@ const pickDocument = async (setAttachment, accessToken) => {
         };
       });
       setAttachment(prevAttachment => [...prevAttachment, ...attachment]);
+      await FileUploadApi(Files,fileNames, accessToken);
     } catch (error) {
       console.log(error, 'error');
     }

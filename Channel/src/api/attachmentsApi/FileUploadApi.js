@@ -1,10 +1,7 @@
 import uuid from 'react-native-uuid';
 
-export const FileUploadApi = async (Files, accessToken) => {
-  const fileNames = Files?.map(item => {
-    const folder = uuid.v4();
-    return `${folder}/${item?.name}`;
-  });
+export const FileUploadApi = async (Files,fileNames, accessToken) => {
+
 
   try {
     const presignedUrl = await fetch(
@@ -29,6 +26,7 @@ export const FileUploadApi = async (Files, accessToken) => {
       const fileType = Files[index]?.type;
       await UploadDocumentApi(s3BucketUrl, fileType, imageBody);
     }
+    console.log(fileNames,"this are the file names after upload");
     return fileNames;
   } catch (error) {
     console.warn(error);
