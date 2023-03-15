@@ -36,6 +36,7 @@ const ChatCard = ({
   setreplyOnMessage,
   setrepliedMsgDetails,
   searchUserProfileAction,
+  flatListRef
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
   const [optionsVisible, setOptionsVisible] = useState(false);
@@ -199,16 +200,14 @@ const ChatCard = ({
                     </Text>
                   </View>
                   {parentId != null && (
-                    <View style={styles.repliedContainer}>
-                      {/* <Text style={styles.text}> */}
+                    <TouchableOpacity style={styles.repliedContainer} onPress={()=>handleRepliedMessagePress(chatState?.data[chat.teamId]?.parentMessages[parentId],chatState,chat,flatListRef)}>
                       {renderTextWithLinks(
                         chatState?.data[chat.teamId]?.parentMessages[parentId]
                           ?.content,
                         chatState?.data[chat.teamId]?.parentMessages[parentId]
                           ?.mentions,
                       )}
-                      {/* </Text> */}
-                    </View>
+                    </TouchableOpacity>
                   )}
                   {chat?.attachment?.length > 0 &&
                     chat?.attachment?.map((item, index) => {
@@ -493,3 +492,18 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
 });
+const handleRepliedMessagePress = (repliedMessage,chatState,chat,flatListRef) => {
+  if (repliedMessage) {
+    const index = chatState?.data[chat.teamId]?.messages.findIndex(
+      (item) => item._id === repliedMessage._id
+    );
+    if (index !== -1) {
+      flatListRef?.current?.scrollToIndex({
+        index,
+        animated: true,
+        viewPosition: 0,
+        viewOffset: 0,
+      });
+    }
+  }
+};

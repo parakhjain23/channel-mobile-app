@@ -177,6 +177,7 @@ const ChatScreen = ({
         setreplyOnMessage={setreplyOnMessage}
         setrepliedMsgDetails={setrepliedMsgDetails}
         searchUserProfileAction={searchUserProfileAction}
+        flatListRef={FlatListRef}
       />
     ),
     [
