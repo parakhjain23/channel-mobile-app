@@ -4,14 +4,15 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  Vibration,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import {GestureHandlerRootView, Swipeable} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Linking} from 'react-native';
-import cheerio, {text} from 'cheerio';
-import * as RootNavigation from '../../navigation/RootNavigation'
+import * as RootNavigation from '../../navigation/RootNavigation';
+import RenderHTML from 'react-native-render-html';
+import base64 from 'react-native-base64';
 
 const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
   const regex = /\{\{(\w+)\}\}/g;
@@ -34,95 +35,89 @@ const ChatCard = ({
   chatState,
   setreplyOnMessage,
   setrepliedMsgDetails,
-  searchUserProfileAction
+  searchUserProfileAction,
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
   const [optionsVisible, setOptionsVisible] = useState(false);
   const urlRegex =
-  /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-])?(?:\?[^\s])?)/gi;
-  function findKeyByValue(value) {
-    console.log(value,"this is value");
-    const newValue = value.substring(1);
-    for (let key in orgState?.userIdAndDisplayNameMapping) {
-      if (orgState?.userIdAndDisplayNameMapping[key] === newValue) {
-        return key;
-      }
+    /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-])?(?:\?[^\s])?)/gi;
+
+  const {width} = useWindowDimensions();
+
+  function renderTextWithLinks(text, mentionsArr = []) {
+    if (mentionsArr?.length > 0) {
+      const regex = /\(MENTION-([^)]+)\)/g;
+      const regexUser = /@(\w+)/g;
+      let mentionIdsArray = text.match(regex);
+      let cleanedHtml = text.replace(regexUser, `<a href=$1>@$1</a>`);
+      cleanedHtml = cleanedHtml.replace(regex, '');
+      const source = {
+        html: `${cleanedHtml}`,
+      };
+      const tagsStyles = {
+        a: {
+          color: 'blue', // Set the link color
+          textDecorationLine: 'underline', // Add an underline to the link
+        },
+      };
+      const renderersProps = {
+        a: {
+          onPress: (evt, href) => {
+            if (href.startsWith('about:///')) {
+              const Name = href.substring('about:///'.length);
+              for (let i = 0; i < mentionsArr?.length; i++) {
+                if (
+                  orgState?.userIdAndDisplayNameMapping[mentionsArr[i]] === Name
+                ) {
+                  RootNavigation.navigate('UserProfiles', {displayName: Name});
+                  searchUserProfileAction(mentionsArr[i], userInfoState?.accessToken);
+                  break;
+                }
+              }
+              // for(let i=0; i<mentionIdsArray?.length; i++){
+              //   const cleanedMention = mentionIdsArray[i].replace("MENTION-", '').replace(/[()=]/g, '');
+              //   const userId = base64.decode(cleanedMention)
+
+                // if(orgState?.userIdAndDisplayNameMapping[userId]==Name){
+                //   console.log(orgState?.userIdAndDisplayNameMapping[userId],'=-=-=-=');
+                //   searchUserProfileAction(userId,userInfoState?.accessToken)
+                //   RootNavigation.navigate('UserProfiles', {displayName:Name});
+                // }
+              // }
+            }
+          },
+        },
+      };
+      return (
+        <RenderHTML
+          contentWidth={width}
+          source={source}
+          tagsStyles={tagsStyles}
+          renderersProps={renderersProps}
+        />
+      );
     }
-    return null;
+    const parts = text?.split(urlRegex);
+    return parts?.map((part, i) =>
+      urlRegex.test(part) ? (
+        <TouchableOpacity
+          key={i}
+          onPress={() => {
+            let url = part;
+            if (!/^https?:\/\//i.test(url)) {
+              url = 'https://' + url;
+            }
+            Linking.openURL(url);
+          }}>
+          <Text style={{color: 'blue', textDecorationLine: 'underline'}}>
+            {part}
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        <Text key={i}>{part}</Text>
+      ),
+    );
   }
-function handleMentions(text,result) {
-  text = text.replace(/@{1,2}(\w+)/g, (match, p1) => {
-    return orgState?.userIdAndDisplayNameMapping[p1] ? `@${orgState?.userIdAndDisplayNameMapping[p1]}` : match;
-  });
-  const parts = text?.split(/(\B@\w+)/);
-  return parts?.map((part, i) =>
-    /^@\w+$/.test(part) ? (
-     <TouchableOpacity key={i} onPress={async ()=>{
-      let key = findKeyByValue(part)
-      await searchUserProfileAction(key,userInfoState?.accessToken),
-      RootNavigation.navigate('UserProfiles', {
-        displayName:orgState?.userIdAndDisplayNameMapping[key],
-      })}}>
-       <Text key={i} style={{color: 'blue'}}>
-        {part}
-      </Text>
-     </TouchableOpacity>
-    ) : (
-      <Text key={i}>{part}</Text>
-    )
-  );
-}
-
-function renderTextWithLinks(text, mentionsArr) {
-  var result = [];
-  var resultStr=''
-    const $ = cheerio.load(`<div>${text}</div>`);
-    $('span[contenteditable="false"]').remove();
-    $('*')
-      .contents()
-      .each((index, element) => {
-        if (element.type === 'text') {
-          const message = $(element).text().trim();
-          if (message !== '') {
-            resultStr += message + ' ';
-            result.push(message)
-            // console.log(message);
-          }
-        } else if ($(element).is('span')) {
-          resultStr +=
-           '@' +
-            $(element)?.attr('data-id') +
-            ' ';
-          // result?.push($(element)?.attr('data-denotation-char') +
-          // $(element)?.attr('data-id'))
-          var id = $(element)?.attr('data-id')
-          var data = '@'+$(element)?.attr('data-value')
-          result?.push({[id]:data})
-        }
-      });
-    resultStr = resultStr.trim();
-  const parts = resultStr?.split(urlRegex);
-  return parts?.map((part, i) =>
-    urlRegex.test(part) ? (
-      <TouchableOpacity
-        key={i}
-        onPress={() => {
-          let url = part;
-          if (!/^https?:\/\//i.test(url)) {
-            url = 'https://' + url;
-          }
-          Linking.openURL(url);
-        }}>
-        <Text style={{color: 'blue', textDecorationLine: 'underline'}}>
-          {part}
-        </Text>
-      </TouchableOpacity>
-    ) : (
-      <Text key={i}>{handleMentions(part,result)}</Text>
-    )
-  );
-}
-
 
   useEffect(() => {
     setOptionsVisible(false);
@@ -208,8 +203,9 @@ function renderTextWithLinks(text, mentionsArr) {
                       {/* <Text style={styles.text}> */}
                       {renderTextWithLinks(
                         chatState?.data[chat.teamId]?.parentMessages[parentId]
-                          ?.content,chatState?.data[chat.teamId]?.parentMessages[parentId]
-                          ?.mentions
+                          ?.content,
+                        chatState?.data[chat.teamId]?.parentMessages[parentId]
+                          ?.mentions,
                       )}
                       {/* </Text> */}
                     </View>
@@ -233,20 +229,48 @@ function renderTextWithLinks(text, mentionsArr) {
                             padding: 10,
                           }}>
                           <TouchableOpacity
-                            onPress={() => Linking.openURL(item?.resourceUrl)} >
-                            <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
-                              {item?.contentType?.includes('pdf') && <Image source={require('../../assests/images/attachments/pdfLogo.png')} style={{width:40,height:40,marginRight:5}} />}
-                              {item?.contentType?.includes('doc') && <Image source={require('../../assests/images/attachments/docLogo.png')} style={{width:40,height:40,marginRight:5}} />}
+                            onPress={() => Linking.openURL(item?.resourceUrl)}>
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                              }}>
+                              {item?.contentType?.includes('pdf') && (
+                                <Image
+                                  source={require('../../assests/images/attachments/pdfLogo.png')}
+                                  style={{
+                                    width: 40,
+                                    height: 40,
+                                    marginRight: 5,
+                                  }}
+                                />
+                              )}
+                              {item?.contentType?.includes('doc') && (
+                                <Image
+                                  source={require('../../assests/images/attachments/docLogo.png')}
+                                  style={{
+                                    width: 40,
+                                    height: 40,
+                                    marginRight: 5,
+                                  }}
+                                />
+                              )}
 
                               <View>
                                 <Text style={{color: 'black'}}>
-                                  {item?.title?.slice(0,10)+'...'}
+                                  {item?.title?.slice(0, 10) + '...'}
                                 </Text>
                                 <Text style={{color: 'black'}}>
-                                  {'...'+item?.contentType?.slice(-10)}
+                                  {'...' + item?.contentType?.slice(-10)}
                                 </Text>
                               </View>
-                              <Icon name='save' size={20} style={{margin:2}} color='black'/>
+                              <Icon
+                                name="save"
+                                size={20}
+                                style={{margin: 2}}
+                                color="black"
+                              />
                             </View>
                           </TouchableOpacity>
                         </View>
