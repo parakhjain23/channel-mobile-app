@@ -7,8 +7,10 @@ import {persistor, store} from './src/redux/Store';
 import Notifee from '@notifee/react-native'
 import NotificationSetup from './src/utils/NotificationSetup';
 import InternetConnection from './src/utils/InternetConnection';
+import SplashScreen from 'react-native-splash-screen';
 const App = () => {
   useEffect(() => {
+    SplashScreen.hide();
    Request()
   }, [])
   
