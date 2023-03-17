@@ -1,3 +1,4 @@
+import React from 'react';
 import {useEffect} from 'react';
 import Notifee, {
   AndroidImportance,
@@ -10,7 +11,9 @@ import {store} from '../redux/Store';
 import {handleNotificationFirebase} from './HandleNotification';
 import * as RootNavigation from '../navigation/RootNavigation'
 import {sendMessageStart} from '../redux/actions/chat/ChatActions';
-import {Platform} from 'react-native';
+import {Alert, Platform} from 'react-native';
+import { switchOrgStart } from '../redux/actions/org/changeCurrentOrg';
+import { increaseCountOnOrgCard } from '../redux/actions/org/UnreadCountOnOrgCardsAction';
 
 const NotificationSetup = () => {
   useEffect(() => {
@@ -67,6 +70,9 @@ const NotificationSetup = () => {
           message?.data?.senderId != store.getState()?.userInfoReducer.user?.id
         ) {
           handleNotificationFirebase(message);
+          if(message?.data?.orgId != store?.getState()?.orgsReducer?.currentOrgId){
+          await  store?.dispatch(increaseCountOnOrgCard(message?.data?.orgId,message?.data?.teamId))
+          }
         }
       });
       messaging().onNotificationOpenedApp(message => {
@@ -126,8 +132,16 @@ const NotificationSetup = () => {
   const actionListeners = async event => {
     if (event?.type == 1) {
       const message = event?.detail?.notification;
-      openChat(message);
+      if(message?.data?.orgId != store?.getState()?.orgsReducer?.currentOrgId){
+      await  store.dispatch(switchOrgStart(store?.getState()?.userInfoReducer?.accessToken,message?.data?.orgId,store?.getState()?.userInfoReducer?.user?.id))
+      setTimeout(() => {
+        openChat(message);
+      }, 500);
     }
+    else{
+      openChat(message)
+    }
+  }
     switch (event?.detail?.pressAction?.id) {
       case 'mark_as_read':
         Notifee.cancelNotification(event?.detail?.notification?.id);
@@ -163,7 +177,7 @@ const NotificationSetup = () => {
       RootNavigation?.navigate('Chat', {chatHeaderTitle: name, teamId: teamId});
     } catch (error) {
       console.warn(error);
-    }
+      }
   };
   return null;
 };

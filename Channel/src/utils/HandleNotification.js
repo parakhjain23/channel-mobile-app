@@ -128,6 +128,10 @@ export const handleNotificationFromEvents = async (data,userIdAndDisplayNameMapp
 export const handleNotificationFirebase = async firebaseData => {
   var title = firebaseData?.notification?.title;
   var body = firebaseData?.notification?.body;
+  if(firebaseData?.data?.orgId != store?.getState()?.orgsReducer?.currentOrgId){
+    title = `New Message in ${store?.getState()?.orgsReducer?.orgIdAndNameMapping[firebaseData?.data?.orgId]}`
+    body = firebaseData?.notification?.title+" : "+ firebaseData?.notification?.body
+  }
   await Notifee.displayNotification({
     title: title,
     body: body,
