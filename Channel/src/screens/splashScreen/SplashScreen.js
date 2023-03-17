@@ -7,10 +7,9 @@ import { websock } from '../Socket';
 const SplashScreen = ({setShowSplashScreen,fetchChatResetAction,networkState}) => {
   useEffect(() => {
     setTimeout(() => {
-      // websock()
       networkState?.isInternetConnected && fetchChatResetAction()
       setShowSplashScreen(false);
-    }, 1000);
+    }, 500);
   });
   return (
     <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
