@@ -14,6 +14,7 @@ import {sendMessageStart} from '../redux/actions/chat/ChatActions';
 import {Alert, Platform} from 'react-native';
 import { switchOrgStart } from '../redux/actions/org/changeCurrentOrg';
 import { increaseCountOnOrgCard, removeCountOnOrgCard } from '../redux/actions/org/UnreadCountOnOrgCardsAction';
+import { moveChannelToTop } from '../redux/actions/channels/ChannelsAction';
 
 const NotificationSetup = () => {
   useEffect(() => {
@@ -133,8 +134,9 @@ const NotificationSetup = () => {
     if (event?.type == 1) {
       const message = event?.detail?.notification;
       if(message?.data?.orgId != store?.getState()?.orgsReducer?.currentOrgId){
-      await store.dispatch(removeCountOnOrgCard(message?.data?.orgId))
-      await  store.dispatch(switchOrgStart(store?.getState()?.userInfoReducer?.accessToken,message?.data?.orgId,store?.getState()?.userInfoReducer?.user?.id))
+        await  store.dispatch(switchOrgStart(store?.getState()?.userInfoReducer?.accessToken,message?.data?.orgId,store?.getState()?.userInfoReducer?.user?.id))
+        await store.dispatch(moveChannelToTop(Object.keys(store.getState()?.orgsReducer?.orgsWithNewMessages[message?.data?.orgId])))
+        await store.dispatch(removeCountOnOrgCard(message?.data?.orgId))
       setTimeout(() => {
         openChat(message);
       }, 500);
