@@ -13,6 +13,7 @@ import {connect} from 'react-redux';
 import {IMAGE_BASE_URL} from '../../constants/Constants';
 import {getChannelsStart} from '../../redux/actions/channels/ChannelsAction';
 import {switchOrgStart} from '../../redux/actions/org/changeCurrentOrg';
+import { removeCountOnOrgCard } from '../../redux/actions/org/UnreadCountOnOrgCardsAction';
 import signOut from '../../redux/actions/user/userAction';
 
 const CustomeDrawerScreen = ({
@@ -22,6 +23,7 @@ const CustomeDrawerScreen = ({
   getChannelsAction,
   switchOrgAction,
   signOutAction,
+  removeCountOnOrgCardAction
 }) => {
   const data = orgsState?.orgs;
   const navigation = useNavigation();
@@ -46,6 +48,7 @@ const CustomeDrawerScreen = ({
     return (
       <TouchableOpacity
         onPress={() => {
+          removeCountOnOrgCardAction(item?.id)
           switchOrgAction(
             userInfoState?.accessToken,
             item?.id,
@@ -176,6 +179,8 @@ const mapDispatchToProps = dispatch => {
     switchOrgAction: (accessToken, orgId, userId) =>
       dispatch(switchOrgStart(accessToken, orgId, userId)),
     signOutAction: () => dispatch(signOut()),
+    removeCountOnOrgCardAction:(orgId)=>
+      dispatch(removeCountOnOrgCard(orgId))
   };
 };
 export default connect(

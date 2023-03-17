@@ -13,7 +13,7 @@ import * as RootNavigation from '../navigation/RootNavigation'
 import {sendMessageStart} from '../redux/actions/chat/ChatActions';
 import {Alert, Platform} from 'react-native';
 import { switchOrgStart } from '../redux/actions/org/changeCurrentOrg';
-import { increaseCountOnOrgCard } from '../redux/actions/org/UnreadCountOnOrgCardsAction';
+import { increaseCountOnOrgCard, removeCountOnOrgCard } from '../redux/actions/org/UnreadCountOnOrgCardsAction';
 
 const NotificationSetup = () => {
   useEffect(() => {
@@ -133,6 +133,7 @@ const NotificationSetup = () => {
     if (event?.type == 1) {
       const message = event?.detail?.notification;
       if(message?.data?.orgId != store?.getState()?.orgsReducer?.currentOrgId){
+      await store.dispatch(removeCountOnOrgCard(message?.data?.orgId))
       await  store.dispatch(switchOrgStart(store?.getState()?.userInfoReducer?.accessToken,message?.data?.orgId,store?.getState()?.userInfoReducer?.user?.id))
       setTimeout(() => {
         openChat(message);

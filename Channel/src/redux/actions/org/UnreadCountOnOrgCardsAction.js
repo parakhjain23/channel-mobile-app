@@ -6,3 +6,10 @@ export function increaseCountOnOrgCard(orgId,teamId){
         orgId,teamId
     }
 }
+
+export function removeCountOnOrgCard(orgId){
+    return {
+        type:Actions.REMOVE_COUNT_ON_ORG_CARD,
+        orgId
+    }
+}

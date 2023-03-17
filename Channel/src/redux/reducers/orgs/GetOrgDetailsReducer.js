@@ -63,6 +63,16 @@ export function orgsReducer(state = initialState, action) {
         orgsWithNewMessages: newMessageObj,
         unreadCountForDrawerIcon:countOnDrawerIcon
       }
+      case Actions.REMOVE_COUNT_ON_ORG_CARD:
+        var updatedOrgsWithNewMessages={}
+        var count=0
+        if (state.orgsWithNewMessages.hasOwnProperty(action.orgId)) {
+          updatedOrgsWithNewMessages = { ...state.orgsWithNewMessages };
+          delete updatedOrgsWithNewMessages[action.orgId];
+          count = Object.keys(updatedOrgsWithNewMessages)?.length
+        }  
+        return {...state,orgsWithNewMessages:updatedOrgsWithNewMessages,unreadCountForDrawerIcon:count}
+        
     default:
       return state;
   }
