@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import uuid from 'react-native-uuid';
 import {
   ActivityIndicator,
   FlatList,
@@ -10,6 +9,7 @@ import {
   TouchableOpacity,
   View,
   Animated,
+  useWindowDimensions,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
@@ -25,7 +25,8 @@ import {ChatCardMemo, LocalChatCardMemo} from './ChatCard';
 import DocumentPicker from 'react-native-document-picker';
 import {FileUploadApi} from '../../api/attachmentsApi/FileUploadApi';
 import {getChannelsByQueryStart} from '../../redux/actions/channels/ChannelsByQueryAction';
-import { fetchSearchedUserProfileStart } from '../../redux/actions/user/searchUserProfileActions';
+import {fetchSearchedUserProfileStart} from '../../redux/actions/user/searchUserProfileActions';
+import {renderTextWithLinks} from './RenderTextWithLinks';
 
 const pickDocument = async (setAttachment, accessToken) => {
   try {
@@ -73,15 +74,15 @@ const ChatScreen = ({
   setGlobalMessageToSendAction,
   getChannelsByQueryStartAction,
   channelsByQueryState,
-  searchUserProfileAction
+  searchUserProfileAction,
 }) => {
   var {teamId, reciverUserId} = route.params;
+  const [replyOnMessage, setreplyOnMessage] = useState(false);
+  const [repliedMsgDetails, setrepliedMsgDetails] = useState('');
   if (teamId == undefined) {
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
   }
   const [message, onChangeMessage] = React.useState(null);
-  const [replyOnMessage, setreplyOnMessage] = useState(false);
-  const [repliedMsgDetails, setrepliedMsgDetails] = useState('');
   const [attachment, setAttachment] = useState([]);
   const [localMsg, setlocalMsg] = useState([]);
   const FlatListRef = useRef(null);
@@ -89,6 +90,7 @@ const ChatScreen = ({
   const [isScrolling, setIsScrolling] = useState(false);
   const [mentions, setMentions] = useState([]);
   const [mentionsArr, setMentionsArr] = useState([]);
+  const {width} = useWindowDimensions();
 
   const handleInputChange = text => {
     onChangeMessage(text);
@@ -168,17 +170,20 @@ const ChatScreen = ({
   }, [networkState?.isInternetConnected]);
   const renderItem = useCallback(
     ({item, index}) => (
-      <ChatCardMemo
-        chat={item}
-        userInfoState={userInfoState}
-        orgState={orgState}
-        deleteMessageAction={deleteMessageAction}
-        chatState={chatState}
-        setreplyOnMessage={setreplyOnMessage}
-        setrepliedMsgDetails={setrepliedMsgDetails}
-        searchUserProfileAction={searchUserProfileAction}
-        flatListRef={FlatListRef}
-      />
+      console.log(index),
+      (
+        <ChatCardMemo
+          chat={item}
+          userInfoState={userInfoState}
+          orgState={orgState}
+          deleteMessageAction={deleteMessageAction}
+          chatState={chatState}
+          setreplyOnMessage={setreplyOnMessage}
+          setrepliedMsgDetails={setrepliedMsgDetails}
+          searchUserProfileAction={searchUserProfileAction}
+          flatListRef={FlatListRef}
+        />
+      )
     ),
     [
       chatState,
@@ -215,12 +220,12 @@ const ChatScreen = ({
   }, [teamId, userInfoState, skip, fetchChatsOfTeamAction]);
   const date = new Date();
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={styles.mainContainer}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : null}
         keyboardVerticalOffset={70}
         style={{flex: 1}}>
-        <View style={{flex: 1}}>
+        <View style={{flex: 1,marginLeft:10}}>
           <View style={{flex: 9}}>
             {teamId == undefined ||
             chatState?.data[teamId]?.isloading == true ? (
@@ -271,7 +276,7 @@ const ChatScreen = ({
               <Text style={{textAlign: 'center'}}>No Internet Connected!!</Text>
             </View>
           )}
-          <View style={{margin: 10}}>
+          <View style={{margin: 8,marginLeft:0}}>
             <View style={{flexDirection: 'row'}}>
               <View
                 style={[
@@ -301,16 +306,26 @@ const ChatScreen = ({
                 {replyOnMessage && (
                   <TouchableOpacity onPress={() => setreplyOnMessage(false)}>
                     <View style={styles.replyMessageInInput}>
-                      <Text style={styles.text}>
-                        {repliedMsgDetails?.content}
-                      </Text>
+                      {repliedMsgDetails?.mentions?.length > 0 ? (
+                        renderTextWithLinks(
+                          repliedMsgDetails?.content,
+                          repliedMsgDetails?.mentions,
+                          userInfoState?.accessToken,
+                          orgState,
+                          width,
+                        )
+                      ) : (
+                        <Text style={styles.text}>
+                          {repliedMsgDetails?.content}
+                        </Text>
+                      )}
                       <MaterialIcons name="cancel" size={16} />
                     </View>
                   </TouchableOpacity>
                 )}
                 <FlatList
                   data={mentions}
-                  keyExtractor={(index) => index.toString()}
+                  keyExtractor={index => index.toString()}
                   renderItem={renderMention}
                   style={{maxHeight: 140}}
                   keyboardShouldPersistTaps="always"
@@ -445,11 +460,13 @@ const mapDispatchToProps = dispatch => {
       dispatch(setGlobalMessageToSend(messageObj)),
     getChannelsByQueryStartAction: (query, userToken, orgId) =>
       dispatch(getChannelsByQueryStart(query, userToken, orgId)),
-    searchUserProfileAction:(userId,token)=>dispatch(fetchSearchedUserProfileStart(userId,token))
+    searchUserProfileAction: (userId, token) =>
+      dispatch(fetchSearchedUserProfileStart(userId, token)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);
 const styles = StyleSheet.create({
+  mainContainer: {flex: 1, backgroundColor: 'white'},
   text: {
     color: 'black',
   },
@@ -515,13 +532,13 @@ const styles = StyleSheet.create({
     elevation: 17,
   },
   container: {
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 10,
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    marginBottom: 15,
-    maxWidth: '90%',
+    // borderWidth: 1,
+    // borderColor: 'gray',
+    // borderRadius: 10,
+    // flexDirection: 'row',
+    // alignItems: 'flex-end',
+    // marginBottom: 15,
+    // maxWidth: '90%',
   },
   sentByMe: {
     alignSelf: 'flex-end',

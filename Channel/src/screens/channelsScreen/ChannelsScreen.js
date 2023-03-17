@@ -9,6 +9,7 @@ import {
   Button,
   ScrollView,
   Animated,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {getChannelsStart} from '../../redux/actions/channels/ChannelsAction';
@@ -132,7 +133,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
                 key={index}
                 style={{flexDirection: 'row', alignItems: 'center'}}
                 onPress={() => setChannelType(item?.type)}>
-                <Text style={{color:'black'}}>{item?.name}</Text>
+                <Text style={{color: 'black'}}>{item?.name}</Text>
                 <RadioButton
                   value={item?.type}
                   status={channelType === item?.type ? 'checked' : 'unchecked'}
@@ -242,97 +243,102 @@ const ChannelsScreen = props => {
     [props?.channelsByQueryState?.channels],
   );
   return (
-    <View style={{flex: 1,backgroundColor:'white'}}>
-      {props?.channelsState?.isLoading ? (
-        <ActivityIndicator size={'large'} color={'black'} />
-      ) : (
-        <View style={{flex: 1}}>
-          {searchValue != '' ? (
-            props?.channelsByQueryState?.channels?.length > 0 ? (
-              <FlatList
-                data={props?.channelsByQueryState?.channels}
-                renderItem={renderItemSearchChannels}
+    <View style={{flex: 1, backgroundColor: 'white'}}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        keyboardVerticalOffset={70}
+        style={{flex: 1}}>
+        {props?.channelsState?.isLoading ? (
+          <ActivityIndicator size={'large'} color={'black'} />
+        ) : (
+          <View style={{flex: 1}}>
+            {searchValue != '' ? (
+              props?.channelsByQueryState?.channels?.length > 0 ? (
+                <FlatList
+                  data={props?.channelsByQueryState?.channels}
+                  renderItem={renderItemSearchChannels}
+                  keyboardDismissMode="on-drag"
+                  keyboardShouldPersistTaps="always"
+                />
+              ) : (
+                <NoChannelsFound
+                  modalizeRef={modalizeRef}
+                  setsearchValue={setsearchValue}
+                />
+              )
+            ) : (
+              <Animated.FlatList
+                data={
+                  props?.channelsState?.recentChannels ||
+                  props?.channelsState?.channels
+                }
+                renderItem={renderItemChannels}
+                onScroll={onScroll}
                 keyboardDismissMode="on-drag"
                 keyboardShouldPersistTaps="always"
               />
-            ) : (
-              <NoChannelsFound
-                modalizeRef={modalizeRef}
-                setsearchValue={setsearchValue}
-              />
-            )
-          ) : (
-            <Animated.FlatList
-              data={
-                props?.channelsState?.recentChannels ||
-                props?.channelsState?.channels
-              }
-              renderItem={renderItemChannels}
-              onScroll={onScroll}
-              keyboardDismissMode="on-drag"
-              keyboardShouldPersistTaps="always"
-            />
-          )}
-          {isScrolling && (
+            )}
+            {isScrolling && (
+              <View
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  width: '100%',
+                  zIndex: 1,
+                  opacity: isScrolling ? 1 : 0,
+                }}>
+                <SearchBox
+                  searchValue={searchValue}
+                  changeText={changeText}
+                  isSearchFocus={false}
+                />
+              </View>
+            )}
             <View
               style={{
                 position: 'absolute',
-                bottom: 0,
-                width: '100%',
-                zIndex: 1,
-                opacity: isScrolling ? 1 : 0,
-              }}>
-              <SearchBox
-                searchValue={searchValue}
-                changeText={changeText}
-                isSearchFocus={false}
-              />
-            </View>
-          )}
-          <View
-            style={{
-              position: 'absolute',
-              bottom: 70,
-              right: 10,
-              alignSelf: 'center',
-            }}>
-            <FAB
-              onPress={onOpen}
-              color={'white'}
-              animated={false}
-              uppercase={false}
-              icon={() => <Icon name="add" size={20} color={'white'} />}
-              style={{
-                backgroundColor: '#333333', // change the background color to light grey
-                borderRadius: 50,
-                alignSelf: 'center',
-              }}
-              labelStyle={{
-                fontSize: 12,
-                textAlign: 'center',
-                lineHeight: 14,
-              }}
-              // label={`New\nChannel`}
-            />
-          </View>
-          <TouchableOpacity
-            onPress={() => {
-              setIsScrolling(true);
-            }}>
-            <View
-              style={{
-                position: 'absolute',
-                bottom: 10,
+                bottom: 70,
                 right: 10,
-                backgroundColor: '#333333',
-                borderRadius: 25,
-                padding: 15,
+                alignSelf: 'center',
               }}>
-              <Icon name="search" size={22} color={'white'} />
+              <FAB
+                onPress={onOpen}
+                color={'white'}
+                animated={false}
+                uppercase={false}
+                icon={() => <Icon name="add" size={20} color={'white'} />}
+                style={{
+                  backgroundColor: '#333333', // change the background color to light grey
+                  borderRadius: 50,
+                  alignSelf: 'center',
+                }}
+                labelStyle={{
+                  fontSize: 12,
+                  textAlign: 'center',
+                  lineHeight: 14,
+                }}
+                // label={`New\nChannel`}
+              />
             </View>
-          </TouchableOpacity>
-        </View>
-      )}
+            {!isScrolling && <TouchableOpacity
+              onPress={() => {
+                setIsScrolling(true);
+              }}>
+              <View
+                style={{
+                  position: 'absolute',
+                  bottom: 10,
+                  right: 10,
+                  backgroundColor: '#333333',
+                  borderRadius: 25,
+                  padding: 15,
+                }}>
+                <Icon name="search" size={22} color={'white'} />
+              </View>
+            </TouchableOpacity>}
+          </View>
+        )}
+      </KeyboardAvoidingView>
       <CreateChannelModel modalizeRef={modalizeRef} props={props} />
     </View>
   );
