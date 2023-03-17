@@ -71,36 +71,64 @@ export function channelsReducer(state = initialState, action) {
     case Actions.FETCH_CHANNELS_ERROR:
       return {...state, channels: [], isLoading: false};
 
+    // case Actions.MOVE_CHANNEL_TO_TOP:
+    //   var tempHighlightChannels = {};
+    //   if (state?.activeChannelTeamId != action.channelId) {
+    //     tempHighlightChannels[action.channelId] = true;
+    //   } else {
+    //     tempHighlightChannels[action.channelId] = false;
+    //   }
+    //   const channelToAddInRecentChannels = state?.channels.find(
+    //     obj => obj['_id'] === action?.channelId,
+    //   );
+    //   if (
+    //     channelToAddInRecentChannels &&
+    //     !state?.recentChannels.find(obj => obj['_id'] === action?.channelId)
+    //   ) {
+    //     state?.recentChannels.push(channelToAddInRecentChannels);
+    //   }
+    //   if (state?.recentChannels[0]?._id != action?.channelId) {
+    //     for (let i = 0; i < state?.recentChannels?.length; i++) {
+    //       if (state?.recentChannels[i]?._id == action?.channelId) {
+    //         state?.recentChannels?.unshift(state?.recentChannels[i]);
+    //         state?.recentChannels?.splice(i + 1, 1);
+    //         break;
+    //       }
+    //     }
+    //   }
+    //   return {
+    //     ...state,
+    //     recentChannels: state?.recentChannels,
+    //     highlightChannel: {...state.highlightChannel, ...tempHighlightChannels},
+    //   };
     case Actions.MOVE_CHANNEL_TO_TOP:
-      var tempHighlightChannels = {};
-      if (state?.activeChannelTeamId != action.channelId) {
-        tempHighlightChannels[action.channelId] = true;
-      } else {
-        tempHighlightChannels[action.channelId] = false;
-      }
-      const channelToAddInRecentChannels = state?.channels.find(
-        obj => obj['_id'] === action?.channelId,
-      );
-      if (
-        channelToAddInRecentChannels &&
-        !state?.recentChannels.find(obj => obj['_id'] === action?.channelId)
-      ) {
-        state?.recentChannels.push(channelToAddInRecentChannels);
-      }
-      if (state?.recentChannels[0]?._id != action?.channelId) {
-        for (let i = 0; i < state?.recentChannels?.length; i++) {
-          if (state?.recentChannels[i]?._id == action?.channelId) {
-            state?.recentChannels?.unshift(state?.recentChannels[i]);
-            state?.recentChannels?.splice(i + 1, 1);
-            break;
-          }
+  var tempHighlightChannels = {};
+  const newRecentChannels = [...state?.recentChannels]; // create a new copy of recentChannels array
+  action.channelId.forEach((id) => {
+    if (state?.activeChannelTeamId != id) {
+      tempHighlightChannels[id] = true;
+    } else {
+      tempHighlightChannels[id] = false;
+    }
+    const channelToAddInRecentChannels = state?.channels.find(obj => obj['_id'] === id);
+    if (channelToAddInRecentChannels && !newRecentChannels.find(obj => obj['_id'] === id)) {
+      newRecentChannels.push(channelToAddInRecentChannels);
+    }
+    if (newRecentChannels[0]?._id != id) {
+      for (let i = 0; i < newRecentChannels?.length; i++) {
+        if (newRecentChannels[i]?._id == id) {
+          newRecentChannels?.unshift(newRecentChannels[i]);
+          newRecentChannels?.splice(i + 1, 1);
+          break;
         }
       }
-      return {
-        ...state,
-        recentChannels: state?.recentChannels,
-        highlightChannel: {...state.highlightChannel, ...tempHighlightChannels},
-      };
+    }
+  });
+  return {
+    ...state,
+    recentChannels: newRecentChannels,
+    highlightChannel: {...state.highlightChannel, ...tempHighlightChannels},
+  };
 
     case Actions.CREATE_NEW_CHANNEL_SUCCESS:
       var userIdAndTeamIdMapping = {};

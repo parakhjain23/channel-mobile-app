@@ -11,9 +11,9 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 import {IMAGE_BASE_URL} from '../../constants/Constants';
-import {getChannelsStart} from '../../redux/actions/channels/ChannelsAction';
+import {getChannelsStart, moveChannelToTop} from '../../redux/actions/channels/ChannelsAction';
 import {switchOrgStart} from '../../redux/actions/org/changeCurrentOrg';
-import { removeCountOnOrgCard } from '../../redux/actions/org/UnreadCountOnOrgCardsAction';
+import { moveMultipleChannelsToTop, removeCountOnOrgCard } from '../../redux/actions/org/UnreadCountOnOrgCardsAction';
 import signOut from '../../redux/actions/user/userAction';
 
 const CustomeDrawerScreen = ({
@@ -23,7 +23,8 @@ const CustomeDrawerScreen = ({
   getChannelsAction,
   switchOrgAction,
   signOutAction,
-  removeCountOnOrgCardAction
+  removeCountOnOrgCardAction,
+  moveChannelToTopAction
 }) => {
   const data = orgsState?.orgs;
   const navigation = useNavigation();
@@ -47,13 +48,13 @@ const CustomeDrawerScreen = ({
     }
     return (
       <TouchableOpacity
-        onPress={() => {
-          removeCountOnOrgCardAction(item?.id)
-          switchOrgAction(
+        onPress={async () => {
+        await switchOrgAction(
             userInfoState?.accessToken,
             item?.id,
             userInfoState?.user?.id,
-          );
+            );  
+          count != undefined && await moveChannelToTopAction(Object.keys(unreadCountObj)) && removeCountOnOrgCardAction(item?.id)
           navigation.navigate('Channel', {orgId: item?.id, name: item?.name});
         }}
         style={{
@@ -180,7 +181,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(switchOrgStart(accessToken, orgId, userId)),
     signOutAction: () => dispatch(signOut()),
     removeCountOnOrgCardAction:(orgId)=>
-      dispatch(removeCountOnOrgCard(orgId))
+      dispatch(removeCountOnOrgCard(orgId)),
+    moveChannelToTopAction :(teamIdArr)=> dispatch(moveChannelToTop(teamIdArr)) 
   };
 };
 export default connect(

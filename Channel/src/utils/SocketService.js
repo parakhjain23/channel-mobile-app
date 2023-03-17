@@ -26,7 +26,7 @@ const SocketService = socket => {
     }
     console.log(data,"new message recived");
     store.dispatch(addNewMessage(newData));
-    store.dispatch(moveChannelToTop(newData?.teamId));
+    store.dispatch(moveChannelToTop([newData?.teamId]));
     if(newData?.senderId != store?.getState()?.userInfoReducer?.user?.id){
       PlayLocalSoundFile()
       if(newData?.teamId != store.getState().channelsReducer?.activeChannelTeamId){
@@ -49,7 +49,7 @@ const SocketService = socket => {
     store.dispatch(
       createNewChannelSuccess(data, store.getState().userInfoReducer?.user?.id),
     );
-    store.dispatch(moveChannelToTop(data?.teamId));
+    store.dispatch(moveChannelToTop([data?.teamId]));
   });
 
   socket.on('orgUser created', data => {

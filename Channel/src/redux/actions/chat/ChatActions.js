@@ -43,7 +43,7 @@ export function getChatsError(){
 export function* sendMessage({message,teamId,orgId,senderId,token,parentId,attachment,mentionsArr}){
   try {
     yield call(sendMessageApi,message,teamId,orgId,senderId,token,parentId,attachment,mentionsArr)
-    yield put(moveChannelToTop(teamId))
+    yield put(moveChannelToTop([teamId]))
   } catch (error) {
     console.warn(error);
   }
