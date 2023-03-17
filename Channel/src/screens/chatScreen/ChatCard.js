@@ -40,7 +40,6 @@ const ChatCard = ({
   flatListRef
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
-  console.log('in chat card');
   const [optionsVisible, setOptionsVisible] = useState(false);
   const {width} = useWindowDimensions()
   useEffect(() => {
@@ -388,7 +387,7 @@ const styles = StyleSheet.create({
   },
   received: {
     alignSelf: 'flex-start',
-    marginLeft: 10,
+    marginLeft: 0,
   },
   avatar: {
     width: 32,

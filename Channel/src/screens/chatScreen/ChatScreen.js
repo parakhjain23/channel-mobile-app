@@ -90,7 +90,7 @@ const ChatScreen = ({
   const [isScrolling, setIsScrolling] = useState(false);
   const [mentions, setMentions] = useState([]);
   const [mentionsArr, setMentionsArr] = useState([]);
-  const {width} = useWindowDimensions()
+  const {width} = useWindowDimensions();
 
   const handleInputChange = text => {
     onChangeMessage(text);
@@ -171,17 +171,19 @@ const ChatScreen = ({
   const renderItem = useCallback(
     ({item, index}) => (
       console.log(index),
-      <ChatCardMemo
-        chat={item}
-        userInfoState={userInfoState}
-        orgState={orgState}
-        deleteMessageAction={deleteMessageAction}
-        chatState={chatState}
-        setreplyOnMessage={setreplyOnMessage}
-        setrepliedMsgDetails={setrepliedMsgDetails}
-        searchUserProfileAction={searchUserProfileAction}
-        flatListRef={FlatListRef}
-      />
+      (
+        <ChatCardMemo
+          chat={item}
+          userInfoState={userInfoState}
+          orgState={orgState}
+          deleteMessageAction={deleteMessageAction}
+          chatState={chatState}
+          setreplyOnMessage={setreplyOnMessage}
+          setrepliedMsgDetails={setrepliedMsgDetails}
+          searchUserProfileAction={searchUserProfileAction}
+          flatListRef={FlatListRef}
+        />
+      )
     ),
     [
       chatState,
@@ -218,12 +220,12 @@ const ChatScreen = ({
   }, [teamId, userInfoState, skip, fetchChatsOfTeamAction]);
   const date = new Date();
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={styles.mainContainer}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : null}
         keyboardVerticalOffset={70}
         style={{flex: 1}}>
-        <View style={{flex: 1}}>
+        <View style={{flex: 1,marginLeft:10}}>
           <View style={{flex: 9}}>
             {teamId == undefined ||
             chatState?.data[teamId]?.isloading == true ? (
@@ -274,7 +276,7 @@ const ChatScreen = ({
               <Text style={{textAlign: 'center'}}>No Internet Connected!!</Text>
             </View>
           )}
-          <View style={{margin: 10}}>
+          <View style={{margin: 8,marginLeft:0}}>
             <View style={{flexDirection: 'row'}}>
               <View
                 style={[
@@ -310,7 +312,7 @@ const ChatScreen = ({
                           repliedMsgDetails?.mentions,
                           userInfoState?.accessToken,
                           orgState,
-                          width
+                          width,
                         )
                       ) : (
                         <Text style={styles.text}>
@@ -464,6 +466,7 @@ const mapDispatchToProps = dispatch => {
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);
 const styles = StyleSheet.create({
+  mainContainer: {flex: 1, backgroundColor: 'white'},
   text: {
     color: 'black',
   },
@@ -529,13 +532,13 @@ const styles = StyleSheet.create({
     elevation: 17,
   },
   container: {
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 10,
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    marginBottom: 15,
-    maxWidth: '90%',
+    // borderWidth: 1,
+    // borderColor: 'gray',
+    // borderRadius: 10,
+    // flexDirection: 'row',
+    // alignItems: 'flex-end',
+    // marginBottom: 15,
+    // maxWidth: '90%',
   },
   sentByMe: {
     alignSelf: 'flex-end',
