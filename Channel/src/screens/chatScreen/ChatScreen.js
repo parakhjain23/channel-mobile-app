@@ -91,7 +91,24 @@ const ChatScreen = ({
   const [mentions, setMentions] = useState([]);
   const [mentionsArr, setMentionsArr] = useState([]);
   const {width} = useWindowDimensions();
-
+  useEffect(() => {
+    localMsg?.shift();
+  }, [chatState?.data[teamId]?.messages]);
+  const skip =
+    chatState?.data[teamId]?.messages?.length != undefined
+      ? chatState?.data[teamId]?.messages?.length
+      : 0;
+  useEffect(() => {
+    if (
+      chatState?.data[teamId]?.messages == undefined ||
+      chatState?.data[teamId]?.messages == [] ||
+      (!chatState?.data[teamId]?.apiCalled && networkState?.isInternetConnected)
+    ) {
+      console.log("api called");
+      fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
+    }
+    setActiveChannelTeamIdAction(teamId);
+  }, [networkState?.isInternetConnected,teamId]);
   const handleInputChange = text => {
     onChangeMessage(text);
     const mentionRegex = /@\w+/g;
@@ -151,23 +168,7 @@ const ChatScreen = ({
     () => chatState?.data[teamId]?.messages || [],
     [chatState?.data[teamId]?.messages],
   );
-  useEffect(() => {
-    localMsg?.shift();
-  }, [chatState?.data[teamId]?.messages]);
-  const skip =
-    chatState?.data[teamId]?.messages?.length != undefined
-      ? chatState?.data[teamId]?.messages?.length
-      : 0;
-  useEffect(() => {
-    if (
-      chatState?.data[teamId]?.messages == undefined ||
-      chatState?.data[teamId]?.messages == [] ||
-      (!chatState?.data[teamId]?.apiCalled && networkState?.isInternetConnected)
-    ) {
-      fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
-    }
-    setActiveChannelTeamIdAction(teamId);
-  }, [networkState?.isInternetConnected]);
+ 
   const renderItem = useCallback(
     ({item, index}) => (
       (
