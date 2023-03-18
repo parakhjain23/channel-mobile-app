@@ -45,7 +45,6 @@ const ChatCard = ({
   const urlRegex =
   /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-])?(?:\?[^\s])?)/gi;
   function findKeyByValue(value) {
-    console.log(value,"this is value");
     const newValue = value.substring(1);
     for (let key in orgState?.userIdAndDisplayNameMapping) {
       if (orgState?.userIdAndDisplayNameMapping[key] === newValue) {
