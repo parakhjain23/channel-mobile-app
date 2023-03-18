@@ -38,7 +38,7 @@ const CustomeDrawerScreen = ({
     }
   }, [userInfoState?.user]);
   const OrgCard = ({item, navigation}) => {
-    var unreadCountObj = orgsState?.orgsWithNewMessages[item?.id]
+    var unreadCountObj = orgsState?.orgsWithNewMessages?.[item?.id]
     var count = undefined
     if(unreadCountObj != undefined){
       count = Object.keys(unreadCountObj).length
