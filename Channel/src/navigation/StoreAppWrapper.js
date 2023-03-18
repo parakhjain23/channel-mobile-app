@@ -21,8 +21,6 @@ const StoreAppWrapper = ({userInfoSate,orgsState}) => {
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
-      // console.log('Connection type', state.type);
-      // console.log('Is connected?', state.isConnected);
       dispatch(networkStatus(state?.isConnected));
     });
     return () => {
