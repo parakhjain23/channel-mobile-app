@@ -1,16 +1,20 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
+  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
-  Vibration,
+  useWindowDimensions,
   View,
 } from 'react-native';
+import cheerio, {text} from 'cheerio';
 import {GestureHandlerRootView, Swipeable} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Linking} from 'react-native';
-import cheerio, {text} from 'cheerio';
-import * as RootNavigation from '../../navigation/RootNavigation'
+import * as RootNavigation from '../../navigation/RootNavigation';
+import RenderHTML from 'react-native-render-html';
+import base64 from 'react-native-base64';
+import { renderTextWithLinks } from './RenderTextWithLinks';
 
 const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
   const regex = /\{\{(\w+)\}\}/g;
@@ -33,7 +37,8 @@ const ChatCard = ({
   chatState,
   setreplyOnMessage,
   setrepliedMsgDetails,
-  searchUserProfileAction
+  searchUserProfileAction,
+  flatListRef
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
   const [optionsVisible, setOptionsVisible] = useState(false);
@@ -86,10 +91,10 @@ function highlight(text,result) {
           <TouchableOpacity
             key={i}
             onPress={async () => {
-              await searchUserProfileAction(key1, userInfoState?.accessToken);
-              RootNavigation.navigate('UserProfiles', {
-                displayName: orgState?.userIdAndDisplayNameMapping[key1],
-              });
+             key1 != 'all' &&  await searchUserProfileAction(key1, userInfoState?.accessToken) && 
+             RootNavigation.navigate('UserProfiles', {
+               displayName: orgState?.userIdAndDisplayNameMapping[key1],
+             });
             }}
           >
             <Text style={{ color: 'blue' }}>{part}</Text>
@@ -152,6 +157,7 @@ function renderTextWithLinks(text, mentionsArr) {
 }
 
 
+  const {width} = useWindowDimensions()
   useEffect(() => {
     setOptionsVisible(false);
   }, [chatState?.data[chat?.teamId]?.messages]);
@@ -232,20 +238,87 @@ function renderTextWithLinks(text, mentionsArr) {
                     </Text>
                   </View>
                   {parentId != null && (
-                    <View style={styles.repliedContainer}>
-                      {/* <Text style={styles.text}> */}
+                    <TouchableOpacity style={styles.repliedContainer} onPress={()=>handleRepliedMessagePress(chatState?.data[chat.teamId]?.parentMessages[parentId],chatState,chat,flatListRef)}>
                       {renderTextWithLinks(
                         chatState?.data[chat.teamId]?.parentMessages[parentId]
-                          ?.content,chatState?.data[chat.teamId]?.parentMessages[parentId]
-                          ?.mentions
+                          ?.content,
+                        chatState?.data[chat.teamId]?.parentMessages[parentId]
+                          ?.mentions,
+                        userInfoState?.accessToken,
+                        orgState,width
                       )}
-                      {/* </Text> */}
-                    </View>
+                    </TouchableOpacity>
                   )}
+                  {chat?.attachment?.length > 0 &&
+                    chat?.attachment?.map((item, index) => {
+                      return item?.contentType?.includes('image') ? (
+                        <TouchableOpacity
+                          onPress={() => Linking.openURL(item?.resourceUrl)}>
+                          <Image
+                            source={{uri: item?.resourceUrl}}
+                            style={{height: 150, width: 150}}
+                          />
+                        </TouchableOpacity>
+                      ) : (
+                        <View
+                          style={{
+                            borderWidth: 0.5,
+                            borderColor: 'gray',
+                            borderRadius: 5,
+                            padding: 10,
+                          }}>
+                          <TouchableOpacity
+                            onPress={() => Linking.openURL(item?.resourceUrl)}>
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                              }}>
+                              {item?.contentType?.includes('pdf') && (
+                                <Image
+                                  source={require('../../assests/images/attachments/pdfLogo.png')}
+                                  style={{
+                                    width: 40,
+                                    height: 40,
+                                    marginRight: 5,
+                                  }}
+                                />
+                              )}
+                              {item?.contentType?.includes('doc') && (
+                                <Image
+                                  source={require('../../assests/images/attachments/docLogo.png')}
+                                  style={{
+                                    width: 40,
+                                    height: 40,
+                                    marginRight: 5,
+                                  }}
+                                />
+                              )}
+
+                              <View>
+                                <Text style={{color: 'black'}}>
+                                  {item?.title?.slice(0, 10) + '...'}
+                                </Text>
+                                <Text style={{color: 'black'}}>
+                                  {'...' + item?.contentType?.slice(-10)}
+                                </Text>
+                              </View>
+                              <Icon
+                                name="save"
+                                size={20}
+                                style={{margin: 2}}
+                                color="black"
+                              />
+                            </View>
+                          </TouchableOpacity>
+                        </View>
+                      );
+                    })}
 
                   <Text style={[styles.messageText, styles.text]}>
                     {/* {chat?.content} */}
-                    {renderTextWithLinks(chat?.content, chat?.mentions)}
+                    {renderTextWithLinks(chat?.content, chat?.mentions,userInfoState?.accessToken,orgState,width)}
                   </Text>
                 </View>
                 {/* <Text style={[styles.timeText, styles.text]}>{time}</Text> */}
@@ -430,7 +503,7 @@ const styles = StyleSheet.create({
   },
   received: {
     alignSelf: 'flex-start',
-    marginLeft: 10,
+    marginLeft: 0,
   },
   avatar: {
     width: 32,
@@ -459,3 +532,18 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
 });
+const handleRepliedMessagePress = (repliedMessage,chatState,chat,flatListRef) => {
+  if (repliedMessage) {
+    const index = chatState?.data[chat.teamId]?.messages.findIndex(
+      (item) => item._id === repliedMessage._id
+    );
+    if (index !== -1) {
+      flatListRef?.current?.scrollToIndex({
+        index,
+        animated: true,
+        viewPosition: 0,
+        viewOffset: 0,
+      });
+    }
+  }
+};

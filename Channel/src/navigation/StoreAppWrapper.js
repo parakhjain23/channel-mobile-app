@@ -3,8 +3,7 @@ import React, { useEffect, useState} from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { networkStatus } from '../redux/actions/network/NetworkActions';
 import { initializeSocket } from '../redux/actions/socket/socketActions';
-import SplashScreen from '../screens/splashScreen/SplashScreen';
-import AppWrapper from './AppWraper';
+import SplashScreenComponent from '../screens/splashScreen/SplashScreen';
 import AuthNavigation from './AuthNavigation';
 
 
@@ -27,8 +26,10 @@ const StoreAppWrapper = ({userInfoSate,orgsState}) => {
       unsubscribe();
     };
   }, []);
+
   return showSplashScreen ? (
-    <SplashScreen setShowSplashScreen={setShowSplashScreen} />
+    <SplashScreenComponent setShowSplashScreen={setShowSplashScreen}/>
+    // <SplashScreen setShowSplashScreen={setShowSplashScreen} />
   ) : (
       <AuthNavigation />
   );

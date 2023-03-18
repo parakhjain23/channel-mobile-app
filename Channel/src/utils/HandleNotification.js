@@ -3,7 +3,7 @@ import {store} from '../redux/Store';
 import cheerio, {text} from 'cheerio';
 
 export const handleNotificationFromEvents = async (data,userIdAndDisplayNameMapping) => {
-  data['attachment']=`${data?.attachment}`
+  data['attachment']=data?.attachment != undefined ? `${data?.attachment}`:`[]`
   data['isActivity']=data?.isActivity != undefined ? `${data?.isActivity}` :'false'
   data['mentions'] = `${data?.mentions}`;
   data['showInMainConversation'] = `${data?.showInMainConversation}`;
@@ -35,6 +35,9 @@ export const handleNotificationFromEvents = async (data,userIdAndDisplayNameMapp
       return userIdAndDisplayNameMapping[p1] ? `@${userIdAndDisplayNameMapping[p1]}` : match;
     });
     data['content'] = resultStr
+  }
+  if(data?.attachment.length > 2){
+    data['content'] = 'Shared an Attachment'
   }
   var channelType =
     store.getState().channelsReducer?.teamIdAndTypeMapping[data?.teamId];
@@ -125,6 +128,10 @@ export const handleNotificationFromEvents = async (data,userIdAndDisplayNameMapp
 export const handleNotificationFirebase = async firebaseData => {
   var title = firebaseData?.notification?.title;
   var body = firebaseData?.notification?.body;
+  if(firebaseData?.data?.orgId != store?.getState()?.orgsReducer?.currentOrgId){
+    title = `New Message in ${store?.getState()?.orgsReducer?.orgIdAndNameMapping[firebaseData?.data?.orgId]}`
+    body = firebaseData?.notification?.title+" : "+ firebaseData?.notification?.body
+  }
   await Notifee.displayNotification({
     title: title,
     body: body,
