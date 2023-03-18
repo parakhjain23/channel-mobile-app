@@ -49,33 +49,57 @@ const ChatCard = ({
     }
     return null;
   }
+// function highlight(text,result) {
+//   let A = orgState?.userIdAndDisplayNameMapping
+//   text = text.replace(/@{1,2}(\w+)/g, (match, p1) => {
+//     return A[p1] ? `@${A[p1]}` : match;
+//   });
+//   const parts = text?.split(/(\B@\w+)/);
+//   return parts?.map((part, i) =>
+//     /^@\w+$/.test(part) ? (
+//      <TouchableOpacity key={i} onPress={async ()=>{
+//       let key = findKeyByValue(part)
+//      key !=null && await searchUserProfileAction(key,userInfoState?.accessToken) && RootNavigation.navigate('UserProfiles', {
+//         displayName:orgState?.userIdAndDisplayNameMapping[key],
+//       })}}>
+//        <Text key={i} style={{color: 'blue'}}>
+//         {part}
+//       </Text>
+//      </TouchableOpacity>
+//     ) : (
+//       <Text key={i}>{part}</Text>
+//     )
+//   );
+// }
+
 function highlight(text,result) {
-  console.log("result arr", result);
-  console.log("this is text in highlight", text);
   let A = orgState?.userIdAndDisplayNameMapping
   text = text.replace(/@{1,2}(\w+)/g, (match, p1) => {
     return A[p1] ? `@${A[p1]}` : match;
   });
   const parts = text?.split(/(\B@\w+)/);
-  console.log("this is parts in highlight", parts);
-  return parts?.map((part, i) =>
-    /^@\w+$/.test(part) ? (
-     <TouchableOpacity key={i} onPress={async ()=>{
-      let key = findKeyByValue(part)
-      await searchUserProfileAction(key,userInfoState?.accessToken),
-      RootNavigation.navigate('UserProfiles', {
-        displayName:orgState?.userIdAndDisplayNameMapping[key],
-      })}}>
-       <Text key={i} style={{color: 'blue'}}>
-        {part}
-      </Text>
-     </TouchableOpacity>
-    ) : (
-      <Text key={i}>{part}</Text>
-    )
-  );
+  return parts?.map((part, i) => {
+    if (/^@\w+$/.test(part)) {
+      let key1 = findKeyByValue(part);
+      if (key1 != null) {
+        return (
+          <TouchableOpacity
+            key={i}
+            onPress={async () => {
+              await searchUserProfileAction(key1, userInfoState?.accessToken);
+              RootNavigation.navigate('UserProfiles', {
+                displayName: orgState?.userIdAndDisplayNameMapping[key1],
+              });
+            }}
+          >
+            <Text style={{ color: 'blue' }}>{part}</Text>
+          </TouchableOpacity>
+        );
+      }
+    }
+    return <Text key={i}>{part}</Text>;
+  });
 }
-
 function renderTextWithLinks(text, mentionsArr) {
   var result = [];
   var resultStr=''
@@ -104,9 +128,7 @@ function renderTextWithLinks(text, mentionsArr) {
         }
       });
     resultStr = resultStr.trim();
-console.log("this is result", result);
   const parts = resultStr?.split(urlRegex);
-console.log("this is parts",parts);
   return parts?.map((part, i) =>
     urlRegex.test(part) ? (
       <TouchableOpacity
