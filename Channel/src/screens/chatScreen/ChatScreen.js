@@ -1,4 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+// import {ImagePicker} from 'react-native-image-picker'
+import {launchCamera,launchImageLibrary} from 'react-native-image-picker'
 import {
   ActivityIndicator,
   FlatList,
@@ -35,6 +37,7 @@ const pickDocument = async (setAttachment, accessToken) => {
       allowMultiSelection: true,
       readContent: true,
     });
+    console.log(Files,"this is files");
     try {
       const FileNames = await FileUploadApi(Files, accessToken);
       const attachment = FileNames?.map((file, index) => {
@@ -58,6 +61,27 @@ const pickDocument = async (setAttachment, accessToken) => {
       console.log('DocumentPicker Error: ', err);
     }
   }
+};
+const launchCameraForPhoto = () => {
+  const options = {
+    storageOptions: {
+      skipBackup: true,
+      path: 'images',
+    },
+  };
+  launchCamera(options,(data)=>console.log(data))
+};
+const launchGallery = () => {
+  const options = {
+    storageOptions: {
+      skipBackup: true,
+      path: 'images',
+    },
+  };
+  // launchCamera(options,(data)=>console.log(data))
+  launchImageLibrary(options,(data)=>{
+    console.log(data);
+  })
 };
 
 const ChatScreen = ({
@@ -109,6 +133,7 @@ const ChatScreen = ({
     }
     setActiveChannelTeamIdAction(teamId);
   }, [networkState?.isInternetConnected,teamId]);
+
   const handleInputChange = text => {
     onChangeMessage(text);
     const mentionRegex = /@\w+/g;
@@ -338,6 +363,18 @@ const ChatScreen = ({
                     onPress={() =>
                       pickDocument(setAttachment, userInfoState?.accessToken)
                     }
+                  />
+                    <MaterialIcons
+                    name="camera"
+                    size={20}
+                    style={styles.attachIcon}
+                    onPress={launchCameraForPhoto}
+                  />
+                        <MaterialIcons
+                    name="add"
+                    size={20}
+                    style={styles.attachIcon}
+                    onPress={launchGallery}
                   />
                   <TextInput
                     editable
