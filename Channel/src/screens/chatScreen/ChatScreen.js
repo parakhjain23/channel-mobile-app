@@ -63,13 +63,13 @@ const pickDocument = async (setAttachment, accessToken) => {
   }
 };
 const launchCameraForPhoto = () => {
-  const options = {
+  const optionsForCamera = {
     storageOptions: {
       skipBackup: true,
       path: 'images',
     },
   };
-  launchCamera(options,(data)=>console.log(data))
+  launchCamera(optionsForCamera,(data)=>console.log(data.assets))
 };
 const launchGallery = () => {
   const options = {
@@ -77,10 +77,11 @@ const launchGallery = () => {
       skipBackup: true,
       path: 'images',
     },
+    selectionLimit:0
   };
   // launchCamera(options,(data)=>console.log(data))
   launchImageLibrary(options,(data)=>{
-    console.log(data);
+    console.log(data.assets);
   })
 };
 
