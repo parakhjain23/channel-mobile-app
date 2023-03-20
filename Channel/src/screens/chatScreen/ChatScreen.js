@@ -1,6 +1,4 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-// import {ImagePicker} from 'react-native-image-picker'
-import {launchCamera,launchImageLibrary} from 'react-native-image-picker'
 import {
   ActivityIndicator,
   FlatList,
@@ -24,66 +22,11 @@ import {
 } from '../../redux/actions/chat/ChatActions';
 import {deleteMessageStart} from '../../redux/actions/chat/DeleteChatAction';
 import {ChatCardMemo, LocalChatCardMemo} from './ChatCard';
-import DocumentPicker from 'react-native-document-picker';
-import {FileUploadApi} from '../../api/attachmentsApi/FileUploadApi';
 import {getChannelsByQueryStart} from '../../redux/actions/channels/ChannelsByQueryAction';
 import {fetchSearchedUserProfileStart} from '../../redux/actions/user/searchUserProfileActions';
 import {renderTextWithLinks} from './RenderTextWithLinks';
-
-const pickDocument = async (setAttachment, accessToken) => {
-  try {
-    const Files = await DocumentPicker.pick({
-      type: [DocumentPicker.types.allFiles],
-      allowMultiSelection: true,
-      readContent: true,
-    });
-    console.log(Files,"this is files");
-    try {
-      const FileNames = await FileUploadApi(Files, accessToken);
-      const attachment = FileNames?.map((file, index) => {
-        return {
-          title: Files[index]?.name,
-          key: file,
-          resourceUrl: `https://resources.intospace.io/${file}`,
-          contentType: Files[index]?.type,
-          size: 18164,
-          encoding: '',
-        };
-      });
-      setAttachment(prevAttachment => [...prevAttachment, ...attachment]);
-    } catch (error) {
-      console.log(error, 'error');
-    }
-  } catch (err) {
-    if (DocumentPicker.isCancel(err)) {
-      console.log('User cancelled document picker');
-    } else {
-      console.log('DocumentPicker Error: ', err);
-    }
-  }
-};
-const launchCameraForPhoto = () => {
-  const optionsForCamera = {
-    storageOptions: {
-      skipBackup: true,
-      path: 'images',
-    },
-  };
-  launchCamera(optionsForCamera,(data)=>console.log(data.assets))
-};
-const launchGallery = () => {
-  const options = {
-    storageOptions: {
-      skipBackup: true,
-      path: 'images',
-    },
-    selectionLimit:0
-  };
-  // launchCamera(options,(data)=>console.log(data))
-  launchImageLibrary(options,(data)=>{
-    console.log(data.assets);
-  })
-};
+import {pickDocument} from './DocumentPicker';
+import {launchCameraForPhoto, launchGallery} from './ImagePicker';
 
 const ChatScreen = ({
   route,
@@ -129,11 +72,11 @@ const ChatScreen = ({
       chatState?.data[teamId]?.messages == [] ||
       (!chatState?.data[teamId]?.apiCalled && networkState?.isInternetConnected)
     ) {
-      console.log("api called");
+      console.log('api called');
       fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
     }
     setActiveChannelTeamIdAction(teamId);
-  }, [networkState?.isInternetConnected,teamId]);
+  }, [networkState?.isInternetConnected, teamId]);
 
   const handleInputChange = text => {
     onChangeMessage(text);
@@ -194,22 +137,20 @@ const ChatScreen = ({
     () => chatState?.data[teamId]?.messages || [],
     [chatState?.data[teamId]?.messages],
   );
- 
+
   const renderItem = useCallback(
     ({item, index}) => (
-      (
-        <ChatCardMemo
-          chat={item}
-          userInfoState={userInfoState}
-          orgState={orgState}
-          deleteMessageAction={deleteMessageAction}
-          chatState={chatState}
-          setreplyOnMessage={setreplyOnMessage}
-          setrepliedMsgDetails={setrepliedMsgDetails}
-          searchUserProfileAction={searchUserProfileAction}
-          flatListRef={FlatListRef}
-        />
-      )
+      <ChatCardMemo
+        chat={item}
+        userInfoState={userInfoState}
+        orgState={orgState}
+        deleteMessageAction={deleteMessageAction}
+        chatState={chatState}
+        setreplyOnMessage={setreplyOnMessage}
+        setrepliedMsgDetails={setrepliedMsgDetails}
+        searchUserProfileAction={searchUserProfileAction}
+        flatListRef={FlatListRef}
+      />
     ),
     [
       chatState,
@@ -251,7 +192,7 @@ const ChatScreen = ({
         behavior={Platform.OS === 'ios' ? 'padding' : null}
         keyboardVerticalOffset={70}
         style={{flex: 1}}>
-        <View style={{flex: 1,marginLeft:10}}>
+        <View style={{flex: 1, marginLeft: 10}}>
           <View style={{flex: 9}}>
             {teamId == undefined ||
             chatState?.data[teamId]?.isloading == true ? (
@@ -302,7 +243,7 @@ const ChatScreen = ({
               <Text style={{textAlign: 'center'}}>No Internet Connected!!</Text>
             </View>
           )}
-          <View style={{margin: 8,marginLeft:0}}>
+          <View style={{margin: 8, marginLeft: 0}}>
             <View style={{flexDirection: 'row'}}>
               <View
                 style={[
@@ -365,17 +306,24 @@ const ChatScreen = ({
                       pickDocument(setAttachment, userInfoState?.accessToken)
                     }
                   />
-                    <MaterialIcons
+                  <MaterialIcons
                     name="camera"
                     size={20}
                     style={styles.attachIcon}
-                    onPress={launchCameraForPhoto}
+                    onPress={() => {
+                      launchCameraForPhoto(
+                        userInfoState?.accessToken,
+                        setAttachment,
+                      );
+                    }}
                   />
-                        <MaterialIcons
+                  <MaterialIcons
                     name="add"
                     size={20}
                     style={styles.attachIcon}
-                    onPress={launchGallery}
+                    onPress={() => {
+                      launchGallery(userInfoState?.accessToken, setAttachment);
+                    }}
                   />
                   <TextInput
                     editable

@@ -3,7 +3,7 @@ import uuid from 'react-native-uuid';
 export const FileUploadApi = async (Files, accessToken) => {
   const fileNames = Files?.map(item => {
     const folder = uuid.v4();
-    return `${folder}/${item?.name}`;
+    return `${folder}/${item?.name || item?.fileName}`;
   });
 
   try {
