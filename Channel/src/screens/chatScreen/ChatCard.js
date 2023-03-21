@@ -13,7 +13,7 @@ import {Linking} from 'react-native';
 import * as RootNavigation from '../../navigation/RootNavigation';
 import RenderHTML from 'react-native-render-html';
 import base64 from 'react-native-base64';
-import { renderTextWithLinks } from './RenderTextWithLinks';
+import {renderTextWithLinks} from './RenderTextWithLinks';
 
 const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
   const regex = /\{\{(\w+)\}\}/g;
@@ -37,11 +37,11 @@ const ChatCard = ({
   setreplyOnMessage,
   setrepliedMsgDetails,
   searchUserProfileAction,
-  flatListRef
+  flatListRef,
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
   const [optionsVisible, setOptionsVisible] = useState(false);
-  const {width} = useWindowDimensions()
+  const {width} = useWindowDimensions();
   useEffect(() => {
     setOptionsVisible(false);
   }, [chatState?.data[chat?.teamId]?.messages]);
@@ -122,14 +122,26 @@ const ChatCard = ({
                     </Text>
                   </View>
                   {parentId != null && (
-                    <TouchableOpacity style={styles.repliedContainer} onPress={()=>handleRepliedMessagePress(chatState?.data[chat.teamId]?.parentMessages[parentId],chatState,chat,flatListRef)}>
+                    <TouchableOpacity
+                      style={styles.repliedContainer}
+                      onPress={() =>
+                        handleRepliedMessagePress(
+                          chatState?.data[chat.teamId]?.parentMessages[
+                            parentId
+                          ],
+                          chatState,
+                          chat,
+                          flatListRef,
+                        )
+                      }>
                       {renderTextWithLinks(
                         chatState?.data[chat.teamId]?.parentMessages[parentId]
                           ?.content,
                         chatState?.data[chat.teamId]?.parentMessages[parentId]
                           ?.mentions,
                         userInfoState?.accessToken,
-                        orgState,width
+                        orgState,
+                        width,
                       )}
                     </TouchableOpacity>
                   )}
@@ -137,6 +149,7 @@ const ChatCard = ({
                     chat?.attachment?.map((item, index) => {
                       return item?.contentType?.includes('image') ? (
                         <TouchableOpacity
+                          key={index}
                           onPress={() => Linking.openURL(item?.resourceUrl)}>
                           <Image
                             source={{uri: item?.resourceUrl}}
@@ -202,7 +215,13 @@ const ChatCard = ({
 
                   <Text style={[styles.messageText, styles.text]}>
                     {/* {chat?.content} */}
-                    {renderTextWithLinks(chat?.content, chat?.mentions,userInfoState?.accessToken,orgState,width)}
+                    {renderTextWithLinks(
+                      chat?.content,
+                      chat?.mentions,
+                      userInfoState?.accessToken,
+                      orgState,
+                      width,
+                    )}
                   </Text>
                 </View>
                 {/* <Text style={[styles.timeText, styles.text]}>{time}</Text> */}
@@ -416,10 +435,15 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
 });
-const handleRepliedMessagePress = (repliedMessage,chatState,chat,flatListRef) => {
+const handleRepliedMessagePress = (
+  repliedMessage,
+  chatState,
+  chat,
+  flatListRef,
+) => {
   if (repliedMessage) {
     const index = chatState?.data[chat.teamId]?.messages.findIndex(
-      (item) => item._id === repliedMessage._id
+      item => item._id === repliedMessage._id,
     );
     if (index !== -1) {
       flatListRef?.current?.scrollToIndex({
