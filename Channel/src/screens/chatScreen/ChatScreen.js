@@ -80,6 +80,27 @@ const ChatScreen = ({
     setActiveChannelTeamIdAction(teamId);
   }, [networkState?.isInternetConnected, teamId]);
 
+  const optionsPosition = useRef(new Animated.Value(0)).current;
+  const showOptionsMethod = () => {
+    setShowOptions(true);
+    Animated.timing(optionsPosition, {
+      toValue: 0,
+      duration: 250,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const hideOptionsMethod = () => {
+    Animated.timing(optionsPosition, {
+      toValue: -200,
+      duration: 250,
+      useNativeDriver: true,
+    }).start();
+    setTimeout(() => {
+      setShowOptions(false);
+    }, 130);
+  };
+
   const handleInputChange = text => {
     onChangeMessage(text);
     const mentionRegex = /@\w+/g;
@@ -301,55 +322,63 @@ const ChatScreen = ({
                 />
 
                 <View style={styles.inputContainer}>
-                  {showOptions && (
-                    <View style={{flexDirection: 'row'}}>
-                      <MaterialIcons
-                        name="attach-file"
-                        size={20}
-                        style={styles.attachIcon}
-                        onPress={() =>
-                          pickDocument(
-                            setAttachment,
-                            userInfoState?.accessToken,
-                          )
-                        }
-                      />
-                      <MaterialIcons
-                        name="camera"
-                        size={20}
-                        style={styles.attachIcon}
-                        onPress={() => {
-                          launchCameraForPhoto(
-                            userInfoState?.accessToken,
-                            setAttachment,
-                          );
-                        }}
-                      />
-                      <MaterialIcons
-                        name="image"
-                        size={20}
-                        style={styles.attachIcon}
-                        onPress={() => {
-                          launchGallery(
-                            userInfoState?.accessToken,
-                            setAttachment,
-                          );
-                        }}
-                      />
-                      <MaterialIcons
-                        name="chevron-left"
-                        size={20}
-                        style={styles.attachIcon}
-                        onPress={() => setShowOptions(false)}
-                      />
-                    </View>
-                  )}
+                  <Animated.View
+                    style={[
+                      styles.optionsContainer,
+                      {transform: [{translateX: optionsPosition}]},
+                    ]}>
+                    {showOptions && (
+                      <View style={{flexDirection: 'row'}}>
+                        <MaterialIcons
+                          name="attach-file"
+                          size={20}
+                          style={styles.attachIcon}
+                          onPress={() =>
+                            pickDocument(
+                              setAttachment,
+                              userInfoState?.accessToken,
+                            )
+                          }
+                        />
+                        <MaterialIcons
+                          name="camera"
+                          size={20}
+                          style={styles.attachIcon}
+                          onPress={() => {
+                            launchCameraForPhoto(
+                              userInfoState?.accessToken,
+                              setAttachment,
+                            );
+                          }}
+                        />
+                        <MaterialIcons
+                          name="image"
+                          size={20}
+                          style={styles.attachIcon}
+                          onPress={() => {
+                            launchGallery(
+                              userInfoState?.accessToken,
+                              setAttachment,
+                            );
+                          }}
+                        />
+                        <MaterialIcons
+                          name="chevron-left"
+                          size={20}
+                          style={styles.attachIcon}
+                          onPress={hideOptionsMethod}
+                          // onPress={() => setShowOptions(false)}
+                        />
+                      </View>
+                    )}
+                  </Animated.View>
                   {!showOptions && (
                     <MaterialIcons
                       name="add"
                       size={20}
                       style={styles.attachIcon}
-                      onPress={() => setShowOptions(!showOptions)}
+                      onPress={showOptionsMethod}
+                      // onPress={() => setShowOptions(!showOptions)}
                     />
                   )}
 
@@ -358,6 +387,7 @@ const ChatScreen = ({
                     multiline
                     onChangeText={handleInputChange}
                     // onChangeText={text => onChangeMessage(text)}
+                    placeholder="Message"
                     value={message}
                     style={[
                       replyOnMessage
@@ -366,6 +396,9 @@ const ChatScreen = ({
                       {color: 'black'},
                     ]}
                   />
+                  {showOptions &&
+                    message?.trim()?.length ==1 &&
+                    hideOptionsMethod()}
                 </View>
               </View>
               <View style={{justifyContent: 'flex-end'}}>
@@ -404,6 +437,7 @@ const ChatScreen = ({
                           mentionsArr,
                         ),
                         // onChangeMessage('');
+                        hideOptionsMethod(),
                         setMentionsArr(''),
                         setMentions([]),
                         replyOnMessage && setreplyOnMessage(false),
@@ -419,7 +453,11 @@ const ChatScreen = ({
                           accessToken: userInfoState?.accessToken,
                           parentId: repliedMsgDetails?.id || null,
                           updatedAt: date,
+                          mentionsArr: mentionsArr
                         }),
+                        hideOptionsMethod(),
+                        setMentionsArr(''),
+                        setMentions([]),
                         replyOnMessage && setreplyOnMessage(false),
                         repliedMsgDetails && setrepliedMsgDetails(null));
                   }}
@@ -603,5 +641,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#cccccc',
     padding: 8,
     borderRadius: 25,
+  },
+  optionsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 10,
   },
 });

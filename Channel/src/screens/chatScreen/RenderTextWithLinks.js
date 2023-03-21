@@ -20,6 +20,9 @@ export const renderTextWithLinks = (text, mentionsArr = [], accessToken,orgState
       html: `${cleanedHtml}`,
     };
     const tagsStyles = {
+      body:{
+        color:'black',
+      },
       a: {
         color: 'blue', // Set the link color
         textDecorationLine: 'underline', // Add an underline to the link
