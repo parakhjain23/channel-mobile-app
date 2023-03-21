@@ -47,10 +47,8 @@ const ChatScreen = ({
   var {teamId, reciverUserId} = route.params;
   const [replyOnMessage, setreplyOnMessage] = useState(false);
   const [repliedMsgDetails, setrepliedMsgDetails] = useState('');
-  if (teamId == undefined) {
-    teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
-  }
-  const [message, onChangeMessage] = React.useState(null);
+  const [showOptions, setShowOptions] = useState(false);
+  const [message, onChangeMessage] = useState(null);
   const [attachment, setAttachment] = useState([]);
   const [localMsg, setlocalMsg] = useState([]);
   const FlatListRef = useRef(null);
@@ -59,6 +57,10 @@ const ChatScreen = ({
   const [mentions, setMentions] = useState([]);
   const [mentionsArr, setMentionsArr] = useState([]);
   const {width} = useWindowDimensions();
+
+  if (teamId == undefined) {
+    teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
+  }
   useEffect(() => {
     localMsg?.shift();
   }, [chatState?.data[teamId]?.messages]);
@@ -297,34 +299,60 @@ const ChatScreen = ({
                   style={{maxHeight: 140}}
                   keyboardShouldPersistTaps="always"
                 />
+
                 <View style={styles.inputContainer}>
-                  <MaterialIcons
-                    name="attach-file"
-                    size={20}
-                    style={styles.attachIcon}
-                    onPress={() =>
-                      pickDocument(setAttachment, userInfoState?.accessToken)
-                    }
-                  />
-                  <MaterialIcons
-                    name="camera"
-                    size={20}
-                    style={styles.attachIcon}
-                    onPress={() => {
-                      launchCameraForPhoto(
-                        userInfoState?.accessToken,
-                        setAttachment,
-                      );
-                    }}
-                  />
-                  <MaterialIcons
-                    name="add"
-                    size={20}
-                    style={styles.attachIcon}
-                    onPress={() => {
-                      launchGallery(userInfoState?.accessToken, setAttachment);
-                    }}
-                  />
+                  {showOptions && (
+                    <View style={{flexDirection: 'row'}}>
+                      <MaterialIcons
+                        name="attach-file"
+                        size={20}
+                        style={styles.attachIcon}
+                        onPress={() =>
+                          pickDocument(
+                            setAttachment,
+                            userInfoState?.accessToken,
+                          )
+                        }
+                      />
+                      <MaterialIcons
+                        name="camera"
+                        size={20}
+                        style={styles.attachIcon}
+                        onPress={() => {
+                          launchCameraForPhoto(
+                            userInfoState?.accessToken,
+                            setAttachment,
+                          );
+                        }}
+                      />
+                      <MaterialIcons
+                        name="image"
+                        size={20}
+                        style={styles.attachIcon}
+                        onPress={() => {
+                          launchGallery(
+                            userInfoState?.accessToken,
+                            setAttachment,
+                          );
+                        }}
+                      />
+                      <MaterialIcons
+                        name="chevron-left"
+                        size={20}
+                        style={styles.attachIcon}
+                        onPress={() => setShowOptions(false)}
+                      />
+                    </View>
+                  )}
+                  {!showOptions && (
+                    <MaterialIcons
+                      name="add"
+                      size={20}
+                      style={styles.attachIcon}
+                      onPress={() => setShowOptions(!showOptions)}
+                    />
+                  )}
+
                   <TextInput
                     editable
                     multiline
