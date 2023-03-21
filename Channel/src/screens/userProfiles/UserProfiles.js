@@ -14,6 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 
 const ContactDetailsPage = ({userInfoState,channelsState}) => {
   const teamId = channelsState?.userIdAndTeamIdMapping[userInfoState?.searchedUserProfile?.id]
+  const imageUrl = userInfoState?.searchedUserProfile?.avatarKey != null ? `${IMAGE_BASE_URL}${userInfoState?.searchedUserProfile?.avatarKey}` : 'https://img.freepik.com/premium-vector/anonymous-user-circle-icon-vector-illustration-flat-style-with-long-shadow_520826-1931.jpg'
   const navigation = useNavigation()
   return (
     <View style={styles.container}>
@@ -21,7 +22,7 @@ const ContactDetailsPage = ({userInfoState,channelsState}) => {
         style={{marginTop: 20, flexDirection: 'row', justifyContent: 'center'}}>
         <Image
           source={{
-            uri: `${IMAGE_BASE_URL}${userInfoState?.searchedUserProfile?.avatarKey}`,
+            uri: imageUrl,
           }}
           style={{width: 150, height: 150, borderRadius: 5, marginBottom: 20}}
         />
