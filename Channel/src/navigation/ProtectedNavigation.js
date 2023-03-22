@@ -6,9 +6,11 @@ import DrawerNavigation from './DrawerNavigation';
 import ChatScreen from '../screens/chatScreen/ChatScreen';
 import ExploreChannels from '../screens/channelsScreen/ExploreChannels';
 import ContactDetailsPage from '../screens/userProfiles/UserProfiles';
+import { useTheme } from '@react-navigation/native';
 
-const ProtectedNavigation = ({userInfoSate}) => {
+const ProtectedNavigation = (props) => {
   const Stack = createNativeStackNavigator();
+  const {colors} = useTheme();
   //   const navigate = useNavigation();
   //   const {colors} = useTheme();
   //   const getShopingCartHeader = {
@@ -21,8 +23,14 @@ const ProtectedNavigation = ({userInfoSate}) => {
   //     },
   //     statusBarTranslucent:true
   //   };
-
-  return !userInfoSate?.isSignedIn ? (
+  const getHeader = {
+    headerTintColor: colors.textColor,
+    headerStyle: {
+      color: colors.textColor,
+      backgroundColor: colors.headerColor,
+    },
+  };
+  return !props?.userInfoSate?.isSignedIn ? (
     <Stack.Navigator>
       <Stack.Screen
         name="Login"
@@ -35,7 +43,8 @@ const ProtectedNavigation = ({userInfoSate}) => {
       <Stack.Screen
         name="Org"
         component={DrawerNavigation}
-        options={{headerShown: false}}
+        initialParams={{setScheme: props?.setScheme}}
+        options={{headerShown: false,...getHeader}}
       />
       <Stack.Screen
         name="Chat"
@@ -43,6 +52,7 @@ const ProtectedNavigation = ({userInfoSate}) => {
         options={({route}) => ({
           headerTitle: route?.params?.chatHeaderTitle,
           headerShown: true,
+          ...getHeader
         })}
       />
       <Stack.Screen
@@ -51,6 +61,7 @@ const ProtectedNavigation = ({userInfoSate}) => {
         options={({route}) => ({
           headerTitle: route?.params?.chatHeaderTitle,
           headerShown: true,
+          ...getHeader
         })}
       />
       <Stack.Screen
@@ -59,6 +70,7 @@ const ProtectedNavigation = ({userInfoSate}) => {
         options={({route}) => ({
           headerTitle: route?.params?.displayName + " Profile",
           headerShown: true,
+          ...getHeader
         })}
       />
     </Stack.Navigator>

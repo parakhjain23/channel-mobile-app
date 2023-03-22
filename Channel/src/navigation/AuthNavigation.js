@@ -1,9 +1,10 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {DarkTheme, DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import ProtectedNavigation from './ProtectedNavigation';
 import {navigationRef} from './RootNavigation';
 import { useColorScheme } from 'react-native';
 import { DARK_THEME, LIGHT_THEME } from '../theme/Theme';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const linking = {
   prefixes: ['channel://'],
@@ -22,10 +23,23 @@ const linking = {
 };
 
 const AuthNavigation = () => {
-  const scheme = useColorScheme();
+  const [scheme,setScheme] = useState('light');
+  useEffect(() => {
+    async function fetchTheme() {
+      const theme = await AsyncStorage.getItem('theme');
+      console.log(theme,'theme');
+      if(theme!=null){
+        setScheme(theme)
+      }
+      else{
+        setScheme(useColorScheme());
+      }
+    }
+    fetchTheme();
+  }, []);
   return (
     <NavigationContainer ref={navigationRef} linking={linking} theme={scheme=="dark" ? DARK_THEME: LIGHT_THEME}>
-      <ProtectedNavigation />
+      <ProtectedNavigation setScheme={setScheme}/>
     </NavigationContainer>
   );
 };

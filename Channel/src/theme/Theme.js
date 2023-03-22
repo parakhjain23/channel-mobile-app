@@ -24,6 +24,7 @@ export const DARK_THEME = {
         color: 'white',
         textColor: 'white',
         modalColor: '#252525',
+        headerColor: '#1A2421'
     }
 }
 
@@ -31,10 +32,11 @@ export const DARK_THEME = {
 export const LIGHT_THEME = {
     dark: false,
     colors: {
-        primaryColor: 'white',
+        primaryColor: '#ffffff',
         secondaryColor: 'black',
         color: 'black',
         textColor: 'black',
         modalColor: 'white',
+        headerColor: 'white'
     }
 }

@@ -10,17 +10,22 @@ import {connect} from 'react-redux';
 import ChannelsScreen from '../screens/channelsScreen/ChannelsScreen';
 import CustomeDrawerScreen from '../screens/drawer/CustomDrawerScreen';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import CustomDrawerScreen from '../screens/drawer/CustomDrawerScreen';
 
 const Drawer = createDrawerNavigator();
 
 const CustomDrawer = props => {
-  return <CustomeDrawerScreen props={props} />;
+  return <CustomeDrawerScreen props={props} setScheme={setScheme} />;
 };
-const DrawerNavigation = ({userInfoState, orgsState}) => {
+const DrawerNavigation = ({orgsState, route}) => {
+  const {setScheme} = route?.params;
   const {colors} = useTheme();
   var count = orgsState?.unreadCountForDrawerIcon;
   return (
-    <Drawer.Navigator drawerContent={props => <CustomDrawer {...props} />}>
+    <Drawer.Navigator
+      drawerContent={props => (
+        <CustomDrawerScreen {...props} setScheme={setScheme} />
+      )}>
       <Drawer.Screen
         name="Channel"
         component={ChannelsScreen}
@@ -29,6 +34,7 @@ const DrawerNavigation = ({userInfoState, orgsState}) => {
             orgsState.orgIdAndNameMapping != null
               ? orgsState?.orgIdAndNameMapping[orgsState?.currentOrgId]
               : 'Channel',
+          headerStyle: {backgroundColor: colors.headerColor},
           headerTitleStyle: {color: colors.textColor},
           headerLeft: () => (
             <TouchableOpacity

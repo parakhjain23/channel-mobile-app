@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useTheme} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {FlatList, Text, TouchableOpacity, View} from 'react-native';
 import {ActivityIndicator} from 'react-native';
@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import { setActiveChannelTeamId } from '../../redux/actions/channels/SetActiveChannelId';
 
 const ExploreChannels = props => {
+  const {colors} = useTheme();
   const [channels, setChannels] = useState([]);
   const navigation = useNavigation();
   async function fetchAllChannels() {
@@ -35,6 +36,7 @@ const ExploreChannels = props => {
           width: '100%',
           flexDirection: 'column',
           justifyContent: 'center',
+          backgroundColor:colors?.primaryColor
         }}
         onPress={() => {
           props?.setActiveChannelTeamIdAction(item?._id);
@@ -50,7 +52,7 @@ const ExploreChannels = props => {
             justifyContent: 'flex-start',
             padding: 13,
           }}>
-          <Text style={{fontSize: 16, fontWeight: '400', color: 'black'}}>
+          <Text style={{fontSize: 16, fontWeight: '400', color: colors?.textColor}}>
             # {item?.name}
           </Text>
         </View>
@@ -58,7 +60,7 @@ const ExploreChannels = props => {
     );
   };
   return (
-    <View>
+    <View style={{backgroundColor:colors?.primaryColor}}>
       {channels?.length == 0 ? (
         <ActivityIndicator />
       ) : (

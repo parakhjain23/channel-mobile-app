@@ -10,9 +10,6 @@ import {
 import {GestureHandlerRootView, Swipeable} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Linking} from 'react-native';
-import * as RootNavigation from '../../navigation/RootNavigation';
-import RenderHTML from 'react-native-render-html';
-import base64 from 'react-native-base64';
 import {renderTextWithLinks} from './RenderTextWithLinks';
 import { useTheme } from '@react-navigation/native';
 import { makeStyles } from './ChatCardStyles';
@@ -314,7 +311,7 @@ const LocalChatCard = ({
                 </View>
                 {parentId != null && (
                   <View style={styles.repliedContainer}>
-                    <Text style={{color: 'black'}}>
+                    <Text style={{color: colors.textColor}}>
                       {
                         chatState?.data[chat.teamId]?.parentMessages[parentId]
                           ?.content
@@ -325,7 +322,7 @@ const LocalChatCard = ({
                 <Text style={[styles.messageText, styles.text]}>
                   {chat?.content}
                 </Text>
-                <Icon name="access-time" color={'black'} />
+                <Icon name="access-time" color={colors.textColor} />
               </View>
               {/* <Text style={[styles.timeText, styles.text]}>{time}</Text> */}
               {/* {sentByMe ? (
