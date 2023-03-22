@@ -3,7 +3,7 @@ import {
   DrawerContent,
   DrawerContentScrollView,
 } from '@react-navigation/drawer';
-import { DrawerActions } from '@react-navigation/native';
+import {DrawerActions, useTheme} from '@react-navigation/native';
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from 'react-redux';
@@ -17,28 +17,31 @@ const CustomDrawer = props => {
   return <CustomeDrawerScreen props={props} />;
 };
 const DrawerNavigation = ({userInfoState, orgsState}) => {
-  var count = orgsState?.unreadCountForDrawerIcon
+  const {colors} = useTheme();
+  var count = orgsState?.unreadCountForDrawerIcon;
   return (
     <Drawer.Navigator drawerContent={props => <CustomDrawer {...props} />}>
       <Drawer.Screen
         name="Channel"
         component={ChannelsScreen}
-        options={({route,navigation}) => ({
+        options={({route, navigation}) => ({
           headerTitle:
             orgsState.orgIdAndNameMapping != null
               ? orgsState?.orgIdAndNameMapping[orgsState?.currentOrgId]
               : 'Channel',
+          headerTitleStyle: {color: colors.textColor},
           headerLeft: () => (
-           <TouchableOpacity onPress={()=>navigation.dispatch(DrawerActions.openDrawer())}>
-             <View style={styles.container}>
-              <Icon name="bars" size={24} color="black" />
-              {count > 0 && (
-                <View style={styles.counter}>
-                  <Text style={styles.counterText}>{count}</Text>
-                </View>
-              )}
-            </View>
-           </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
+              <View style={styles.container}>
+                <Icon name="bars" size={24} color={colors.secondaryColor} />
+                {count > 0 && (
+                  <View style={styles.counter}>
+                    <Text style={styles.counterText}>{count}</Text>
+                  </View>
+                )}
+              </View>
+            </TouchableOpacity>
           ),
         })}
       />
@@ -53,7 +56,7 @@ export default connect(mapStateToProps)(DrawerNavigation);
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
-    marginLeft:15
+    marginLeft: 15,
   },
   counter: {
     position: 'absolute',

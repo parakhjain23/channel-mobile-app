@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useTheme} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 import {
   Button,
@@ -26,6 +26,7 @@ const CustomeDrawerScreen = ({
   removeCountOnOrgCardAction,
   moveChannelToTopAction
 }) => {
+  const {colors} = useTheme();
   const data = orgsState?.orgs;
   const navigation = useNavigation();
   useEffect(() => {
@@ -79,7 +80,7 @@ const CustomeDrawerScreen = ({
               }
               style={{height: 40, width: 40, marginRight: 10}}
             />
-            <Text style={{color: 'black'}}>{item?.name}</Text>
+            <Text style={{color: colors.textColor}}>{item?.name}</Text>
           </View>
           <View style={{flexDirection:'row',alignItems:'center'}}>
           {count !=undefined && (
@@ -93,10 +94,10 @@ const CustomeDrawerScreen = ({
                 alignItems: 'center',
                 marginRight: 10,
               }}>
-              <Text style={{color: 'white', fontSize: 12}}>{count}</Text>
+              <Text style={{color: colors.textColor, fontSize: 12}}>{count}</Text>
             </View>
           )}
-            <Icon name="chevron-right" />
+            <Icon name="chevron-right" color={colors.textColor}/>
           </View>
         </View>
       </TouchableOpacity>
@@ -109,6 +110,7 @@ const CustomeDrawerScreen = ({
         paddingVertical: '3%',
         paddingTop: '8%',
         paddingHorizontal: '3%',
+        backgroundColor:colors.primaryColor
       }}>
       <View style={{flex: 0.15, justifyContent: 'center'}}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -122,13 +124,13 @@ const CustomeDrawerScreen = ({
                 fontSize: 18,
                 fontWeight: '400',
                 marginLeft: 10,
-                color: 'black',
+                color: colors.textColor,
               }}>
               {userInfoState?.user?.displayName &&
                 userInfoState?.user?.displayName}{' '}
               {userInfoState?.user?.lastName && userInfoState?.user?.lastName}
             </Text>
-            <Text style={{marginLeft: 10, color: 'black'}}>
+            <Text style={{marginLeft: 10, color: colors.textColor}}>
               {userInfoState?.user?.email && userInfoState?.user?.email}
             </Text>
           </View>

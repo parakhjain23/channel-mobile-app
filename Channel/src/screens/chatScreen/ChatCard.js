@@ -15,9 +15,11 @@ import RenderHTML from 'react-native-render-html';
 import base64 from 'react-native-base64';
 import {renderTextWithLinks} from './RenderTextWithLinks';
 import { useTheme } from '@react-navigation/native';
+import { makeStyles } from './ChatCardStyles';
 
 const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
   const {colors} = useTheme();
+  const styles = makeStyles(colors);
   const regex = /\{\{(\w+)\}\}/g;
   const result = content.replace(regex, (match, userId) => {
     return orgState?.userIdAndNameMapping[userId] || match; // return the name if it exists, or the original match if not
@@ -43,6 +45,7 @@ const ChatCard = ({
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
   const {colors} = useTheme();
+  const styles = makeStyles(colors);
   const [optionsVisible, setOptionsVisible] = useState(false);
   const {width} = useWindowDimensions();
   useEffect(() => {
@@ -253,6 +256,7 @@ const LocalChatCard = ({
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
   const {colors} = useTheme();
+  const styles = makeStyles(colors);
   const [optionsVisible, setOptionsVisible] = useState(false);
   const swipeableRef = useRef(null);
   const onLongPress = () => {
@@ -352,93 +356,7 @@ const LocalChatCard = ({
 export const ChatCardMemo = React.memo(ChatCard);
 export const LocalChatCardMemo = React.memo(LocalChatCard);
 // export default{React.memo(ChatCard), React.memo(LocalChatCard)};
-const styles = StyleSheet.create({
-  text: {
-    color: 'black',
-  },
-  inputWithReply: {
-    padding: 10,
-  },
-  inputWithoutReply: {
-    padding: 20,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: 10,
-    borderColor: 'grey',
-  },
-  inputWithReplyContainer: {
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 10,
-  },
-  replyMessageInInput: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    margin: 5,
-    borderWidth: 0.25,
-    borderRadius: 5,
-    padding: 5,
-    backgroundColor: '#d9d9d9',
-  },
-  repliedContainer: {
-    padding: 5,
-    backgroundColor: '#d9d9d9',
-    borderRadius: 5,
-    marginBottom: 4,
-  },
-  option: {
-    margin: 8,
-    backgroundColor: 'yellow',
-  },
-  actionText: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 10,
-  },
-  container: {
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 10,
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    marginBottom: 15,
-    maxWidth: '90%',
-  },
-  sentByMe: {
-    alignSelf: 'flex-end',
-    marginRight: 10,
-  },
-  received: {
-    alignSelf: 'flex-start',
-    marginLeft: 0,
-  },
-  avatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    marginHorizontal: 4,
-  },
-  textContainer: {
-    padding: 8,
-    borderRadius: 8,
-    flexDirection: 'column',
-    maxWidth: '70%',
-  },
-  nameText: {
-    fontWeight: 'bold',
-    fontSize: 12,
-    marginBottom: 4,
-  },
-  messageText: {
-    fontSize: 14,
-  },
-  timeText: {
-    fontSize: 10,
-    color: '#666',
-    marginRight: 3,
-    marginBottom: 4,
-  },
-});
+
 const handleRepliedMessagePress = (
   repliedMessage,
   chatState,

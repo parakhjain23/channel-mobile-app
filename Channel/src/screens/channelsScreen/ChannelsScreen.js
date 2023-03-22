@@ -66,7 +66,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
           onChangeText={setTitle}
           autoFocus={true}
           textColor={colors.textColor}
-          // activeOutlineColor={colors.textColor}
+          activeOutlineColor={colors.textColor}
           style={{backgroundColor:colors.primaryColor}}
         />
         <TextInput
@@ -74,7 +74,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
           mode={'outlined'}
           onChangeText={changeText}
           textColor={colors.textColor}
-          // activeOutlineColor={colors.textColor}
+          activeOutlineColor={colors.textColor}
           style={{backgroundColor:colors.primaryColor}}
         />
 
@@ -144,6 +144,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
                   value={item?.type}
                   status={channelType === item?.type ? 'checked' : 'unchecked'}
                   onPress={() => setChannelType(item?.type)}
+                  color={colors.textColor}
                 />
               </TouchableOpacity>
             );

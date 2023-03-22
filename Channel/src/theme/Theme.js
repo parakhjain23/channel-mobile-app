@@ -19,11 +19,11 @@ export const FONTS = {
 export const DARK_THEME = {
     dark: true,
     colors: {
-        secondaryColor: '#b3b3b3',
         primaryColor: '#121212',
+        secondaryColor: '#b3b3b3',
         color: 'white',
         textColor: 'white',
-        modalColor: '#252525'
+        modalColor: '#252525',
     }
 }
 
@@ -31,10 +31,10 @@ export const DARK_THEME = {
 export const LIGHT_THEME = {
     dark: false,
     colors: {
-        secondaryColor: 'gray',
         primaryColor: 'white',
+        secondaryColor: 'black',
         color: 'black',
         textColor: 'black',
-        modalColor: 'white'
+        modalColor: 'white',
     }
 }
