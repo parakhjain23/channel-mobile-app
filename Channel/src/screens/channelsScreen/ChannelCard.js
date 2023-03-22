@@ -1,3 +1,4 @@
+import {useTheme} from '@react-navigation/native';
 import React from 'react';
 import {Text, TouchableOpacity, View, Button} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -6,6 +7,7 @@ import {fetchSearchedUserProfileStart} from '../../redux/actions/user/searchUser
 
 const ChannelCard = ({item, navigation, props}) => {
   // console.log('channelcard');
+  const {colors} = useTheme();
   const Name =
     item?.type == 'DIRECT_MESSAGE'
       ? props?.orgsState?.userIdAndNameMapping &&
@@ -47,9 +49,9 @@ const ChannelCard = ({item, navigation, props}) => {
           justifyContent: 'flex-start',
           padding: 13,
         }}>
-        <Icon name={iconName} size={14} color="black" />
+        <Icon name={iconName} size={14} color={colors.textColor} />
         <Text
-          style={{fontSize: 16, fontWeight: nameFontWeight, color: 'black'}}>
+          style={{fontSize: 16, fontWeight: nameFontWeight, color: colors.textColor}}>
           {' '}
           {Name}
         </Text>
@@ -64,8 +66,9 @@ const SearchChannelCard = ({
   setsearchValue,
   userInfoState,
   searchUserProfileAction,
-  orgsState
+  orgsState,
 }) => {
+  const {colors} = useTheme();
   const Name =
     item?._source?.type == 'U'
       ? item?._source?.title
@@ -108,8 +111,8 @@ const SearchChannelCard = ({
           justifyContent: 'flex-start',
           padding: 13,
         }}>
-        <Icon name={iconName} color={'black'} />
-        <Text style={{fontSize: 16, fontWeight: '400', color: 'black'}}>
+        <Icon name={iconName} color={colors.textColor} />
+        <Text style={{fontSize: 16, fontWeight: '400', color: colors.textColor}}>
           {' '}
           {Name}
         </Text>
@@ -118,9 +121,15 @@ const SearchChannelCard = ({
             <Button
               title="Profile"
               onPress={async () => {
-                await searchUserProfileAction(item?._source?.userId,userInfoState?.accessToken)
+                await searchUserProfileAction(
+                  item?._source?.userId,
+                  userInfoState?.accessToken,
+                );
                 navigation.navigate('UserProfiles', {
-                  displayName:orgsState?.userIdAndDisplayNameMapping[item?._source?.userId],
+                  displayName:
+                    orgsState?.userIdAndDisplayNameMapping[
+                      item?._source?.userId
+                    ],
                 });
               }}></Button>
           )}
@@ -130,6 +139,7 @@ const SearchChannelCard = ({
   );
 };
 const UsersToAddCard = ({item, setUserIds, userIds, setsearchedUser}) => {
+  const {colors} = useTheme();
   const Name = item?._source?.type == 'U' && item?._source?.title;
   return (
     item?._source?.type == 'U' && (
@@ -138,7 +148,8 @@ const UsersToAddCard = ({item, setUserIds, userIds, setsearchedUser}) => {
           borderWidth: 0.4,
           borderColor: 'gray',
           borderRadius: 3,
-          minHeight: 60,
+          minHeight: 45,
+          margin:1,
           flexDirection: 'column',
           justifyContent: 'center',
         }}
@@ -153,8 +164,8 @@ const UsersToAddCard = ({item, setUserIds, userIds, setsearchedUser}) => {
             justifyContent: 'flex-start',
             padding: 13,
           }}>
-          <Icon name="user" color={'black'} />
-          <Text style={{fontSize: 16, fontWeight: '400', color: 'black'}}>
+          <Icon name="user" color={colors.textColor} />
+          <Text style={{fontSize: 16, fontWeight: '400', color: colors.textColor}}>
             {' '}
             {Name}
           </Text>
@@ -165,7 +176,7 @@ const UsersToAddCard = ({item, setUserIds, userIds, setsearchedUser}) => {
 };
 const mapStateToProps = state => ({
   userInfoState: state.userInfoReducer,
-  orgsState: state.orgsReducer
+  orgsState: state.orgsReducer,
 });
 const mapDispatchToProps = dispatch => {
   return {

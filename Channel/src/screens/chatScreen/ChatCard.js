@@ -14,8 +14,10 @@ import * as RootNavigation from '../../navigation/RootNavigation';
 import RenderHTML from 'react-native-render-html';
 import base64 from 'react-native-base64';
 import {renderTextWithLinks} from './RenderTextWithLinks';
+import { useTheme } from '@react-navigation/native';
 
 const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
+  const {colors} = useTheme();
   const regex = /\{\{(\w+)\}\}/g;
   const result = content.replace(regex, (match, userId) => {
     return orgState?.userIdAndNameMapping[userId] || match; // return the name if it exists, or the original match if not
@@ -40,6 +42,7 @@ const ChatCard = ({
   flatListRef,
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
+  const {colors} = useTheme();
   const [optionsVisible, setOptionsVisible] = useState(false);
   const {width} = useWindowDimensions();
   useEffect(() => {
@@ -249,6 +252,7 @@ const LocalChatCard = ({
   setrepliedMsgDetails,
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
+  const {colors} = useTheme();
   const [optionsVisible, setOptionsVisible] = useState(false);
   const swipeableRef = useRef(null);
   const onLongPress = () => {
