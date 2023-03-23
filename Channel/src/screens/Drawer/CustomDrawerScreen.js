@@ -102,6 +102,7 @@ const CustomeDrawerScreen = ({
           borderColor: 'gray',
           borderRadius: 5,
           marginVertical: '1%',
+          backgroundColor: colors.primaryColor
         }}>
         <View
           style={{
@@ -151,7 +152,7 @@ const CustomeDrawerScreen = ({
         paddingVertical: '3%',
         paddingTop: '8%',
         paddingHorizontal: '3%',
-        backgroundColor: colors.primaryColor,
+        backgroundColor: colors.drawerBackgroundColor,
       }}>
       <View style={{flex: 0.15, justifyContent: 'center'}}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>

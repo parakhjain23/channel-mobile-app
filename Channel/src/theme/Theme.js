@@ -24,7 +24,9 @@ export const DARK_THEME = {
         color: 'white',
         textColor: 'white',
         modalColor: '#252525',
-        headerColor: '#1A2421'
+        headerColor: '#1A2421',
+        drawerBackgroundColor: '#1A2421',
+        searchBoxBackgroundColor: '#E6E6E6'
     }
 }
 
@@ -37,6 +39,8 @@ export const LIGHT_THEME = {
         color: 'black',
         textColor: 'black',
         modalColor: 'white',
-        headerColor: 'white'
+        headerColor: 'white',
+        drawerBackgroundColor: 'white',
+        searchBoxBackgroundColor: 'white'
     }
 }
