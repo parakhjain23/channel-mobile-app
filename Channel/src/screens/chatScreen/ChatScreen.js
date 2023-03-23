@@ -28,7 +28,7 @@ import {pickDocument} from './DocumentPicker';
 import {launchCameraForPhoto, launchGallery} from './ImagePicker';
 import {makeStyles} from './Styles';
 import {useTheme} from '@react-navigation/native';
-import LootieView from 'lottie-react-native';
+import AnimatedLottieView from 'lottie-react-native';
 
 const ChatScreen = ({
   route,
@@ -62,7 +62,7 @@ const ChatScreen = ({
   const [mentions, setMentions] = useState([]);
   const [mentionsArr, setMentionsArr] = useState([]);
   const {width} = useWindowDimensions();
-
+  const animationRef = useRef(null);
   if (teamId == undefined) {
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
   }
@@ -126,8 +126,8 @@ const ChatScreen = ({
       prevmessage.replace(
         new RegExp(`@\\w+\\s?$`),
         `@${mention?._source?.displayName} `,
-        ),
-        );
+      ),
+    );
     setMentions([]);
   };
   const renderMention = ({item, index}) =>
@@ -142,7 +142,11 @@ const ChatScreen = ({
             margin: 2,
             padding: 2,
           }}>
-          <MaterialIcons name="account-circle" size={20} color={colors.textColor}/>
+          <MaterialIcons
+            name="account-circle"
+            size={20}
+            color={colors.textColor}
+          />
           <Text style={{fontSize: 16, margin: 4, color: colors.textColor}}>
             {item?._source?.displayName}
           </Text>
@@ -270,6 +274,16 @@ const ChatScreen = ({
               <Text style={{textAlign: 'center'}}>No Internet Connected!!</Text>
             </View>
           )}
+          {attachmentLoading && (
+            <View style={{alignItems: 'center'}}>
+              <AnimatedLottieView
+                source={require('../../assests/images/attachments/uploading.json')}
+                loop
+                autoPlay
+                style={{height: 100}}
+              />
+            </View>
+          )}
           <View style={{margin: 8, marginLeft: 0}}>
             <View style={{flexDirection: 'row'}}>
               <View
@@ -277,11 +291,6 @@ const ChatScreen = ({
                   replyOnMessage && styles.inputWithReplyContainer,
                   {width: '90%'},
                 ]}>
-                {attachmentLoading && (
-                  <LootieView source={require('../../assests/images/attachments/uploading.json')} autoPlay loop/>
-                  // <Lottie source={require('../../assests/images/attachments/uploading.json')} autoPlay loop />
-                  // <Text> Documents Uploading....</Text>
-                )}
                 {attachment?.length > 0 &&
                   attachment?.map((item, index) => {
                     return (
@@ -437,8 +446,8 @@ const ChatScreen = ({
                             senderType: 'APP',
                             teamId: '63e09e1f0916f000183a9d87',
                             updatedAt: date,
-                            attachment:attachment,
-                            mentionsArr:mentionsArr
+                            attachment: attachment,
+                            mentionsArr: mentionsArr,
                           },
                         ]),
                         sendMessageAction(
