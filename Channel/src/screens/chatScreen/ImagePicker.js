@@ -1,7 +1,11 @@
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {FileUploadApi} from '../../api/attachmentsApi/FileUploadApi';
 
-export const launchCameraForPhoto = (accessToken, setAttachment) => {
+export const launchCameraForPhoto = (
+  accessToken,
+  setAttachment,
+  setAttachmentLoading,
+) => {
   const optionsForCamera = {
     storageOptions: {
       skipBackup: true,
@@ -11,6 +15,7 @@ export const launchCameraForPhoto = (accessToken, setAttachment) => {
   launchCamera(optionsForCamera, async data => {
     console.log(data);
     if (data?.assets) {
+      setAttachmentLoading(true);
       try {
         const FileNames = await FileUploadApi(data?.assets, accessToken);
         const attachment = FileNames?.map((file, index) => {
@@ -24,14 +29,20 @@ export const launchCameraForPhoto = (accessToken, setAttachment) => {
           };
         });
         console.log(attachment, '-=-=-=-');
+        setAttachmentLoading(false);
         setAttachment(prevAttachment => [...prevAttachment, ...attachment]);
       } catch (error) {
+        setAttachmentLoading(false);
         console.log(error, 'error');
       }
     }
   });
 };
-export const launchGallery = (accessToken, setAttachment) => {
+export const launchGallery = (
+  accessToken,
+  setAttachment,
+  setAttachmentLoading,
+) => {
   const options = {
     storageOptions: {
       skipBackup: true,
@@ -42,6 +53,7 @@ export const launchGallery = (accessToken, setAttachment) => {
   launchImageLibrary(options, async data => {
     console.log(data);
     if (data?.assets) {
+      setAttachmentLoading(true);
       try {
         const FileNames = await FileUploadApi(data?.assets, accessToken);
         const attachment = FileNames?.map((file, index) => {
@@ -55,8 +67,10 @@ export const launchGallery = (accessToken, setAttachment) => {
           };
         });
         console.log(attachment, '-=-=-=-');
+        setAttachmentLoading(false);
         setAttachment(prevAttachment => [...prevAttachment, ...attachment]);
       } catch (error) {
+        setAttachmentLoading(false);
         console.log(error, 'error');
       }
     }

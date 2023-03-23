@@ -28,7 +28,6 @@ import {pickDocument} from './DocumentPicker';
 import {launchCameraForPhoto, launchGallery} from './ImagePicker';
 import {makeStyles} from './Styles';
 import {useTheme} from '@react-navigation/native';
-
 const ChatScreen = ({
   route,
   userInfoState,
@@ -53,6 +52,7 @@ const ChatScreen = ({
   const [showOptions, setShowOptions] = useState(false);
   const [message, onChangeMessage] = useState('');
   const [attachment, setAttachment] = useState([]);
+  const [attachmentLoading, setAttachmentLoading] = useState(false);
   const [localMsg, setlocalMsg] = useState([]);
   const FlatListRef = useRef(null);
   const scrollY = new Animated.Value(0);
@@ -275,12 +275,15 @@ const ChatScreen = ({
                   replyOnMessage && styles.inputWithReplyContainer,
                   {width: '90%'},
                 ]}>
+                {attachmentLoading && (
+                  <Text> Documents Uploading....</Text>
+                )}
                 {attachment?.length > 0 &&
                   attachment?.map((item, index) => {
                     return (
                       <TouchableOpacity key={index}>
                         <View style={styles.replyMessageInInput}>
-                          <Text style={styles.text}>{item?.title}</Text>
+                          <Text style={styles.repliedText}>{item?.title}</Text>
                           <MaterialIcons
                             name="cancel"
                             size={18}
@@ -307,7 +310,7 @@ const ChatScreen = ({
                           width,
                         )
                       ) : (
-                        <Text style={{color:'black'}}>
+                        <Text style={styles.repliedText}>
                           {repliedMsgDetails?.content}
                         </Text>
                       )}
@@ -339,6 +342,7 @@ const ChatScreen = ({
                             pickDocument(
                               setAttachment,
                               userInfoState?.accessToken,
+                              setAttachmentLoading,
                             )
                           }
                         />
@@ -350,6 +354,7 @@ const ChatScreen = ({
                             launchCameraForPhoto(
                               userInfoState?.accessToken,
                               setAttachment,
+                              setAttachmentLoading,
                             );
                           }}
                         />
@@ -361,6 +366,7 @@ const ChatScreen = ({
                             launchGallery(
                               userInfoState?.accessToken,
                               setAttachment,
+                              setAttachmentLoading,
                             );
                           }}
                         />

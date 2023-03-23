@@ -5,6 +5,9 @@ export const makeStyles = colors => StyleSheet.create({
     text: {
       color: colors.textColor
     },
+    repliedText:{
+      color: 'black',
+    },
     inputWithReply: {
       flex: 1,
       padding: 10,
