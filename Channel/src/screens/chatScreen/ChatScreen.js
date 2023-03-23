@@ -108,7 +108,6 @@ const ChatScreen = ({
     onChangeMessage(text);
     const mentionRegex = /@\w+/g;
     const foundMentions = text.match(mentionRegex);
-
     foundMentions?.length > 0
       ? (getChannelsByQueryStartAction(
           foundMentions?.[foundMentions?.length - 1].replace('@', ''),
@@ -125,13 +124,13 @@ const ChatScreen = ({
       prevmessage.replace(
         new RegExp(`@\\w+\\s?$`),
         `@${mention?._source?.displayName} `,
-      ),
-    );
+        ),
+        );
     setMentions([]);
   };
   const renderMention = ({item, index}) =>
     item?._source?.type == 'U' && (
-      <TouchableOpacity onPress={() => handleMentionSelect(item)}>
+      <TouchableOpacity onPress={() => handleMentionSelect(item)} key={index}>
         <View
           style={{
             flexDirection: 'row',
@@ -142,7 +141,7 @@ const ChatScreen = ({
             padding: 2,
           }}>
           <MaterialIcons name="account-circle" size={20} color={colors.textColor}/>
-          <Text key={index} style={{fontSize: 16, margin: 4, color: colors.textColor}}>
+          <Text style={{fontSize: 16, margin: 4, color: colors.textColor}}>
             {item?._source?.displayName}
           </Text>
         </View>
@@ -318,7 +317,7 @@ const ChatScreen = ({
                 )}
                 <FlatList
                   data={mentions}
-                  keyExtractor={index => index.toString()}
+                  // keyExtractor={index => index.toString()}
                   renderItem={renderMention}
                   style={{maxHeight: 140}}
                   keyboardShouldPersistTaps="always"
@@ -428,6 +427,8 @@ const ChatScreen = ({
                             senderType: 'APP',
                             teamId: '63e09e1f0916f000183a9d87',
                             updatedAt: date,
+                            attachment:attachment,
+                            mentionsArr:mentionsArr
                           },
                         ]),
                         sendMessageAction(

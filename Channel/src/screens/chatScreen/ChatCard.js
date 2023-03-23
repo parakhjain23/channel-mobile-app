@@ -256,6 +256,7 @@ const LocalChatCard = ({
   const styles = makeStyles(colors);
   const [optionsVisible, setOptionsVisible] = useState(false);
   const swipeableRef = useRef(null);
+  const {width} = useWindowDimensions();
   const onLongPress = () => {
     setOptionsVisible(true);
   };
@@ -320,7 +321,13 @@ const LocalChatCard = ({
                   </View>
                 )}
                 <Text style={[styles.messageText, styles.text]}>
-                  {chat?.content}
+                {renderTextWithLinks(
+                      chat?.content,
+                      chat?.mentions,
+                      userInfoState?.accessToken,
+                      orgState,
+                      width,
+                    )}
                 </Text>
                 <Icon name="access-time" color={colors.textColor} />
               </View>
