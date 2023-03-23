@@ -308,7 +308,7 @@ const ChatScreen = ({
                           width,
                         )
                       ) : (
-                        <Text style={styles.text}>
+                        <Text style={{color:'black'}}>
                           {repliedMsgDetails?.content}
                         </Text>
                       )}
