@@ -14,7 +14,7 @@ import {
 import {connect} from 'react-redux';
 import {getChannelsStart} from '../../redux/actions/channels/ChannelsAction';
 import SearchBox from '../../components/searchBox';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation, useTheme} from '@react-navigation/native';
 import {FAB, RadioButton, TextInput} from 'react-native-paper';
 import {Modalize} from 'react-native-modalize';
 import {CHANNEL_TYPE} from '../../constants/Constants';
@@ -34,6 +34,7 @@ import {
 import Icon, {MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
 
 const CreateChannelModel = ({modalizeRef, props}) => {
+  const {colors} = useTheme()
   const [title, setTitle] = useState('');
   const [channelType, setChannelType] = useState('PUBLIC');
   const [userIds, setUserIds] = useState([]);
@@ -57,18 +58,24 @@ const CreateChannelModel = ({modalizeRef, props}) => {
       ref={modalizeRef}
       onClose={() => setsearchedUser('')}
       // avoidKeyboardLikeIOS={true}
-      modalStyle={{flex: 1, marginTop: '5%'}}>
+      modalStyle={{flex: 1, marginTop: '5%',backgroundColor:colors.modalColor}}>
       <View style={{margin: 12, flex: 1}}>
         <TextInput
           label={'Title'}
           mode={'outlined'}
           onChangeText={setTitle}
           autoFocus={true}
+          textColor={colors.textColor}
+          activeOutlineColor={colors.textColor}
+          style={{backgroundColor:colors.primaryColor}}
         />
         <TextInput
           label={'Members'}
           mode={'outlined'}
           onChangeText={changeText}
+          textColor={colors.textColor}
+          activeOutlineColor={colors.textColor}
+          style={{backgroundColor:colors.primaryColor}}
         />
 
         {searchedUser != '' && (
@@ -97,7 +104,6 @@ const CreateChannelModel = ({modalizeRef, props}) => {
                 key={index}
                 style={{
                   marginVertical: 5,
-                  // height: 30,
                   justifyContent: 'space-between',
                   flexDirection: 'row',
                 }}>
@@ -106,7 +112,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
                     justifyContent: 'center',
                   }}>
                   <Text
-                    style={{fontSize: 16, fontWeight: '400', color: 'black'}}>
+                    style={{fontSize: 16, fontWeight: '400', color: colors.textColor}}>
                     {props?.orgsState?.userIdAndNameMapping[userId]}
                   </Text>
                 </View>
@@ -133,11 +139,12 @@ const CreateChannelModel = ({modalizeRef, props}) => {
                 key={index}
                 style={{flexDirection: 'row', alignItems: 'center'}}
                 onPress={() => setChannelType(item?.type)}>
-                <Text style={{color: 'black'}}>{item?.name}</Text>
+                <Text style={{color: colors.textColor}}>{item?.name}</Text>
                 <RadioButton
                   value={item?.type}
                   status={channelType === item?.type ? 'checked' : 'unchecked'}
                   onPress={() => setChannelType(item?.type)}
+                  color={colors.textColor}
                 />
               </TouchableOpacity>
             );
@@ -168,6 +175,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
 };
 
 const ChannelsScreen = props => {
+  const {colors} = useTheme();
   const [searchValue, setsearchValue] = useState('');
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation();
@@ -243,7 +251,7 @@ const ChannelsScreen = props => {
     [props?.channelsByQueryState?.channels],
   );
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={{flex: 1, backgroundColor: colors.primaryColor}}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : null}
         keyboardVerticalOffset={70}

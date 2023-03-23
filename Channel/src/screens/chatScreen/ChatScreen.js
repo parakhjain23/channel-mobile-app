@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   FlatList,
   KeyboardAvoidingView,
-  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
@@ -27,6 +26,8 @@ import {fetchSearchedUserProfileStart} from '../../redux/actions/user/searchUser
 import {renderTextWithLinks} from './RenderTextWithLinks';
 import {pickDocument} from './DocumentPicker';
 import {launchCameraForPhoto, launchGallery} from './ImagePicker';
+import {makeStyles} from './Styles';
+import {useTheme} from '@react-navigation/native';
 
 const ChatScreen = ({
   route,
@@ -45,12 +46,12 @@ const ChatScreen = ({
   searchUserProfileAction,
 }) => {
   var {teamId, reciverUserId} = route.params;
+  const {colors} = useTheme();
+  const styles = makeStyles(colors);
   const [replyOnMessage, setreplyOnMessage] = useState(false);
   const [repliedMsgDetails, setrepliedMsgDetails] = useState('');
-  if (teamId == undefined) {
-    teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
-  }
-  const [message, onChangeMessage] = React.useState(null);
+  const [showOptions, setShowOptions] = useState(false);
+  const [message, onChangeMessage] = useState('');
   const [attachment, setAttachment] = useState([]);
   const [localMsg, setlocalMsg] = useState([]);
   const FlatListRef = useRef(null);
@@ -59,6 +60,10 @@ const ChatScreen = ({
   const [mentions, setMentions] = useState([]);
   const [mentionsArr, setMentionsArr] = useState([]);
   const {width} = useWindowDimensions();
+
+  if (teamId == undefined) {
+    teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
+  }
   useEffect(() => {
     localMsg?.shift();
   }, [chatState?.data[teamId]?.messages]);
@@ -77,6 +82,27 @@ const ChatScreen = ({
     }
     setActiveChannelTeamIdAction(teamId);
   }, [networkState?.isInternetConnected, teamId]);
+
+  const optionsPosition = useRef(new Animated.Value(0)).current;
+  const showOptionsMethod = () => {
+    setShowOptions(true);
+    Animated.timing(optionsPosition, {
+      toValue: 0,
+      duration: 250,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const hideOptionsMethod = () => {
+    Animated.timing(optionsPosition, {
+      toValue: -200,
+      duration: 250,
+      useNativeDriver: true,
+    }).start();
+    setTimeout(() => {
+      setShowOptions(false);
+    }, 130);
+  };
 
   const handleInputChange = text => {
     onChangeMessage(text);
@@ -115,8 +141,8 @@ const ChatScreen = ({
             margin: 2,
             padding: 2,
           }}>
-          <MaterialIcons name="account-circle" size={20} />
-          <Text key={index} style={{fontSize: 16, margin: 4, color: 'black'}}>
+          <MaterialIcons name="account-circle" size={20} color={colors.textColor}/>
+          <Text key={index} style={{fontSize: 16, margin: 4, color: colors.textColor}}>
             {item?._source?.displayName}
           </Text>
         </View>
@@ -297,54 +323,93 @@ const ChatScreen = ({
                   style={{maxHeight: 140}}
                   keyboardShouldPersistTaps="always"
                 />
+
                 <View style={styles.inputContainer}>
-                  <MaterialIcons
-                    name="attach-file"
-                    size={20}
-                    style={styles.attachIcon}
-                    onPress={() =>
-                      pickDocument(setAttachment, userInfoState?.accessToken)
-                    }
-                  />
-                  <MaterialIcons
-                    name="camera"
-                    size={20}
-                    style={styles.attachIcon}
-                    onPress={() => {
-                      launchCameraForPhoto(
-                        userInfoState?.accessToken,
-                        setAttachment,
-                      );
-                    }}
-                  />
-                  <MaterialIcons
-                    name="add"
-                    size={20}
-                    style={styles.attachIcon}
-                    onPress={() => {
-                      launchGallery(userInfoState?.accessToken, setAttachment);
-                    }}
-                  />
+                  {showOptions && (
+                    <Animated.View
+                      style={[
+                        styles.optionsContainer,
+                        {transform: [{translateX: optionsPosition}]},
+                      ]}>
+                      <View style={{flexDirection: 'row'}}>
+                        <MaterialIcons
+                          name="attach-file"
+                          size={20}
+                          style={styles.attachIcon}
+                          onPress={() =>
+                            pickDocument(
+                              setAttachment,
+                              userInfoState?.accessToken,
+                            )
+                          }
+                        />
+                        <MaterialIcons
+                          name="camera"
+                          size={20}
+                          style={styles.attachIcon}
+                          onPress={() => {
+                            launchCameraForPhoto(
+                              userInfoState?.accessToken,
+                              setAttachment,
+                            );
+                          }}
+                        />
+                        <MaterialIcons
+                          name="image"
+                          size={20}
+                          style={styles.attachIcon}
+                          onPress={() => {
+                            launchGallery(
+                              userInfoState?.accessToken,
+                              setAttachment,
+                            );
+                          }}
+                        />
+                        <MaterialIcons
+                          name="chevron-left"
+                          size={20}
+                          style={styles.attachIcon}
+                          onPress={hideOptionsMethod}
+                          // onPress={() => setShowOptions(false)}
+                        />
+                      </View>
+                    </Animated.View>
+                  )}
+                  {!showOptions && (
+                    <MaterialIcons
+                      name="add"
+                      size={20}
+                      style={styles.attachIcon}
+                      onPress={showOptionsMethod}
+                      // onPress={() => setShowOptions(!showOptions)}
+                    />
+                  )}
+
                   <TextInput
                     editable
                     multiline
                     onChangeText={handleInputChange}
                     // onChangeText={text => onChangeMessage(text)}
+                    placeholder="Message"
+                    placeholderTextColor={colors.textColor}
                     value={message}
                     style={[
                       replyOnMessage
                         ? styles.inputWithReply
                         : styles.inputWithoutReply,
-                      {color: 'black'},
+                      {color: colors.textColor},
                     ]}
                   />
+                  {showOptions &&
+                    message?.trim()?.length == 1 &&
+                    hideOptionsMethod()}
                 </View>
               </View>
               <View style={{justifyContent: 'flex-end'}}>
                 <MaterialIcons
                   name="send"
                   size={25}
-                  style={{color: 'black', padding: 10}}
+                  style={{color: colors.textColor, padding: 10}}
                   onPress={() => {
                     networkState?.isInternetConnected
                       ? (message?.trim() != '' || attachment?.length > 0) &&
@@ -376,6 +441,7 @@ const ChatScreen = ({
                           mentionsArr,
                         ),
                         // onChangeMessage('');
+                        hideOptionsMethod(),
                         setMentionsArr(''),
                         setMentions([]),
                         replyOnMessage && setreplyOnMessage(false),
@@ -391,7 +457,11 @@ const ChatScreen = ({
                           accessToken: userInfoState?.accessToken,
                           parentId: repliedMsgDetails?.id || null,
                           updatedAt: date,
+                          mentionsArr: mentionsArr,
                         }),
+                        hideOptionsMethod(),
+                        setMentionsArr(''),
+                        setMentions([]),
                         replyOnMessage && setreplyOnMessage(false),
                         repliedMsgDetails && setrepliedMsgDetails(null));
                   }}
@@ -451,129 +521,3 @@ const mapDispatchToProps = dispatch => {
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);
-const styles = StyleSheet.create({
-  mainContainer: {flex: 1, backgroundColor: 'white'},
-  text: {
-    color: 'black',
-  },
-  inputWithReply: {
-    flex: 1,
-    padding: 10,
-  },
-  inputWithoutReply: {
-    flex: 1,
-    // minHeight: 40,
-    // paddingHorizontal: 10,
-    // borderWidth: 1,
-    // borderRadius: 10,
-    // borderColor: 'grey',
-    paddingVertical: 8,
-  },
-  inputWithReplyContainer: {
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 10,
-  },
-  replyMessageInInput: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    margin: 5,
-    borderWidth: 0.25,
-    borderRadius: 5,
-    padding: 5,
-    backgroundColor: '#d9d9d9',
-  },
-  repliedContainer: {
-    padding: 5,
-    backgroundColor: '#d9d9d9',
-    borderRadius: 5,
-    marginBottom: 4,
-  },
-  option: {
-    margin: 8,
-    backgroundColor: 'yellow',
-  },
-  actionText: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 10,
-  },
-  moveToBottom: {
-    position: 'absolute',
-    bottom: 10,
-    right: 15,
-    backgroundColor: '#cccccc',
-    padding: 15,
-    borderRadius: 25,
-    color: 'black',
-    fontSize: 19,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.46,
-    shadowRadius: 11.14,
-
-    elevation: 17,
-  },
-  container: {
-    // borderWidth: 1,
-    // borderColor: 'gray',
-    // borderRadius: 10,
-    // flexDirection: 'row',
-    // alignItems: 'flex-end',
-    // marginBottom: 15,
-    // maxWidth: '90%',
-  },
-  sentByMe: {
-    alignSelf: 'flex-end',
-    marginRight: 10,
-  },
-  received: {
-    alignSelf: 'flex-start',
-    marginLeft: 10,
-  },
-  avatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    marginHorizontal: 4,
-  },
-  textContainer: {
-    padding: 8,
-    borderRadius: 8,
-    flexDirection: 'column',
-    maxWidth: '70%',
-  },
-  nameText: {
-    fontWeight: 'bold',
-    fontSize: 12,
-    marginBottom: 4,
-  },
-  messageText: {
-    fontSize: 14,
-  },
-  timeText: {
-    fontSize: 10,
-    color: '#666',
-    marginRight: 3,
-    marginBottom: 4,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: 4,
-    borderColor: '#b3b3b3',
-    paddingHorizontal: 5,
-    paddingVertical: 4,
-  },
-  attachIcon: {
-    marginRight: 8,
-    color: 'black',
-    backgroundColor: '#cccccc',
-    padding: 8,
-    borderRadius: 25,
-  },
-});

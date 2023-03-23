@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useTheme} from '@react-navigation/native';
 import React from 'react';
 import {Text} from 'react-native';
 import {TouchableOpacity} from 'react-native';
@@ -8,6 +8,7 @@ import * as RootNavigation from '../../navigation/RootNavigation';
 import { fetchSearchedUserProfileStart } from '../../redux/actions/user/searchUserProfileActions';
 import {store} from '../../redux/Store'
 export const renderTextWithLinks = (text, mentionsArr = [], accessToken,orgState,width) => {
+  const {colors} = useTheme();
   const urlRegex =
     /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-])?(?:\?[^\s])?)/gi;
   if (mentionsArr?.length > 0) {
@@ -20,8 +21,11 @@ export const renderTextWithLinks = (text, mentionsArr = [], accessToken,orgState
       html: `${cleanedHtml}`,
     };
     const tagsStyles = {
+      body:{
+        color:colors.textColor,
+      },
       a: {
-        color: 'blue', // Set the link color
+        color: '#14AEEA', // Set the link color
         textDecorationLine: 'underline', // Add an underline to the link
       },
     };
