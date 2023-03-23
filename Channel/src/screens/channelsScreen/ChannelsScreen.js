@@ -32,9 +32,10 @@ import {
   RenderUsersToAdd,
 } from './ChannelCard';
 import Icon, {MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
+import NoInternetComponent from '../../components/NoInternetComponent';
 
 const CreateChannelModel = ({modalizeRef, props}) => {
-  const {colors} = useTheme()
+  const {colors} = useTheme();
   const [title, setTitle] = useState('');
   const [channelType, setChannelType] = useState('PUBLIC');
   const [userIds, setUserIds] = useState([]);
@@ -58,7 +59,11 @@ const CreateChannelModel = ({modalizeRef, props}) => {
       ref={modalizeRef}
       onClose={() => setsearchedUser('')}
       // avoidKeyboardLikeIOS={true}
-      modalStyle={{flex: 1, marginTop: '5%',backgroundColor:colors.modalColor}}>
+      modalStyle={{
+        flex: 1,
+        marginTop: '5%',
+        backgroundColor: colors.modalColor,
+      }}>
       <View style={{margin: 12, flex: 1}}>
         <TextInput
           label={'Title'}
@@ -67,7 +72,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
           autoFocus={true}
           textColor={colors.textColor}
           activeOutlineColor={colors.textColor}
-          style={{backgroundColor:colors.primaryColor}}
+          style={{backgroundColor: colors.primaryColor}}
         />
         <TextInput
           label={'Members'}
@@ -75,7 +80,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
           onChangeText={changeText}
           textColor={colors.textColor}
           activeOutlineColor={colors.textColor}
-          style={{backgroundColor:colors.primaryColor}}
+          style={{backgroundColor: colors.primaryColor}}
         />
 
         {searchedUser != '' && (
@@ -112,7 +117,11 @@ const CreateChannelModel = ({modalizeRef, props}) => {
                     justifyContent: 'center',
                   }}>
                   <Text
-                    style={{fontSize: 16, fontWeight: '400', color: colors.textColor}}>
+                    style={{
+                      fontSize: 16,
+                      fontWeight: '400',
+                      color: colors.textColor,
+                    }}>
                     {props?.orgsState?.userIdAndNameMapping[userId]}
                   </Text>
                 </View>
@@ -274,7 +283,8 @@ const ChannelsScreen = props => {
                   setsearchValue={setsearchValue}
                 />
               )
-            ) : (
+            ) : props?.channelsState?.recentChannels?.length > 0 ||
+              props?.channelsState?.channels?.length > 0 ? (
               <Animated.FlatList
                 data={
                   props?.channelsState?.recentChannels ||
@@ -285,6 +295,10 @@ const ChannelsScreen = props => {
                 keyboardDismissMode="on-drag"
                 keyboardShouldPersistTaps="always"
               />
+            ) : (
+              <View style={{flex:1,justifyContent:'center',marginHorizontal:20}}>
+                <NoInternetComponent />
+              </View>
             )}
             {isScrolling && (
               <View
@@ -328,22 +342,24 @@ const ChannelsScreen = props => {
                 // label={`New\nChannel`}
               />
             </View>
-            {!isScrolling && <TouchableOpacity
-              onPress={() => {
-                setIsScrolling(true);
-              }}>
-              <View
-                style={{
-                  position: 'absolute',
-                  bottom: 10,
-                  right: 10,
-                  backgroundColor: '#333333',
-                  borderRadius: 25,
-                  padding: 15,
+            {!isScrolling && (
+              <TouchableOpacity
+                onPress={() => {
+                  setIsScrolling(true);
                 }}>
-                <Icon name="search" size={22} color={'white'} />
-              </View>
-            </TouchableOpacity>}
+                <View
+                  style={{
+                    position: 'absolute',
+                    bottom: 10,
+                    right: 10,
+                    backgroundColor: '#333333',
+                    borderRadius: 25,
+                    padding: 15,
+                  }}>
+                  <Icon name="search" size={22} color={'white'} />
+                </View>
+              </TouchableOpacity>
+            )}
           </View>
         )}
       </KeyboardAvoidingView>

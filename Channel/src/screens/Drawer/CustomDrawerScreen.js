@@ -12,6 +12,7 @@ import {
 import {Switch} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
+import NoInternetComponent from '../../components/NoInternetComponent';
 import {IMAGE_BASE_URL} from '../../constants/Constants';
 import {
   getChannelsStart,
@@ -40,20 +41,20 @@ const CustomeDrawerScreen = ({
   const navigation = useNavigation();
   const [isDarkModeOn, setIsDarkModeOn] = useState(false);
   const [isSwitchOn, setIsSwitchOn] = useState(false);
-  
+
   async function checkDarkMode() {
     const theme = await AsyncStorage.getItem('theme');
     setIsDarkModeOn(theme === 'dark');
   }
-  
+
   useEffect(() => {
     checkDarkMode();
   }, []);
-  
+
   useEffect(() => {
     setIsSwitchOn(isDarkModeOn);
   }, [isDarkModeOn]);
-  
+
   const onToggleSwitch = async () => {
     setIsSwitchOn(!isSwitchOn);
     const currentTheme = await AsyncStorage.getItem('theme');
@@ -183,15 +184,18 @@ const CustomeDrawerScreen = ({
           borderTopWidth: 0.5,
           paddingTop: 10,
         }}>
-        {/* {data?.map((item,index)=>{
-            return <OrgCard key={index} item={item}/>
-          })} */}
-        <FlatList
-          data={data}
-          renderItem={({item}) => (
-            <OrgCard item={item} navigation={navigation} />
-          )}
-        />
+        {data?.length > 0 ? (
+          <FlatList
+            data={data}
+            renderItem={({item}) => (
+              <OrgCard item={item} navigation={navigation} />
+            )}
+          />
+        ) : (
+          <View style={{flex: 0.65, justifyContent: 'center'}}>
+            <NoInternetComponent/>
+          </View>
+        )}
       </View>
       <View
         style={{
