@@ -34,6 +34,7 @@ export function channelsReducer(state = initialState, action) {
       var key = null;
       var teamId = null;
       for (let i = 0; i < action?.channels?.length; i++) {
+        console.log(action.channels[i]);
         if (action?.channels[i]?.type == 'DIRECT_MESSAGE') {
           key =
             action?.channels[i].userIds[0] != action?.userId
@@ -42,9 +43,12 @@ export function channelsReducer(state = initialState, action) {
           teamId = action?.channels[i]?._id;
           userIdAndTeamIdMapping[key] = teamId;
         } else {
+          if(action.channels[i].type == 'PERSONAL'){
+            action.channels[i].name="You ( your own personal space )"
+          }
           key = action?.channels[i]._id;
           teamIdAndNameMapping[key] = action?.channels[i]?.name;
-        }
+        } 
         tempteamIdAndTypeMapping[action?.channels[i]?._id] =
           action?.channels[i]?.type;
         channelIdAndDataMapping[action?.channels[i]?._id] = action.channels[i];
