@@ -28,6 +28,8 @@ import {pickDocument} from './DocumentPicker';
 import {launchCameraForPhoto, launchGallery} from './ImagePicker';
 import {makeStyles} from './Styles';
 import {useTheme} from '@react-navigation/native';
+import LootieView from 'lottie-react-native';
+
 const ChatScreen = ({
   route,
   userInfoState,
@@ -276,7 +278,9 @@ const ChatScreen = ({
                   {width: '90%'},
                 ]}>
                 {attachmentLoading && (
-                  <Text> Documents Uploading....</Text>
+                  <LootieView source={require('../../assests/images/attachments/uploading.json')} autoPlay loop/>
+                  // <Lottie source={require('../../assests/images/attachments/uploading.json')} autoPlay loop />
+                  // <Text> Documents Uploading....</Text>
                 )}
                 {attachment?.length > 0 &&
                   attachment?.map((item, index) => {
