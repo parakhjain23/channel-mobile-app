@@ -300,6 +300,7 @@ const ChatScreen = ({
                           <MaterialIcons
                             name="cancel"
                             size={18}
+                            color={'black'}
                             onPress={() => {
                               const newAttachment = attachment.filter(
                                 (_, i) => i !== index,
