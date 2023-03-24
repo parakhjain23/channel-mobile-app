@@ -34,7 +34,6 @@ export function channelsReducer(state = initialState, action) {
       var key = null;
       var teamId = null;
       for (let i = 0; i < action?.channels?.length; i++) {
-        console.log(action.channels[i]);
         if (action?.channels[i]?.type == 'DIRECT_MESSAGE') {
           key =
             action?.channels[i].userIds[0] != action?.userId
