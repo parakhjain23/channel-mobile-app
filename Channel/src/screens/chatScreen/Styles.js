@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-
+import { s, vs, ms, mvs } from 'react-native-size-matters';
 export const makeStyles = colors => StyleSheet.create({
     mainContainer: {flex: 1, backgroundColor: colors.primaryColor},
     text: {
@@ -10,7 +10,7 @@ export const makeStyles = colors => StyleSheet.create({
     },
     inputWithReply: {
       flex: 1,
-      padding: 10,
+      padding: ms(10),
     },
     inputWithoutReply: {
       flex: 1,
@@ -19,30 +19,30 @@ export const makeStyles = colors => StyleSheet.create({
       // borderWidth: 1,
       // borderRadius: 10,
       // borderColor: 'grey',
-      paddingVertical: 8,
+      paddingVertical: mvs(8),
     },
     inputWithReplyContainer: {
       borderWidth: 1,
       borderColor: 'gray',
-      borderRadius: 10,
+      borderRadius: ms(10),
     },
     replyMessageInInput: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      margin: 5,
-      borderWidth: 0.25,
-      borderRadius: 5,
-      padding: 5,
+      margin: ms(5),
+      borderWidth: ms(0.25),
+      borderRadius: ms(5),
+      padding: ms(5),
       backgroundColor: '#d9d9d9',
     },
     repliedContainer: {
-      padding: 5,
+      padding: ms(5),
       backgroundColor: '#d9d9d9',
-      borderRadius: 5,
-      marginBottom: 4,
+      borderRadius: ms(5),
+      marginBottom: ms(4),
     },
     option: {
-      margin: 8,
+      margin: ms(8),
       backgroundColor: 'yellow',
     },
     actionText: {
@@ -56,9 +56,9 @@ export const makeStyles = colors => StyleSheet.create({
       right: 15,
       backgroundColor: '#cccccc',
       padding: 15,
-      borderRadius: 25,
+      borderRadius: ms(25),
       color: 'black',
-      fontSize: 19,
+      fontSize: ms(19),
       shadowColor: '#000',
       shadowOffset: {
         width: 0,
@@ -67,7 +67,7 @@ export const makeStyles = colors => StyleSheet.create({
       shadowOpacity: 0.46,
       shadowRadius: 11.14,
   
-      elevation: 17,
+      elevation: ms(17),
     },
     container: {
       // borderWidth: 1,
@@ -80,57 +80,56 @@ export const makeStyles = colors => StyleSheet.create({
     },
     sentByMe: {
       alignSelf: 'flex-end',
-      marginRight: 10,
+      marginRight: ms(10),
     },
     received: {
       alignSelf: 'flex-start',
-      marginLeft: 10,
+      marginLeft: ms(10),
     },
     avatar: {
-      width: 32,
-      height: 32,
-      borderRadius: 16,
-      marginHorizontal: 4,
+      width: ms(32),
+      height: mvs(32),
+      borderRadius: ms(16),
+      marginHorizontal: ms(4),
     },
     textContainer: {
-      padding: 8,
-      borderRadius: 8,
+      padding: ms(8),
+      borderRadius: ms(8),
       flexDirection: 'column',
       maxWidth: '70%',
     },
     nameText: {
       fontWeight: 'bold',
-      fontSize: 12,
-      marginBottom: 4,
+      fontSize: ms(12),
+      marginBottom: mvs(4),
     },
     messageText: {
-      fontSize: 14,
+      fontSize: ms(14),
     },
     timeText: {
-      fontSize: 10,
       color: '#666',
-      marginRight: 3,
-      marginBottom: 4,
+      marginRight: ms(3),
+      marginBottom: mvs(4),
     },
     inputContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      borderWidth: 1,
-      borderRadius: 4,
+      borderWidth: ms(1),
+      borderRadius: ms(4),
       borderColor: '#b3b3b3',
-      paddingHorizontal: 5,
-      paddingVertical: 4,
+      paddingHorizontal: ms(5),
+      paddingVertical: mvs(4),
     },
     attachIcon: {
-      marginRight: 8,
+      marginRight: ms(8),
       color: 'black',
       backgroundColor: '#cccccc',
-      padding: 8,
-      borderRadius: 25,
+      padding: ms(8),
+      borderRadius: ms(25),
     },
     optionsContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginLeft: 10,
+      marginLeft: ms(10),
     },
   });

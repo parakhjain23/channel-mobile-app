@@ -13,6 +13,7 @@ import {Linking} from 'react-native';
 import {renderTextWithLinks} from './RenderTextWithLinks';
 import { useTheme } from '@react-navigation/native';
 import { makeStyles } from './ChatCardStyles';
+import { ms } from 'react-native-size-matters';
 
 const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
   const {colors} = useTheme();
@@ -119,7 +120,7 @@ const ChatCard = ({
                       style={[
                         styles.timeText,
                         styles.text,
-                        {marginHorizontal: 10},
+                        {marginHorizontal: ms(10)},
                       ]}>
                       {time}
                     </Text>

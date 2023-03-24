@@ -29,7 +29,7 @@ import {launchCameraForPhoto, launchGallery} from './ImagePicker';
 import {makeStyles} from './Styles';
 import {useTheme} from '@react-navigation/native';
 import AnimatedLottieView from 'lottie-react-native';
-
+import {s, vs, ms, mvs} from 'react-native-size-matters';
 const ChatScreen = ({
   route,
   userInfoState,
@@ -137,10 +137,10 @@ const ChatScreen = ({
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            borderWidth: 0.7,
+            borderWidth: ms(0.7),
             borderTopColor: 'grey',
-            margin: 2,
-            padding: 2,
+            margin: s(2),
+            padding: s(2),
           }}>
           <MaterialIcons
             name="account-circle"
@@ -223,7 +223,7 @@ const ChatScreen = ({
         behavior={Platform.OS === 'ios' ? 'padding' : null}
         keyboardVerticalOffset={70}
         style={{flex: 1}}>
-        <View style={{flex: 1, marginLeft: 10}}>
+        <View style={{flex: 1, marginLeft: ms(10)}}>
           <View style={{flex: 9}}>
             {teamId == undefined ||
             chatState?.data[teamId]?.isloading == true ? (
@@ -280,11 +280,11 @@ const ChatScreen = ({
                 source={require('../../assests/images/attachments/uploading.json')}
                 loop
                 autoPlay
-                style={{height: 100}}
+                style={{height: s(100)}}
               />
             </View>
           )}
-          <View style={{margin: 8, marginLeft: 0}}>
+          <View style={{margin: ms(8), marginLeft: 0}}>
             <View style={{flexDirection: 'row'}}>
               <View
                 style={[
@@ -299,7 +299,7 @@ const ChatScreen = ({
                           <Text style={styles.repliedText}>{item?.title}</Text>
                           <MaterialIcons
                             name="cancel"
-                            size={18}
+                            size={ms(18)}
                             color={'black'}
                             onPress={() => {
                               const newAttachment = attachment.filter(
@@ -328,7 +328,7 @@ const ChatScreen = ({
                           {repliedMsgDetails?.content}
                         </Text>
                       )}
-                      <MaterialIcons name="cancel" size={16} />
+                      <MaterialIcons name="cancel" size={ms(16)} />
                     </View>
                   </TouchableOpacity>
                 )}
@@ -336,7 +336,7 @@ const ChatScreen = ({
                   data={mentions}
                   // keyExtractor={index => index.toString()}
                   renderItem={renderMention}
-                  style={{maxHeight: 140}}
+                  style={{maxHeight: mvs(140)}}
                   keyboardShouldPersistTaps="always"
                 />
 
@@ -350,7 +350,7 @@ const ChatScreen = ({
                       <View style={{flexDirection: 'row'}}>
                         <MaterialIcons
                           name="attach-file"
-                          size={20}
+                          size={ms(20)}
                           style={styles.attachIcon}
                           onPress={() =>
                             pickDocument(
@@ -362,7 +362,7 @@ const ChatScreen = ({
                         />
                         <MaterialIcons
                           name="camera"
-                          size={20}
+                          size={ms(20)}
                           style={styles.attachIcon}
                           onPress={() => {
                             launchCameraForPhoto(
@@ -374,7 +374,7 @@ const ChatScreen = ({
                         />
                         <MaterialIcons
                           name="image"
-                          size={20}
+                          size={ms(20)}
                           style={styles.attachIcon}
                           onPress={() => {
                             launchGallery(
@@ -386,7 +386,7 @@ const ChatScreen = ({
                         />
                         <MaterialIcons
                           name="chevron-left"
-                          size={20}
+                          size={ms(20)}
                           style={styles.attachIcon}
                           onPress={hideOptionsMethod}
                           // onPress={() => setShowOptions(false)}
@@ -397,7 +397,7 @@ const ChatScreen = ({
                   {!showOptions && (
                     <MaterialIcons
                       name="add"
-                      size={20}
+                      size={ms(20)}
                       style={styles.attachIcon}
                       onPress={showOptionsMethod}
                       // onPress={() => setShowOptions(!showOptions)}
@@ -427,8 +427,8 @@ const ChatScreen = ({
               <View style={{justifyContent: 'flex-end'}}>
                 <MaterialIcons
                   name="send"
-                  size={25}
-                  style={{color: colors.textColor, padding: 10}}
+                  size={ms(25)}
+                  style={{color: colors.textColor, padding: ms(10)}}
                   onPress={() => {
                     networkState?.isInternetConnected
                       ? (message?.trim() != '' || attachment?.length > 0) &&
