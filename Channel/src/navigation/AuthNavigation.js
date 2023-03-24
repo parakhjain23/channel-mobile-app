@@ -2,12 +2,12 @@ import React, {useEffect, useState} from 'react';
 import {DarkTheme, DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import ProtectedNavigation from './ProtectedNavigation';
 import {navigationRef} from './RootNavigation';
-import { useColorScheme } from 'react-native';
+import { Linking, useColorScheme } from 'react-native';
 import { DARK_THEME, LIGHT_THEME } from '../theme/Theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const linking = {
-  prefixes: ['channel://'],
+  prefixes: ['channel://','channel','walkover.space.chat'],
   initialRouteName: 'Login',
   config: {
     screens: {
@@ -21,7 +21,8 @@ const linking = {
     },
   },
 };
-
+Linking.addEventListener((url)=>
+console.log(url,"this is url"))
 const AuthNavigation = () => {
   const [scheme,setScheme] = useState('light');
   useEffect(() => {
