@@ -20,20 +20,25 @@ const ChannelCard = ({item, navigation, props}) => {
         ]
       : item?.name;
   const iconName = item?.type == 'DIRECT_MESSAGE' ? 'user' : 'hashtag';
-  var nameFontWeight;
-  props?.channelsState?.highlightChannel[item?._id] != undefined
-    ? (nameFontWeight = props?.channelsState?.highlightChannel[item?._id]
-        ? '600'
-        : '400')
-    : '400';
+  let unread =
+    props?.channelsState?.highlightChannel[item?._id] != undefined
+      ? (unread = props?.channelsState?.highlightChannel[item?._id]
+          ? true
+          : false)
+      : false;
+  // var nameFontWeight;
+  // props?.channelsState?.highlightChannel[item?._id] != undefined
+  //   ? (nameFontWeight = props?.channelsState?.highlightChannel[item?._id]
+  //       ? '800'
+  //       : '400')
+  //   : '400';
   return (
     <TouchableOpacity
       style={{
-        // borderBottomWidth: 0.5,
         borderWidth: 0.5,
         borderColor: 'gray',
-        // borderRadius: 5,
         minHeight: 60,
+        backgroundColor: unread && colors.unreadBackgroundColor || colors.primaryColor,
         width: '100%',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -46,15 +51,34 @@ const ChannelCard = ({item, navigation, props}) => {
         style={{
           flexDirection: 'row',
           alignItems: 'center',
-          justifyContent: 'flex-start',
+          justifyContent: 'space-between',
           padding: 13,
         }}>
-        <Icon name={iconName} size={14} color={colors.textColor} />
-        <Text
-          style={{fontSize: 16, fontWeight: nameFontWeight, color: colors.textColor}}>
-          {' '}
-          {Name}
-        </Text>
+        <View style={{flexDirection: 'row', alignItems: 'center',maxWidth:'80%'}}>
+          <Icon name={iconName} size={14} color={colors.textColor} />
+          <Text>{'  '}</Text>
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: unread ? '600' : '400',
+              color: colors.textColor,
+            }}>
+            {Name}
+          </Text>
+        </View>
+        {unread && (
+          <View>
+            <Text
+              style={{
+                color: '#ff6347',
+                paddingHorizontal: 6,
+                paddingVertical: 2,
+                borderRadius: 1,
+              }}>
+              New
+            </Text>
+          </View>
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -112,7 +136,8 @@ const SearchChannelCard = ({
           padding: 13,
         }}>
         <Icon name={iconName} color={colors.textColor} />
-        <Text style={{fontSize: 16, fontWeight: '400', color: colors.textColor}}>
+        <Text
+          style={{fontSize: 16, fontWeight: '400', color: colors.textColor}}>
           {' '}
           {Name}
         </Text>
@@ -149,7 +174,7 @@ const UsersToAddCard = ({item, setUserIds, userIds, setsearchedUser}) => {
           borderColor: 'gray',
           borderRadius: 3,
           minHeight: 45,
-          margin:1,
+          margin: 1,
           flexDirection: 'column',
           justifyContent: 'center',
         }}
@@ -165,7 +190,8 @@ const UsersToAddCard = ({item, setUserIds, userIds, setsearchedUser}) => {
             padding: 13,
           }}>
           <Icon name="user" color={colors.textColor} />
-          <Text style={{fontSize: 16, fontWeight: '400', color: colors.textColor}}>
+          <Text
+            style={{fontSize: 16, fontWeight: '400', color: colors.textColor}}>
             {' '}
             {Name}
           </Text>

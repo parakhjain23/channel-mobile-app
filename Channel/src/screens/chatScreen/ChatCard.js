@@ -153,7 +153,9 @@ const ChatCard = ({
                       return item?.contentType?.includes('image') ? (
                         <TouchableOpacity
                           key={index}
-                          onPress={() => Linking.openURL(item?.resourceUrl)}>
+                          onPress={() => Linking.openURL(item?.resourceUrl)}
+                          style={{marginVertical:5,alignItems:'center'}}
+                          >
                           <Image
                             source={{uri: item?.resourceUrl}}
                             style={{height: 150, width: 150}}
@@ -166,6 +168,7 @@ const ChatCard = ({
                             borderColor: 'gray',
                             borderRadius: 5,
                             padding: 10,
+                            marginVertical:5
                           }}>
                           <TouchableOpacity
                             onPress={() => Linking.openURL(item?.resourceUrl)}>
@@ -197,10 +200,10 @@ const ChatCard = ({
                               )}
 
                               <View>
-                                <Text style={{color: 'black'}}>
+                                <Text style={styles.text}>
                                   {item?.title?.slice(0, 10) + '...'}
                                 </Text>
-                                <Text style={{color: 'black'}}>
+                                <Text style={styles.text}>
                                   {'...' + item?.contentType?.slice(-10)}
                                 </Text>
                               </View>
@@ -208,7 +211,7 @@ const ChatCard = ({
                                 name="save"
                                 size={20}
                                 style={{margin: 2}}
-                                color="black"
+                                color={colors.color}
                               />
                             </View>
                           </TouchableOpacity>
