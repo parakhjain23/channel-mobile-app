@@ -4,7 +4,7 @@ import {FlatList, Text, TouchableOpacity, View} from 'react-native';
 import {ActivityIndicator} from 'react-native';
 import {connect} from 'react-redux';
 import { setActiveChannelTeamId } from '../../redux/actions/channels/SetActiveChannelId';
-
+import { s, vs, ms, mvs } from 'react-native-size-matters';
 const ExploreChannels = props => {
   const {colors} = useTheme();
   const [channels, setChannels] = useState([]);
@@ -29,10 +29,10 @@ const ExploreChannels = props => {
     return (
       <TouchableOpacity
         style={{
-          borderWidth: 0.5,
+          borderWidth: ms(0.5),
           borderColor: 'gray',
           borderRadius: 5,
-          height: 60,
+          height: s(60),
           width: '100%',
           flexDirection: 'column',
           justifyContent: 'center',
@@ -50,9 +50,9 @@ const ExploreChannels = props => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'flex-start',
-            padding: 13,
+            padding: s(13),
           }}>
-          <Text style={{fontSize: 16, fontWeight: '400', color: colors?.textColor}}>
+          <Text style={{fontSize: ms(16,.5), fontWeight: '400', color: colors?.textColor}}>
             # {item?.name}
           </Text>
         </View>

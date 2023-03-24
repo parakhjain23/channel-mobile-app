@@ -4,7 +4,7 @@ import {Text, TouchableOpacity, View, Button} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 import {fetchSearchedUserProfileStart} from '../../redux/actions/user/searchUserProfileActions';
-
+import { s, vs, ms, mvs } from 'react-native-size-matters';
 const ChannelCard = ({item, navigation, props}) => {
   // console.log('channelcard');
   const {colors} = useTheme();
@@ -35,9 +35,9 @@ const ChannelCard = ({item, navigation, props}) => {
   return (
     <TouchableOpacity
       style={{
-        borderWidth: 0.5,
+        borderWidth: ms(0.5),
         borderColor: 'gray',
-        minHeight: 60,
+        minHeight: mvs(60),
         backgroundColor: unread && colors.unreadBackgroundColor || colors.primaryColor,
         width: '100%',
         flexDirection: 'column',
@@ -52,14 +52,14 @@ const ChannelCard = ({item, navigation, props}) => {
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: 13,
+          padding: ms(13),
         }}>
         <View style={{flexDirection: 'row', alignItems: 'center',maxWidth:'80%'}}>
           <Icon name={iconName} size={14} color={colors.textColor} />
           <Text>{'  '}</Text>
           <Text
             style={{
-              fontSize: 16,
+              fontSize: ms(16),
               fontWeight: unread ? '600' : '400',
               color: colors.textColor,
             }}>
@@ -71,9 +71,9 @@ const ChannelCard = ({item, navigation, props}) => {
             <Text
               style={{
                 color: '#ff6347',
-                paddingHorizontal: 6,
-                paddingVertical: 2,
-                borderRadius: 1,
+                paddingHorizontal: ms(6),
+                paddingVertical: mvs(2),
+                borderRadius: ms(1),
               }}>
               New
             </Text>
@@ -104,10 +104,10 @@ const SearchChannelCard = ({
   return (
     <TouchableOpacity
       style={{
-        borderWidth: 0.5,
+        borderWidth: ms(0.5),
         borderColor: 'gray',
-        borderRadius: 5,
-        height: 60,
+        borderRadius: ms(5),
+        height: s(60),
         width: '100%',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -133,15 +133,15 @@ const SearchChannelCard = ({
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'flex-start',
-          padding: 13,
+          padding: ms(13),
         }}>
         <Icon name={iconName} color={colors.textColor} />
         <Text
-          style={{fontSize: 16, fontWeight: '400', color: colors.textColor}}>
+          style={{fontSize: ms(16), fontWeight: '400', color: colors.textColor}}>
           {' '}
           {Name}
         </Text>
-        <View style={{position: 'absolute', left: undefined, right: 20}}>
+        <View style={{position: 'absolute', left: undefined, right: ms(20)}}>
           {item?._source?.type == 'U' && (
             <Button
               title="Profile"
@@ -170,11 +170,11 @@ const UsersToAddCard = ({item, setUserIds, userIds, setsearchedUser}) => {
     item?._source?.type == 'U' && (
       <TouchableOpacity
         style={{
-          borderWidth: 0.4,
+          borderWidth: ms(0.4),
           borderColor: 'gray',
-          borderRadius: 3,
-          minHeight: 45,
-          margin: 1,
+          borderRadius: s(3),
+          minHeight: s(45),
+          margin: s(1),
           flexDirection: 'column',
           justifyContent: 'center',
         }}
@@ -187,11 +187,11 @@ const UsersToAddCard = ({item, setUserIds, userIds, setsearchedUser}) => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'flex-start',
-            padding: 13,
+            padding: ms(13),
           }}>
           <Icon name="user" color={colors.textColor} />
           <Text
-            style={{fontSize: 16, fontWeight: '400', color: colors.textColor}}>
+            style={{fontSize: ms(16,.5), fontWeight: '400', color: colors.textColor}}>
             {' '}
             {Name}
           </Text>

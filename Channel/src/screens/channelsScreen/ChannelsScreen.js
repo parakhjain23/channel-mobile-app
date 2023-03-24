@@ -31,9 +31,9 @@ import {
   RenderSearchChannels,
   RenderUsersToAdd,
 } from './ChannelCard';
-import Icon, {MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import NoInternetComponent from '../../components/NoInternetComponent';
-
+import { s, vs, ms, mvs } from 'react-native-size-matters';
 const CreateChannelModel = ({modalizeRef, props}) => {
   const {colors} = useTheme();
   const [title, setTitle] = useState('');
@@ -64,7 +64,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
         marginTop: '5%',
         backgroundColor: colors.modalColor,
       }}>
-      <View style={{margin: 12, flex: 1}}>
+      <View style={{margin: ms(12), flex: 1}}>
         <TextInput
           label={'Title'}
           mode={'outlined'}
@@ -108,7 +108,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
               <View
                 key={index}
                 style={{
-                  marginVertical: 5,
+                  marginVertical: mvs(5),
                   justifyContent: 'space-between',
                   flexDirection: 'row',
                 }}>
@@ -118,7 +118,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
                   }}>
                   <Text
                     style={{
-                      fontSize: 16,
+                      fontSize: ms(16,.5),
                       fontWeight: '400',
                       color: colors.textColor,
                     }}>
@@ -140,7 +140,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
             flexDirection: 'row',
             justifyContent: 'space-around',
             flexWrap: 'wrap',
-            marginVertical: 20,
+            marginVertical: mvs(20),
           }}>
           {CHANNEL_TYPE?.map((item, index) => {
             return (
@@ -263,7 +263,7 @@ const ChannelsScreen = props => {
     <View style={{flex: 1, backgroundColor: colors.primaryColor}}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : null}
-        keyboardVerticalOffset={70}
+        keyboardVerticalOffset={s(70)}
         style={{flex: 1}}>
         {props?.channelsState?.isLoading ? (
           <ActivityIndicator size={'large'} color={'black'} />
@@ -319,8 +319,8 @@ const ChannelsScreen = props => {
             <View
               style={{
                 position: 'absolute',
-                bottom: 70,
-                right: 10,
+                bottom: s(70),
+                right: s(10),
                 alignSelf: 'center',
               }}>
               <FAB
@@ -331,13 +331,13 @@ const ChannelsScreen = props => {
                 icon={() => <Icon name="add" size={20} color={'white'} />}
                 style={{
                   backgroundColor: '#333333', // change the background color to light grey
-                  borderRadius: 50,
+                  borderRadius: ms(50),
                   alignSelf: 'center',
                 }}
                 labelStyle={{
-                  fontSize: 12,
+                  fontSize: ms(12,.5),
                   textAlign: 'center',
-                  lineHeight: 14,
+                  lineHeight: ms(14),
                 }}
                 // label={`New\nChannel`}
               />
@@ -350,13 +350,13 @@ const ChannelsScreen = props => {
                 <View
                   style={{
                     position: 'absolute',
-                    bottom: 10,
-                    right: 10,
+                    bottom: s(10),
+                    right: s(10),
                     backgroundColor: '#333333',
-                    borderRadius: 25,
-                    padding: 15,
+                    borderRadius: ms(25),
+                    padding: ms(15),
                   }}>
-                  <Icon name="search" size={22} color={'white'} />
+                  <Icon name="search" size={ms(22)} color={'white'} />
                 </View>
               </TouchableOpacity>
             )}

@@ -221,7 +221,7 @@ const ChatScreen = ({
     <View style={styles.mainContainer}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : null}
-        keyboardVerticalOffset={ms(70)}
+        keyboardVerticalOffset={s(70)}
         style={{flex: 1}}>
         <View style={{flex: 1, marginLeft: ms(10)}}>
           <View style={{flex: 9}}>
