@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useRef} from 'react';
 import {Button, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Modalize} from 'react-native-modalize';
-
+import {s,ms,mvs} from 'react-native-size-matters'
 const NoChannelsFound = ({modalizeRef, setsearchValue, props}) => {
   const navigation = useNavigation();
   return (
