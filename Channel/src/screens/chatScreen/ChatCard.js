@@ -185,7 +185,7 @@ const ChatCard = ({
                       />
                     </TouchableOpacity>
                   </Modal>
-                  {chat?.attachment?.length > 0 &&
+                  {chat?.attachment?.length > 0 && 
                     chat?.attachment?.map((item, index) => {
                       return item?.contentType?.includes('image') ? (
                         <TouchableOpacity
