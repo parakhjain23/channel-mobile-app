@@ -11,9 +11,9 @@ import {GestureHandlerRootView, Swipeable} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Linking} from 'react-native';
 import {renderTextWithLinks} from './RenderTextWithLinks';
-import { useTheme } from '@react-navigation/native';
-import { makeStyles } from './ChatCardStyles';
-import { ms } from 'react-native-size-matters';
+import {useTheme} from '@react-navigation/native';
+import {makeStyles} from './ChatCardStyles';
+import {ms} from 'react-native-size-matters';
 
 const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
   const {colors} = useTheme();
@@ -155,8 +155,7 @@ const ChatCard = ({
                         <TouchableOpacity
                           key={index}
                           onPress={() => Linking.openURL(item?.resourceUrl)}
-                          style={{marginVertical:5,alignItems:'center'}}
-                          >
+                          style={{marginVertical: 5, alignItems: 'center'}}>
                           <Image
                             source={{uri: item?.resourceUrl}}
                             style={{height: 150, width: 150}}
@@ -169,8 +168,9 @@ const ChatCard = ({
                             borderColor: 'gray',
                             borderRadius: 5,
                             padding: 10,
-                            marginVertical:5
-                          }}>
+                            marginVertical: 5,
+                          }}
+                          key={index}>
                           <TouchableOpacity
                             onPress={() => Linking.openURL(item?.resourceUrl)}>
                             <View
@@ -325,13 +325,13 @@ const LocalChatCard = ({
                   </View>
                 )}
                 <Text style={[styles.messageText, styles.text]}>
-                {renderTextWithLinks(
-                      chat?.content,
-                      chat?.mentions,
-                      userInfoState?.accessToken,
-                      orgState,
-                      width,
-                    )}
+                  {renderTextWithLinks(
+                    chat?.content,
+                    chat?.mentions,
+                    userInfoState?.accessToken,
+                    orgState,
+                    width,
+                  )}
                 </Text>
                 <Icon name="access-time" color={colors.textColor} />
               </View>
