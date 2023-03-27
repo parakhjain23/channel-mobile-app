@@ -18,7 +18,7 @@ export const pickDocument = async (setAttachment, accessToken,setAttachmentLoadi
           key: file,
           resourceUrl: `https://resources.intospace.io/${file}`,
           contentType: Files[index]?.type,
-          size: 18164,
+          // size: 18164,
           encoding: '',
         };
       });
