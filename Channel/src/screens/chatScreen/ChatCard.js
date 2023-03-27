@@ -1,6 +1,8 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
+  Dimensions,
   Image,
+  Modal,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -46,10 +48,20 @@ const ChatCard = ({
   const styles = makeStyles(colors);
   const [optionsVisible, setOptionsVisible] = useState(false);
   const {width} = useWindowDimensions();
+  const [selectedImage, setSelectedImage] = useState(null);
+  const swipeableRef = useRef(null);
+
+  const handleImagePress = index => {
+    setSelectedImage(chat?.attachment?.[index]);
+  };
+
+  const handleModalClose = () => {
+    setSelectedImage(null);
+  };
+
   useEffect(() => {
     setOptionsVisible(false);
   }, [chatState?.data[chat?.teamId]?.messages]);
-  const swipeableRef = useRef(null);
   const onLongPress = () => {
     setOptionsVisible(!optionsVisible);
   };
@@ -149,12 +161,37 @@ const ChatCard = ({
                       )}
                     </TouchableOpacity>
                   )}
+                  <Modal
+                    visible={selectedImage !== null}
+                    transparent={true}
+                    onRequestClose={handleModalClose}>
+                    <TouchableOpacity
+                      style={{
+                        flex: 1,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                      }}
+                      activeOpacity={1}
+                      // onPress={handleModalClose}
+                    >
+                      <Image
+                        source={{uri: selectedImage?.resourceUrl}}
+                        style={{
+                          width: Dimensions.get('window').width,
+                          height: Dimensions.get('window').height - 50,
+                        }}
+                        resizeMode="contain"
+                      />
+                    </TouchableOpacity>
+                  </Modal>
                   {chat?.attachment?.length > 0 &&
                     chat?.attachment?.map((item, index) => {
                       return item?.contentType?.includes('image') ? (
                         <TouchableOpacity
                           key={index}
-                          onPress={() => Linking.openURL(item?.resourceUrl)}
+                          onPress={() => handleImagePress(index)}
+                          // onPress={() => Linking.openURL(item?.resourceUrl)}
                           style={{marginVertical: 5, alignItems: 'center'}}>
                           <Image
                             source={{uri: item?.resourceUrl}}
