@@ -6,6 +6,10 @@
 	<array>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>Allow access to the camera to take pictures for uploading.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Allow access to the photo library to select pictures for uploading.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>

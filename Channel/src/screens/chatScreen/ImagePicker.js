@@ -12,8 +12,8 @@ export const launchCameraForPhoto = (
       path: 'images',
     },
   };
+  console.log(optionsForCamera,"=-=-=-=");
   launchCamera(optionsForCamera, async data => {
-    console.log(data);
     if (data?.assets) {
       setAttachmentLoading(true);
       try {
