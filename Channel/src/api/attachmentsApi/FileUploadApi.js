@@ -23,36 +23,28 @@ export const FileUploadApi = async (Files, accessToken) => {
     const Genereated_URL = await presignedUrl.json();
     const signedUrls = Object.values(Genereated_URL);
 
-    // Create an array of upload promises
     const uploadPromises = signedUrls.map(async (s3BucketUrl, index) => {
-      const fileData = new FormData();
-      fileData.append('file', {
-        uri: Files[index]?.uri,
-        type: Files[index]?.type,
-        name: Files[index]?.name || Files[index]?.fileName,
-      });
-      await UploadDocumentApi(s3BucketUrl, fileData);
+      const fileUri = await fetch(Files[index]?.uri);
+      const imageBody = await fileUri.blob();
+      const fileType = Files[index]?.type;
+      await UploadDocumentApi(s3BucketUrl, fileType, imageBody);
+      return fileNames[index];
     });
 
-    // Wait for all uploads to finish
-    await Promise.all(uploadPromises);
-
-    return fileNames;
+    const uploadedFileNames = await Promise.all(uploadPromises);
+    return uploadedFileNames;
   } catch (error) {
-    console.error(error);
-    throw error;
+    console.warn(error);
+    return null;
   }
 };
 
-
 const UploadDocumentApi = async (s3BucketUrl, fileType, imageBody) => {
-  const uploadDocToS3 = await fetch(s3BucketUrl, {
+  await fetch(s3BucketUrl, {
     method: 'PUT',
     headers: {
       'Content-Type': fileType,
     },
     body: imageBody,
   });
-  //   const downloadDocUrl = JSON.stringify(uploadDocToS3);
-  //   console.log(downloadDocUrl, 'result from upload document api');
 };
