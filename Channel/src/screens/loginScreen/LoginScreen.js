@@ -26,7 +26,10 @@ const LoginScreen = (props) => {
   }, [])
   const styling = Platform.OS =='ios'? {animated:true} : {animation:{startEnter:'slide_in_left'}} 
   const handleDeepLink =(event)=>{
-    InAppBrowser.close()
+    console.log(event);
+    if(event?.url != 'channel://'){
+      InAppBrowser.close()
+    }
   }
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
