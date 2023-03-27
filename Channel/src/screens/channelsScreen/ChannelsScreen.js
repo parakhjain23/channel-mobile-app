@@ -10,6 +10,7 @@ import {
   ScrollView,
   Animated,
   KeyboardAvoidingView,
+  RefreshControl,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {getChannelsStart} from '../../redux/actions/channels/ChannelsAction';
@@ -33,7 +34,8 @@ import {
 } from './ChannelCard';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import NoInternetComponent from '../../components/NoInternetComponent';
-import { s, vs, ms, mvs } from 'react-native-size-matters';
+import {s, vs, ms, mvs} from 'react-native-size-matters';
+import { getAllUsersOfOrgStart } from '../../redux/actions/org/GetAllUsersOfOrg';
 const CreateChannelModel = ({modalizeRef, props}) => {
   const {colors} = useTheme();
   const [title, setTitle] = useState('');
@@ -118,7 +120,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
                   }}>
                   <Text
                     style={{
-                      fontSize: ms(16,.5),
+                      fontSize: ms(16, 0.5),
                       fontWeight: '400',
                       color: colors.textColor,
                     }}>
@@ -223,17 +225,21 @@ const ChannelsScreen = props => {
   const onOpen = () => {
     modalizeRef.current?.open();
   };
-  // const onRefresh = React.useCallback(async () => {
-  //   setRefreshing(true);
-  //   await props.getChannelsAction(
-  //     props?.userInfoState?.accessToken,
-  //     props?.orgsState?.currentOrgId,
-  //     props?.userInfoState?.user?.id,
-  //   );
-  //   setTimeout(() => {
-  //     setRefreshing(false);
-  //   }, 2000);
-  // }, []);
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    await props.getChannelsAction(
+      props?.userInfoState?.accessToken,
+      props?.orgsState?.currentOrgId,
+      props?.userInfoState?.user?.id,
+    );
+    await props.getAllUsersOfOrgAction(
+      props?.userInfoState?.accessToken,
+      props?.orgsState?.currentOrgId
+    )
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
   const renderItemChannels = useCallback(
     ({item, index}) => {
       return (
@@ -296,8 +302,22 @@ const ChannelsScreen = props => {
                 keyboardShouldPersistTaps="always"
               />
             ) : (
-              <View style={{flex:1,justifyContent:'center',marginHorizontal:20}}>
-                <NoInternetComponent />
+              <View
+                style={{
+                  flex: 1,
+                }}
+                >
+                <ScrollView
+                  style={{
+                    marginHorizontal: 20,
+                  }}
+                  contentContainerStyle={{justifyContent: 'center', flex: 1}}
+                  refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                  }
+                  >
+                  <NoInternetComponent />
+                </ScrollView>
               </View>
             )}
             {isScrolling && (
@@ -335,7 +355,7 @@ const ChannelsScreen = props => {
                   alignSelf: 'center',
                 }}
                 labelStyle={{
-                  fontSize: ms(12,.5),
+                  fontSize: ms(12, 0.5),
                   textAlign: 'center',
                   lineHeight: ms(14),
                 }}
@@ -388,6 +408,7 @@ const mapDispatchToProps = dispatch => {
     setActiveChannelTeamIdAction: teamId =>
       dispatch(setActiveChannelTeamId(teamId)),
     resetActiveChannelTeamIdAction: () => dispatch(resetActiveChannelTeamId()),
+    getAllUsersOfOrgAction:(accessToken,orgId) => dispatch(getAllUsersOfOrgStart(accessToken,orgId)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelsScreen);

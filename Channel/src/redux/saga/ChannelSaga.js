@@ -11,6 +11,7 @@ function* ChannelSaga() {
     yield takeLatest(Actions.FETCH_CHANNELS_START,getChannels)
     yield takeLatest(Actions.UPDATE_CURRENT_ORG_ID,getChannels)
     yield takeLatest(Actions.UPDATE_CURRENT_ORG_ID,getAllUsersOfOrg)
+    yield takeLatest(Actions.GET_ALL_USERS_START,getAllUsersOfOrg)
     yield takeLatest(Actions.CREATE_NEW_CHANNEL_START,createNewChannel)
     yield takeLatest(Actions.FETCH_CHANNELS_BY_QUERY_START,getChannelsByQuery)
     yield takeLatest(Actions.CREATE_NEW_DM_CHANNEL_START,createNewDmChannel)

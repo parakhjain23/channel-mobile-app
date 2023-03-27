@@ -10,7 +10,13 @@ export function* getAllUsersOfOrg({accessToken,orgId}){
     console.warn(error);
   }
 }
-
+export function getAllUsersOfOrgStart(accessToken,orgId){
+  console.log('start-=-=-=-=--=-');
+  return {
+    type: Actions.GET_ALL_USERS_START,
+    accessToken,orgId
+  }
+}
 export function getAllUsersOfOrgSuccess(data){
   return {
     type: Actions.GET_ALL_USERS_SUCCESS,
