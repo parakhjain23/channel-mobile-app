@@ -26,6 +26,7 @@ const LoginScreen = (props) => {
   }, [])
   const styling = Platform.OS =='ios'? {animated:true} : {animation:{startEnter:'slide_in_left'}} 
   const handleDeepLink =(event)=>{
+    console.log(event);
     if(event?.url != 'channel://'){
       InAppBrowser.close()
     }
