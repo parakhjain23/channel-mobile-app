@@ -102,7 +102,7 @@ const CustomeDrawerScreen = ({
           borderColor: 'gray',
           borderRadius: 5,
           marginVertical: '1%',
-          backgroundColor: colors.primaryColor
+          backgroundColor: colors.primaryColor,
         }}>
         <View
           style={{
@@ -155,7 +155,7 @@ const CustomeDrawerScreen = ({
         backgroundColor: colors.drawerBackgroundColor,
       }}>
       <View style={{flex: 0.15, justifyContent: 'center'}}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View style={{flexDirection: 'row', alignItems: 'center',maxWidth:'90%'}}>
           <Image
             source={{uri: `${IMAGE_BASE_URL}${userInfoState?.user?.avatarKey}`}}
             style={{width: 60, height: 60, borderRadius: 50}}
@@ -172,9 +172,14 @@ const CustomeDrawerScreen = ({
                 userInfoState?.user?.displayName}{' '}
               {userInfoState?.user?.lastName && userInfoState?.user?.lastName}
             </Text>
-            <Text style={{marginLeft: 10, color: colors.textColor}}>
-              {userInfoState?.user?.email && userInfoState?.user?.email}
-            </Text>
+              <Text
+                style={{
+                  marginLeft: 10,
+                  color: colors.textColor,
+                }}>
+                {userInfoState?.user?.email &&
+                  userInfoState?.user?.email}
+              </Text>
           </View>
         </View>
       </View>
@@ -194,7 +199,7 @@ const CustomeDrawerScreen = ({
           />
         ) : (
           <View style={{flex: 0.65, justifyContent: 'center'}}>
-            <NoInternetComponent/>
+            <NoInternetComponent />
           </View>
         )}
       </View>
