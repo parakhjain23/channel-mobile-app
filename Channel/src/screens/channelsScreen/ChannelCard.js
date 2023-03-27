@@ -4,9 +4,9 @@ import {Text, TouchableOpacity, View, Button} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 import {fetchSearchedUserProfileStart} from '../../redux/actions/user/searchUserProfileActions';
-import { s, vs, ms, mvs } from 'react-native-size-matters';
-const ChannelCard = ({item, navigation, props}) => {
-  // console.log('channelcard');
+import {s, vs, ms, mvs} from 'react-native-size-matters';
+import {resetUnreadCountStart} from '../../redux/actions/channels/ChannelsAction';
+const ChannelCard = ({item, navigation, props,resetUnreadCountAction}) => {
   const {colors} = useTheme();
   const Name =
     item?.type == 'DIRECT_MESSAGE'
@@ -38,13 +38,20 @@ const ChannelCard = ({item, navigation, props}) => {
         borderWidth: ms(0.5),
         borderColor: 'gray',
         minHeight: mvs(60),
-        backgroundColor: unread && colors.unreadBackgroundColor || colors.primaryColor,
+        backgroundColor:
+          (unread && colors.unreadBackgroundColor) || colors.primaryColor,
         width: '100%',
         flexDirection: 'column',
         justifyContent: 'center',
       }}
       onPress={() => {
         props?.setActiveChannelTeamIdAction(item?._id);
+        props?.channelsState.teamIdAndUnreadCountMapping?.[item?._id] > 0 && resetUnreadCountAction(
+          props?.orgsState?.currentOrgId,
+          props?.userInfoState?.user?.id,
+          item?._id,
+          props?.userInfoState?.accessToken,
+        );
         navigation.navigate('Chat', {chatHeaderTitle: Name, teamId: item?._id});
       }}>
       <View
@@ -54,7 +61,8 @@ const ChannelCard = ({item, navigation, props}) => {
           justifyContent: 'space-between',
           padding: ms(13),
         }}>
-        <View style={{flexDirection: 'row', alignItems: 'center',maxWidth:'80%'}}>
+        <View
+          style={{flexDirection: 'row', alignItems: 'center', maxWidth: '80%'}}>
           <Icon name={iconName} size={14} color={colors.textColor} />
           <Text>{'  '}</Text>
           <Text
@@ -66,7 +74,7 @@ const ChannelCard = ({item, navigation, props}) => {
             {Name}
           </Text>
         </View>
-        {unread && (
+        {props?.channelsState.teamIdAndUnreadCountMapping?.[item?._id] > 0 && (
           <View>
             <Text
               style={{
@@ -75,10 +83,24 @@ const ChannelCard = ({item, navigation, props}) => {
                 paddingVertical: mvs(2),
                 borderRadius: ms(1),
               }}>
-              New
+              New{' '}
+              {props?.channelsState.teamIdAndUnreadCountMapping?.[item?._id]}
             </Text>
           </View>
         )}
+        {/* {unread && (
+          <View>
+            <Text
+              style={{
+                color: '#ff6347',
+                paddingHorizontal: ms(6),
+                paddingVertical: mvs(2),
+                borderRadius: ms(1),
+              }}>
+              New {props?.channelsState.teamIdAndUnreadCountMapping>0 && props?.channelsState.teamIdAndUnreadCountMapping}
+            </Text>
+          </View>
+        )} */}
       </View>
     </TouchableOpacity>
   );
@@ -137,7 +159,11 @@ const SearchChannelCard = ({
         }}>
         <Icon name={iconName} color={colors.textColor} />
         <Text
-          style={{fontSize: ms(16), fontWeight: '400', color: colors.textColor}}>
+          style={{
+            fontSize: ms(16),
+            fontWeight: '400',
+            color: colors.textColor,
+          }}>
           {' '}
           {Name}
         </Text>
@@ -191,7 +217,11 @@ const UsersToAddCard = ({item, setUserIds, userIds, setsearchedUser}) => {
           }}>
           <Icon name="user" color={colors.textColor} />
           <Text
-            style={{fontSize: ms(16,.5), fontWeight: '400', color: colors.textColor}}>
+            style={{
+              fontSize: ms(16, 0.5),
+              fontWeight: '400',
+              color: colors.textColor,
+            }}>
             {' '}
             {Name}
           </Text>
@@ -208,9 +238,13 @@ const mapDispatchToProps = dispatch => {
   return {
     searchUserProfileAction: (userId, token) =>
       dispatch(fetchSearchedUserProfileStart(userId, token)),
+    resetUnreadCountAction: (orgId, userId, teamId, accessToken) =>
+      dispatch(resetUnreadCountStart(orgId, userId, teamId, accessToken)),
   };
 };
-export const RenderChannels = React.memo(ChannelCard);
+export const RenderChannels = React.memo(
+  connect(mapStateToProps, mapDispatchToProps)(ChannelCard),
+);
 export const RenderSearchChannels = React.memo(
   connect(mapStateToProps, mapDispatchToProps)(SearchChannelCard),
 );
