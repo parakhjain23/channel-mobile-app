@@ -5,9 +5,11 @@ import { getChannelsStart } from '../../redux/actions/channels/ChannelsAction';
 import { getOrgDetails, getOrgDetailsStart } from '../../redux/actions/org/GetOrgDetailsAction';
 import { saveUserToken } from '../../redux/actions/user/userAction';
 import { InAppBrowser } from 'react-native-inappbrowser-reborn'
+import { useTheme } from '@react-navigation/native';
 
 
 const LoginScreen = (props) => {
+  const {colors} = useTheme();
   const [token,setToken] = useState( props?.route?.params?.token);
   useEffect(()=>{
     setToken(props?.route?.params?.token)
@@ -32,7 +34,7 @@ const LoginScreen = (props) => {
     }
   }
   return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',backgroundColor:colors.drawerBackgroundColor}}>
       <Image source={require('../../assests/images/appIcon/icon-96x96.png')} />
       <Button
         title="Login Via Space"
