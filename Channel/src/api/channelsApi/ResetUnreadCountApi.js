@@ -22,9 +22,9 @@ export const resetUnreadCountApi = async (
       },
     );
     const result = await response.json();
-    console.log(result,'result from the resetunreadcount api ');
-    return result;
+    console.log(result,'result from the reset unread count api ');
+    // return result;
   } catch (error) {
-    console.warn(error,"kjhokhgoihikjhgouihio");
+    console.warn(error,"error in reset unread count api");
   }
 };

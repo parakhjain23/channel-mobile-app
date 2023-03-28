@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import {fetchSearchedUserProfileStart} from '../../redux/actions/user/searchUserProfileActions';
 import {s, vs, ms, mvs} from 'react-native-size-matters';
 import {resetUnreadCountStart} from '../../redux/actions/channels/ChannelsAction';
-const ChannelCard = ({item, navigation, props,resetUnreadCountAction}) => {
+const ChannelCard = ({item, navigation, props, resetUnreadCountAction}) => {
   const {colors} = useTheme();
   const Name =
     item?.type == 'DIRECT_MESSAGE'
@@ -26,17 +26,12 @@ const ChannelCard = ({item, navigation, props,resetUnreadCountAction}) => {
           ? true
           : false)
       : false;
-  // var nameFontWeight;
-  // props?.channelsState?.highlightChannel[item?._id] != undefined
-  //   ? (nameFontWeight = props?.channelsState?.highlightChannel[item?._id]
-  //       ? '800'
-  //       : '400')
-  //   : '400';
+
   return (
     <TouchableOpacity
       style={{
-        borderWidth: ms(0.5),
-        borderColor: 'gray',
+        borderBottomWidth: ms(0.7),
+        borderBottomColor: unread ? colors?.unreadBorderColor : 'gray',
         minHeight: mvs(60),
         backgroundColor:
           (unread && colors.unreadBackgroundColor) || colors.primaryColor,
@@ -46,12 +41,13 @@ const ChannelCard = ({item, navigation, props,resetUnreadCountAction}) => {
       }}
       onPress={() => {
         props?.setActiveChannelTeamIdAction(item?._id);
-        props?.channelsState.teamIdAndUnreadCountMapping?.[item?._id] > 0 && resetUnreadCountAction(
-          props?.orgsState?.currentOrgId,
-          props?.userInfoState?.user?.id,
-          item?._id,
-          props?.userInfoState?.accessToken,
-        );
+        props?.channelsState?.teamIdAndUnreadCountMapping?.[item?._id] > 0 &&
+          resetUnreadCountAction(
+            props?.orgsState?.currentOrgId,
+            props?.userInfoState?.user?.id,
+            item?._id,
+            props?.userInfoState?.accessToken,
+          );
         navigation.navigate('Chat', {chatHeaderTitle: Name, teamId: item?._id});
       }}>
       <View
@@ -74,16 +70,29 @@ const ChannelCard = ({item, navigation, props,resetUnreadCountAction}) => {
             {Name}
           </Text>
         </View>
-        {props?.channelsState.teamIdAndUnreadCountMapping?.[item?._id] > 0 && (
-          <View>
+        {props?.channelsState?.teamIdAndUnreadCountMapping?.[item?._id] > 0 && (
+          <View
+            style={{
+              position: 'absolute',
+              top: 12, // adjust this value to position the text correctly
+              right: 5, // adjust this value to position the text correctly
+              backgroundColor: '#73e1ff',
+              paddingHorizontal: ms(5),
+              paddingVertical: mvs(2),
+              borderRadius: ms(5),
+              overflow: 'hidden',
+            }}>
             <Text
               style={{
-                color: '#ff6347',
-                paddingHorizontal: ms(6),
-                paddingVertical: mvs(2),
-                borderRadius: ms(1),
+                color: 'black',
+                fontSize: ms(11),
+                fontWeight: 'bold',
+                textAlign: 'center',
+                minWidth: ms(15),
+                height: ms(20),
+                lineHeight: ms(20),
+                overflow: 'hidden',
               }}>
-              New{' '}
               {props?.channelsState.teamIdAndUnreadCountMapping?.[item?._id]}
             </Text>
           </View>

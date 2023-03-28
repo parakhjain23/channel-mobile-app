@@ -27,7 +27,7 @@ export const DARK_THEME = {
         headerColor: '#1A2421',
         drawerBackgroundColor: '#1A2421',
         searchBoxBackgroundColor: '#E6E6E6',
-        // unreadBackgroundColor: '#000000'
+        unreadBorderColor: '#73e1ff'
     }
 }
 
@@ -43,6 +43,6 @@ export const LIGHT_THEME = {
         headerColor: 'white',
         drawerBackgroundColor: 'white',
         searchBoxBackgroundColor: 'white',
-        // unreadBackgroundColor: '#f0f0f0'
+        unreadBorderColor: 'black'
     }
 }

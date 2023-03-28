@@ -117,10 +117,12 @@ export function channelsReducer(state = initialState, action) {
     //   };
     case Actions.MOVE_CHANNEL_TO_TOP:
       var tempHighlightChannels = {};
+      let teamIdAndUnreadCountMappingLocal = {};
       const newRecentChannels = [...state?.recentChannels]; // create a new copy of recentChannels array
-      action.channelId.forEach(id => {
+      action?.channelId.forEach(id => {
         if (state?.activeChannelTeamId != id) {
           tempHighlightChannels[id] = true;
+          teamIdAndUnreadCountMappingLocal[id] = (state?.teamIdAndUnreadCountMapping[id])+1
         } else {
           tempHighlightChannels[id] = false;
         }
@@ -146,7 +148,11 @@ export function channelsReducer(state = initialState, action) {
       return {
         ...state,
         recentChannels: newRecentChannels,
-        highlightChannel: {...state.highlightChannel, ...tempHighlightChannels},
+        highlightChannel: {...state?.highlightChannel, ...tempHighlightChannels},
+        teamIdAndUnreadCountMapping: {
+          ...state?.teamIdAndUnreadCountMapping,
+          ...teamIdAndUnreadCountMappingLocal
+        }
       };
 
     case Actions.CREATE_NEW_CHANNEL_SUCCESS:
@@ -200,6 +206,7 @@ export function channelsReducer(state = initialState, action) {
 
     case Actions.RESET_ACTIVE_CHANNEL_TEAMID:
       return {...state, activeChannelTeamId: null};
+    
     default:
       return state;
   }

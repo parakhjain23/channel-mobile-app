@@ -70,10 +70,3 @@ export function resetUnreadCountStart(orgId,userId,teamId,accessToken){
     orgId,userId,teamId,accessToken
   }
 }
-// export function resetUnreadCountSuccess(response){
-//   return {
-//     type: Actions.RESET_UNREAD_COUNT_SUCCESS,
-//     // orgId,userId,teamId,accessToken
-//     payload: response
-//   }
-// }
