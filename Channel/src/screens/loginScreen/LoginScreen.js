@@ -20,7 +20,7 @@ const LoginScreen = (props) => {
       props.getOrgDetailsAction(props?.route?.params?.token);
     }
   },[token])
-  Platform.OS=='ios' && useEffect(() => {
+  useEffect(() => {
     Linking.addEventListener('url',handleDeepLink)
     return () => {
       Linking.remove('url');

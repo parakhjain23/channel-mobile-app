@@ -35,16 +35,16 @@ const SocketService = socket => {
     }
   });
   socket.on('chat/message patched', data => {
-    console.log(data,"chat patched");
-    if (data?.deleted) {
-      store.dispatch(deleteMessageSuccess(data));
-    }
+    // console.log(data,"chat patched");
+    // if (data?.deleted) {
+    //   store.dispatch(deleteMessageSuccess(data));
+    // }
   });
   socket.on('chat/message updated', data => {
-    console.log(data,"chat updated");
-    if (data?.deleted) {
-      store.dispatch(deleteMessageSuccess(data));
-    }
+    // console.log(data,"chat updated");
+    // if (data?.deleted) {
+    //   store.dispatch(deleteMessageSuccess(data));
+    // }
   });
 
   socket.on('chat/team created', data => {
