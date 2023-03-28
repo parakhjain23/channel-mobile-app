@@ -41,6 +41,7 @@ const ChannelCard = ({item, navigation, props, resetUnreadCountAction}) => {
       }}
       onPress={() => {
         props?.setActiveChannelTeamIdAction(item?._id);
+        navigation.navigate('Chat', {chatHeaderTitle: Name, teamId: item?._id});
         props?.channelsState?.teamIdAndUnreadCountMapping?.[item?._id] > 0 &&
           resetUnreadCountAction(
             props?.orgsState?.currentOrgId,
@@ -48,7 +49,6 @@ const ChannelCard = ({item, navigation, props, resetUnreadCountAction}) => {
             item?._id,
             props?.userInfoState?.accessToken,
           );
-        navigation.navigate('Chat', {chatHeaderTitle: Name, teamId: item?._id});
       }}>
       <View
         style={{
