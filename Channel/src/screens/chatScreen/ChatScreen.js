@@ -267,11 +267,11 @@ const ChatScreen = ({
               />
             )}
           </View>
-          {!networkState?.isInternetConnected && (
+          {/* {!networkState?.isInternetConnected && (
             <View>
               <Text style={{textAlign: 'center', color:colors.textColor}}>No Internet Connected!!</Text>
             </View>
-          )}
+          )} */}
           {attachmentLoading && (
             <View style={{alignItems: 'center'}}>
               <AnimatedLottieView
