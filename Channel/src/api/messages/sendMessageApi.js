@@ -9,12 +9,6 @@ export const sendMessageApi = async (
   attachment,
   mentionsArr = [],
 ) => {
-  console.log(message,"this is message");
-  console.log(teamId,"this is teamId");
-  console.log(senderId,"this is sender id");
-  console.log(attachment,"this is attachments");
-  console.log(mentionsArr,"this is mentions arr");
-
   try {
     const mentionRegex = /@(\w+)/g;
     // Replace mentions with HTML tags
@@ -28,7 +22,6 @@ export const sendMessageApi = async (
 
     let mentionIndex = 0;
     if (mentionsArr?.length > 0 || message?.includes('@channel')) {
-      console.log("inside if condition");
       message = message?.replace(mentionRegex, (match, username) => {
         if (match === '@channel') {
           mentionsArr ? mentionsArr?.push('@all') : (mentionsArr = []),

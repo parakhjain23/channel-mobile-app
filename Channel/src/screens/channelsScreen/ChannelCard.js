@@ -64,7 +64,7 @@ const ChannelCard = ({item, navigation, props, resetUnreadCountAction}) => {
           <Text
             style={{
               fontSize: ms(16),
-              fontWeight: unread ? '600' : '400',
+              fontWeight: unread ? '700' : '400',
               color: colors.textColor,
             }}>
             {Name}

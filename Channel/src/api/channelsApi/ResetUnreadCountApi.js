@@ -4,8 +4,6 @@ export const resetUnreadCountApi = async (
   teamId,
   accessToken,
 ) => {
-  console.log('in api',orgId,userId,teamId,accessToken);
-
   try {
     var response = await fetch(
       `https://api.intospace.io/chat/teamUser?orgId=${orgId}&userId=${userId}&teamId=${teamId}`,
@@ -22,7 +20,6 @@ export const resetUnreadCountApi = async (
       },
     );
     const result = await response.json();
-    console.log(result,'result from the reset unread count api ');
     // return result;
   } catch (error) {
     console.warn(error,"error in reset unread count api");

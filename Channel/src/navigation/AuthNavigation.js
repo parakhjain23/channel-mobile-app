@@ -21,14 +21,11 @@ const linking = {
     },
   },
 };
-Linking.addEventListener((url)=>
-console.log(url,"this is url"))
 const AuthNavigation = () => {
   const [scheme,setScheme] = useState('light');
   useEffect(() => {
     async function fetchTheme() {
       const theme = await AsyncStorage.getItem('theme');
-      console.log(theme,'theme');
       if(theme!=null){
         setScheme(theme)
       }

@@ -12,7 +12,6 @@ export const launchCameraForPhoto = (
       path: 'images',
     },
   };
-  console.log(optionsForCamera,"=-=-=-=");
   launchCamera(optionsForCamera, async data => {
     if (data?.assets) {
       setAttachmentLoading(true);
@@ -28,7 +27,6 @@ export const launchCameraForPhoto = (
             encoding: '',
           };
         });
-        console.log(attachment, '-=-=-=-');
         setAttachmentLoading(false);
         setAttachment(prevAttachment => [...prevAttachment, ...attachment]);
       } catch (error) {
@@ -51,7 +49,6 @@ export const launchGallery = (
     selectionLimit: 0,
   };
   launchImageLibrary(options, async data => {
-    console.log(data);
     if (data?.assets) {
       setAttachmentLoading(true);
       try {
@@ -66,12 +63,10 @@ export const launchGallery = (
             encoding: '',
           };
         });
-        console.log(attachment, '-=-=-=-');
         setAttachmentLoading(false);
         setAttachment(prevAttachment => [...prevAttachment, ...attachment]);
       } catch (error) {
         setAttachmentLoading(false);
-        console.log(error, 'error');
       }
     }
   });

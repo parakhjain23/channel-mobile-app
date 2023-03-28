@@ -11,7 +11,6 @@ export function* getAllUsersOfOrg({accessToken,orgId}){
   }
 }
 export function getAllUsersOfOrgStart(accessToken,orgId){
-  console.log('start-=-=-=-=--=-');
   return {
     type: Actions.GET_ALL_USERS_START,
     accessToken,orgId

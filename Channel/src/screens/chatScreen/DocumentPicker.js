@@ -30,10 +30,8 @@ export const pickDocument = async (setAttachment, accessToken,setAttachmentLoadi
   } catch (err) {
     if (DocumentPicker.isCancel(err)) {
       setAttachmentLoading(false);
-      console.log('User cancelled document picker');
     } else {
       setAttachmentLoading(false);
-      console.log('DocumentPicker Error: ', err);
     }
   }
 };

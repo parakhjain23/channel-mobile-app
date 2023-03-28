@@ -78,7 +78,6 @@ const ChatScreen = ({
       chatState?.data[teamId]?.messages == [] ||
       (!chatState?.data[teamId]?.apiCalled && networkState?.isInternetConnected)
     ) {
-      console.log('api called');
       fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
     }
     setActiveChannelTeamIdAction(teamId);
@@ -270,7 +269,7 @@ const ChatScreen = ({
           </View>
           {!networkState?.isInternetConnected && (
             <View>
-              <Text style={{textAlign: 'center'}}>No Internet Connected!!</Text>
+              <Text style={{textAlign: 'center', color:colors.textColor}}>No Internet Connected!!</Text>
             </View>
           )}
           {attachmentLoading && (

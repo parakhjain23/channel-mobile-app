@@ -50,7 +50,10 @@ const ChatCard = ({
   const {width} = useWindowDimensions();
   const [selectedImage, setSelectedImage] = useState(null);
   const swipeableRef = useRef(null);
-  const attachment = typeof(chat?.attachment) == 'string' ? JSON.parse(chat?.attachment) : chat?.attachment
+  const attachment =
+    typeof chat?.attachment == 'string'
+      ? JSON.parse(chat?.attachment)
+      : chat?.attachment;
   const handleImagePress = index => {
     setSelectedImage(chat?.attachment?.[index]);
   };
@@ -334,9 +337,6 @@ const LocalChatCard = ({
                 styles.container,
                 sentByMe ? styles.sentByMe : styles.received,
               ]}>
-              {/* {sentByMe ? null : (
-                    <Image source={{uri: image}} style={styles.avatar} />
-                  )} */}
               <View style={styles.textContainer}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Text style={[styles.nameText, styles.text]}>
@@ -361,21 +361,22 @@ const LocalChatCard = ({
                     </Text>
                   </View>
                 )}
-                <Text style={[styles.messageText, styles.text]}>
-                  {renderTextWithLinks(
-                    chat?.content,
-                    chat?.mentions,
-                    userInfoState?.accessToken,
-                    orgState,
-                    width,
-                  )}
-                </Text>
-                <Icon name="access-time" color={colors.textColor} />
+                <View
+                  style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                  <Text style={[styles.messageText, styles.text]}>
+                    {renderTextWithLinks(
+                      chat?.content,
+                      chat?.mentions,
+                      userInfoState?.accessToken,
+                      orgState,
+                      width,
+                    )}
+                  </Text>
+                  <View style={{alignSelf: 'flex-end'}}>
+                    <Icon name="access-time" color={colors.textColor} />
+                  </View>
+                </View>
               </View>
-              {/* <Text style={[styles.timeText, styles.text]}>{time}</Text> */}
-              {/* {sentByMe ? (
-                    <Image source={{uri: image}} style={styles.avatar} />
-                  ) : null} */}
             </View>
             <View style={sentByMe ? styles.sentByMe : styles.received}>
               {optionsVisible && (
