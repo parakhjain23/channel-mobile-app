@@ -50,7 +50,7 @@ const ChatCard = ({
   const {width} = useWindowDimensions();
   const [selectedImage, setSelectedImage] = useState(null);
   const swipeableRef = useRef(null);
-
+  const attachment = typeof(chat?.attachment) == 'string' ? JSON.parse(chat?.attachment) : chat?.attachment
   const handleImagePress = index => {
     setSelectedImage(chat?.attachment?.[index]);
   };
@@ -185,8 +185,9 @@ const ChatCard = ({
                       />
                     </TouchableOpacity>
                   </Modal>
-                  {chat?.attachment?.length > 0 && chat?.attachment &&
-                    chat?.attachment?.map((item, index) => {
+                  {chat?.content == 'Shared an Attachment' && console.log(chat)}
+                  {attachment?.length > 0 && 
+                    attachment?.map((item, index) => {
                       return item?.contentType?.includes('image') ? (
                         <TouchableOpacity
                           key={index}
