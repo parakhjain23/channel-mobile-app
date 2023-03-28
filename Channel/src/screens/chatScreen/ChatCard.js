@@ -59,30 +59,9 @@ const ChatCard = ({
     }
     return null;
   }
-// function highlight(text,result) {
-//   let A = orgState?.userIdAndDisplayNameMapping
-//   text = text.replace(/@{1,2}(\w+)/g, (match, p1) => {
-//     return A[p1] ? `@${A[p1]}` : match;
-//   });
-//   const parts = text?.split(/(\B@\w+)/);
-//   return parts?.map((part, i) =>
-//     /^@\w+$/.test(part) ? (
-//      <TouchableOpacity key={i} onPress={async ()=>{
-//       let key = findKeyByValue(part)
-//      key !=null && await searchUserProfileAction(key,userInfoState?.accessToken) && RootNavigation.navigate('UserProfiles', {
-//         displayName:orgState?.userIdAndDisplayNameMapping[key],
-//       })}}>
-//        <Text key={i} style={{color: 'blue'}}>
-//         {part}
-//       </Text>
-//      </TouchableOpacity>
-//     ) : (
-//       <Text key={i}>{part}</Text>
-//     )
-//   );
-// }
 
-function highlight(text,result) {
+function highlight(text,result,repliedContainer) {
+  const textColor = repliedContainer ? 'black' : 'white'
   let A = orgState?.userIdAndDisplayNameMapping
   text = text.replace(/@{1,2}(\w+)/g, (match, p1) => {
     return A[p1] ? `@${A[p1]}` : match;
@@ -93,24 +72,24 @@ function highlight(text,result) {
       let key1 = findKeyByValue(part);
       if (key1 != null) {
         return (
-          <TouchableOpacity
+             <TouchableOpacity
             key={i}
             onPress={async () => {
              key1 != 'all' &&  await searchUserProfileAction(key1, userInfoState?.accessToken) && 
              RootNavigation.navigate('UserProfiles', {
                displayName: orgState?.userIdAndDisplayNameMapping[key1],
-             });
+             }) 
             }}
           >
-            <Text style={{ color: 'blue' }}>{part}</Text>
+            <Text style={{ color: colors.linkColor }}>{part}</Text>
           </TouchableOpacity>
         );
       }
     }
-    return <Text key={i}>{part}</Text>;
+    return <Text key={i} style={{color:textColor}}>{part}</Text>;
   });
 }
-function renderTextWithLinks(text, mentionsArr) {
+function renderTextWithLinks(text, mentionsArr,repliedContainer) {
   var result = [];
   var resultStr=''
     const $ = cheerio.load(`<div>${text}</div>`);
@@ -141,7 +120,7 @@ function renderTextWithLinks(text, mentionsArr) {
   const parts = resultStr?.split(urlRegex);
   return parts?.map((part, i) =>
     urlRegex.test(part) ? (
-      <TouchableOpacity
+        <TouchableOpacity
         key={i}
         onPress={() => {
           let url = part;
@@ -151,12 +130,12 @@ function renderTextWithLinks(text, mentionsArr) {
           }
           Linking.openURL(url);
         }}>
-        <Text style={{color: 'blue', textDecorationLine: 'underline'}}>
+        <Text style={{color: colors.linkColor, textDecorationLine: 'underline'}}>
           {part}
         </Text>
       </TouchableOpacity>
     ) : (
-      <Text key={i}>{highlight(part,result)}</Text>
+      <Text key={i}>{highlight(part,result,repliedContainer)}</Text>
     )
   );
 }
@@ -257,7 +236,7 @@ function renderTextWithLinks(text, mentionsArr) {
                   </View>
                   {parentId != null && (
                     <TouchableOpacity
-                      style={styles.repliedContainer}
+                      style={[styles.repliedContainer]}
                       onPress={() =>
                         handleRepliedMessagePress(
                           chatState?.data[chat.teamId]?.parentMessages[
@@ -273,9 +252,7 @@ function renderTextWithLinks(text, mentionsArr) {
                           ?.content,
                         chatState?.data[chat.teamId]?.parentMessages[parentId]
                           ?.mentions,
-                        userInfoState?.accessToken,
-                        orgState,
-                        width,
+                        true
                       )}
                     </TouchableOpacity>
                   )}
@@ -380,9 +357,7 @@ function renderTextWithLinks(text, mentionsArr) {
                     {renderTextWithLinks(
                       chat?.content,
                       chat?.mentions,
-                      userInfoState?.accessToken,
-                      orgState,
-                      width,
+                      false 
                     )}
                   </Text>
                 </View>
