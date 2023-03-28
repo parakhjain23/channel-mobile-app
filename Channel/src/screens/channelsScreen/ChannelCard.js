@@ -81,6 +81,7 @@ const ChannelCard = ({item, navigation, props, resetUnreadCountAction}) => {
               paddingVertical: mvs(2),
               borderRadius: ms(5),
               overflow: 'hidden',
+              marginRight:ms(4)
             }}>
             <Text
               style={{
