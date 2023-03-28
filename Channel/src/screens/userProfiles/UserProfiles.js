@@ -12,6 +12,7 @@ import {IMAGE_BASE_URL} from '../../constants/Constants';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import {makeStyles} from './Styles';
 import {ScrollView} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const ContactDetailsPage = ({userInfoState, channelsState}) => {
   const {colors} = useTheme();
@@ -38,33 +39,27 @@ const ContactDetailsPage = ({userInfoState, channelsState}) => {
           />
         </View>
         <Text style={styles.name}>
-          Name :- {userInfoState?.searchedUserProfile?.firstName}{' '}
+        <Icon name='user' size={16} color={colors.textColor}/>{'  '}
+         {userInfoState?.searchedUserProfile?.firstName}{' '}
           {userInfoState?.searchedUserProfile?.lastName}
         </Text>
-        <Text style={styles.email}>
-          Email :- {userInfoState?.searchedUserProfile?.email}
+        <TouchableOpacity onPress={()=>Linking.openURL(`mailto:${userInfoState?.searchedUserProfile?.email}`)}>
+        <Text style={[styles.email]}>
+        <Icon name='envelope' size={16} color={colors.textColor}/>{'  '}
+         {userInfoState?.searchedUserProfile?.email}
         </Text>
+        </TouchableOpacity>
         {userInfoState?.searchedUserProfile?.mobileNumber && (
-          <View style={styles.email}>
+          <TouchableOpacity onPress={()=>Linking.openURL(`tel:${userInfoState?.searchedUserProfile?.mobileNumber}`)}>
+            <View style={styles.email}>
             <Text style={[styles.email]}>
-              Phone :- {userInfoState?.searchedUserProfile?.mobileNumber}
+            <Icon name='phone' size={16} color={colors.textColor}/>{'  '}
+              {userInfoState?.searchedUserProfile?.mobileNumber}
             </Text>
           </View>
+          </TouchableOpacity>
          )}
         <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-          {userInfoState?.searchedUserProfile?.mobileNumber && (
-            <TouchableOpacity
-              style={[styles.button, styles.callButton]}
-              onPress={() =>
-                Linking.openURL(
-                  `tel:${userInfoState?.searchedUserProfile?.mobileNumber}`,
-                )
-              }>
-              <Text style={styles.buttonText}>
-                Call {userInfoState?.searchedUserProfile?.displayName}
-              </Text>
-            </TouchableOpacity>
-          )}
           <TouchableOpacity
             style={[styles.button, styles.messageButton]}
             onPress={() =>

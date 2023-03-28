@@ -155,7 +155,7 @@ const CustomeDrawerScreen = ({
         backgroundColor: colors.drawerBackgroundColor,
       }}>
       <View style={{flex: 0.15, justifyContent: 'center'}}>
-        <View style={{flexDirection: 'row', alignItems: 'center',maxWidth:'90%'}}>
+        <View style={{flexDirection: 'row', alignItems: 'center',maxWidth:'80%'}}>
           <Image
             source={{uri: `${IMAGE_BASE_URL}${userInfoState?.user?.avatarKey}`}}
             style={{width: 60, height: 60, borderRadius: 50}}

@@ -45,6 +45,12 @@ const ChatCard = ({
   flatListRef,
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
+  const [width, setWidth] = useState(0);
+  const onLayout = event => {
+    const { width } = event.nativeEvent.layout;
+    setWidth(width);
+  };
+  
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const [optionsVisible, setOptionsVisible] = useState(false);
@@ -89,7 +95,8 @@ function highlight(text,result,repliedContainer) {
     return <Text key={i} style={{color:textColor}}>{part}</Text>;
   });
 }
-function renderTextWithLinks(text, mentionsArr,repliedContainer) {
+function renderTextWithLinks(text, mentionsArr,repliedContainer,width) {
+  console.log(width,"this is width");
   var result = [];
   var resultStr=''
     const $ = cheerio.load(`<div>${text}</div>`);
@@ -120,7 +127,8 @@ function renderTextWithLinks(text, mentionsArr,repliedContainer) {
   const parts = resultStr?.split(urlRegex);
   return parts?.map((part, i) =>
     urlRegex.test(part) ? (
-        <TouchableOpacity
+       <View>
+         <TouchableOpacity
         key={i}
         onPress={() => {
           let url = part;
@@ -134,14 +142,12 @@ function renderTextWithLinks(text, mentionsArr,repliedContainer) {
           {part}
         </Text>
       </TouchableOpacity>
+       </View>
     ) : (
       <Text key={i}>{highlight(part,result,repliedContainer)}</Text>
     )
   );
 }
-
-
-  const {width} = useWindowDimensions()
   const [selectedImage, setSelectedImage] = useState(null);
   const swipeableRef = useRef(null);
   const attachment =
@@ -200,8 +206,9 @@ function renderTextWithLinks(text, mentionsArr,repliedContainer) {
               <View
                 style={[
                   styles.container,
-                  sentByMe ? styles.sentByMe : styles.received,
-                ]}>
+                  sentByMe ? styles.sentByMe : styles.received
+                ]}
+                >
                 {optionsVisible && (
                   <TouchableOpacity
                     onPress={() => {
@@ -220,7 +227,8 @@ function renderTextWithLinks(text, mentionsArr,repliedContainer) {
                     <Text style={[styles.text, {color: 'tomato'}]}>Delete</Text>
                   </TouchableOpacity>
                 )}
-                <View style={styles.textContainer}>
+                <View onLayout={onLayout}>
+   <View style={[styles.textContainer,{maxWidth:'90%'}]}>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text style={[styles.nameText, styles.text]}>
                       {SenderName}
@@ -256,6 +264,7 @@ function renderTextWithLinks(text, mentionsArr,repliedContainer) {
                       )}
                     </TouchableOpacity>
                   )}
+                  <View style={{maxWidth:'80%'}}>
                   <Modal
                     visible={selectedImage !== null}
                     transparent={true}
@@ -268,7 +277,6 @@ function renderTextWithLinks(text, mentionsArr,repliedContainer) {
                         backgroundColor: 'rgba(0, 0, 0, 0.9)',
                       }}
                       activeOpacity={1}
-                      // onPress={handleModalClose}
                     >
                       <Image
                         source={{uri: selectedImage?.resourceUrl}}
@@ -280,6 +288,7 @@ function renderTextWithLinks(text, mentionsArr,repliedContainer) {
                       />
                     </TouchableOpacity>
                   </Modal>
+                  </View>
                   {attachment?.length > 0 && 
                     attachment?.map((item, index) => {
                       return item?.contentType?.includes('image') ? (
@@ -357,9 +366,11 @@ function renderTextWithLinks(text, mentionsArr,repliedContainer) {
                     {renderTextWithLinks(
                       chat?.content,
                       chat?.mentions,
-                      false 
+                      false ,
+                      width
                     )}
                   </Text>
+                </View>
                 </View>
                 {/* <Text style={[styles.timeText, styles.text]}>{time}</Text> */}
               </View>

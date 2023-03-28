@@ -29,6 +29,7 @@ export const makeStyles = colors =>
       fontSize: 18,
       color: colors?.textColor,
       marginBottom: 15,
+      flexDirection:'row'
     },
     phone: {
       fontSize: 18,
