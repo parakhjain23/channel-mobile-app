@@ -45,109 +45,102 @@ const ChatCard = ({
   flatListRef,
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
-  const [width, setWidth] = useState(0);
-  const onLayout = event => {
-    const { width } = event.nativeEvent.layout;
-    setWidth(width);
-  };
-  
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const [optionsVisible, setOptionsVisible] = useState(false);
-  const urlRegex =
-  /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-])?(?:\?[^\s])?)/gi;
-  function findKeyByValue(value) {
-    const newValue = value.substring(1);
-    for (let key in orgState?.userIdAndDisplayNameMapping) {
-      if (orgState?.userIdAndDisplayNameMapping[key] === newValue) {
-        return key;
-      }
-    }
-    return null;
-  }
+  // const urlRegex =
+  // /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-])?(?:\?[^\s])?)/gi;
+  // function findKeyByValue(value) {
+  //   const newValue = value.substring(1);
+  //   for (let key in orgState?.userIdAndDisplayNameMapping) {
+  //     if (orgState?.userIdAndDisplayNameMapping[key] === newValue) {
+  //       return key;
+  //     }
+  //   }
+  //   return null;
+  // }
 
-function highlight(text,result,repliedContainer) {
-  const textColor = repliedContainer ? 'black' : 'white'
-  let A = orgState?.userIdAndDisplayNameMapping
-  text = text.replace(/@{1,2}(\w+)/g, (match, p1) => {
-    return A[p1] ? `@${A[p1]}` : match;
-  });
-  const parts = text?.split(/(\B@\w+)/);
-  return parts?.map((part, i) => {
-    if (/^@\w+$/.test(part)) {
-      let key1 = findKeyByValue(part);
-      if (key1 != null) {
-        return (
-             <TouchableOpacity
-            key={i}
-            onPress={async () => {
-             key1 != 'all' &&  await searchUserProfileAction(key1, userInfoState?.accessToken) && 
-             RootNavigation.navigate('UserProfiles', {
-               displayName: orgState?.userIdAndDisplayNameMapping[key1],
-             }) 
-            }}
-          >
-            <Text style={{ color: colors.linkColor }}>{part}</Text>
-          </TouchableOpacity>
-        );
-      }
-    }
-    return <Text key={i} style={{color:textColor}}>{part}</Text>;
-  });
-}
-function renderTextWithLinks(text, mentionsArr,repliedContainer,width) {
-  console.log(width,"this is width");
-  var result = [];
-  var resultStr=''
-    const $ = cheerio.load(`<div>${text}</div>`);
-    $('span[contenteditable="false"]').remove();
-    $('*')
-      .contents()
-      .each((index, element) => {
-        if (element.type === 'text') {
-          const message = $(element).text().trim();
-          if (message !== '') {
-            resultStr += message + ' ';
-            result.push(message)
-            // console.log(message);
-          }
-        } else if ($(element).is('span')) {
-          resultStr +=
-            $(element)?.attr('data-denotation-char') +
-            $(element)?.attr('data-id') +
-            ' ';
-          // result?.push($(element)?.attr('data-denotation-char') +
-          // $(element)?.attr('data-id'))
-          var id = $(element)?.attr('data-id')
-          var data = '@'+$(element)?.attr('data-value')
-          result?.push({[id]:data})
-        }
-      });
-    resultStr = resultStr.trim();
-  const parts = resultStr?.split(urlRegex);
-  return parts?.map((part, i) =>
-    urlRegex.test(part) ? (
-       <View>
-         <TouchableOpacity
-        key={i}
-        onPress={() => {
-          let url = part;
-          //regEx for checking if https included or not
-          if (!/^https?:\/\//i.test(url)) {
-            url = 'https://' + url;
-          }
-          Linking.openURL(url);
-        }}>
-        <Text style={{color: colors.linkColor, textDecorationLine: 'underline'}}>
-          {part}
-        </Text>
-      </TouchableOpacity>
-       </View>
-    ) : (
-      <Text key={i}>{highlight(part,result,repliedContainer)}</Text>
-    )
-  );
-}
+// function highlight(text,result,repliedContainer) {
+//   const textColor = repliedContainer ? 'black' : 'white'
+//   let A = orgState?.userIdAndDisplayNameMapping
+//   text = text.replace(/@{1,2}(\w+)/g, (match, p1) => {
+//     return A[p1] ? `@${A[p1]}` : match;
+//   });
+//   const parts = text?.split(/(\B@\w+)/);
+//   return parts?.map((part, i) => {
+//     if (/^@\w+$/.test(part)) {
+//       let key1 = findKeyByValue(part);
+//       if (key1 != null) {
+//         return (
+//              <TouchableOpacity
+//             key={i}
+//             onPress={async () => {
+//              key1 != 'all' &&  await searchUserProfileAction(key1, userInfoState?.accessToken) && 
+//              RootNavigation.navigate('UserProfiles', {
+//                displayName: orgState?.userIdAndDisplayNameMapping[key1],
+//              }) 
+//             }}
+//           >
+//             <Text style={{ color: colors.linkColor }}>{part}</Text>
+//           </TouchableOpacity>
+//         );
+//       }
+//     }
+//     return <Text key={i} style={{color:textColor}}>{part}</Text>;
+//   });
+// }
+// function renderTextWithLinks(text, mentionsArr,repliedContainer) {
+  // var result = [];
+  // var resultStr=''
+  //   const $ = cheerio.load(`<div>${text}</div>`);
+  //   $('span[contenteditable="false"]').remove();
+  //   $('*')
+  //     .contents()
+  //     .each((index, element) => {
+  //       if (element.type === 'text') {
+  //         const message = $(element).text().trim();
+  //         if (message !== '') {
+  //           resultStr += message + ' ';
+  //           result.push(message)
+  //           // console.log(message);
+  //         }
+  //       } else if ($(element).is('span')) {
+  //         resultStr +=
+  //           $(element)?.attr('data-denotation-char') +
+  //           $(element)?.attr('data-id') +
+  //           ' ';
+  //         // result?.push($(element)?.attr('data-denotation-char') +
+  //         // $(element)?.attr('data-id'))
+  //         var id = $(element)?.attr('data-id')
+  //         var data = '@'+$(element)?.attr('data-value')
+  //         result?.push({[id]:data})
+  //       }
+  //     });
+  //   resultStr = resultStr.trim();
+  // const parts = resultStr?.split(urlRegex);
+  // return parts?.map((part, i) =>
+  //   urlRegex.test(part) ? (
+  //      <View style={{maxWidth:250}}>
+  //        <TouchableOpacity
+  //       key={i}
+  //       onPress={() => {
+  //         let url = part;
+  //         //regEx for checking if https included or not
+  //         if (!/^https?:\/\//i.test(url)) {
+  //           url = 'https://' + url;
+  //         }
+  //         Linking.openURL(url);
+  //       }}>
+  //       <Text style={{color: colors.linkColor, textDecorationLine: 'underline'}}>
+  //         {part}
+  //       </Text>
+  //     </TouchableOpacity>
+  //      </View>
+  //   ) : (
+  //     <Text key={i}>{highlight(part,result,repliedContainer)}</Text>
+  //   )
+  // );
+// }
   const [selectedImage, setSelectedImage] = useState(null);
   const swipeableRef = useRef(null);
   const attachment =
@@ -227,8 +220,7 @@ function renderTextWithLinks(text, mentionsArr,repliedContainer,width) {
                     <Text style={[styles.text, {color: 'tomato'}]}>Delete</Text>
                   </TouchableOpacity>
                 )}
-                <View onLayout={onLayout}>
-   <View style={[styles.textContainer,{maxWidth:'90%'}]}>
+                   <View style={[styles.textContainer,{maxWidth:'90%'}]}>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text style={[styles.nameText, styles.text]}>
                       {SenderName}
@@ -255,12 +247,13 @@ function renderTextWithLinks(text, mentionsArr,repliedContainer,width) {
                           flatListRef,
                         )
                       }>
-                      {renderTextWithLinks(
+                      {chatState?.data[chat.teamId]?.parentMessages[parentId]?.attachment?.length > 0 ? <Text style={{color:'black'}}><Icon name='attach-file' size={14}/> attachment</Text>: renderTextWithLinks(
                         chatState?.data[chat.teamId]?.parentMessages[parentId]
                           ?.content,
                         chatState?.data[chat.teamId]?.parentMessages[parentId]
                           ?.mentions,
-                        true
+                        true,
+                        orgState
                       )}
                     </TouchableOpacity>
                   )}
@@ -366,14 +359,12 @@ function renderTextWithLinks(text, mentionsArr,repliedContainer,width) {
                     {renderTextWithLinks(
                       chat?.content,
                       chat?.mentions,
-                      false ,
-                      width
+                      false,
+                      orgState
                     )}
                   </Text>
                 </View>
                 </View>
-                {/* <Text style={[styles.timeText, styles.text]}>{time}</Text> */}
-              </View>
             </Swipeable>
           </TouchableOpacity>
         </GestureHandlerRootView>
@@ -468,9 +459,8 @@ const LocalChatCard = ({
                     {renderTextWithLinks(
                       chat?.content,
                       chat?.mentions,
-                      userInfoState?.accessToken,
+                      false,
                       orgState,
-                      width,
                     )}
                   </Text>
                   <View style={{alignSelf: 'flex-end'}}>

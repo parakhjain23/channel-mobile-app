@@ -157,7 +157,7 @@ const CustomeDrawerScreen = ({
       <View style={{flex: 0.15, justifyContent: 'center'}}>
         <View style={{flexDirection: 'row', alignItems: 'center',maxWidth:'80%'}}>
           <Image
-            source={{uri: `${IMAGE_BASE_URL}${userInfoState?.user?.avatarKey}`}}
+            source={{uri: `${IMAGE_BASE_URL}${userInfoState?.user?.avatarKey}` || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVe0cFaZ9e5Hm9X-tdWRLSvoZqg2bjemBABA&usqp=CAU'}}
             style={{width: 60, height: 60, borderRadius: 50}}
           />
           <View>
