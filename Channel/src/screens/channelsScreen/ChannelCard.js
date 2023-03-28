@@ -31,7 +31,7 @@ const ChannelCard = ({item, navigation, props, resetUnreadCountAction}) => {
     <TouchableOpacity
       style={{
         borderBottomWidth: ms(0.7),
-        borderBottomColor: unread ? colors?.unreadBorderColor : 'gray',
+        borderBottomColor: 'gray',
         minHeight: mvs(60),
         backgroundColor:
           (unread && colors.unreadBackgroundColor) || colors.primaryColor,
@@ -73,15 +73,11 @@ const ChannelCard = ({item, navigation, props, resetUnreadCountAction}) => {
         {props?.channelsState?.teamIdAndUnreadCountMapping?.[item?._id] > 0 && (
           <View
             style={{
-              position: 'absolute',
-              top: 12, // adjust this value to position the text correctly
-              right: 5, // adjust this value to position the text correctly
               backgroundColor: '#73e1ff',
               paddingHorizontal: ms(5),
               paddingVertical: mvs(2),
               borderRadius: ms(5),
               overflow: 'hidden',
-              marginRight:ms(4)
             }}>
             <Text
               style={{
