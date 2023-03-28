@@ -20,11 +20,11 @@ const SocketService = socket => {
     store.dispatch(socketStatus(false))
   });
   socket.on('chat/message created', data => {
+    console.log(data,"new message recived");
     var newData = data
     if (!('isActivity' in newData)) {
       newData.isActivity = false;
     }
-    console.log(data,"new message recived");
     store.dispatch(addNewMessage(newData));
     store.dispatch(moveChannelToTop([newData?.teamId]));
     if(newData?.senderId != store?.getState()?.userInfoReducer?.user?.id){
@@ -35,14 +35,16 @@ const SocketService = socket => {
     }
   });
   socket.on('chat/message patched', data => {
-    if (data?.deleted) {
-      store.dispatch(deleteMessageSuccess(data));
-    }
+    // console.log(data,"chat patched");
+    // if (data?.deleted) {
+    //   store.dispatch(deleteMessageSuccess(data));
+    // }
   });
   socket.on('chat/message updated', data => {
-    if (data?.deleted) {
-      store.dispatch(deleteMessageSuccess(data));
-    }
+    // console.log(data,"chat updated");
+    // if (data?.deleted) {
+    //   store.dispatch(deleteMessageSuccess(data));
+    // }
   });
 
   socket.on('chat/team created', data => {

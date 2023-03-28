@@ -3,7 +3,7 @@ import uuid from 'react-native-uuid';
 export const FileUploadApi = async (Files, accessToken) => {
   const fileNames = Files?.map(item => {
     const folder = uuid.v4();
-    return `${folder}/${item?.name}`;
+    return `${folder}/${item?.name || item?.fileName}`;
   });
 
   try {
@@ -23,26 +23,28 @@ export const FileUploadApi = async (Files, accessToken) => {
     const Genereated_URL = await presignedUrl.json();
     const signedUrls = Object.values(Genereated_URL);
 
-    for (const [index, s3BucketUrl] of signedUrls.entries()) {
+    const uploadPromises = signedUrls.map(async (s3BucketUrl, index) => {
       const fileUri = await fetch(Files[index]?.uri);
       const imageBody = await fileUri.blob();
       const fileType = Files[index]?.type;
       await UploadDocumentApi(s3BucketUrl, fileType, imageBody);
-    }
-    return fileNames;
+      return fileNames[index];
+    });
+
+    const uploadedFileNames = await Promise.all(uploadPromises);
+    return uploadedFileNames;
   } catch (error) {
     console.warn(error);
+    return null;
   }
 };
 
 const UploadDocumentApi = async (s3BucketUrl, fileType, imageBody) => {
-  const uploadDocToS3 = await fetch(s3BucketUrl, {
+  await fetch(s3BucketUrl, {
     method: 'PUT',
     headers: {
       'Content-Type': fileType,
     },
     body: imageBody,
   });
-  //   const downloadDocUrl = JSON.stringify(uploadDocToS3);
-  //   console.log(downloadDocUrl, 'result from upload document api');
 };

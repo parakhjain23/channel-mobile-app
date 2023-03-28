@@ -3,7 +3,7 @@ import {store} from '../redux/Store';
 import cheerio, {text} from 'cheerio';
 
 export const handleNotificationFromEvents = async (data,userIdAndDisplayNameMapping) => {
-  data['attachment']=data?.attachment != undefined ? `${data?.attachment}`:`[]`
+  data['attachment']=data?.attachment != undefined ? JSON.stringify(data?.attachment):`[]`
   data['isActivity']=data?.isActivity != undefined ? `${data?.isActivity}` :'false'
   data['mentions'] = `${data?.mentions}`;
   data['showInMainConversation'] = `${data?.showInMainConversation}`;

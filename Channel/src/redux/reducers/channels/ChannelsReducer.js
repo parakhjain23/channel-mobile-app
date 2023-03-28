@@ -10,6 +10,7 @@ const initialState = {
   userIdAndTeamIdMapping: {},
   teamIdAndNameMapping: {},
   teamIdAndTypeMapping: {},
+  teamIdAndUnreadCountMapping: {},
 };
 
 export function channelsReducer(state = initialState, action) {
@@ -42,6 +43,9 @@ export function channelsReducer(state = initialState, action) {
           teamId = action?.channels[i]?._id;
           userIdAndTeamIdMapping[key] = teamId;
         } else {
+          if (action.channels[i].type == 'PERSONAL') {
+            action.channels[i].name = 'You ( your own personal space )';
+          }
           key = action?.channels[i]._id;
           teamIdAndNameMapping[key] = action?.channels[i]?.name;
         }
@@ -57,6 +61,16 @@ export function channelsReducer(state = initialState, action) {
         teamIdAndNameMapping: teamIdAndNameMapping,
         teamIdAndTypeMapping: tempteamIdAndTypeMapping,
         channelIdAndDataMapping: channelIdAndDataMapping,
+      };
+
+    case Actions.FETCH_CHANNEL_DETAILS_SUCCESS:
+      let teamIdAndUnreadCountMapping = {};
+      action?.payload?.map(team => {
+        teamIdAndUnreadCountMapping[team?.teamId] = team?.unreadCount;
+      });
+      return {
+        ...state,
+        teamIdAndUnreadCountMapping: teamIdAndUnreadCountMapping,
       };
 
     case Actions.FETCH_RECENT_CHANNELS_SUCCESS:
@@ -102,33 +116,44 @@ export function channelsReducer(state = initialState, action) {
     //     highlightChannel: {...state.highlightChannel, ...tempHighlightChannels},
     //   };
     case Actions.MOVE_CHANNEL_TO_TOP:
-  var tempHighlightChannels = {};
-  const newRecentChannels = [...state?.recentChannels]; // create a new copy of recentChannels array
-  action.channelId.forEach((id) => {
-    if (state?.activeChannelTeamId != id) {
-      tempHighlightChannels[id] = true;
-    } else {
-      tempHighlightChannels[id] = false;
-    }
-    const channelToAddInRecentChannels = state?.channels.find(obj => obj['_id'] === id);
-    if (channelToAddInRecentChannels && !newRecentChannels.find(obj => obj['_id'] === id)) {
-      newRecentChannels.push(channelToAddInRecentChannels);
-    }
-    if (newRecentChannels[0]?._id != id) {
-      for (let i = 0; i < newRecentChannels?.length; i++) {
-        if (newRecentChannels[i]?._id == id) {
-          newRecentChannels?.unshift(newRecentChannels[i]);
-          newRecentChannels?.splice(i + 1, 1);
-          break;
+      var tempHighlightChannels = {};
+      let teamIdAndUnreadCountMappingLocal = {};
+      const newRecentChannels = [...state?.recentChannels]; // create a new copy of recentChannels array
+      action?.channelId.forEach(id => {
+        if (state?.activeChannelTeamId != id) {
+          tempHighlightChannels[id] = true;
+          teamIdAndUnreadCountMappingLocal[id] = (state?.teamIdAndUnreadCountMapping[id])+1
+        } else {
+          tempHighlightChannels[id] = false;
         }
-      }
-    }
-  });
-  return {
-    ...state,
-    recentChannels: newRecentChannels,
-    highlightChannel: {...state.highlightChannel, ...tempHighlightChannels},
-  };
+        const channelToAddInRecentChannels = state?.channels.find(
+          obj => obj['_id'] === id,
+        );
+        if (
+          channelToAddInRecentChannels &&
+          !newRecentChannels.find(obj => obj['_id'] === id)
+        ) {
+          newRecentChannels.push(channelToAddInRecentChannels);
+        }
+        if (newRecentChannels[0]?._id != id) {
+          for (let i = 0; i < newRecentChannels?.length; i++) {
+            if (newRecentChannels[i]?._id == id) {
+              newRecentChannels?.unshift(newRecentChannels[i]);
+              newRecentChannels?.splice(i + 1, 1);
+              break;
+            }
+          }
+        }
+      });
+      return {
+        ...state,
+        recentChannels: newRecentChannels,
+        highlightChannel: {...state?.highlightChannel, ...tempHighlightChannels},
+        teamIdAndUnreadCountMapping: {
+          ...state?.teamIdAndUnreadCountMapping,
+          ...teamIdAndUnreadCountMappingLocal
+        }
+      };
 
     case Actions.CREATE_NEW_CHANNEL_SUCCESS:
       var userIdAndTeamIdMapping = {};
@@ -176,10 +201,12 @@ export function channelsReducer(state = initialState, action) {
         ...state,
         activeChannelTeamId: action?.teamId,
         highlightChannel: tempHighlightChannels,
+        teamIdAndUnreadCountMapping: {...state?.teamIdAndUnreadCountMapping,[action?.teamId]:0}
       };
 
     case Actions.RESET_ACTIVE_CHANNEL_TEAMID:
       return {...state, activeChannelTeamId: null};
+    
     default:
       return state;
   }

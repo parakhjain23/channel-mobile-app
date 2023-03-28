@@ -10,11 +10,12 @@ import {
   ScrollView,
   Animated,
   KeyboardAvoidingView,
+  RefreshControl,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {getChannelsStart} from '../../redux/actions/channels/ChannelsAction';
 import SearchBox from '../../components/searchBox';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation, useTheme} from '@react-navigation/native';
 import {FAB, RadioButton, TextInput} from 'react-native-paper';
 import {Modalize} from 'react-native-modalize';
 import {CHANNEL_TYPE} from '../../constants/Constants';
@@ -31,9 +32,12 @@ import {
   RenderSearchChannels,
   RenderUsersToAdd,
 } from './ChannelCard';
-import Icon, {MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
-
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import NoInternetComponent from '../../components/NoInternetComponent';
+import {s, vs, ms, mvs} from 'react-native-size-matters';
+import { getAllUsersOfOrgStart } from '../../redux/actions/org/GetAllUsersOfOrg';
 const CreateChannelModel = ({modalizeRef, props}) => {
+  const {colors} = useTheme();
   const [title, setTitle] = useState('');
   const [channelType, setChannelType] = useState('PUBLIC');
   const [userIds, setUserIds] = useState([]);
@@ -57,18 +61,28 @@ const CreateChannelModel = ({modalizeRef, props}) => {
       ref={modalizeRef}
       onClose={() => setsearchedUser('')}
       // avoidKeyboardLikeIOS={true}
-      modalStyle={{flex: 1, marginTop: '5%'}}>
-      <View style={{margin: 12, flex: 1}}>
+      modalStyle={{
+        flex: 1,
+        marginTop: '5%',
+        backgroundColor: colors.modalColor,
+      }}>
+      <View style={{margin: ms(12), flex: 1}}>
         <TextInput
           label={'Title'}
           mode={'outlined'}
           onChangeText={setTitle}
           autoFocus={true}
+          textColor={colors.textColor}
+          activeOutlineColor={colors.textColor}
+          style={{backgroundColor: colors.primaryColor}}
         />
         <TextInput
           label={'Members'}
           mode={'outlined'}
           onChangeText={changeText}
+          textColor={colors.textColor}
+          activeOutlineColor={colors.textColor}
+          style={{backgroundColor: colors.primaryColor}}
         />
 
         {searchedUser != '' && (
@@ -96,8 +110,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
               <View
                 key={index}
                 style={{
-                  marginVertical: 5,
-                  // height: 30,
+                  marginVertical: mvs(5),
                   justifyContent: 'space-between',
                   flexDirection: 'row',
                 }}>
@@ -106,7 +119,11 @@ const CreateChannelModel = ({modalizeRef, props}) => {
                     justifyContent: 'center',
                   }}>
                   <Text
-                    style={{fontSize: 16, fontWeight: '400', color: 'black'}}>
+                    style={{
+                      fontSize: ms(16, 0.5),
+                      fontWeight: '400',
+                      color: colors.textColor,
+                    }}>
                     {props?.orgsState?.userIdAndNameMapping[userId]}
                   </Text>
                 </View>
@@ -125,7 +142,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
             flexDirection: 'row',
             justifyContent: 'space-around',
             flexWrap: 'wrap',
-            marginVertical: 20,
+            marginVertical: mvs(20),
           }}>
           {CHANNEL_TYPE?.map((item, index) => {
             return (
@@ -133,11 +150,12 @@ const CreateChannelModel = ({modalizeRef, props}) => {
                 key={index}
                 style={{flexDirection: 'row', alignItems: 'center'}}
                 onPress={() => setChannelType(item?.type)}>
-                <Text style={{color: 'black'}}>{item?.name}</Text>
+                <Text style={{color: colors.textColor}}>{item?.name}</Text>
                 <RadioButton
                   value={item?.type}
                   status={channelType === item?.type ? 'checked' : 'unchecked'}
                   onPress={() => setChannelType(item?.type)}
+                  color={colors.textColor}
                 />
               </TouchableOpacity>
             );
@@ -168,6 +186,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
 };
 
 const ChannelsScreen = props => {
+  const {colors} = useTheme();
   const [searchValue, setsearchValue] = useState('');
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation();
@@ -206,17 +225,21 @@ const ChannelsScreen = props => {
   const onOpen = () => {
     modalizeRef.current?.open();
   };
-  // const onRefresh = React.useCallback(async () => {
-  //   setRefreshing(true);
-  //   await props.getChannelsAction(
-  //     props?.userInfoState?.accessToken,
-  //     props?.orgsState?.currentOrgId,
-  //     props?.userInfoState?.user?.id,
-  //   );
-  //   setTimeout(() => {
-  //     setRefreshing(false);
-  //   }, 2000);
-  // }, []);
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    await props.getChannelsAction(
+      props?.userInfoState?.accessToken,
+      props?.orgsState?.currentOrgId,
+      props?.userInfoState?.user?.id,
+    );
+    await props.getAllUsersOfOrgAction(
+      props?.userInfoState?.accessToken,
+      props?.orgsState?.currentOrgId
+    )
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
   const renderItemChannels = useCallback(
     ({item, index}) => {
       return (
@@ -243,10 +266,10 @@ const ChannelsScreen = props => {
     [props?.channelsByQueryState?.channels],
   );
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={{flex: 1, backgroundColor: colors.primaryColor}}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : null}
-        keyboardVerticalOffset={70}
+        keyboardVerticalOffset={s(70)}
         style={{flex: 1}}>
         {props?.channelsState?.isLoading ? (
           <ActivityIndicator size={'large'} color={'black'} />
@@ -266,7 +289,8 @@ const ChannelsScreen = props => {
                   setsearchValue={setsearchValue}
                 />
               )
-            ) : (
+            ) : props?.channelsState?.recentChannels?.length > 0 ||
+              props?.channelsState?.channels?.length > 0 ? (
               <Animated.FlatList
                 data={
                   props?.channelsState?.recentChannels ||
@@ -277,6 +301,24 @@ const ChannelsScreen = props => {
                 keyboardDismissMode="on-drag"
                 keyboardShouldPersistTaps="always"
               />
+            ) : (
+              <View
+                style={{
+                  flex: 1,
+                }}
+                >
+                <ScrollView
+                  style={{
+                    marginHorizontal: 20,
+                  }}
+                  contentContainerStyle={{justifyContent: 'center', flex: 1}}
+                  refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                  }
+                  >
+                  <NoInternetComponent />
+                </ScrollView>
+              </View>
             )}
             {isScrolling && (
               <View
@@ -297,8 +339,8 @@ const ChannelsScreen = props => {
             <View
               style={{
                 position: 'absolute',
-                bottom: 70,
-                right: 10,
+                bottom: s(70),
+                right: s(10),
                 alignSelf: 'center',
               }}>
               <FAB
@@ -309,33 +351,35 @@ const ChannelsScreen = props => {
                 icon={() => <Icon name="add" size={20} color={'white'} />}
                 style={{
                   backgroundColor: '#333333', // change the background color to light grey
-                  borderRadius: 50,
+                  borderRadius: ms(50),
                   alignSelf: 'center',
                 }}
                 labelStyle={{
-                  fontSize: 12,
+                  fontSize: ms(12, 0.5),
                   textAlign: 'center',
-                  lineHeight: 14,
+                  lineHeight: ms(14),
                 }}
                 // label={`New\nChannel`}
               />
             </View>
-            {!isScrolling && <TouchableOpacity
-              onPress={() => {
-                setIsScrolling(true);
-              }}>
-              <View
-                style={{
-                  position: 'absolute',
-                  bottom: 10,
-                  right: 10,
-                  backgroundColor: '#333333',
-                  borderRadius: 25,
-                  padding: 15,
+            {!isScrolling && (
+              <TouchableOpacity
+                onPress={() => {
+                  setIsScrolling(true);
                 }}>
-                <Icon name="search" size={22} color={'white'} />
-              </View>
-            </TouchableOpacity>}
+                <View
+                  style={{
+                    position: 'absolute',
+                    bottom: s(10),
+                    right: s(10),
+                    backgroundColor: '#333333',
+                    borderRadius: ms(25),
+                    padding: ms(15),
+                  }}>
+                  <Icon name="search" size={ms(22)} color={'white'} />
+                </View>
+              </TouchableOpacity>
+            )}
           </View>
         )}
       </KeyboardAvoidingView>
@@ -364,6 +408,7 @@ const mapDispatchToProps = dispatch => {
     setActiveChannelTeamIdAction: teamId =>
       dispatch(setActiveChannelTeamId(teamId)),
     resetActiveChannelTeamIdAction: () => dispatch(resetActiveChannelTeamId()),
+    getAllUsersOfOrgAction:(accessToken,orgId) => dispatch(getAllUsersOfOrgStart(accessToken,orgId)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelsScreen);
