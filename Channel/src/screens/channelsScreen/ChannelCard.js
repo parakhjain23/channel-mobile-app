@@ -20,12 +20,12 @@ const ChannelCard = ({item, navigation, props, resetUnreadCountAction}) => {
         ]
       : item?.name;
   const iconName = item?.type == 'DIRECT_MESSAGE' ? 'user' : 'hashtag';
-  let unread =
-    props?.channelsState?.highlightChannel[item?._id] != undefined
+  let unread = props?.channelsState?.teamIdAndUnreadCountMapping?.[item?._id] > 0 || 
+    (props?.channelsState?.highlightChannel[item?._id] != undefined
       ? (unread = props?.channelsState?.highlightChannel[item?._id]
           ? true
           : false)
-      : false;
+      : false)
 
   return (
     <TouchableOpacity
