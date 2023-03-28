@@ -185,7 +185,6 @@ const ChatCard = ({
                       />
                     </TouchableOpacity>
                   </Modal>
-                  {chat?.content == 'Shared an Attachment' && console.log(chat)}
                   {attachment?.length > 0 && 
                     attachment?.map((item, index) => {
                       return item?.contentType?.includes('image') ? (
