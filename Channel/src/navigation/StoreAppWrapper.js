@@ -26,7 +26,6 @@ const StoreAppWrapper = ({userInfoSate,orgsState}) => {
       unsubscribe();
     };
   }, []);
-
   return showSplashScreen ? (
     <SplashScreenComponent setShowSplashScreen={setShowSplashScreen}/>
     // <SplashScreen setShowSplashScreen={setShowSplashScreen} />
