@@ -340,7 +340,7 @@ const onScroll = Animated.event(
                           {repliedMsgDetails?.content}
                         </Text>
                       )}
-                      <MaterialIcons name="cancel" size={ms(16)} />
+                      <MaterialIcons name="cancel" size={ms(16)} color='black' />
                     </View>
                   </TouchableOpacity>
                 )}
