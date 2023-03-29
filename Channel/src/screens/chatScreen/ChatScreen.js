@@ -10,6 +10,7 @@ import {
   Animated,
   useWindowDimensions,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
 import ListFooterComponent from '../../components/ListFooterComponent';
@@ -321,7 +322,10 @@ const ChatScreen = ({
                           orgState,
                           width,
                         )
-                      ) : (
+                      ) : repliedMsgDetails?.attachment?.length > 0 ? (<Text style={{color:'black'}}>
+                        <Icon name='attach-file' size={16} color='black'/>
+                        attachment
+                      </Text>):(
                         <Text style={styles.repliedText}>
                           {repliedMsgDetails?.content}
                         </Text>

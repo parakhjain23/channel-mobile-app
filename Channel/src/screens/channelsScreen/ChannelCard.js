@@ -121,10 +121,7 @@ const SearchChannelCard = ({
   orgsState,
 }) => {
   const {colors} = useTheme();
-  const Name =
-    item?._source?.type == 'U'
-      ? item?._source?.title
-      : '#' + item?._source?.title;
+  const Name = item?._source?.title;
   const teamId = item?._id?.includes('_')
     ? props?.channelsState?.userIdAndTeamIdMapping[item?._source?.userId]
     : item?._id;
