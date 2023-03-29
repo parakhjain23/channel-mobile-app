@@ -19,6 +19,7 @@ import {makeStyles} from './ChatCardStyles';
 import {ms} from 'react-native-size-matters';
 import * as RootNavigation from '../../navigation/RootNavigation';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
+import ImageViewer from 'react-native-image-zoom-viewer';
 const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
@@ -194,7 +195,18 @@ const ChatCard = ({
                       visible={selectedImage !== null}
                       transparent={true}
                       onRequestClose={handleModalClose}>
-                      <TouchableOpacity
+                      <ImageViewer
+                        imageUrls={[
+                          {
+                            url: selectedImage?.resourceUrl,
+                            width: Dimensions.get('window')?.width-20,
+                            height: Dimensions.get('window')?.height - 100,
+                          },
+                        ]}
+                        enableSwipeDown={true}
+                        onSwipeDown={handleModalClose}
+                      />
+                      {/* <TouchableOpacity
                         style={{
                           flex: 1,
                           alignItems: 'center',
@@ -211,7 +223,7 @@ const ChatCard = ({
                           }}
                           resizeMode="contain"
                         />
-                      </TouchableOpacity>
+                      </TouchableOpacity> */}
                     </Modal>
                   </View>
                   {attachment?.length > 0 &&
@@ -288,8 +300,18 @@ const ChatCard = ({
                       );
                     })}
 
-                  <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'flex-end'}}>
-                    <Text style={[styles.messageText, styles.text,{maxWidth:'90%'}]}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-end',
+                    }}>
+                    <Text
+                      style={[
+                        styles.messageText,
+                        styles.text,
+                        {maxWidth: '90%'},
+                      ]}>
                       {/* {chat?.content} */}
                       {renderTextWithLinks(
                         chat?.content,
