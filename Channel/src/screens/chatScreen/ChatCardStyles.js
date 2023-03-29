@@ -83,7 +83,7 @@ export const makeStyles = colors => StyleSheet.create({
     },
     timeText: {
       fontSize: s(10),
-      marginRight: ms(3),
-      marginBottom: ms(4),
+      marginRight: ms(-3),
+      marginBottom: ms(-4),
     },
   });

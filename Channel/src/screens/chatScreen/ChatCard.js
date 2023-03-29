@@ -99,7 +99,7 @@ const ChatCard = ({
     typeof chat.isActivity === 'string'
       ? chat.isActivity === 'true'
       : chat.isActivity;
-  const openLink = async (url) => {
+  const openLink = async url => {
     if (await InAppBrowser.isAvailable()) {
       const result = InAppBrowser?.open(url);
     } else {
@@ -147,16 +147,16 @@ const ChatCard = ({
                       <Text style={[styles.nameText, styles.text]}>
                         {SenderName}
                       </Text>
-                      <Text
-                        style={[
-                          styles.timeText,
-                          styles.text,
-                          {marginHorizontal: ms(10)},
-                        ]}>
-                        {time}
-                      </Text>
                     </View>
                   )}
+                  {/* <Text
+                    style={[
+                      styles.timeText,
+                      styles.text,
+                      {marginHorizontal: ms(10)},
+                    ]}>
+                    {time}
+                  </Text> */}
                   {parentId != null && (
                     <TouchableOpacity
                       style={[styles.repliedContainer]}
@@ -288,18 +288,27 @@ const ChatCard = ({
                       );
                     })}
 
-                  <Text style={[styles.messageText, styles.text]}>
-                    {/* {chat?.content} */}
-                    {renderTextWithLinks(
-                      chat?.content,
-                      chat?.mentions,
-                      false,
-                      orgState,
-                      searchUserProfileAction,
-                      userInfoState,
-                    )}
-                  </Text>
-                  <View style={{maxWidth: '80%'}}></View>
+                  <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'flex-end'}}>
+                    <Text style={[styles.messageText, styles.text,{maxWidth:'90%'}]}>
+                      {/* {chat?.content} */}
+                      {renderTextWithLinks(
+                        chat?.content,
+                        chat?.mentions,
+                        false,
+                        orgState,
+                        searchUserProfileAction,
+                        userInfoState,
+                      )}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.timeText,
+                        styles.text,
+                        {marginHorizontal: ms(10)},
+                      ]}>
+                      {time}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </Swipeable>
