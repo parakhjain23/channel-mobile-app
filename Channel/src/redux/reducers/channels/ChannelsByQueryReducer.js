@@ -2,7 +2,7 @@ import * as Actions from '../../Enums';
 
 const initialState = {
   channels: [],
-  mentionChannels:[{_source:{displayName:'Channel',type:'U'}}],
+  mentionChannels:[{_source:{displayName:'channel',type:'U'}}],
   isLoading: false,
 };
 

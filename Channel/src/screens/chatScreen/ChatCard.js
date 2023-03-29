@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   Dimensions,
   Image,
@@ -49,21 +49,28 @@ const ChatCard = ({
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
   const {colors} = useTheme();
-  const styles = makeStyles(colors);
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const [optionsVisible, setOptionsVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const swipeableRef = useRef(null);
-  const attachment =
-    typeof chat?.attachment == 'string'
-      ? JSON.parse(chat?.attachment)
-      : chat?.attachment;
-  const handleImagePress = index => {
-    setSelectedImage(chat?.attachment?.[index]);
-  };
+  const attachment = useMemo(() => {
+    if (typeof chat?.attachment === 'string') {
+      return JSON.parse(chat?.attachment);
+    } else {
+      return chat?.attachment;
+    }
+  }, [chat?.attachment]);
 
-  const handleModalClose = () => {
+  const handleImagePress = useCallback(
+    index => {
+      setSelectedImage(chat?.attachment?.[index]);
+    },
+    [chat?.attachment],
+  );
+
+  const handleModalClose = useCallback(() => {
     setSelectedImage(null);
-  };
+  }, []);
 
   useEffect(() => {
     setOptionsVisible(false);
@@ -72,18 +79,25 @@ const ChatCard = ({
     setOptionsVisible(!optionsVisible);
   };
   var parentId = chat?.parentId;
-  const date = new Date(chat?.updatedAt);
-  const time = date.getHours() + ':' + date.getMinutes();
+  const date = useMemo(() => new Date(chat?.updatedAt), [chat?.updatedAt]);
+  const time = useMemo(() => date.getHours() + ':' + date.getMinutes(), [date]);
   const sentByMe = chat?.senderId == userInfoState?.user?.id ? true : false;
-  const containerBackgroundColor = sentByMe
-    ? colors.sentByMeCardColor
-    : colors.receivedCardColor;
-  const SenderName =
-    chat?.senderId == userInfoState?.user?.id
-      ? 'You'
-      : orgState?.userIdAndDisplayNameMapping[chat?.senderId]
-      ? orgState?.userIdAndDisplayNameMapping[chat?.senderId]
-      : orgState?.userIdAndNameMapping[chat?.senderId];
+  const containerBackgroundColor = useMemo(() => {
+    if (sentByMe) {
+      return colors.sentByMeCardColor;
+    } else {
+      return colors.receivedCardColor;
+    }
+  }, [colors, sentByMe]);
+  const SenderName = useMemo(() => {
+    if (chat?.senderId === userInfoState?.user?.id) {
+      return 'You';
+    } else if (orgState?.userIdAndDisplayNameMapping[chat?.senderId]) {
+      return orgState?.userIdAndDisplayNameMapping[chat?.senderId];
+    } else {
+      return orgState?.userIdAndNameMapping[chat?.senderId];
+    }
+  }, [chat?.senderId, orgState, userInfoState]);
   const swipeFromLeftOpen = () => {
     setrepliedMsgDetails(chat);
     setreplyOnMessage(true);
@@ -191,9 +205,9 @@ const ChatCard = ({
                         imageUrls={[
                           {
                             url: selectedImage?.resourceUrl,
-                            width: Dimensions.get('window')?.width-20,
+                            width: Dimensions.get('window')?.width - 20,
                             height: Dimensions.get('window')?.height - 100,
-                          }
+                          },
                         ]}
                         enableSwipeDown={true}
                         onSwipeDown={handleModalClose}
@@ -301,7 +315,7 @@ const ChatCard = ({
                       style={[
                         styles.messageText,
                         // styles.text,
-                        {maxWidth: '90%',color:'white'},
+                        {maxWidth: '90%', color: 'white'},
                       ]}>
                       {/* {chat?.content} */}
                       {renderTextWithLinks(
@@ -349,7 +363,7 @@ const LocalChatCard = ({
   channelType,
 }) => {
   const {colors} = useTheme();
-  const styles = makeStyles(colors);
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const [optionsVisible, setOptionsVisible] = useState(false);
   const swipeableRef = useRef(null);
   const onLongPress = () => {
@@ -362,7 +376,9 @@ const LocalChatCard = ({
   const SenderName =
     chat?.senderId == userInfoState?.user?.id
       ? 'You'
-      : orgState?.userIdAndDisplayNameMapping[chat?.senderId] ? orgState?.userIdAndDisplayNameMapping[chat?.senderId] : orgState?.userIdAndNameMapping[chat?.senderId];
+      : orgState?.userIdAndDisplayNameMapping[chat?.senderId]
+      ? orgState?.userIdAndDisplayNameMapping[chat?.senderId]
+      : orgState?.userIdAndNameMapping[chat?.senderId];
   const swipeFromLeftOpen = () => {
     setrepliedMsgDetails(chat);
     setreplyOnMessage(true);
@@ -388,7 +404,11 @@ const LocalChatCard = ({
                 styles.container,
                 sentByMe ? styles.sentByMe : styles.received,
               ]}>
-              <View style={[styles.textContainer,{backgroundColor:colors.sentByMeCardColor}]}>
+              <View
+                style={[
+                  styles.textContainer,
+                  {backgroundColor: colors.sentByMeCardColor},
+                ]}>
                 {channelType != 'DIRECT_MESSAGE' && (
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text style={[styles.nameText, styles.text]}>
@@ -406,29 +426,40 @@ const LocalChatCard = ({
                     </Text>
                   </View>
                 )}
-                <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'flex-end'}}>
-                    <Text style={[styles.messageText, styles.text,{maxWidth:'90%'}]}>
-                      {/* {chat?.content} */}
-                      {renderTextWithLinks(
-                        chat?.content,
-                        chat?.mentions,
-                        false,
-                        orgState,
-                        userInfoState,
-                      )}
-                    </Text>
-                   <View style={{flexDirection:'column',alignItems:'flex-end'}}>
-                   <Icon name="access-time" color={colors.textColor} />
-                   <Text
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-end',
+                  }}>
+                  <Text
+                    style={[
+                      styles.messageText,
+                      styles.text,
+                      {maxWidth: '90%'},
+                    ]}>
+                    {/* {chat?.content} */}
+                    {renderTextWithLinks(
+                      chat?.content,
+                      chat?.mentions,
+                      false,
+                      orgState,
+                      userInfoState,
+                    )}
+                  </Text>
+                  <View
+                    style={{flexDirection: 'column', alignItems: 'flex-end'}}>
+                    <Icon name="access-time" color={colors.textColor} />
+                    <Text
                       style={[
                         styles.timeText,
                         styles.text,
                         {marginHorizontal: ms(10)},
                       ]}>
-                    {time}
+                      {time}
                     </Text>
-                   </View>
                   </View>
+                </View>
               </View>
             </View>
             <View style={sentByMe ? styles.sentByMe : styles.received}>
