@@ -48,6 +48,6 @@ export const LIGHT_THEME = {
         linkColor:'blue',
         // sentByMeCardColor:'#2196f3',
         sentByMeCardColor:'#2196f3',
-        receivedCardColor:'#ECE5DD'
+        receivedCardColor:'white'
     }
 }

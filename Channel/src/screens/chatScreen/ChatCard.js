@@ -193,7 +193,7 @@ const ChatCard = ({
                             url: selectedImage?.resourceUrl,
                             width: Dimensions.get('window')?.width-20,
                             height: Dimensions.get('window')?.height - 100,
-                          },
+                          }
                         ]}
                         enableSwipeDown={true}
                         onSwipeDown={handleModalClose}
@@ -224,7 +224,6 @@ const ChatCard = ({
                         <TouchableOpacity
                           key={index}
                           onPress={() => handleImagePress(index)}
-                          // onPress={() => Linking.openURL(item?.resourceUrl)}
                           style={{marginVertical: 5, alignItems: 'center'}}>
                           <Image
                             source={{uri: item?.resourceUrl}}
@@ -301,8 +300,8 @@ const ChatCard = ({
                     <Text
                       style={[
                         styles.messageText,
-                        styles.text,
-                        {maxWidth: '90%'},
+                        // styles.text,
+                        {maxWidth: '90%',color:'white'},
                       ]}>
                       {/* {chat?.content} */}
                       {renderTextWithLinks(
