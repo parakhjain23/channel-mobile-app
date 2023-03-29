@@ -341,7 +341,7 @@ const LocalChatCard = ({
   const SenderName =
     chat?.senderId == userInfoState?.user?.id
       ? 'You'
-      : orgState?.userIdAndNameMapping[chat?.senderId];
+      : orgState?.userIdAndDisplayNameMapping[chat?.senderId] ? orgState?.userIdAndDisplayNameMapping[chat?.senderId] : orgState?.userIdAndNameMapping[chat?.senderId];
   const swipeFromLeftOpen = () => {
     setrepliedMsgDetails(chat);
     setreplyOnMessage(true);
@@ -373,14 +373,6 @@ const LocalChatCard = ({
                     <Text style={[styles.nameText, styles.text]}>
                       {SenderName}
                     </Text>
-                    <Text
-                      style={[
-                        styles.timeText,
-                        styles.text,
-                        {marginHorizontal: 10},
-                      ]}>
-                      {time}
-                    </Text>
                   </View>
                 )}
                 {parentId != null && (
@@ -393,24 +385,6 @@ const LocalChatCard = ({
                     </Text>
                   </View>
                 )}
-                {/* <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
-                  <Text style={[styles.messageText, styles.text]}>
-                    {renderTextWithLinks(
-                      chat?.content,
-                      chat?.mentions,
-                      false,
-                      orgState,
-                      userInfoState,
-                    )}
-                  </Text>
-                  <View style={{alignSelf: 'flex-end',maxWidth:'90%'}}>
-                    <Icon name="access-time" color={colors.textColor} />
-                  </View>
-                </View> */}
                 <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'flex-end'}}>
                     <Text style={[styles.messageText, styles.text,{maxWidth:'90%'}]}>
                       {/* {chat?.content} */}
