@@ -11,6 +11,7 @@ export const sendMessageApi = async (
 ) => {
   try {
     const mentionRegex = /@(\w+)/g;
+    // Replace mentions with HTML tags
     function mentionHTML(userId, match, username) {
       const base64UserId = base64.encode(userId);
       if (username == 'channel') {
@@ -52,11 +53,12 @@ export const sendMessageApi = async (
         senderId: senderId,
         parentId: parentId,
         createdAt: '2022-05-23T07:02:37.051Z',
-        senderType: 'APP',
         appId: '62b53b61b5b4a2001fb9af37',
+        senderType:'USER'
       }),
     });
     const result = await response.json();
+    // console.log(result, 'result from the api');
   } catch (error) {
     console.warn(error);
   }
