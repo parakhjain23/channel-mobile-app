@@ -115,12 +115,12 @@ const ChatScreen = ({
           userInfoState?.user?.id,
           orgState?.currentOrgId,
         ),
-        setMentions(channelsByQueryState?.channels || []))
+        setMentions(channelsByQueryState?.channels))
       : setMentions([]);
   };
 
   const handleMentionSelect = mention => {
-    setMentionsArr(prevUserIds => [...prevUserIds, mention?._source?.userId]);
+    mention?._source?.userId != undefined &&  setMentionsArr(prevUserIds => [...prevUserIds,mention?._source?.userId]);
     onChangeMessage(prevmessage =>
       prevmessage.replace(
         new RegExp(`@\\w+\\s?$`),
