@@ -72,7 +72,8 @@ const ChatCard = ({
   var parentId = chat?.parentId;
   const date = new Date(chat?.updatedAt);
   const time = date.getHours() + ':' + date.getMinutes();
-  const sentByMe = chat?.senderId == userInfoState?.user?.id;
+  const sentByMe = chat?.senderId == userInfoState?.user?.id ? true : false;
+  const containerBackgroundColor = sentByMe ? colors.sentByMeCardColor : colors.receivedCardColor
   const SenderName =
     chat?.senderId == userInfoState?.user?.id
       ? 'You'
@@ -133,6 +134,7 @@ const ChatCard = ({
                 style={[
                   styles.container,
                   sentByMe ? styles.sentByMe : styles.received,
+                  {backgroundColor:containerBackgroundColor}
                 ]}>
                 {optionsVisible && (
                   <TouchableOpacity
@@ -185,7 +187,9 @@ const ChatCard = ({
                         chatState?.data[chat.teamId]?.parentMessages[parentId]
                           ?.mentions,
                         true,
-                        orgState
+                        orgState,
+                        searchUserProfileAction,
+                        userInfoState
                       )}
                     </TouchableOpacity>
                   )}
@@ -292,7 +296,9 @@ const ChatCard = ({
                       chat?.content,
                       chat?.mentions,
                       false,
-                      orgState
+                      orgState,
+                      searchUserProfileAction,
+                      userInfoState
                     )}
                   </Text>
                     <View style={{maxWidth: '80%'}}></View>
@@ -397,6 +403,7 @@ const LocalChatCard = ({
                       chat?.mentions,
                       false,
                       orgState,
+                      userInfoState
                     )}
                   </Text>
                   <View style={{alignSelf: 'flex-end'}}>

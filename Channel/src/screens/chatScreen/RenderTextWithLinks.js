@@ -6,7 +6,7 @@ import {Linking} from 'react-native';
 import * as RootNavigation from '../../navigation/RootNavigation';
 import cheerio, {text} from 'cheerio';
 
-export const renderTextWithLinks = (text,mentions,repliedContainer,orgState,width) => {
+export const renderTextWithLinks = (text,mentions,repliedContainer,orgState,searchUserProfileAction,userInfoState) => {
   const {colors} = useTheme();
   const urlRegex =
   /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-])?(?:\?[^\s])?)/gi;
