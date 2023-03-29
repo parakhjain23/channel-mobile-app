@@ -48,7 +48,7 @@ export const renderTextWithLinks = (
                }) 
               }}
             >
-              <Text style={{ color: colors.linkColor, fontWeight:'800',textDecorationLine:'underline'}}>{part}</Text>
+              <Text style={{ color: repliedContainer ? textColor :  colors.linkColor, fontWeight:'800',textDecorationLine:'underline'}}>{part}</Text>
             </TouchableOpacity>
           );
         }
