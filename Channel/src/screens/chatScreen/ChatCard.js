@@ -18,6 +18,7 @@ import {useTheme} from '@react-navigation/native';
 import {makeStyles} from './ChatCardStyles';
 import {ms} from 'react-native-size-matters';
 import * as RootNavigation from '../../navigation/RootNavigation';
+import InAppBrowser from 'react-native-inappbrowser-reborn';
 const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
@@ -43,7 +44,7 @@ const ChatCard = ({
   setrepliedMsgDetails,
   searchUserProfileAction,
   flatListRef,
-  channelType
+  channelType,
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
   const {colors} = useTheme();
@@ -73,11 +74,15 @@ const ChatCard = ({
   const date = new Date(chat?.updatedAt);
   const time = date.getHours() + ':' + date.getMinutes();
   const sentByMe = chat?.senderId == userInfoState?.user?.id ? true : false;
-  const containerBackgroundColor = sentByMe ? colors.sentByMeCardColor : colors.receivedCardColor
+  const containerBackgroundColor = sentByMe
+    ? colors.sentByMeCardColor
+    : colors.receivedCardColor;
   const SenderName =
     chat?.senderId == userInfoState?.user?.id
       ? 'You'
-      : orgState?.userIdAndDisplayNameMapping[chat?.senderId] ?orgState?.userIdAndDisplayNameMapping[chat?.senderId] : orgState?.userIdAndNameMapping[chat?.senderId];
+      : orgState?.userIdAndDisplayNameMapping[chat?.senderId]
+      ? orgState?.userIdAndDisplayNameMapping[chat?.senderId]
+      : orgState?.userIdAndNameMapping[chat?.senderId];
   const swipeFromLeftOpen = () => {
     setrepliedMsgDetails(chat);
     setreplyOnMessage(true);
@@ -94,35 +99,17 @@ const ChatCard = ({
     typeof chat.isActivity === 'string'
       ? chat.isActivity === 'true'
       : chat.isActivity;
+  const openLink = async (url) => {
+    if (await InAppBrowser.isAvailable()) {
+      const result = InAppBrowser?.open(url);
+    } else {
+      Linking.openURL(url);
+    }
+  };
   return (
     <>
       {!isActivity ? (
         <GestureHandlerRootView style={{flexDirection: 'row'}}>
-          <Modal
-            visible={selectedImage !== null}
-            transparent={true}
-            onRequestClose={handleModalClose}
-            style={{flex:1}}
-            >
-            <TouchableOpacity
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'rgba(0, 0, 0, 0.9)',
-              }}
-              activeOpacity={1}
-              onPress={handleModalClose}>
-              <Image
-                source={{uri: selectedImage?.resourceUrl}}
-                style={{
-                  width: Dimensions.get('window').width - 50,
-                  height: Dimensions.get('window').height - 50,
-                }}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          </Modal>
-
           <TouchableOpacity
             onLongPress={sentByMe ? onLongPress : null}
             style={{flex: 1}}>
@@ -134,7 +121,7 @@ const ChatCard = ({
                 style={[
                   styles.container,
                   sentByMe ? styles.sentByMe : styles.received,
-                  {backgroundColor:containerBackgroundColor}
+                  {backgroundColor: containerBackgroundColor},
                 ]}>
                 {optionsVisible && (
                   <TouchableOpacity
@@ -154,20 +141,22 @@ const ChatCard = ({
                     <Text style={[styles.text, {color: 'tomato'}]}>Delete</Text>
                   </TouchableOpacity>
                 )}
-                <View style={[styles.textContainer,{maxWidth:'90%'}]}>
-                  {channelType != 'DIRECT_MESSAGE' && <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text style={[styles.nameText, styles.text]}>
-                      {SenderName}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.timeText,
-                        styles.text,
-                        {marginHorizontal: ms(10)},
-                      ]}>
-                      {time}
-                    </Text>
-                  </View>}
+                <View style={[styles.textContainer, {maxWidth: '90%'}]}>
+                  {channelType != 'DIRECT_MESSAGE' && (
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <Text style={[styles.nameText, styles.text]}>
+                        {SenderName}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.timeText,
+                          styles.text,
+                          {marginHorizontal: ms(10)},
+                        ]}>
+                        {time}
+                      </Text>
+                    </View>
+                  )}
                   {parentId != null && (
                     <TouchableOpacity
                       style={[styles.repliedContainer]}
@@ -181,44 +170,51 @@ const ChatCard = ({
                           flatListRef,
                         )
                       }>
-                      {chatState?.data[chat.teamId]?.parentMessages[parentId]?.attachment?.length > 0 ? <Text style={{color:'black'}}><Icon name='attach-file' size={14}/> attachment</Text>: renderTextWithLinks(
-                        chatState?.data[chat.teamId]?.parentMessages[parentId]
-                          ?.content,
-                        chatState?.data[chat.teamId]?.parentMessages[parentId]
-                          ?.mentions,
-                        true,
-                        orgState,
-                        searchUserProfileAction,
-                        userInfoState
+                      {chatState?.data[chat.teamId]?.parentMessages[parentId]
+                        ?.attachment?.length > 0 ? (
+                        <Text style={{color: 'black'}}>
+                          <Icon name="attach-file" size={14} /> attachment
+                        </Text>
+                      ) : (
+                        renderTextWithLinks(
+                          chatState?.data[chat.teamId]?.parentMessages[parentId]
+                            ?.content,
+                          chatState?.data[chat.teamId]?.parentMessages[parentId]
+                            ?.mentions,
+                          true,
+                          orgState,
+                          searchUserProfileAction,
+                          userInfoState,
+                        )
                       )}
                     </TouchableOpacity>
                   )}
-                  <View style={{maxWidth:'80%'}}>
-                  <Modal
-                    visible={selectedImage !== null}
-                    transparent={true}
-                    onRequestClose={handleModalClose}>
-                    <TouchableOpacity
-                      style={{
-                        flex: 1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: 'rgba(0, 0, 0, 0.9)',
-                      }}
-                      activeOpacity={1}
-                    >
-                      <Image
-                        source={{uri: selectedImage?.resourceUrl}}
+                  <View style={{maxWidth: '80%'}}>
+                    <Modal
+                      visible={selectedImage !== null}
+                      transparent={true}
+                      onRequestClose={handleModalClose}>
+                      <TouchableOpacity
                         style={{
-                          width: Dimensions.get('window').width,
-                          height: Dimensions.get('window').height - 50,
+                          flex: 1,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: 'rgba(0, 0, 0, 0.9)',
                         }}
-                        resizeMode="contain"
-                      />
-                    </TouchableOpacity>
-                  </Modal>
+                        activeOpacity={1}
+                        onPress={handleModalClose}>
+                        <Image
+                          source={{uri: selectedImage?.resourceUrl}}
+                          style={{
+                            width: Dimensions.get('window').width,
+                            height: Dimensions.get('window').height - 50,
+                          }}
+                          resizeMode="contain"
+                        />
+                      </TouchableOpacity>
+                    </Modal>
                   </View>
-                  {attachment?.length > 0 && 
+                  {attachment?.length > 0 &&
                     attachment?.map((item, index) => {
                       return item?.contentType?.includes('image') ? (
                         <TouchableOpacity
@@ -242,7 +238,9 @@ const ChatCard = ({
                           }}
                           key={index}>
                           <TouchableOpacity
-                            onPress={() => Linking.openURL(item?.resourceUrl)}>
+                            onPress={() => {
+                              openLink(item?.resourceUrl);
+                            }}>
                             <View
                               style={{
                                 flexDirection: 'row',
@@ -298,12 +296,12 @@ const ChatCard = ({
                       false,
                       orgState,
                       searchUserProfileAction,
-                      userInfoState
+                      userInfoState,
                     )}
                   </Text>
-                    <View style={{maxWidth: '80%'}}></View>
-                  </View>
+                  <View style={{maxWidth: '80%'}}></View>
                 </View>
+              </View>
             </Swipeable>
           </TouchableOpacity>
         </GestureHandlerRootView>
@@ -326,7 +324,7 @@ const LocalChatCard = ({
   setreplyOnMessage,
   setrepliedMsgDetails,
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
-  channelType
+  channelType,
 }) => {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
@@ -369,19 +367,21 @@ const LocalChatCard = ({
                 sentByMe ? styles.sentByMe : styles.received,
               ]}>
               <View style={styles.textContainer}>
-                {channelType !='DIRECT_MESSAGE' &&<View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Text style={[styles.nameText, styles.text]}>
-                    {SenderName}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.timeText,
-                      styles.text,
-                      {marginHorizontal: 10},
-                    ]}>
-                    {time}
-                  </Text>
-                </View>}
+                {channelType != 'DIRECT_MESSAGE' && (
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Text style={[styles.nameText, styles.text]}>
+                      {SenderName}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.timeText,
+                        styles.text,
+                        {marginHorizontal: 10},
+                      ]}>
+                      {time}
+                    </Text>
+                  </View>
+                )}
                 {parentId != null && (
                   <View style={styles.repliedContainer}>
                     <Text style={{color: colors.textColor}}>
@@ -403,7 +403,7 @@ const LocalChatCard = ({
                       chat?.mentions,
                       false,
                       orgState,
-                      userInfoState
+                      userInfoState,
                     )}
                   </Text>
                   <View style={{alignSelf: 'flex-end'}}>
