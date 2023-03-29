@@ -9,6 +9,7 @@ import {
   View,
   Animated,
   useWindowDimensions,
+  Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -159,17 +160,17 @@ const ChatScreen = ({
         </View>
       </TouchableOpacity>
     );
-
-  const onScroll = Animated.event(
-    [{nativeEvent: {contentOffset: {y: scrollY}}}],
-    {
-      useNativeDriver: true,
-      listener: event => {
-        const offsetY = event.nativeEvent.contentOffset.y;
-        setIsScrolling(offsetY > 0);
-      },
+const screenHeight = Dimensions.get('window').height;
+const onScroll = Animated.event(
+  [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+  {
+    useNativeDriver: true,
+    listener: event => {
+      const offsetY = event.nativeEvent.contentOffset.y;
+      setIsScrolling(offsetY >= 0.7 * screenHeight);
     },
-  );
+  },
+);
   const memoizedData = useMemo(
     () => chatState?.data[teamId]?.messages || [],
     [chatState?.data[teamId]?.messages],
