@@ -69,9 +69,9 @@ export const makeStyles = colors => StyleSheet.create({
     },
     textContainer: {
       padding: ms(8),
-      borderRadius: ms(8),
+      // borderRadius: ms(8),
       flexDirection: 'column',
-      maxWidth: '70%',
+      maxWidth: '90%',
     },
     nameText: {
       fontWeight: 'bold',

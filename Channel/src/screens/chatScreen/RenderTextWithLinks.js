@@ -42,16 +42,13 @@ export const renderTextWithLinks = (
             <TouchableOpacity
               key={i}
               onPress={async () => {
-                key1 != 'all' &&
-                  (await searchUserProfileAction(
-                    key1,
-                    userInfoState?.accessToken,
-                  )) &&
-                  RootNavigation.navigate('UserProfiles', {
-                    displayName: orgState?.userIdAndDisplayNameMapping[key1],
-                  });
-              }}>
-              <Text style={{color: colors.linkColor}}>{part}</Text>
+               key1 != 'all' &&  await searchUserProfileAction(key1, userInfoState?.accessToken) && 
+               RootNavigation.navigate('UserProfiles', {
+                 displayName: orgState?.userIdAndDisplayNameMapping[key1],
+               }) 
+              }}
+            >
+              <Text style={{ color: colors.linkColor, fontWeight:'800',textDecorationLine:'underline'}}>{part}</Text>
             </TouchableOpacity>
           );
         }

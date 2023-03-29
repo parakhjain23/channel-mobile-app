@@ -150,14 +150,6 @@ const ChatCard = ({
                       </Text>
                     </View>
                   )}
-                  {/* <Text
-                    style={[
-                      styles.timeText,
-                      styles.text,
-                      {marginHorizontal: ms(10)},
-                    ]}>
-                    {time}
-                  </Text> */}
                   {parentId != null && (
                     <TouchableOpacity
                       style={[styles.repliedContainer]}
@@ -397,7 +389,7 @@ const LocalChatCard = ({
                 styles.container,
                 sentByMe ? styles.sentByMe : styles.received,
               ]}>
-              <View style={styles.textContainer}>
+              <View style={[styles.textContainer,{backgroundColor:colors.sentByMeCardColor}]}>
                 {channelType != 'DIRECT_MESSAGE' && (
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text style={[styles.nameText, styles.text]}>
@@ -423,7 +415,7 @@ const LocalChatCard = ({
                     </Text>
                   </View>
                 )}
-                <View
+                {/* <View
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
@@ -437,10 +429,33 @@ const LocalChatCard = ({
                       userInfoState,
                     )}
                   </Text>
-                  <View style={{alignSelf: 'flex-end'}}>
+                  <View style={{alignSelf: 'flex-end',maxWidth:'90%'}}>
                     <Icon name="access-time" color={colors.textColor} />
                   </View>
-                </View>
+                </View> */}
+                <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'flex-end'}}>
+                    <Text style={[styles.messageText, styles.text,{maxWidth:'90%'}]}>
+                      {/* {chat?.content} */}
+                      {renderTextWithLinks(
+                        chat?.content,
+                        chat?.mentions,
+                        false,
+                        orgState,
+                        userInfoState,
+                      )}
+                    </Text>
+                   <View style={{flexDirection:'column',alignItems:'flex-end'}}>
+                   <Icon name="access-time" color={colors.textColor} />
+                   <Text
+                      style={[
+                        styles.timeText,
+                        styles.text,
+                        {marginHorizontal: ms(10)},
+                      ]}>
+                    {time}
+                    </Text>
+                   </View>
+                  </View>
               </View>
             </View>
             <View style={sentByMe ? styles.sentByMe : styles.received}>

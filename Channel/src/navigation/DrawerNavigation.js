@@ -37,7 +37,7 @@ const DrawerNavigation = ({orgsState, route}) => {
           headerStyle: {backgroundColor: colors.headerColor},
           headerTitleStyle: {color: colors.textColor},
           headerLeft: () => (
-            <TouchableOpacity
+             <TouchableOpacity style={{padding:10}}
               onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
               <View style={styles.container}>
                 <Icon name="bars" size={24} color={colors.secondaryColor} />
