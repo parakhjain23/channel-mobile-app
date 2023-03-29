@@ -115,7 +115,7 @@ const ChatScreen = ({
           userInfoState?.user?.id,
           orgState?.currentOrgId,
         ),
-        setMentions(channelsByQueryState?.channels))
+        setMentions(channelsByQueryState?.mentionChannels))
       : setMentions([]);
   };
 
