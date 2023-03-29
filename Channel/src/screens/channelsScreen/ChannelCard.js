@@ -41,7 +41,7 @@ const ChannelCard = ({item, navigation, props, resetUnreadCountAction}) => {
         justifyContent: 'center',
       }}
       onPress={() => {
-        RootNavigation.navigate('Chat', {chatHeaderTitle: Name, teamId: item?._id})
+        RootNavigation.navigate('Chat', {chatHeaderTitle: Name, teamId: item?._id,channelType:item?.type})
         props?.setActiveChannelTeamIdAction(item?._id);
         props?.channelsState?.teamIdAndUnreadCountMapping?.[item?._id] > 0 &&
           resetUnreadCountAction(

@@ -47,7 +47,7 @@ const ChatScreen = ({
   channelsByQueryState,
   searchUserProfileAction,
 }) => {
-  var {teamId, reciverUserId} = route.params;
+  var {teamId, reciverUserId,channelType} = route.params;
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const [replyOnMessage, setreplyOnMessage] = useState(false);
@@ -180,6 +180,7 @@ const ChatScreen = ({
         setrepliedMsgDetails={setrepliedMsgDetails}
         searchUserProfileAction={searchUserProfileAction}
         flatListRef={FlatListRef}
+        channelType={channelType}
       />
     ),
     [
@@ -201,6 +202,7 @@ const ChatScreen = ({
         chatState={chatState}
         setreplyOnMessage={setreplyOnMessage}
         setrepliedMsgDetails={setrepliedMsgDetails}
+        channelType={channelType}
       />
     ),
     [

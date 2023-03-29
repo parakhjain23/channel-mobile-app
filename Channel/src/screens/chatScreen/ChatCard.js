@@ -43,6 +43,7 @@ const ChatCard = ({
   setrepliedMsgDetails,
   searchUserProfileAction,
   flatListRef,
+  channelType
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
   const {colors} = useTheme();
@@ -75,7 +76,7 @@ const ChatCard = ({
   const SenderName =
     chat?.senderId == userInfoState?.user?.id
       ? 'You'
-      : orgState?.userIdAndNameMapping[chat?.senderId];
+      : orgState?.userIdAndDisplayNameMapping[chat?.senderId] ?orgState?.userIdAndDisplayNameMapping[chat?.senderId] : orgState?.userIdAndNameMapping[chat?.senderId];
   const swipeFromLeftOpen = () => {
     setrepliedMsgDetails(chat);
     setreplyOnMessage(true);
@@ -151,8 +152,8 @@ const ChatCard = ({
                     <Text style={[styles.text, {color: 'tomato'}]}>Delete</Text>
                   </TouchableOpacity>
                 )}
-                   <View style={[styles.textContainer,{maxWidth:'90%'}]}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View style={[styles.textContainer,{maxWidth:'90%'}]}>
+                  {channelType != 'DIRECT_MESSAGE' && <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text style={[styles.nameText, styles.text]}>
                       {SenderName}
                     </Text>
@@ -164,7 +165,7 @@ const ChatCard = ({
                       ]}>
                       {time}
                     </Text>
-                  </View>
+                  </View>}
                   {parentId != null && (
                     <TouchableOpacity
                       style={[styles.repliedContainer]}
@@ -293,7 +294,7 @@ const ChatCard = ({
                       false,
                       orgState
                     )}
-                    </Text>
+                  </Text>
                     <View style={{maxWidth: '80%'}}></View>
                   </View>
                 </View>
@@ -319,6 +320,7 @@ const LocalChatCard = ({
   setreplyOnMessage,
   setrepliedMsgDetails,
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
+  channelType
 }) => {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
@@ -361,7 +363,7 @@ const LocalChatCard = ({
                 sentByMe ? styles.sentByMe : styles.received,
               ]}>
               <View style={styles.textContainer}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                {channelType !='DIRECT_MESSAGE' &&<View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Text style={[styles.nameText, styles.text]}>
                     {SenderName}
                   </Text>
@@ -373,7 +375,7 @@ const LocalChatCard = ({
                     ]}>
                     {time}
                   </Text>
-                </View>
+                </View>}
                 {parentId != null && (
                   <View style={styles.repliedContainer}>
                     <Text style={{color: colors.textColor}}>
