@@ -63,9 +63,16 @@ const ChatScreen = ({
   const [mentions, setMentions] = useState([]);
   const [mentionsArr, setMentionsArr] = useState([]);
   const {width} = useWindowDimensions();
+  const textInputRef = useRef(null);
   if (teamId == undefined) {
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
   }
+  useEffect(() => {
+    if(repliedMsgDetails != ''){
+      textInputRef.current.focus()
+    }
+  }, [repliedMsgDetails])
+  
   useEffect(() => {
     localMsg?.shift();
   }, [chatState?.data[teamId]?.messages]);
@@ -409,6 +416,7 @@ const ChatScreen = ({
                   )}
 
                   <TextInput
+                    ref={textInputRef}
                     editable
                     multiline
                     onChangeText={handleInputChange}
