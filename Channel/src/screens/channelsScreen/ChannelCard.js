@@ -11,14 +11,18 @@ const ChannelCard = ({item, navigation, props, resetUnreadCountAction}) => {
   const {colors} = useTheme();
   const Name =
     item?.type == 'DIRECT_MESSAGE'
-      ? props?.orgsState?.userIdAndNameMapping &&
-        props?.orgsState?.userIdAndNameMapping[
+      ? props?.orgsState?.userIdAndDisplayNameMapping ?
+        props?.orgsState?.userIdAndDisplayNameMapping[
           `${
             item.userIds[0] != props?.userInfoState?.user?.id
               ? item.userIds[0]
               : item.userIds[1]
           }`
-        ]
+        ] : props?.orgsState?.userIdAndNameMapping[`${
+          item.userIds[0] != props?.userInfoState?.user?.id
+            ? item.userIds[0]
+            : item.userIds[1]
+        }`] 
       : item?.name;
   const iconName = item?.type == 'DIRECT_MESSAGE' ? 'user' : 'hashtag';
   let unread = props?.channelsState?.teamIdAndUnreadCountMapping?.[item?._id] > 0 || 
