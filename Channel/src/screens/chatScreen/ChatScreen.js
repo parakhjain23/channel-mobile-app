@@ -10,6 +10,7 @@ import {
   Animated,
   useWindowDimensions,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
 import ListFooterComponent from '../../components/ListFooterComponent';
@@ -46,7 +47,7 @@ const ChatScreen = ({
   channelsByQueryState,
   searchUserProfileAction,
 }) => {
-  var {teamId, reciverUserId} = route.params;
+  var {teamId, reciverUserId,channelType} = route.params;
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const [replyOnMessage, setreplyOnMessage] = useState(false);
@@ -179,6 +180,7 @@ const ChatScreen = ({
         setrepliedMsgDetails={setrepliedMsgDetails}
         searchUserProfileAction={searchUserProfileAction}
         flatListRef={FlatListRef}
+        channelType={channelType}
       />
     ),
     [
@@ -200,6 +202,7 @@ const ChatScreen = ({
         chatState={chatState}
         setreplyOnMessage={setreplyOnMessage}
         setrepliedMsgDetails={setrepliedMsgDetails}
+        channelType={channelType}
       />
     ),
     [
@@ -321,7 +324,10 @@ const ChatScreen = ({
                           orgState,
                           width,
                         )
-                      ) : (
+                      ) : repliedMsgDetails?.attachment?.length > 0 ? (<Text style={{color:'black'}}>
+                        <Icon name='attach-file' size={16} color='black'/>
+                        attachment
+                      </Text>):(
                         <Text style={styles.repliedText}>
                           {repliedMsgDetails?.content}
                         </Text>

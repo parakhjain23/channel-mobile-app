@@ -6,7 +6,7 @@ import {Linking} from 'react-native';
 import * as RootNavigation from '../../navigation/RootNavigation';
 import cheerio, {text} from 'cheerio';
 
-export const renderTextWithLinks = (text,mentions,repliedContainer,orgState,width) => {
+export const renderTextWithLinks = (text,mentions,repliedContainer,orgState,searchUserProfileAction,userInfoState) => {
   const {colors} = useTheme();
   const urlRegex =
   /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-])?(?:\?[^\s])?)/gi;
@@ -20,7 +20,7 @@ export const renderTextWithLinks = (text,mentions,repliedContainer,orgState,widt
     return null;
   }  
   function highlight(text,result,repliedContainer) {
-    const textColor = repliedContainer ? 'black' : 'white'
+    const textColor = repliedContainer ? 'black' : colors.textColor
     let A = orgState?.userIdAndDisplayNameMapping
     text = text.replace(/@{1,2}(\w+)/g, (match, p1) => {
       return A[p1] ? `@${A[p1]}` : match;

@@ -52,6 +52,10 @@ export const makeStyles = colors => StyleSheet.create({
       alignItems: 'flex-end',
       marginBottom: mvs(15),
       maxWidth: '90%',
+      // backgroundColor:'#282c34'
+      // backgroundColor:'#f1f1f1'
+      // backgroundColor:'#4caf50'
+      // backgroundColor:'#e0e0e0'
     },
     sentByMe: {
       alignSelf: 'flex-end',

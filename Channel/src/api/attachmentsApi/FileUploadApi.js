@@ -28,7 +28,7 @@ export const FileUploadApi = async (Files, accessToken) => {
     const uploadPromises = signedUrls.map(async (s3BucketUrl, index) => {
       const fileUri = await fetch(Files[index]?.uri);
       const imageBody = await fileUri.blob();
-      const fileType = Files[index]?.type;4
+      const fileType = Files[index]?.type;
       await UploadDocumentApi(s3BucketUrl, fileType, imageBody);
       return fileNames[index];
     });

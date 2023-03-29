@@ -17,7 +17,7 @@ import {renderTextWithLinks} from './RenderTextWithLinks';
 import {useTheme} from '@react-navigation/native';
 import {makeStyles} from './ChatCardStyles';
 import {ms} from 'react-native-size-matters';
-import * as RootNavigation from '../../navigation/RootNavigation'
+import * as RootNavigation from '../../navigation/RootNavigation';
 const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
@@ -43,104 +43,12 @@ const ChatCard = ({
   setrepliedMsgDetails,
   searchUserProfileAction,
   flatListRef,
+  channelType
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const [optionsVisible, setOptionsVisible] = useState(false);
-  // const urlRegex =
-  // /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-])?(?:\?[^\s])?)/gi;
-  // function findKeyByValue(value) {
-  //   const newValue = value.substring(1);
-  //   for (let key in orgState?.userIdAndDisplayNameMapping) {
-  //     if (orgState?.userIdAndDisplayNameMapping[key] === newValue) {
-  //       return key;
-  //     }
-  //   }
-  //   return null;
-  // }
-
-// function highlight(text,result,repliedContainer) {
-//   const textColor = repliedContainer ? 'black' : 'white'
-//   let A = orgState?.userIdAndDisplayNameMapping
-//   text = text.replace(/@{1,2}(\w+)/g, (match, p1) => {
-//     return A[p1] ? `@${A[p1]}` : match;
-//   });
-//   const parts = text?.split(/(\B@\w+)/);
-//   return parts?.map((part, i) => {
-//     if (/^@\w+$/.test(part)) {
-//       let key1 = findKeyByValue(part);
-//       if (key1 != null) {
-//         return (
-//              <TouchableOpacity
-//             key={i}
-//             onPress={async () => {
-//              key1 != 'all' &&  await searchUserProfileAction(key1, userInfoState?.accessToken) && 
-//              RootNavigation.navigate('UserProfiles', {
-//                displayName: orgState?.userIdAndDisplayNameMapping[key1],
-//              }) 
-//             }}
-//           >
-//             <Text style={{ color: colors.linkColor }}>{part}</Text>
-//           </TouchableOpacity>
-//         );
-//       }
-//     }
-//     return <Text key={i} style={{color:textColor}}>{part}</Text>;
-//   });
-// }
-// function renderTextWithLinks(text, mentionsArr,repliedContainer) {
-  // var result = [];
-  // var resultStr=''
-  //   const $ = cheerio.load(`<div>${text}</div>`);
-  //   $('span[contenteditable="false"]').remove();
-  //   $('*')
-  //     .contents()
-  //     .each((index, element) => {
-  //       if (element.type === 'text') {
-  //         const message = $(element).text().trim();
-  //         if (message !== '') {
-  //           resultStr += message + ' ';
-  //           result.push(message)
-  //           // console.log(message);
-  //         }
-  //       } else if ($(element).is('span')) {
-  //         resultStr +=
-  //           $(element)?.attr('data-denotation-char') +
-  //           $(element)?.attr('data-id') +
-  //           ' ';
-  //         // result?.push($(element)?.attr('data-denotation-char') +
-  //         // $(element)?.attr('data-id'))
-  //         var id = $(element)?.attr('data-id')
-  //         var data = '@'+$(element)?.attr('data-value')
-  //         result?.push({[id]:data})
-  //       }
-  //     });
-  //   resultStr = resultStr.trim();
-  // const parts = resultStr?.split(urlRegex);
-  // return parts?.map((part, i) =>
-  //   urlRegex.test(part) ? (
-  //      <View style={{maxWidth:250}}>
-  //        <TouchableOpacity
-  //       key={i}
-  //       onPress={() => {
-  //         let url = part;
-  //         //regEx for checking if https included or not
-  //         if (!/^https?:\/\//i.test(url)) {
-  //           url = 'https://' + url;
-  //         }
-  //         Linking.openURL(url);
-  //       }}>
-  //       <Text style={{color: colors.linkColor, textDecorationLine: 'underline'}}>
-  //         {part}
-  //       </Text>
-  //     </TouchableOpacity>
-  //      </View>
-  //   ) : (
-  //     <Text key={i}>{highlight(part,result,repliedContainer)}</Text>
-  //   )
-  // );
-// }
   const [selectedImage, setSelectedImage] = useState(null);
   const swipeableRef = useRef(null);
   const attachment =
@@ -164,11 +72,12 @@ const ChatCard = ({
   var parentId = chat?.parentId;
   const date = new Date(chat?.updatedAt);
   const time = date.getHours() + ':' + date.getMinutes();
-  const sentByMe = chat?.senderId == userInfoState?.user?.id;
+  const sentByMe = chat?.senderId == userInfoState?.user?.id ? true : false;
+  const containerBackgroundColor = sentByMe ? colors.sentByMeCardColor : colors.receivedCardColor
   const SenderName =
     chat?.senderId == userInfoState?.user?.id
       ? 'You'
-      : orgState?.userIdAndNameMapping[chat?.senderId];
+      : orgState?.userIdAndDisplayNameMapping[chat?.senderId] ?orgState?.userIdAndDisplayNameMapping[chat?.senderId] : orgState?.userIdAndNameMapping[chat?.senderId];
   const swipeFromLeftOpen = () => {
     setrepliedMsgDetails(chat);
     setreplyOnMessage(true);
@@ -189,6 +98,31 @@ const ChatCard = ({
     <>
       {!isActivity ? (
         <GestureHandlerRootView style={{flexDirection: 'row'}}>
+          <Modal
+            visible={selectedImage !== null}
+            transparent={true}
+            onRequestClose={handleModalClose}
+            style={{flex:1}}
+            >
+            <TouchableOpacity
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'rgba(0, 0, 0, 0.9)',
+              }}
+              activeOpacity={1}
+              onPress={handleModalClose}>
+              <Image
+                source={{uri: selectedImage?.resourceUrl}}
+                style={{
+                  width: Dimensions.get('window').width - 50,
+                  height: Dimensions.get('window').height - 50,
+                }}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          </Modal>
+
           <TouchableOpacity
             onLongPress={sentByMe ? onLongPress : null}
             style={{flex: 1}}>
@@ -199,9 +133,9 @@ const ChatCard = ({
               <View
                 style={[
                   styles.container,
-                  sentByMe ? styles.sentByMe : styles.received
-                ]}
-                >
+                  sentByMe ? styles.sentByMe : styles.received,
+                  {backgroundColor:containerBackgroundColor}
+                ]}>
                 {optionsVisible && (
                   <TouchableOpacity
                     onPress={() => {
@@ -220,8 +154,8 @@ const ChatCard = ({
                     <Text style={[styles.text, {color: 'tomato'}]}>Delete</Text>
                   </TouchableOpacity>
                 )}
-                   <View style={[styles.textContainer,{maxWidth:'90%'}]}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View style={[styles.textContainer,{maxWidth:'90%'}]}>
+                  {channelType != 'DIRECT_MESSAGE' && <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text style={[styles.nameText, styles.text]}>
                       {SenderName}
                     </Text>
@@ -233,7 +167,7 @@ const ChatCard = ({
                       ]}>
                       {time}
                     </Text>
-                  </View>
+                  </View>}
                   {parentId != null && (
                     <TouchableOpacity
                       style={[styles.repliedContainer]}
@@ -253,7 +187,9 @@ const ChatCard = ({
                         chatState?.data[chat.teamId]?.parentMessages[parentId]
                           ?.mentions,
                         true,
-                        orgState
+                        orgState,
+                        searchUserProfileAction,
+                        userInfoState
                       )}
                     </TouchableOpacity>
                   )}
@@ -360,10 +296,13 @@ const ChatCard = ({
                       chat?.content,
                       chat?.mentions,
                       false,
-                      orgState
+                      orgState,
+                      searchUserProfileAction,
+                      userInfoState
                     )}
                   </Text>
-                </View>
+                    <View style={{maxWidth: '80%'}}></View>
+                  </View>
                 </View>
             </Swipeable>
           </TouchableOpacity>
@@ -387,12 +326,12 @@ const LocalChatCard = ({
   setreplyOnMessage,
   setrepliedMsgDetails,
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
+  channelType
 }) => {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const [optionsVisible, setOptionsVisible] = useState(false);
   const swipeableRef = useRef(null);
-  const {width} = useWindowDimensions();
   const onLongPress = () => {
     setOptionsVisible(true);
   };
@@ -430,7 +369,7 @@ const LocalChatCard = ({
                 sentByMe ? styles.sentByMe : styles.received,
               ]}>
               <View style={styles.textContainer}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                {channelType !='DIRECT_MESSAGE' &&<View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Text style={[styles.nameText, styles.text]}>
                     {SenderName}
                   </Text>
@@ -442,7 +381,7 @@ const LocalChatCard = ({
                     ]}>
                     {time}
                   </Text>
-                </View>
+                </View>}
                 {parentId != null && (
                   <View style={styles.repliedContainer}>
                     <Text style={{color: colors.textColor}}>
@@ -454,13 +393,17 @@ const LocalChatCard = ({
                   </View>
                 )}
                 <View
-                  style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
                   <Text style={[styles.messageText, styles.text]}>
                     {renderTextWithLinks(
                       chat?.content,
                       chat?.mentions,
                       false,
                       orgState,
+                      userInfoState
                     )}
                   </Text>
                   <View style={{alignSelf: 'flex-end'}}>

@@ -27,7 +27,9 @@ export const DARK_THEME = {
         headerColor: '#1A2421',
         drawerBackgroundColor: '#1A2421',
         searchBoxBackgroundColor: '#E6E6E6',
-        linkColor:'#14AEEA'
+        linkColor:'#14AEEA',
+        sentByMeCardColor:'#282c34',
+        receivedCardColor:'#2a2a2a'
     }
 }
 
@@ -43,6 +45,9 @@ export const LIGHT_THEME = {
         headerColor: 'white',
         drawerBackgroundColor: 'white',
         searchBoxBackgroundColor: 'white',
-        linkColor:'blue'
+        linkColor:'blue',
+        // sentByMeCardColor:'#2196f3',
+        sentByMeCardColor:'#2196f3',
+        receivedCardColor:'#ECE5DD'
     }
 }
