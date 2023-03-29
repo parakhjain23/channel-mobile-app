@@ -39,6 +39,7 @@ const ChannelCard = ({item, navigation, props, resetUnreadCountAction}) => {
         flexDirection: 'column',
         justifyContent: 'center',
       }}
+      activeOpacity={0.8}
       onPress={() => {
         props?.setActiveChannelTeamIdAction(item?._id);
         navigation.navigate('Chat', {chatHeaderTitle: Name, teamId: item?._id});
