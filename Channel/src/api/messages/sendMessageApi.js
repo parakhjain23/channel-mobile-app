@@ -52,7 +52,7 @@ export const sendMessageApi = async (
         senderId: senderId,
         parentId: parentId,
         createdAt: '2022-05-23T07:02:37.051Z',
-        senderType: 'APP',
+        senderType: 'USER',
         appId: '62b53b61b5b4a2001fb9af37',
       }),
     });
@@ -106,7 +106,7 @@ export const sendGlobalMessageApi = async messageObj => {
         senderId: messageObj.senderId,
         parentId: messageObj.parentId,
         createdAt: messageObj?.date,
-        senderType: 'APP',
+        senderType: 'USER',
         appId: '62b53b61b5b4a2001fb9af37',
       }),
     });
