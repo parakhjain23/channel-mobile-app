@@ -108,7 +108,7 @@ export const sendGlobalMessageApi = async messageObj => {
         senderId: messageObj.senderId,
         parentId: messageObj.parentId,
         createdAt: messageObj?.date,
-        senderType: 'APP',
+        senderType: 'USER',
         appId: '62b53b61b5b4a2001fb9af37',
       }),
     });
