@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import {fetchSearchedUserProfileStart} from '../../redux/actions/user/searchUserProfileActions';
 import {s, vs, ms, mvs} from 'react-native-size-matters';
 import {resetUnreadCountStart} from '../../redux/actions/channels/ChannelsAction';
+import * as RootNavigation from '../../navigation/RootNavigation'
 const ChannelCard = ({item, navigation, props, resetUnreadCountAction}) => {
   const {colors} = useTheme();
   const Name =
@@ -40,8 +41,8 @@ const ChannelCard = ({item, navigation, props, resetUnreadCountAction}) => {
         justifyContent: 'center',
       }}
       onPress={() => {
+        RootNavigation.navigate('Chat', {chatHeaderTitle: Name, teamId: item?._id})
         props?.setActiveChannelTeamIdAction(item?._id);
-        navigation.navigate('Chat', {chatHeaderTitle: Name, teamId: item?._id});
         props?.channelsState?.teamIdAndUnreadCountMapping?.[item?._id] > 0 &&
           resetUnreadCountAction(
             props?.orgsState?.currentOrgId,
