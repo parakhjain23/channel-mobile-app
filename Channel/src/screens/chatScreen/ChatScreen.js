@@ -9,6 +9,7 @@ import {
   View,
   Animated,
   useWindowDimensions,
+  Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -63,9 +64,16 @@ const ChatScreen = ({
   const [mentions, setMentions] = useState([]);
   const [mentionsArr, setMentionsArr] = useState([]);
   const {width} = useWindowDimensions();
+  const textInputRef = useRef(null);
   if (teamId == undefined) {
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
   }
+  useEffect(() => {
+    if(repliedMsgDetails != ''){
+      textInputRef.current.focus()
+    }
+  }, [repliedMsgDetails])
+  
   useEffect(() => {
     localMsg?.shift();
   }, [chatState?.data[teamId]?.messages]);
@@ -152,17 +160,17 @@ const ChatScreen = ({
         </View>
       </TouchableOpacity>
     );
-
-  const onScroll = Animated.event(
-    [{nativeEvent: {contentOffset: {y: scrollY}}}],
-    {
-      useNativeDriver: true,
-      listener: event => {
-        const offsetY = event.nativeEvent.contentOffset.y;
-        setIsScrolling(offsetY > 0);
-      },
+const screenHeight = Dimensions.get('window').height;
+const onScroll = Animated.event(
+  [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+  {
+    useNativeDriver: true,
+    listener: event => {
+      const offsetY = event.nativeEvent.contentOffset.y;
+      setIsScrolling(offsetY >= 0.7 * screenHeight);
     },
-  );
+  },
+);
   const memoizedData = useMemo(
     () => chatState?.data[teamId]?.messages || [],
     [chatState?.data[teamId]?.messages],
@@ -409,6 +417,7 @@ const ChatScreen = ({
                   )}
 
                   <TextInput
+                    ref={textInputRef}
                     editable
                     multiline
                     onChangeText={handleInputChange}
