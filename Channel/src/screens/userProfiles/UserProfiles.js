@@ -33,7 +33,7 @@ const ContactDetailsPage = ({userInfoState, channelsState}) => {
           }}>
           <Image
             source={{
-              uri: `${IMAGE_BASE_URL}${userInfoState?.searchedUserProfile?.avatarKey}`,
+              uri: userInfoState?.searchedUserProfile?.avatarKey ? `${IMAGE_BASE_URL}${userInfoState?.searchedUserProfile?.avatarKey}`:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVe0cFaZ9e5Hm9X-tdWRLSvoZqg2bjemBABA&usqp=CAU',
             }}
             style={{width: 150, height: 150, borderRadius: 5, marginBottom: 20}}
           />
