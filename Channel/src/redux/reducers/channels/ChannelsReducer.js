@@ -208,6 +208,7 @@ export function channelsReducer(state = initialState, action) {
       return {...state, activeChannelTeamId: null};
     
     case Actions.GET_CHANNEL_SUCCESS:
+      console.log("inside channel reducer");
       var userIdAndTeamIdMapping = {};
       var teamIdAndNameMapping = {};
       var teamIdAndTypeMapping = {};
