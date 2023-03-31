@@ -7,15 +7,16 @@ import * as RootNavigation from '../../navigation/RootNavigation';
 import cheerio, {text} from 'cheerio';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 
-export const renderTextWithLinks = (
+export const RenderTextWithLinks = ({
   text,
   mentions,
   repliedContainer,
   orgState,
   searchUserProfileAction,
   userInfoState,
-) => {
-  const {colors} = useTheme();
+  colors,
+}) => {
+  // const {colors} = useTheme();
   const urlRegex =
     /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-])?(?:\?[^\s])?)/gi;
   function findKeyByValue(value) {
@@ -42,13 +43,23 @@ export const renderTextWithLinks = (
             <TouchableOpacity
               key={i}
               onPress={async () => {
-               key1 != 'all' &&  await searchUserProfileAction(key1, userInfoState?.accessToken) && 
-               RootNavigation.navigate('UserProfiles', {
-                 displayName: orgState?.userIdAndDisplayNameMapping[key1],
-               }) 
-              }}
-            >
-              <Text style={{ color: repliedContainer ? textColor :  colors.linkColor, fontWeight:'800',textDecorationLine:'underline'}}>{part}</Text>
+                key1 != 'all' &&
+                  (await searchUserProfileAction(
+                    key1,
+                    userInfoState?.accessToken,
+                  )) &&
+                  RootNavigation.navigate('UserProfiles', {
+                    displayName: orgState?.userIdAndDisplayNameMapping[key1],
+                  });
+              }}>
+              <Text
+                style={{
+                  color: repliedContainer ? textColor : colors.linkColor,
+                  fontWeight: '800',
+                  textDecorationLine: 'underline',
+                }}>
+                {part}
+              </Text>
             </TouchableOpacity>
           );
         }

@@ -10,7 +10,7 @@ import {
 import {GestureHandlerRootView, Swipeable} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Linking} from 'react-native';
-import {renderTextWithLinks} from './RenderTextWithLinks';
+import {RenderTextWithLinks, renderTextWithLinks} from './RenderTextWithLinks';
 import {useTheme} from '@react-navigation/native';
 import {makeStyles} from './ChatCardStyles';
 import {ms} from 'react-native-size-matters';
@@ -42,7 +42,6 @@ const ChatCard = ({
   searchUserProfileAction,
   flatListRef,
   channelType,
-  // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
   const {colors} = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
@@ -118,220 +117,212 @@ const ChatCard = ({
     }
   };
   if (!isActivity) {
-    return <GestureHandlerRootView style={{flexDirection: 'row'}}>
-      <TouchableOpacity
-        onLongPress={sentByMe ? onLongPress : null}
-        style={{flex: 1}}>
-        <Swipeable
-          ref={swipeableRef}
-          renderLeftActions={LeftSwipeActions}
-          onSwipeableWillOpen={swipeFromLeftOpen}>
-          <View
-            style={[
-              styles.container,
-              sentByMe ? styles.sentByMe : styles.received,
-              {backgroundColor: containerBackgroundColor},
-            ]}>
-            {optionsVisible && (
-              <TouchableOpacity
-                onPress={() => {
-                  setOptionsVisible(false),
-                    deleteMessageAction(userInfoState?.accessToken, chat?._id);
-                }}
-                style={{
-                  alignItems: 'center',
-                  alignSelf: 'center',
-                  paddingHorizontal: ms(20),
-                }}>
-                <Icon name="delete" color={'tomato'} />
-                <Text style={[styles.text, {color: 'tomato'}]}>Delete</Text>
-              </TouchableOpacity>
-            )}
-            <View style={[styles.textContainer, {maxWidth: '90%'}]}>
-              {channelType != 'DIRECT_MESSAGE' && (
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Text style={[styles.nameText, styles.text]}>
-                    {SenderName}
-                  </Text>
-                </View>
-              )}
-              {parentId != null && (
+    return (
+      <GestureHandlerRootView style={{flexDirection: 'row'}}>
+        <TouchableOpacity
+          onLongPress={sentByMe ? onLongPress : null}
+          style={{flex: 1}}>
+          <Swipeable
+            ref={swipeableRef}
+            renderLeftActions={LeftSwipeActions}
+            onSwipeableWillOpen={swipeFromLeftOpen}>
+            <View
+              style={[
+                styles.container,
+                sentByMe ? styles.sentByMe : styles.received,
+                {backgroundColor: containerBackgroundColor},
+              ]}>
+              {optionsVisible && (
                 <TouchableOpacity
-                  style={[styles.repliedContainer]}
-                  onPress={() =>
-                    handleRepliedMessagePress(
-                      chatState?.data[chat.teamId]?.parentMessages[parentId],
-                      chatState,
-                      chat,
-                      flatListRef,
-                    )
-                  }>
-                  {chatState?.data[chat.teamId]?.parentMessages[parentId]
-                    ?.attachment?.length > 0 ? (
-                    <Text style={{color: 'black'}}>
-                      <Icon name="attach-file" size={ms(14)} /> attachment
-                    </Text>
-                  ) : (
-                    renderTextWithLinks(
-                      chatState?.data[chat.teamId]?.parentMessages[parentId]
-                        ?.content,
-                      chatState?.data[chat.teamId]?.parentMessages[parentId]
-                        ?.mentions,
-                      true,
-                      orgState,
-                      searchUserProfileAction,
-                      userInfoState,
-                    )
-                  )}
+                  onPress={() => {
+                    setOptionsVisible(false),
+                      deleteMessageAction(
+                        userInfoState?.accessToken,
+                        chat?._id,
+                      );
+                  }}
+                  style={{
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                    paddingHorizontal: ms(20),
+                  }}>
+                  <Icon name="delete" color={'tomato'} />
+                  <Text style={[styles.text, {color: 'tomato'}]}>Delete</Text>
                 </TouchableOpacity>
               )}
-              <View style={{maxWidth: '80%'}}>
-                <Modal
-                  visible={selectedImage !== null}
-                  transparent={true}
-                  onRequestClose={handleModalClose}>
-                  <ImageViewer
-                    imageUrls={[
-                      {
-                        url: selectedImage?.resourceUrl,
-                        width: Dimensions.get('window')?.width - 20,
-                        height: Dimensions.get('window')?.height - 100,
-                      },
-                    ]}
-                    enableSwipeDown={true}
-                    onSwipeDown={handleModalClose}
-                  />
-                  {/* <TouchableOpacity
-                        style={{
-                          flex: 1,
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          backgroundColor: 'rgba(0, 0, 0, 0.9)',
-                        }}
-                        activeOpacity={1}
-                        onPress={handleModalClose}>
-                        <Image
-                          source={{uri: selectedImage?.resourceUrl}}
-                          style={{
-                            width: Dimensions.get('window').width,
-                            height: Dimensions.get('window').height - 50,
-                          }}
-                          resizeMode="contain"
-                        />
-                      </TouchableOpacity> */}
-                </Modal>
-              </View>
-              {attachment?.length > 0 &&
-                attachment?.map((item, index) => {
-                  return item?.contentType?.includes('image') ? (
-                    <TouchableOpacity
-                      key={index}
-                      onPress={() => handleImagePress(index)}
-                      style={{marginVertical: ms(5), alignItems: 'center'}}>
-                      <Image
-                        source={{uri: item?.resourceUrl}}
-                        style={{height: ms(150), width: ms(150)}}
+              <View style={[styles.textContainer, {maxWidth: '90%'}]}>
+                {channelType != 'DIRECT_MESSAGE' && (
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Text style={[styles.nameText, styles.text]}>
+                      {SenderName}
+                    </Text>
+                  </View>
+                )}
+                {parentId != null && (
+                  <TouchableOpacity
+                    style={[styles.repliedContainer]}
+                    onPress={() =>
+                      handleRepliedMessagePress(
+                        chatState?.data[chat.teamId]?.parentMessages[parentId],
+                        chatState,
+                        chat,
+                        flatListRef,
+                      )
+                    }>
+                    {chatState?.data[chat.teamId]?.parentMessages[parentId]
+                      ?.attachment?.length > 0 ? (
+                      <Text style={{color: 'black'}}>
+                        <Icon name="attach-file" size={ms(14)} /> attachment
+                      </Text>
+                    ) : (
+                      <RenderTextWithLinks
+                        text={
+                          chatState?.data[chat.teamId]?.parentMessages[parentId]
+                            ?.content
+                        }
+                        mentions={
+                          chatState?.data[chat.teamId]?.parentMessages[parentId]
+                            ?.mentions
+                        }
+                        repliedContainer={true}
+                        orgState={orgState}
+                        searchUserProfileAction={searchUserProfileAction}
+                        userInfoState={userInfoState}
+                        colors={colors}
                       />
-                    </TouchableOpacity>
-                  ) : (
-                    <View
-                      style={[
-                        styles.repliedContainer,
+                    )}
+                  </TouchableOpacity>
+                )}
+                <View style={{maxWidth: '80%'}}>
+                  <Modal
+                    visible={selectedImage !== null}
+                    transparent={true}
+                    onRequestClose={handleModalClose}>
+                    <ImageViewer
+                      imageUrls={[
                         {
-                          borderWidth: ms(0.5),
-                          borderColor: 'gray',
-                          borderRadius: ms(5),
-                          padding: ms(10),
+                          url: selectedImage?.resourceUrl,
+                          width: Dimensions.get('window')?.width - 20,
+                          height: Dimensions.get('window')?.height - 100,
                         },
                       ]}
-                      key={index}>
+                      enableSwipeDown={true}
+                      onSwipeDown={handleModalClose}
+                    />
+                  </Modal>
+                </View>
+                {attachment?.length > 0 &&
+                  attachment?.map((item, index) => {
+                    return item?.contentType?.includes('image') ? (
                       <TouchableOpacity
-                        onPress={() => {
-                          openLink(item?.resourceUrl);
-                        }}>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                          }}>
-                          {item?.contentType?.includes('pdf') && (
-                            <Image
-                              source={require('../../assests/images/attachments/pdfLogo.png')}
-                              style={{
-                                width: ms(40),
-                                height: ms(40),
-                                marginRight: ms(5),
-                              }}
-                            />
-                          )}
-                          {item?.contentType?.includes('doc') && (
-                            <Image
-                              source={require('../../assests/images/attachments/docLogo.png')}
-                              style={{
-                                width: ms(40),
-                                height: ms(40),
-                                marginRight: ms(5),
-                              }}
-                            />
-                          )}
-
-                          <View>
-                            <Text style={{color: 'black'}}>
-                              {item?.title?.slice(0, 10) + '...'}
-                            </Text>
-                            <Text style={{color: 'black'}}>
-                              {'...' + item?.contentType?.slice(-10)}
-                            </Text>
-                          </View>
-                          <Icon
-                            name="save"
-                            size={ms(20)}
-                            style={{margin: ms(2)}}
-                            color={'black'}
-                          />
-                        </View>
+                        key={index}
+                        onPress={() => handleImagePress(index)}
+                        style={{marginVertical: ms(5), alignItems: 'center'}}>
+                        <Image
+                          source={{uri: item?.resourceUrl}}
+                          style={{height: ms(150), width: ms(150)}}
+                        />
                       </TouchableOpacity>
-                    </View>
-                  );
-                })}
+                    ) : (
+                      <View
+                        style={[
+                          styles.repliedContainer,
+                          {
+                            borderWidth: ms(0.5),
+                            borderColor: 'gray',
+                            borderRadius: ms(5),
+                            padding: ms(10),
+                          },
+                        ]}
+                        key={index}>
+                        <TouchableOpacity
+                          onPress={() => {
+                            openLink(item?.resourceUrl);
+                          }}>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                            }}>
+                            {item?.contentType?.includes('pdf') && (
+                              <Image
+                                source={require('../../assests/images/attachments/pdfLogo.png')}
+                                style={{
+                                  width: ms(40),
+                                  height: ms(40),
+                                  marginRight: ms(5),
+                                }}
+                              />
+                            )}
+                            {item?.contentType?.includes('doc') && (
+                              <Image
+                                source={require('../../assests/images/attachments/docLogo.png')}
+                                style={{
+                                  width: ms(40),
+                                  height: ms(40),
+                                  marginRight: ms(5),
+                                }}
+                              />
+                            )}
 
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'flex-end',
-                }}>
-                <Text
-                  style={[
-                    styles.messageText,
-                    // styles.text,
-                    {maxWidth: '90%', color: 'white'},
-                  ]}>
-                  {/* {chat?.content} */}
-                  {renderTextWithLinks(
-                    chat?.content,
-                    chat?.mentions,
-                    false,
-                    orgState,
-                    searchUserProfileAction,
-                    userInfoState,
-                  )}
-                </Text>
-                <Text
-                  style={[
-                    styles.timeText,
-                    styles.text,
-                    {marginHorizontal: ms(10)},
-                  ]}>
-                  {time}
-                </Text>
+                            <View>
+                              <Text style={{color: 'black'}}>
+                                {item?.title?.slice(0, 10) + '...'}
+                              </Text>
+                              <Text style={{color: 'black'}}>
+                                {'...' + item?.contentType?.slice(-10)}
+                              </Text>
+                            </View>
+                            <Icon
+                              name="save"
+                              size={ms(20)}
+                              style={{margin: ms(2)}}
+                              color={'black'}
+                            />
+                          </View>
+                        </TouchableOpacity>
+                      </View>
+                    );
+                  })}
+
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-end',
+                  }}>
+                  <Text
+                    style={[
+                      styles.messageText,
+                      // styles.text,
+                      {maxWidth: '90%', color: 'white'},
+                    ]}>
+                    <RenderTextWithLinks
+                      text={chat?.content}
+                      mentions={chat?.mentions}
+                      repliedContainer={false}
+                      orgState={orgState}
+                      searchUserProfileAction={searchUserProfileAction}
+                      userInfoState={userInfoState}
+                      colors={colors}
+                    />
+                  </Text>
+                  <Text
+                    style={[
+                      styles.timeText,
+                      styles.text,
+                      {marginHorizontal: ms(10)},
+                    ]}>
+                    {time}
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
-        </Swipeable>
-      </TouchableOpacity>
-    </GestureHandlerRootView>;
+          </Swipeable>
+        </TouchableOpacity>
+      </GestureHandlerRootView>
+    );
     return;
   } else {
     return (
@@ -342,237 +333,6 @@ const ChatCard = ({
       />
     );
   }
-  // return (
-  //   <>
-  //     {!isActivity ? (
-  //       <GestureHandlerRootView style={{flexDirection: 'row'}}>
-  //         <TouchableOpacity
-  //           onLongPress={sentByMe ? onLongPress : null}
-  //           style={{flex: 1}}>
-  //           <Swipeable
-  //             ref={swipeableRef}
-  //             renderLeftActions={LeftSwipeActions}
-  //             onSwipeableWillOpen={swipeFromLeftOpen}>
-  //             <View
-  //               style={[
-  //                 styles.container,
-  //                 sentByMe ? styles.sentByMe : styles.received,
-  //                 {backgroundColor: containerBackgroundColor},
-  //               ]}>
-  //               {optionsVisible && (
-  //                 <TouchableOpacity
-  //                   onPress={() => {
-  //                     setOptionsVisible(false),
-  //                       deleteMessageAction(
-  //                         userInfoState?.accessToken,
-  //                         chat?._id,
-  //                       );
-  //                   }}
-  //                   style={{
-  //                     alignItems: 'center',
-  //                     alignSelf: 'center',
-  //                     paddingHorizontal: ms(20),
-  //                   }}>
-  //                   <Icon name="delete" color={'tomato'} />
-  //                   <Text style={[styles.text, {color: 'tomato'}]}>Delete</Text>
-  //                 </TouchableOpacity>
-  //               )}
-  //               <View style={[styles.textContainer, {maxWidth: '90%'}]}>
-  //                 {channelType != 'DIRECT_MESSAGE' && (
-  //                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
-  //                     <Text style={[styles.nameText, styles.text]}>
-  //                       {SenderName}
-  //                     </Text>
-  //                   </View>
-  //                 )}
-  //                 {parentId != null && (
-  //                   <TouchableOpacity
-  //                     style={[styles.repliedContainer]}
-  //                     onPress={() =>
-  //                       handleRepliedMessagePress(
-  //                         chatState?.data[chat.teamId]?.parentMessages[
-  //                           parentId
-  //                         ],
-  //                         chatState,
-  //                         chat,
-  //                         flatListRef,
-  //                       )
-  //                     }>
-  //                     {chatState?.data[chat.teamId]?.parentMessages[parentId]
-  //                       ?.attachment?.length > 0 ? (
-  //                       <Text style={{color: 'black'}}>
-  //                         <Icon name="attach-file" size={ms(14)} /> attachment
-  //                       </Text>
-  //                     ) : (
-  //                       renderTextWithLinks(
-  //                         chatState?.data[chat.teamId]?.parentMessages[parentId]
-  //                           ?.content,
-  //                         chatState?.data[chat.teamId]?.parentMessages[parentId]
-  //                           ?.mentions,
-  //                         true,
-  //                         orgState,
-  //                         searchUserProfileAction,
-  //                         userInfoState,
-  //                       )
-  //                     )}
-  //                   </TouchableOpacity>
-  //                 )}
-  //                 <View style={{maxWidth: '80%'}}>
-  //                   <Modal
-  //                     visible={selectedImage !== null}
-  //                     transparent={true}
-  //                     onRequestClose={handleModalClose}>
-  //                     <ImageViewer
-  //                       imageUrls={[
-  //                         {
-  //                           url: selectedImage?.resourceUrl,
-  //                           width: Dimensions.get('window')?.width - 20,
-  //                           height: Dimensions.get('window')?.height - 100,
-  //                         },
-  //                       ]}
-  //                       enableSwipeDown={true}
-  //                       onSwipeDown={handleModalClose}
-  //                     />
-  //                     {/* <TouchableOpacity
-  //                       style={{
-  //                         flex: 1,
-  //                         alignItems: 'center',
-  //                         justifyContent: 'center',
-  //                         backgroundColor: 'rgba(0, 0, 0, 0.9)',
-  //                       }}
-  //                       activeOpacity={1}
-  //                       onPress={handleModalClose}>
-  //                       <Image
-  //                         source={{uri: selectedImage?.resourceUrl}}
-  //                         style={{
-  //                           width: Dimensions.get('window').width,
-  //                           height: Dimensions.get('window').height - 50,
-  //                         }}
-  //                         resizeMode="contain"
-  //                       />
-  //                     </TouchableOpacity> */}
-  //                   </Modal>
-  //                 </View>
-  //                 {attachment?.length > 0 &&
-  //                   attachment?.map((item, index) => {
-  //                     return item?.contentType?.includes('image') ? (
-  //                       <TouchableOpacity
-  //                         key={index}
-  //                         onPress={() => handleImagePress(index)}
-  //                         style={{marginVertical: ms(5), alignItems: 'center'}}>
-  //                         <Image
-  //                           source={{uri: item?.resourceUrl}}
-  //                           style={{height: ms(150), width: ms(150)}}
-  //                         />
-  //                       </TouchableOpacity>
-  //                     ) : (
-  //                       <View
-  //                         style={[
-  //                           styles.repliedContainer,
-  //                           {
-  //                             borderWidth: ms(0.5),
-  //                             borderColor: 'gray',
-  //                             borderRadius: ms(5),
-  //                             padding: ms(10),
-  //                           },
-  //                         ]}
-  //                         key={index}>
-  //                         <TouchableOpacity
-  //                           onPress={() => {
-  //                             openLink(item?.resourceUrl);
-  //                           }}>
-  //                           <View
-  //                             style={{
-  //                               flexDirection: 'row',
-  //                               alignItems: 'center',
-  //                               justifyContent: 'space-between',
-  //                             }}>
-  //                             {item?.contentType?.includes('pdf') && (
-  //                               <Image
-  //                                 source={require('../../assests/images/attachments/pdfLogo.png')}
-  //                                 style={{
-  //                                   width: ms(40),
-  //                                   height: ms(40),
-  //                                   marginRight: ms(5),
-  //                                 }}
-  //                               />
-  //                             )}
-  //                             {item?.contentType?.includes('doc') && (
-  //                               <Image
-  //                                 source={require('../../assests/images/attachments/docLogo.png')}
-  //                                 style={{
-  //                                   width: ms(40),
-  //                                   height: ms(40),
-  //                                   marginRight: ms(5),
-  //                                 }}
-  //                               />
-  //                             )}
-
-  //                             <View>
-  //                               <Text style={{color: 'black'}}>
-  //                                 {item?.title?.slice(0, 10) + '...'}
-  //                               </Text>
-  //                               <Text style={{color: 'black'}}>
-  //                                 {'...' + item?.contentType?.slice(-10)}
-  //                               </Text>
-  //                             </View>
-  //                             <Icon
-  //                               name="save"
-  //                               size={ms(20)}
-  //                               style={{margin: ms(2)}}
-  //                               color={'black'}
-  //                             />
-  //                           </View>
-  //                         </TouchableOpacity>
-  //                       </View>
-  //                     );
-  //                   })}
-
-  //                 <View
-  //                   style={{
-  //                     flexDirection: 'row',
-  //                     justifyContent: 'space-between',
-  //                     alignItems: 'flex-end',
-  //                   }}>
-  //                   <Text
-  //                     style={[
-  //                       styles.messageText,
-  //                       // styles.text,
-  //                       {maxWidth: '90%', color: 'white'},
-  //                     ]}>
-  //                     {/* {chat?.content} */}
-  //                     {renderTextWithLinks(
-  //                       chat?.content,
-  //                       chat?.mentions,
-  //                       false,
-  //                       orgState,
-  //                       searchUserProfileAction,
-  //                       userInfoState,
-  //                     )}
-  //                   </Text>
-  //                   <Text
-  //                     style={[
-  //                       styles.timeText,
-  //                       styles.text,
-  //                       {marginHorizontal: ms(10)},
-  //                     ]}>
-  //                     {time}
-  //                   </Text>
-  //                 </View>
-  //               </View>
-  //             </View>
-  //           </Swipeable>
-  //         </TouchableOpacity>
-  //       </GestureHandlerRootView>
-  //     ) : (
-  //       <AddRemoveJoinedMsg
-  //         senderName={SenderName}
-  //         content={chat?.content}
-  //         orgState={orgState}
-  //       />
-  //     )}
-  //   </>
-  // );
 };
 const LocalChatCard = ({
   chat,
@@ -582,7 +342,6 @@ const LocalChatCard = ({
   chatState,
   setreplyOnMessage,
   setrepliedMsgDetails,
-  // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
   channelType,
 }) => {
   const {colors} = useTheme();
@@ -662,13 +421,14 @@ const LocalChatCard = ({
                       {maxWidth: '90%'},
                     ]}>
                     {/* {chat?.content} */}
-                    {renderTextWithLinks(
-                      chat?.content,
-                      chat?.mentions,
-                      false,
-                      orgState,
-                      userInfoState,
-                    )}
+                    <RenderTextWithLinks
+                      text={chat?.content}
+                      mentions={chat?.mentions}
+                      repliedContainer={false}
+                      orgState={orgState}
+                      userInfoState={userInfoState}
+                      colors={colors}
+                    />
                   </Text>
                   <View
                     style={{flexDirection: 'column', alignItems: 'flex-end'}}>
@@ -705,10 +465,8 @@ const LocalChatCard = ({
     </>
   );
 };
-// export default React.memo(ChatCard)
 export const ChatCardMemo = React.memo(ChatCard);
 export const LocalChatCardMemo = React.memo(LocalChatCard);
-// export default{React.memo(ChatCard), React.memo(LocalChatCard)};
 
 const handleRepliedMessagePress = (
   repliedMessage,

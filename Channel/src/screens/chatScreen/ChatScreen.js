@@ -178,21 +178,18 @@ const ChatScreen = ({
 
   const renderItem = useCallback(
     ({item, index}) => (
-      console.log(index),
-      (
-        <ChatCardMemo
-          chat={item}
-          userInfoState={userInfoState}
-          orgState={orgState}
-          deleteMessageAction={deleteMessageAction}
-          chatState={chatState}
-          setreplyOnMessage={setreplyOnMessage}
-          setrepliedMsgDetails={setrepliedMsgDetails}
-          searchUserProfileAction={searchUserProfileAction}
-          flatListRef={FlatListRef}
-          channelType={channelType}
-        />
-      )
+      <ChatCardMemo
+        chat={item}
+        userInfoState={userInfoState}
+        orgState={orgState}
+        deleteMessageAction={deleteMessageAction}
+        chatState={chatState}
+        setreplyOnMessage={setreplyOnMessage}
+        setrepliedMsgDetails={setrepliedMsgDetails}
+        searchUserProfileAction={searchUserProfileAction}
+        flatListRef={FlatListRef}
+        channelType={channelType}
+      />
     ),
     [
       chatState,
@@ -244,29 +241,6 @@ const ChatScreen = ({
               <>
                 <Animated.FlatList
                   ref={FlatListRef}
-                  data={[
-                    ...chatState?.data[teamId]?.messages,
-                    ...localMsg,
-                    ...chatState?.data[teamId]?.globalMessagesToSend,
-                  ]}
-                  renderItem={renderItem}
-                  inverted
-                  ListFooterComponent={
-                    chatState?.data[teamId]?.messages?.length > 15 &&
-                    ListFooterComponent
-                  }
-                  onEndReached={
-                    chatState?.data[teamId]?.messages?.length > 20 &&
-                    onEndReached
-                  }
-                  onEndReachedThreshold={0.2}
-                  keyboardDismissMode="on-drag"
-                  keyboardShouldPersistTaps="always"
-                  onScroll={onScroll}
-                />
-
-                {/* <Animated.FlatList
-                  ref={FlatListRef}
                   data={memoizedData}
                   renderItem={renderItem}
                   inverted
@@ -291,7 +265,7 @@ const ChatScreen = ({
                     data={chatState?.data[teamId]?.globalMessagesToSend}
                     renderItem={renderItemLocal}
                   />
-                )} */}
+                )}
               </>
             )}
             {isScrolling && (
