@@ -48,7 +48,7 @@ const ChatScreen = ({
   channelsByQueryState,
   searchUserProfileAction,
 }) => {
-  var {teamId, reciverUserId,channelType} = route.params;
+  var {teamId, reciverUserId, channelType} = route.params;
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const [replyOnMessage, setreplyOnMessage] = useState(false);
@@ -69,11 +69,11 @@ const ChatScreen = ({
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
   }
   useEffect(() => {
-    if(repliedMsgDetails != ''){
-      textInputRef.current.focus()
+    if (repliedMsgDetails != '') {
+      textInputRef.current.focus();
     }
-  }, [repliedMsgDetails])
-  
+  }, [repliedMsgDetails]);
+
   useEffect(() => {
     localMsg?.shift();
   }, [chatState?.data[teamId]?.messages]);
@@ -127,7 +127,8 @@ const ChatScreen = ({
   };
 
   const handleMentionSelect = mention => {
-    mention?._source?.userId != undefined &&  setMentionsArr(prevUserIds => [...prevUserIds,mention?._source?.userId]);
+    mention?._source?.userId != undefined &&
+      setMentionsArr(prevUserIds => [...prevUserIds, mention?._source?.userId]);
     onChangeMessage(prevmessage =>
       prevmessage.replace(
         new RegExp(`@\\w+\\s?$`),
@@ -159,17 +160,17 @@ const ChatScreen = ({
         </View>
       </TouchableOpacity>
     );
-const screenHeight = Dimensions.get('window').height;
-const onScroll = Animated.event(
-  [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-  {
-    useNativeDriver: true,
-    listener: event => {
-      const offsetY = event.nativeEvent.contentOffset.y;
-      setIsScrolling(offsetY >= 0.7 * screenHeight);
+  const screenHeight = Dimensions.get('window').height;
+  const onScroll = Animated.event(
+    [{nativeEvent: {contentOffset: {y: scrollY}}}],
+    {
+      useNativeDriver: true,
+      listener: event => {
+        const offsetY = event.nativeEvent.contentOffset.y;
+        setIsScrolling(offsetY >= 0.7 * screenHeight);
+      },
     },
-  },
-);
+  );
   const memoizedData = useMemo(
     () => chatState?.data[teamId]?.messages || [],
     [chatState?.data[teamId]?.messages],
@@ -177,18 +178,21 @@ const onScroll = Animated.event(
 
   const renderItem = useCallback(
     ({item, index}) => (
-      <ChatCardMemo
-        chat={item}
-        userInfoState={userInfoState}
-        orgState={orgState}
-        deleteMessageAction={deleteMessageAction}
-        chatState={chatState}
-        setreplyOnMessage={setreplyOnMessage}
-        setrepliedMsgDetails={setrepliedMsgDetails}
-        searchUserProfileAction={searchUserProfileAction}
-        flatListRef={FlatListRef}
-        channelType={channelType}
-      />
+      console.log(index),
+      (
+        <ChatCardMemo
+          chat={item}
+          userInfoState={userInfoState}
+          orgState={orgState}
+          deleteMessageAction={deleteMessageAction}
+          chatState={chatState}
+          setreplyOnMessage={setreplyOnMessage}
+          setrepliedMsgDetails={setrepliedMsgDetails}
+          searchUserProfileAction={searchUserProfileAction}
+          flatListRef={FlatListRef}
+          channelType={channelType}
+        />
+      )
     ),
     [
       chatState,
@@ -240,6 +244,29 @@ const onScroll = Animated.event(
               <>
                 <Animated.FlatList
                   ref={FlatListRef}
+                  data={[
+                    ...chatState?.data[teamId]?.messages,
+                    ...localMsg,
+                    ...chatState?.data[teamId]?.globalMessagesToSend,
+                  ]}
+                  renderItem={renderItem}
+                  inverted
+                  ListFooterComponent={
+                    chatState?.data[teamId]?.messages?.length > 15 &&
+                    ListFooterComponent
+                  }
+                  onEndReached={
+                    chatState?.data[teamId]?.messages?.length > 20 &&
+                    onEndReached
+                  }
+                  onEndReachedThreshold={0.2}
+                  keyboardDismissMode="on-drag"
+                  keyboardShouldPersistTaps="always"
+                  onScroll={onScroll}
+                />
+
+                {/* <Animated.FlatList
+                  ref={FlatListRef}
                   data={memoizedData}
                   renderItem={renderItem}
                   inverted
@@ -264,7 +291,7 @@ const onScroll = Animated.event(
                     data={chatState?.data[teamId]?.globalMessagesToSend}
                     renderItem={renderItemLocal}
                   />
-                )}
+                )} */}
               </>
             )}
             {isScrolling && (
@@ -331,15 +358,21 @@ const onScroll = Animated.event(
                           orgState,
                           width,
                         )
-                      ) : repliedMsgDetails?.attachment?.length > 0 ? (<Text style={{color:'black'}}>
-                        <Icon name='attach-file' size={16} color='black'/>
-                        attachment
-                      </Text>):(
+                      ) : repliedMsgDetails?.attachment?.length > 0 ? (
+                        <Text style={{color: 'black'}}>
+                          <Icon name="attach-file" size={16} color="black" />
+                          attachment
+                        </Text>
+                      ) : (
                         <Text style={styles.repliedText}>
                           {repliedMsgDetails?.content}
                         </Text>
                       )}
-                      <MaterialIcons name="cancel" size={ms(16)} color='black' />
+                      <MaterialIcons
+                        name="cancel"
+                        size={ms(16)}
+                        color="black"
+                      />
                     </View>
                   </TouchableOpacity>
                 )}
