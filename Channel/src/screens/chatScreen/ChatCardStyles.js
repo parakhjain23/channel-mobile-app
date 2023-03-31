@@ -46,8 +46,7 @@ export const makeStyles = colors => StyleSheet.create({
     },
     container: {
       borderWidth: ms(1),
-      borderColor: 'gray',
-      borderRadius: ms(10),
+      borderRadius: ms(5),
       flexDirection: 'row',
       alignItems: 'flex-end',
       marginBottom: mvs(15),
@@ -56,10 +55,12 @@ export const makeStyles = colors => StyleSheet.create({
     sentByMe: {
       alignSelf: 'flex-end',
       marginRight: ms(10),
+      borderColor: 'transparent',
     },
     received: {
       alignSelf: 'flex-start',
       marginLeft: 0,
+      borderColor: 'gray',
     },
     avatar: {
       width: ms(32),
@@ -69,9 +70,9 @@ export const makeStyles = colors => StyleSheet.create({
     },
     textContainer: {
       padding: ms(8),
-      borderRadius: ms(8),
+      // borderRadius: ms(8),
       flexDirection: 'column',
-      maxWidth: '70%',
+      maxWidth: '90%',
     },
     nameText: {
       fontWeight: 'bold',
@@ -83,7 +84,7 @@ export const makeStyles = colors => StyleSheet.create({
     },
     timeText: {
       fontSize: s(10),
-      marginRight: ms(3),
-      marginBottom: ms(4),
+      marginRight: ms(-3),
+      marginBottom: ms(-4),
     },
   });

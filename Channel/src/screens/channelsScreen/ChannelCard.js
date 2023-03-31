@@ -6,18 +6,23 @@ import {connect} from 'react-redux';
 import {fetchSearchedUserProfileStart} from '../../redux/actions/user/searchUserProfileActions';
 import {s, vs, ms, mvs} from 'react-native-size-matters';
 import {resetUnreadCountStart} from '../../redux/actions/channels/ChannelsAction';
+import * as RootNavigation from '../../navigation/RootNavigation'
 const ChannelCard = ({item, navigation, props, resetUnreadCountAction}) => {
   const {colors} = useTheme();
   const Name =
     item?.type == 'DIRECT_MESSAGE'
-      ? props?.orgsState?.userIdAndNameMapping &&
-        props?.orgsState?.userIdAndNameMapping[
+      ? props?.orgsState?.userIdAndDisplayNameMapping ?
+        props?.orgsState?.userIdAndDisplayNameMapping[
           `${
             item.userIds[0] != props?.userInfoState?.user?.id
               ? item.userIds[0]
               : item.userIds[1]
           }`
-        ]
+        ] : props?.orgsState?.userIdAndNameMapping[`${
+          item.userIds[0] != props?.userInfoState?.user?.id
+            ? item.userIds[0]
+            : item.userIds[1]
+        }`] 
       : item?.name;
   const iconName = item?.type == 'DIRECT_MESSAGE' ? 'user' : 'hashtag';
   let unread = props?.channelsState?.teamIdAndUnreadCountMapping?.[item?._id] > 0 || 
@@ -39,9 +44,10 @@ const ChannelCard = ({item, navigation, props, resetUnreadCountAction}) => {
         flexDirection: 'column',
         justifyContent: 'center',
       }}
+      activeOpacity={0.8}
       onPress={() => {
+        RootNavigation.navigate('Chat', {chatHeaderTitle: Name, teamId: item?._id,channelType:item?.type})
         props?.setActiveChannelTeamIdAction(item?._id);
-        navigation.navigate('Chat', {chatHeaderTitle: Name, teamId: item?._id});
         props?.channelsState?.teamIdAndUnreadCountMapping?.[item?._id] > 0 &&
           resetUnreadCountAction(
             props?.orgsState?.currentOrgId,
@@ -121,10 +127,7 @@ const SearchChannelCard = ({
   orgsState,
 }) => {
   const {colors} = useTheme();
-  const Name =
-    item?._source?.type == 'U'
-      ? item?._source?.title
-      : '#' + item?._source?.title;
+  const Name = item?._source?.title;
   const teamId = item?._id?.includes('_')
     ? props?.channelsState?.userIdAndTeamIdMapping[item?._source?.userId]
     : item?._id;

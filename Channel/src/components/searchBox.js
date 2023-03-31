@@ -9,7 +9,7 @@ const SearchBox = ({searchValue, changeText, isSearchFocus, hits}) => {
     <TextInput
       value={searchValue}
       onChangeText={changeText}
-      label='Search Channels'
+      label='Search'
       style={{backgroundColor: colors?.searchBoxBackgroundColor, borderWidth: 1, borderColor: colors?.color,marginHorizontal:1}}
       underlineStyle={{backgroundColor:'transparent'}}
       underlineColorAndroid="transparent"

@@ -9,7 +9,9 @@ import {
   View,
   Animated,
   useWindowDimensions,
+  Dimensions,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
 import ListFooterComponent from '../../components/ListFooterComponent';
@@ -46,7 +48,7 @@ const ChatScreen = ({
   channelsByQueryState,
   searchUserProfileAction,
 }) => {
-  var {teamId, reciverUserId} = route.params;
+  var {teamId, reciverUserId,channelType} = route.params;
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const [replyOnMessage, setreplyOnMessage] = useState(false);
@@ -62,9 +64,16 @@ const ChatScreen = ({
   const [mentions, setMentions] = useState([]);
   const [mentionsArr, setMentionsArr] = useState([]);
   const {width} = useWindowDimensions();
+  const textInputRef = useRef(null);
   if (teamId == undefined) {
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
   }
+  useEffect(() => {
+    if(repliedMsgDetails != ''){
+      textInputRef.current.focus()
+    }
+  }, [repliedMsgDetails])
+  
   useEffect(() => {
     localMsg?.shift();
   }, [chatState?.data[teamId]?.messages]);
@@ -114,12 +123,12 @@ const ChatScreen = ({
           userInfoState?.user?.id,
           orgState?.currentOrgId,
         ),
-        setMentions(channelsByQueryState?.channels || []))
+        setMentions(channelsByQueryState?.mentionChannels))
       : setMentions([]);
   };
 
   const handleMentionSelect = mention => {
-    setMentionsArr(prevUserIds => [...prevUserIds, mention?._source?.userId]);
+    mention?._source?.userId != undefined &&  setMentionsArr(prevUserIds => [...prevUserIds,mention?._source?.userId]);
     onChangeMessage(prevmessage =>
       prevmessage.replace(
         new RegExp(`@\\w+\\s?$`),
@@ -151,17 +160,17 @@ const ChatScreen = ({
         </View>
       </TouchableOpacity>
     );
-
-  const onScroll = Animated.event(
-    [{nativeEvent: {contentOffset: {y: scrollY}}}],
-    {
-      useNativeDriver: true,
-      listener: event => {
-        const offsetY = event.nativeEvent.contentOffset.y;
-        setIsScrolling(offsetY > 0);
-      },
+const screenHeight = Dimensions.get('window').height;
+const onScroll = Animated.event(
+  [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+  {
+    useNativeDriver: true,
+    listener: event => {
+      const offsetY = event.nativeEvent.contentOffset.y;
+      setIsScrolling(offsetY >= 0.7 * screenHeight);
     },
-  );
+  },
+);
   const memoizedData = useMemo(
     () => chatState?.data[teamId]?.messages || [],
     [chatState?.data[teamId]?.messages],
@@ -179,6 +188,7 @@ const ChatScreen = ({
         setrepliedMsgDetails={setrepliedMsgDetails}
         searchUserProfileAction={searchUserProfileAction}
         flatListRef={FlatListRef}
+        channelType={channelType}
       />
     ),
     [
@@ -200,6 +210,7 @@ const ChatScreen = ({
         chatState={chatState}
         setreplyOnMessage={setreplyOnMessage}
         setrepliedMsgDetails={setrepliedMsgDetails}
+        channelType={channelType}
       />
     ),
     [
@@ -321,7 +332,10 @@ const ChatScreen = ({
                           orgState,
                           width,
                         )
-                      ) : (
+                      ) : repliedMsgDetails?.attachment?.length > 0 ? (<Text style={{color:'black'}}>
+                        <Icon name='attach-file' size={16} color='black'/>
+                        attachment
+                      </Text>):(
                         <Text style={styles.repliedText}>
                           {repliedMsgDetails?.content}
                         </Text>
@@ -403,6 +417,7 @@ const ChatScreen = ({
                   )}
 
                   <TextInput
+                    ref={textInputRef}
                     editable
                     multiline
                     onChangeText={handleInputChange}

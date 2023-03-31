@@ -46,6 +46,8 @@ export const launchGallery = (
       skipBackup: true,
       path: 'images',
     },
+    mediaType:'mixed',
+    videoQuality:'low',
     selectionLimit: 0,
   };
   launchImageLibrary(options, async data => {

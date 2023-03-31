@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   Dimensions,
   Image,
@@ -17,7 +17,9 @@ import {renderTextWithLinks} from './RenderTextWithLinks';
 import {useTheme} from '@react-navigation/native';
 import {makeStyles} from './ChatCardStyles';
 import {ms} from 'react-native-size-matters';
-import * as RootNavigation from '../../navigation/RootNavigation'
+import * as RootNavigation from '../../navigation/RootNavigation';
+import InAppBrowser from 'react-native-inappbrowser-reborn';
+import ImageViewer from 'react-native-image-zoom-viewer';
 const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
@@ -43,139 +45,32 @@ const ChatCard = ({
   setrepliedMsgDetails,
   searchUserProfileAction,
   flatListRef,
+  channelType,
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
 }) => {
   const {colors} = useTheme();
-  const styles = makeStyles(colors);
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const [optionsVisible, setOptionsVisible] = useState(false);
-  const urlRegex =
-  /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-])?(?:\?[^\s])?)/gi;
-  function findKeyByValue(value) {
-    const newValue = value.substring(1);
-    for (let key in orgState?.userIdAndDisplayNameMapping) {
-      if (orgState?.userIdAndDisplayNameMapping[key] === newValue) {
-        return key;
-      }
-    }
-    return null;
-  }
-// function highlight(text,result) {
-//   let A = orgState?.userIdAndDisplayNameMapping
-//   text = text.replace(/@{1,2}(\w+)/g, (match, p1) => {
-//     return A[p1] ? `@${A[p1]}` : match;
-//   });
-//   const parts = text?.split(/(\B@\w+)/);
-//   return parts?.map((part, i) =>
-//     /^@\w+$/.test(part) ? (
-//      <TouchableOpacity key={i} onPress={async ()=>{
-//       let key = findKeyByValue(part)
-//      key !=null && await searchUserProfileAction(key,userInfoState?.accessToken) && RootNavigation.navigate('UserProfiles', {
-//         displayName:orgState?.userIdAndDisplayNameMapping[key],
-//       })}}>
-//        <Text key={i} style={{color: 'blue'}}>
-//         {part}
-//       </Text>
-//      </TouchableOpacity>
-//     ) : (
-//       <Text key={i}>{part}</Text>
-//     )
-//   );
-// }
-
-function highlight(text,result) {
-  let A = orgState?.userIdAndDisplayNameMapping
-  text = text.replace(/@{1,2}(\w+)/g, (match, p1) => {
-    return A[p1] ? `@${A[p1]}` : match;
-  });
-  const parts = text?.split(/(\B@\w+)/);
-  return parts?.map((part, i) => {
-    if (/^@\w+$/.test(part)) {
-      let key1 = findKeyByValue(part);
-      if (key1 != null) {
-        return (
-          <TouchableOpacity
-            key={i}
-            onPress={async () => {
-             key1 != 'all' &&  await searchUserProfileAction(key1, userInfoState?.accessToken) && 
-             RootNavigation.navigate('UserProfiles', {
-               displayName: orgState?.userIdAndDisplayNameMapping[key1],
-             });
-            }}
-          >
-            <Text style={{ color: 'blue' }}>{part}</Text>
-          </TouchableOpacity>
-        );
-      }
-    }
-    return <Text key={i}>{part}</Text>;
-  });
-}
-function renderTextWithLinks(text, mentionsArr) {
-  var result = [];
-  var resultStr=''
-    const $ = cheerio.load(`<div>${text}</div>`);
-    $('span[contenteditable="false"]').remove();
-    $('*')
-      .contents()
-      .each((index, element) => {
-        if (element.type === 'text') {
-          const message = $(element).text().trim();
-          if (message !== '') {
-            resultStr += message + ' ';
-            result.push(message)
-            // console.log(message);
-          }
-        } else if ($(element).is('span')) {
-          resultStr +=
-            $(element)?.attr('data-denotation-char') +
-            $(element)?.attr('data-id') +
-            ' ';
-          // result?.push($(element)?.attr('data-denotation-char') +
-          // $(element)?.attr('data-id'))
-          var id = $(element)?.attr('data-id')
-          var data = '@'+$(element)?.attr('data-value')
-          result?.push({[id]:data})
-        }
-      });
-    resultStr = resultStr.trim();
-  const parts = resultStr?.split(urlRegex);
-  return parts?.map((part, i) =>
-    urlRegex.test(part) ? (
-      <TouchableOpacity
-        key={i}
-        onPress={() => {
-          let url = part;
-          //regEx for checking if https included or not
-          if (!/^https?:\/\//i.test(url)) {
-            url = 'https://' + url;
-          }
-          Linking.openURL(url);
-        }}>
-        <Text style={{color: 'blue', textDecorationLine: 'underline'}}>
-          {part}
-        </Text>
-      </TouchableOpacity>
-    ) : (
-      <Text key={i}>{highlight(part,result)}</Text>
-    )
-  );
-}
-
-
-  const {width} = useWindowDimensions()
   const [selectedImage, setSelectedImage] = useState(null);
   const swipeableRef = useRef(null);
-  const attachment =
-    typeof chat?.attachment == 'string'
-      ? JSON.parse(chat?.attachment)
-      : chat?.attachment;
-  const handleImagePress = index => {
-    setSelectedImage(chat?.attachment?.[index]);
-  };
+  const attachment = useMemo(() => {
+    if (typeof chat?.attachment === 'string') {
+      return JSON.parse(chat?.attachment);
+    } else {
+      return chat?.attachment;
+    }
+  }, [chat?.attachment]);
 
-  const handleModalClose = () => {
+  const handleImagePress = useCallback(
+    index => {
+      setSelectedImage(chat?.attachment?.[index]);
+    },
+    [chat?.attachment],
+  );
+
+  const handleModalClose = useCallback(() => {
     setSelectedImage(null);
-  };
+  }, []);
 
   useEffect(() => {
     setOptionsVisible(false);
@@ -184,13 +79,25 @@ function renderTextWithLinks(text, mentionsArr) {
     setOptionsVisible(!optionsVisible);
   };
   var parentId = chat?.parentId;
-  const date = new Date(chat?.updatedAt);
-  const time = date.getHours() + ':' + date.getMinutes();
-  const sentByMe = chat?.senderId == userInfoState?.user?.id;
-  const SenderName =
-    chat?.senderId == userInfoState?.user?.id
-      ? 'You'
-      : orgState?.userIdAndNameMapping[chat?.senderId];
+  const date = useMemo(() => new Date(chat?.updatedAt), [chat?.updatedAt]);
+  const time = useMemo(() => date.getHours() + ':' + date.getMinutes(), [date]);
+  const sentByMe = chat?.senderId == userInfoState?.user?.id ? true : false;
+  const containerBackgroundColor = useMemo(() => {
+    if (sentByMe) {
+      return colors.sentByMeCardColor;
+    } else {
+      return colors.receivedCardColor;
+    }
+  }, [colors, sentByMe]);
+  const SenderName = useMemo(() => {
+    if (chat?.senderId === userInfoState?.user?.id) {
+      return 'You';
+    } else if (orgState?.userIdAndDisplayNameMapping[chat?.senderId]) {
+      return orgState?.userIdAndDisplayNameMapping[chat?.senderId];
+    } else {
+      return orgState?.userIdAndNameMapping[chat?.senderId];
+    }
+  }, [chat?.senderId, orgState, userInfoState]);
   const swipeFromLeftOpen = () => {
     setrepliedMsgDetails(chat);
     setreplyOnMessage(true);
@@ -207,6 +114,13 @@ function renderTextWithLinks(text, mentionsArr) {
     typeof chat.isActivity === 'string'
       ? chat.isActivity === 'true'
       : chat.isActivity;
+  const openLink = async url => {
+    if (await InAppBrowser.isAvailable()) {
+      const result = InAppBrowser?.open(url);
+    } else {
+      Linking.openURL(url);
+    }
+  };
   return (
     <>
       {!isActivity ? (
@@ -222,6 +136,7 @@ function renderTextWithLinks(text, mentionsArr) {
                 style={[
                   styles.container,
                   sentByMe ? styles.sentByMe : styles.received,
+                  {backgroundColor: containerBackgroundColor},
                 ]}>
                 {optionsVisible && (
                   <TouchableOpacity
@@ -241,23 +156,17 @@ function renderTextWithLinks(text, mentionsArr) {
                     <Text style={[styles.text, {color: 'tomato'}]}>Delete</Text>
                   </TouchableOpacity>
                 )}
-                <View style={styles.textContainer}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text style={[styles.nameText, styles.text]}>
-                      {SenderName}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.timeText,
-                        styles.text,
-                        {marginHorizontal: ms(10)},
-                      ]}>
-                      {time}
-                    </Text>
-                  </View>
+                <View style={[styles.textContainer, {maxWidth: '90%'}]}>
+                  {channelType != 'DIRECT_MESSAGE' && (
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <Text style={[styles.nameText, styles.text]}>
+                        {SenderName}
+                      </Text>
+                    </View>
+                  )}
                   {parentId != null && (
                     <TouchableOpacity
-                      style={styles.repliedContainer}
+                      style={[styles.repliedContainer]}
                       onPress={() =>
                         handleRepliedMessagePress(
                           chatState?.data[chat.teamId]?.parentMessages[
@@ -268,48 +177,67 @@ function renderTextWithLinks(text, mentionsArr) {
                           flatListRef,
                         )
                       }>
-                      {renderTextWithLinks(
-                        chatState?.data[chat.teamId]?.parentMessages[parentId]
-                          ?.content,
-                        chatState?.data[chat.teamId]?.parentMessages[parentId]
-                          ?.mentions,
-                        userInfoState?.accessToken,
-                        orgState,
-                        width,
+                      {chatState?.data[chat.teamId]?.parentMessages[parentId]
+                        ?.attachment?.length > 0 ? (
+                        <Text style={{color: 'black'}}>
+                          <Icon name="attach-file" size={14} /> attachment
+                        </Text>
+                      ) : (
+                        renderTextWithLinks(
+                          chatState?.data[chat.teamId]?.parentMessages[parentId]
+                            ?.content,
+                          chatState?.data[chat.teamId]?.parentMessages[parentId]
+                            ?.mentions,
+                          true,
+                          orgState,
+                          searchUserProfileAction,
+                          userInfoState,
+                        )
                       )}
                     </TouchableOpacity>
                   )}
-                  <Modal
-                    visible={selectedImage !== null}
-                    transparent={true}
-                    onRequestClose={handleModalClose}>
-                    <TouchableOpacity
-                      style={{
-                        flex: 1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: 'rgba(0, 0, 0, 0.9)',
-                      }}
-                      activeOpacity={1}
-                      // onPress={handleModalClose}
-                    >
-                      <Image
-                        source={{uri: selectedImage?.resourceUrl}}
-                        style={{
-                          width: Dimensions.get('window').width,
-                          height: Dimensions.get('window').height - 50,
-                        }}
-                        resizeMode="contain"
+                  <View style={{maxWidth: '80%'}}>
+                    <Modal
+                      visible={selectedImage !== null}
+                      transparent={true}
+                      onRequestClose={handleModalClose}>
+                      <ImageViewer
+                        imageUrls={[
+                          {
+                            url: selectedImage?.resourceUrl,
+                            width: Dimensions.get('window')?.width - 20,
+                            height: Dimensions.get('window')?.height - 100,
+                          },
+                        ]}
+                        enableSwipeDown={true}
+                        onSwipeDown={handleModalClose}
                       />
-                    </TouchableOpacity>
-                  </Modal>
-                  {attachment?.length > 0 && 
+                      {/* <TouchableOpacity
+                        style={{
+                          flex: 1,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                        }}
+                        activeOpacity={1}
+                        onPress={handleModalClose}>
+                        <Image
+                          source={{uri: selectedImage?.resourceUrl}}
+                          style={{
+                            width: Dimensions.get('window').width,
+                            height: Dimensions.get('window').height - 50,
+                          }}
+                          resizeMode="contain"
+                        />
+                      </TouchableOpacity> */}
+                    </Modal>
+                  </View>
+                  {attachment?.length > 0 &&
                     attachment?.map((item, index) => {
                       return item?.contentType?.includes('image') ? (
                         <TouchableOpacity
                           key={index}
                           onPress={() => handleImagePress(index)}
-                          // onPress={() => Linking.openURL(item?.resourceUrl)}
                           style={{marginVertical: 5, alignItems: 'center'}}>
                           <Image
                             source={{uri: item?.resourceUrl}}
@@ -327,7 +255,9 @@ function renderTextWithLinks(text, mentionsArr) {
                           }}
                           key={index}>
                           <TouchableOpacity
-                            onPress={() => Linking.openURL(item?.resourceUrl)}>
+                            onPress={() => {
+                              openLink(item?.resourceUrl);
+                            }}>
                             <View
                               style={{
                                 flexDirection: 'row',
@@ -375,18 +305,38 @@ function renderTextWithLinks(text, mentionsArr) {
                       );
                     })}
 
-                  <Text style={[styles.messageText, styles.text]}>
-                    {/* {chat?.content} */}
-                    {renderTextWithLinks(
-                      chat?.content,
-                      chat?.mentions,
-                      userInfoState?.accessToken,
-                      orgState,
-                      width,
-                    )}
-                  </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-end',
+                    }}>
+                    <Text
+                      style={[
+                        styles.messageText,
+                        // styles.text,
+                        {maxWidth: '90%', color: 'white'},
+                      ]}>
+                      {/* {chat?.content} */}
+                      {renderTextWithLinks(
+                        chat?.content,
+                        chat?.mentions,
+                        false,
+                        orgState,
+                        searchUserProfileAction,
+                        userInfoState,
+                      )}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.timeText,
+                        styles.text,
+                        {marginHorizontal: ms(10)},
+                      ]}>
+                      {time}
+                    </Text>
+                  </View>
                 </View>
-                {/* <Text style={[styles.timeText, styles.text]}>{time}</Text> */}
               </View>
             </Swipeable>
           </TouchableOpacity>
@@ -410,12 +360,12 @@ const LocalChatCard = ({
   setreplyOnMessage,
   setrepliedMsgDetails,
   // image = 'https://t4.ftcdn.net/jpg/05/11/55/91/360_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg',
+  channelType,
 }) => {
   const {colors} = useTheme();
-  const styles = makeStyles(colors);
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const [optionsVisible, setOptionsVisible] = useState(false);
   const swipeableRef = useRef(null);
-  const {width} = useWindowDimensions();
   const onLongPress = () => {
     setOptionsVisible(true);
   };
@@ -426,6 +376,8 @@ const LocalChatCard = ({
   const SenderName =
     chat?.senderId == userInfoState?.user?.id
       ? 'You'
+      : orgState?.userIdAndDisplayNameMapping[chat?.senderId]
+      ? orgState?.userIdAndDisplayNameMapping[chat?.senderId]
       : orgState?.userIdAndNameMapping[chat?.senderId];
   const swipeFromLeftOpen = () => {
     setrepliedMsgDetails(chat);
@@ -452,20 +404,18 @@ const LocalChatCard = ({
                 styles.container,
                 sentByMe ? styles.sentByMe : styles.received,
               ]}>
-              <View style={styles.textContainer}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Text style={[styles.nameText, styles.text]}>
-                    {SenderName}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.timeText,
-                      styles.text,
-                      {marginHorizontal: 10},
-                    ]}>
-                    {time}
-                  </Text>
-                </View>
+              <View
+                style={[
+                  styles.textContainer,
+                  {backgroundColor: colors.sentByMeCardColor},
+                ]}>
+                {channelType != 'DIRECT_MESSAGE' && (
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Text style={[styles.nameText, styles.text]}>
+                      {SenderName}
+                    </Text>
+                  </View>
+                )}
                 {parentId != null && (
                   <View style={styles.repliedContainer}>
                     <Text style={{color: colors.textColor}}>
@@ -477,18 +427,37 @@ const LocalChatCard = ({
                   </View>
                 )}
                 <View
-                  style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                  <Text style={[styles.messageText, styles.text]}>
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-end',
+                  }}>
+                  <Text
+                    style={[
+                      styles.messageText,
+                      styles.text,
+                      {maxWidth: '90%'},
+                    ]}>
+                    {/* {chat?.content} */}
                     {renderTextWithLinks(
                       chat?.content,
                       chat?.mentions,
-                      userInfoState?.accessToken,
+                      false,
                       orgState,
-                      width,
+                      userInfoState,
                     )}
                   </Text>
-                  <View style={{alignSelf: 'flex-end'}}>
+                  <View
+                    style={{flexDirection: 'column', alignItems: 'flex-end'}}>
                     <Icon name="access-time" color={colors.textColor} />
+                    <Text
+                      style={[
+                        styles.timeText,
+                        styles.text,
+                        {marginHorizontal: ms(10)},
+                      ]}>
+                      {time}
+                    </Text>
                   </View>
                 </View>
               </View>

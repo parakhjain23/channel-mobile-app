@@ -2,6 +2,7 @@ import * as Actions from '../../Enums';
 
 const initialState = {
   channels: [],
+  mentionChannels:[{_source:{displayName:'channel',type:'U'}}],
   isLoading: false,
 };
 
@@ -11,7 +12,7 @@ export function channelsByQueryReducer(state = initialState, action) {
       return {...state, isLoading: true};
 
     case Actions.FETCH_CHANNELS_BY_QUERY_SUCCESS:
-      return {...state, channels: action.channels, isLoading: false};
+      return {...state, channels: action.channels,mentionChannels:[...state?.mentionChannels,...action.channels], isLoading: false};
 
     case Actions.FETCH_CHANNELS_BY_QUERY_ERROR:
       return {...state, channels: [], isLoading: false};

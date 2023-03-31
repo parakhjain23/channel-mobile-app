@@ -1,4 +1,6 @@
 import uuid from 'react-native-uuid';
+import { NativeModules } from 'react-native';
+const { NSData,NSTemporaryDirectory } = NativeModules;
 
 export const FileUploadApi = async (Files, accessToken) => {
   const fileNames = Files?.map(item => {
@@ -30,7 +32,6 @@ export const FileUploadApi = async (Files, accessToken) => {
       await UploadDocumentApi(s3BucketUrl, fileType, imageBody);
       return fileNames[index];
     });
-
     const uploadedFileNames = await Promise.all(uploadPromises);
     return uploadedFileNames;
   } catch (error) {
