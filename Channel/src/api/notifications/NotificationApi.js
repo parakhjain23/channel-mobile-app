@@ -32,7 +32,7 @@ const notificationApi = async (token, deviceId) => {
 
     fetch('https://api.intospace.io/users/deviceGroups', requestOptions)
       .then(response => response.text())
-      .catch(error => console.log('error', error));
+      .catch(error => console.warn('error', error));
   } catch (error) {
     console.warn(error);
   }

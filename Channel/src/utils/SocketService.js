@@ -22,7 +22,7 @@ const SocketService = socket => {
   });
   socket.on('chat/message created', data => {
     if(store.getState().channelsReducer?.teamIdAndNameMapping[data?.teamId]==undefined){
-      // console.log("inside undefined");
+      // console.warn("inside undefined");
       store.dispatch(getChannelByTeamIdStart(store?.getState()?.userInfoReducer?.accessToken,data?.teamId,store?.getState()?.userInfoReducer?.user?.id))
     }
     var newData = data
@@ -39,13 +39,13 @@ const SocketService = socket => {
     }
   });
   socket.on('chat/message patched', data => {
-    // console.log(data,"chat patched");
+    // console.warn(data,"chat patched");
     // if (data?.deleted) {
     //   store.dispatch(deleteMessageSuccess(data));
     // }
   });
   socket.on('chat/message updated', data => {
-    // console.log(data,"chat updated");
+    // console.warn(data,"chat updated");
     // if (data?.deleted) {
     //   store.dispatch(deleteMessageSuccess(data));
     // }

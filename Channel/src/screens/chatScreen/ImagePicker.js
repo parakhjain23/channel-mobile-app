@@ -31,7 +31,7 @@ export const launchCameraForPhoto = (
         setAttachment(prevAttachment => [...prevAttachment, ...attachment]);
       } catch (error) {
         setAttachmentLoading(false);
-        console.log(error, 'error');
+        console.warn(error, 'error');
       }
     }
   });

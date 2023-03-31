@@ -10,7 +10,7 @@ export function* createSocketMiddleware({accessToken,orgId}) {
     var socket = yield call(createSocket,accessToken,orgId)
     SocketService(socket)
   } catch (error) {
-    console.log('error in createSocketMiddleware', error);
+    console.warn('error in createSocketMiddleware', error);
   }
 }
 

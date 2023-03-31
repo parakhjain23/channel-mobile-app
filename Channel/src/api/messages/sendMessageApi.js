@@ -58,7 +58,7 @@ export const sendMessageApi = async (
       }),
     });
     const result = await response.json();
-    // console.log(result, 'result from the api');
+    // console.warn(result, 'result from the api');
   } catch (error) {
     console.warn(error);
   }

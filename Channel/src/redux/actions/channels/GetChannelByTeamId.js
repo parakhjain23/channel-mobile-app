@@ -16,14 +16,14 @@ export function* getChannelByTeamId({token,teamId,userId}){
   }
 
 export function getChannelByTeamIdStart(token,teamId,userId){
-  // console.log("inside start");
+  // console.warn("inside start");
   return {
     type: Actions.GET_CHANNEL_START,
     token,teamId,userId
   }
 }
 export function getChannelByTeamIdSuccess(channel,userId){
-  // console.log("inside successs",channel);
+  // console.warn("inside successs",channel);
     return {
       type: Actions.GET_CHANNEL_SUCCESS,
       channel,

@@ -84,7 +84,7 @@ export const RenderTextWithLinks = ({
         if (message !== '') {
           resultStr += message + ' ';
           result.push(message);
-          // console.log(message);
+          // console.warn(message);
         }
       } else if ($(element).is('span')) {
         resultStr +=

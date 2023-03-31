@@ -26,16 +26,16 @@ export function createSocket(accessToken, orgId) {
         deviceType: 'WEB',
       },
       (error, authResult) => {
-        // console.log('ERROR', error);
+        // console.warn('ERROR', error);
       },
     );
     // socket.on('connect', () => {
-    //   // console.log('Connected');
+    //   // console.warn('Connected');
     // });
   }
 
   // socket.on('disconnect', () => {
-  //   // console.log('Disconnected');
+  //   // console.warn('Disconnected');
   // });
   return socket;
 }

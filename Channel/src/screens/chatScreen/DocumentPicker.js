@@ -8,7 +8,7 @@ export const pickDocument = async (setAttachment, accessToken,setAttachmentLoadi
       allowMultiSelection: true,
       readContent: true,
     });
-    console.log(Files, 'this is files');
+    console.warn(Files, 'this is files');
     setAttachmentLoading(true);
     try {
       const FileNames = await FileUploadApi(Files, accessToken);
@@ -25,7 +25,7 @@ export const pickDocument = async (setAttachment, accessToken,setAttachmentLoadi
       setAttachmentLoading(false);
       setAttachment(prevAttachment => [...prevAttachment, ...attachment]);
     } catch (error) {
-      console.log(error, 'error');
+      console.warn(error, 'error');
     }
   } catch (err) {
     if (DocumentPicker.isCancel(err)) {
