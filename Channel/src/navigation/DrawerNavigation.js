@@ -13,10 +13,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import CustomDrawerScreen from '../screens/drawer/CustomDrawerScreen';
 
 const Drawer = createDrawerNavigator();
-
-const CustomDrawer = props => {
-  return <CustomeDrawerScreen props={props} setScheme={setScheme} />;
-};
 const DrawerNavigation = ({orgsState, route}) => {
   const {setScheme} = route?.params;
   const {colors} = useTheme();
