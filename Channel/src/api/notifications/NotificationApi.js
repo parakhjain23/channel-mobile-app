@@ -10,20 +10,20 @@ export function* notifications({accessToken, deviceId}) {
 
 const notificationApi = async (token, deviceId) => {
   try {
-    var myHeaders = new Headers();
+    const myHeaders = new Headers();
     myHeaders.append(
       'Authorization',
       `${token}`,
     );
     myHeaders.append('Content-Type', 'application/json');
 
-    var raw = JSON.stringify({
+    const raw = JSON.stringify({
       deviceId: {
         chat: `${deviceId}`
       },
     });
 
-    var requestOptions = {
+    const requestOptions = {
       method: 'POST',
       headers: myHeaders,
       body: raw,

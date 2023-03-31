@@ -79,6 +79,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
         <TextInput
           label={'Members'}
           mode={'outlined'}
+          value={searchedUser}
           onChangeText={changeText}
           textColor={colors.textColor}
           activeOutlineColor={colors.textColor}
@@ -87,13 +88,13 @@ const CreateChannelModel = ({modalizeRef, props}) => {
 
         {searchedUser != '' && (
           <ScrollView
-            style={{maxHeight: 200}}
+            style={{maxHeight: ms(200)}}
             keyboardShouldPersistTaps="always">
             {props?.channelsByQueryState?.channels?.map((item, index) => {
               return (
                 item?._source?.type == 'U' && (
                   <RenderUsersToAdd
-                    key={index}
+                    key={item._source.userId}
                     item={item}
                     setUserIds={setUserIds}
                     userIds={userIds}
