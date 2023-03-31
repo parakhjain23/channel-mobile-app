@@ -112,7 +112,6 @@ const ChatScreen = ({
       setShowOptions(false);
     }, 130);
   };
-
   const handleInputChange = text => {
     onChangeMessage(text);
     const mentionRegex = /@\w+/g;
@@ -340,7 +339,7 @@ const onScroll = Animated.event(
                           {repliedMsgDetails?.content}
                         </Text>
                       )}
-                      <MaterialIcons name="cancel" size={ms(16)} />
+                      <MaterialIcons name="cancel" size={ms(16)} color='black' />
                     </View>
                   </TouchableOpacity>
                 )}

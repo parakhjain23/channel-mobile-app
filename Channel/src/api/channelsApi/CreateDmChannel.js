@@ -12,13 +12,12 @@ export const createDmChannel = async (token,orgId,channelName,reciverUserId) => 
         requestId: '123456781',
         type: "DIRECT_MESSAGE",
         orgId: orgId,
-        name: channelName,
-        userId: `${reciverUserId}`
+        userId: reciverUserId
       }),
     });
     var result = await response.json();
     if(result?.name=='GeneralError' || result?.name=='Conflict'){
-      Alert.alert(result?.message)
+      console.log(result)
     }
     return result
   } catch (error) {
