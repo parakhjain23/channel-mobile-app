@@ -207,6 +207,41 @@ export function channelsReducer(state = initialState, action) {
     case Actions.RESET_ACTIVE_CHANNEL_TEAMID:
       return {...state, activeChannelTeamId: null};
     
+    case Actions.GET_CHANNEL_SUCCESS:
+      var userIdAndTeamIdMapping = {};
+      var teamIdAndNameMapping = {};
+      var teamIdAndTypeMapping = {};
+      if (action?.channel?.type == 'DIRECT_MESSAGE') {
+        key =
+          action?.channel.userIds[0] != action?.userId
+            ? action?.channel?.userIds[0]
+            : action?.channel.userIds[1];
+        teamId = action?.channel?._id;
+        userIdAndTeamIdMapping[key] = teamId;
+        teamIdAndTypeMapping[teamId] = action?.channel?.type;
+      } else{
+        key = action?.channel._id;
+        teamIdAndTypeMapping[key] = action?.channel?.type;
+        teamIdAndNameMapping[key] = action?.channel?.name;
+      }
+      return {
+        ...state,
+        channels: [action.channel, ...state?.channels],
+        recentChannels: [action.channel, ...state?.recentChannels],
+        userIdAndTeamIdMapping: {
+          ...state?.userIdAndTeamIdMapping,
+          ...userIdAndTeamIdMapping,
+        },
+        teamIdAndNameMapping: {
+          ...state?.teamIdAndNameMapping,
+          ...teamIdAndNameMapping,
+        },
+        teamIdAndTypeMapping: {
+          ...state?.teamIdAndTypeMapping,
+          ...teamIdAndTypeMapping,
+        },
+      };
+        
     default:
       return state;
   }
