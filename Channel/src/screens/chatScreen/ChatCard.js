@@ -3,13 +3,10 @@ import {
   Dimensions,
   Image,
   Modal,
-  StyleSheet,
   Text,
   TouchableOpacity,
-  useWindowDimensions,
   View,
 } from 'react-native';
-import cheerio, {text} from 'cheerio';
 import {GestureHandlerRootView, Swipeable} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Linking} from 'react-native';
@@ -17,7 +14,6 @@ import {renderTextWithLinks} from './RenderTextWithLinks';
 import {useTheme} from '@react-navigation/native';
 import {makeStyles} from './ChatCardStyles';
 import {ms} from 'react-native-size-matters';
-import * as RootNavigation from '../../navigation/RootNavigation';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import ImageViewer from 'react-native-image-zoom-viewer';
 const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
