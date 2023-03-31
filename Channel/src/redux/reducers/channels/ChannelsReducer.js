@@ -34,7 +34,6 @@ export function channelsReducer(state = initialState, action) {
       var channelIdAndDataMapping = {};
       var key = null;
       var teamId = null;
-      console.log(action.channels,"action.channels");
       for (let i = 0; i < action?.channels?.length; i++) {
         if (action?.channels[i]?.type == 'DIRECT_MESSAGE') {
           key =
@@ -54,7 +53,6 @@ export function channelsReducer(state = initialState, action) {
           action?.channels[i]?.type;
         channelIdAndDataMapping[action?.channels[i]?._id] = action.channels[i];
       }
-      console.log(userIdAndTeamIdMapping,"-=-==-")
       return {
         ...state,
         channels: action.channels,
@@ -158,7 +156,6 @@ export function channelsReducer(state = initialState, action) {
       };
 
     case Actions.CREATE_NEW_CHANNEL_SUCCESS:
-      console.log(action.channel,"new channel created")
       var userIdAndTeamIdMapping = {};
       var teamIdAndNameMapping = {};
       var teamIdAndTypeMapping = {};
@@ -179,11 +176,6 @@ export function channelsReducer(state = initialState, action) {
         teamIdAndTypeMapping[key] = action?.channel?.type;
         teamIdAndNameMapping[key] = action?.channel?.name;
       }
-      console.log(userIdAndTeamIdMapping)
-      console.log({
-        ...state?.userIdAndTeamIdMapping,
-        ...userIdAndTeamIdMapping,
-      },"this is updated");
       return {
         ...state,
         channels: [action.channel, ...state?.channels],
