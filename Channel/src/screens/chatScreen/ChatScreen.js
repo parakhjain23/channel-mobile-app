@@ -112,19 +112,9 @@ const ChatScreen = ({
       setShowOptions(false);
     }, 130);
   };
-
   const handleInputChange = text => {
     onChangeMessage(text);
-    const mentionRegex = /@\w+/g;
-    const foundMentions = text.match(mentionRegex);
-    foundMentions?.length > 0
-      ? (getChannelsByQueryStartAction(
-          foundMentions?.[foundMentions?.length - 1].replace('@', ''),
-          userInfoState?.user?.id,
-          orgState?.currentOrgId,
-        ),
-        setMentions(channelsByQueryState?.mentionChannels))
-      : setMentions([]);
+    console.log(text,"=-=-=-=-=-");
   };
 
   const handleMentionSelect = mention => {
