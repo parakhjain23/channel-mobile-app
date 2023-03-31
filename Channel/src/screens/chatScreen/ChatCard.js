@@ -106,7 +106,7 @@ const ChatCard = ({
   const LeftSwipeActions = () => {
     return (
       <View style={{width: '10%', justifyContent: 'center', zIndex: 0}}>
-        <Icon name="reply" size={20} />
+        <Icon name="reply" size={20} color={colors?.color} />
       </View>
     );
   };
@@ -121,6 +121,7 @@ const ChatCard = ({
       Linking.openURL(url);
     }
   };
+
   return (
     <>
       {!isActivity ? (
@@ -150,7 +151,7 @@ const ChatCard = ({
                     style={{
                       alignItems: 'center',
                       alignSelf: 'center',
-                      paddingHorizontal: 20,
+                      paddingHorizontal: ms(20),
                     }}>
                     <Icon name="delete" color={'tomato'} />
                     <Text style={[styles.text, {color: 'tomato'}]}>Delete</Text>
@@ -180,7 +181,7 @@ const ChatCard = ({
                       {chatState?.data[chat.teamId]?.parentMessages[parentId]
                         ?.attachment?.length > 0 ? (
                         <Text style={{color: 'black'}}>
-                          <Icon name="attach-file" size={14} /> attachment
+                          <Icon name="attach-file" size={ms(14)} /> attachment
                         </Text>
                       ) : (
                         renderTextWithLinks(
@@ -238,21 +239,23 @@ const ChatCard = ({
                         <TouchableOpacity
                           key={index}
                           onPress={() => handleImagePress(index)}
-                          style={{marginVertical: 5, alignItems: 'center'}}>
+                          style={{marginVertical: ms(5), alignItems: 'center'}}>
                           <Image
                             source={{uri: item?.resourceUrl}}
-                            style={{height: 150, width: 150}}
+                            style={{height: ms(150), width: ms(150)}}
                           />
                         </TouchableOpacity>
                       ) : (
                         <View
-                          style={{
-                            borderWidth: 0.5,
-                            borderColor: 'gray',
-                            borderRadius: 5,
-                            padding: 10,
-                            marginVertical: 5,
-                          }}
+                          style={[
+                            styles.repliedContainer,
+                            {
+                              borderWidth: ms(0.5),
+                              borderColor: 'gray',
+                              borderRadius: ms(5),
+                              padding: ms(10),
+                            },
+                          ]}
                           key={index}>
                           <TouchableOpacity
                             onPress={() => {
@@ -268,9 +271,9 @@ const ChatCard = ({
                                 <Image
                                   source={require('../../assests/images/attachments/pdfLogo.png')}
                                   style={{
-                                    width: 40,
-                                    height: 40,
-                                    marginRight: 5,
+                                    width: ms(40),
+                                    height: ms(40),
+                                    marginRight: ms(5),
                                   }}
                                 />
                               )}
@@ -278,26 +281,26 @@ const ChatCard = ({
                                 <Image
                                   source={require('../../assests/images/attachments/docLogo.png')}
                                   style={{
-                                    width: 40,
-                                    height: 40,
-                                    marginRight: 5,
+                                    width: ms(40),
+                                    height: ms(40),
+                                    marginRight: ms(5),
                                   }}
                                 />
                               )}
 
                               <View>
-                                <Text style={styles.text}>
+                                <Text style={{color: 'black'}}>
                                   {item?.title?.slice(0, 10) + '...'}
                                 </Text>
-                                <Text style={styles.text}>
+                                <Text style={{color: 'black'}}>
                                   {'...' + item?.contentType?.slice(-10)}
                                 </Text>
                               </View>
                               <Icon
                                 name="save"
-                                size={20}
-                                style={{margin: 2}}
-                                color={colors.color}
+                                size={ms(20)}
+                                style={{margin: ms(2)}}
+                                color={'black'}
                               />
                             </View>
                           </TouchableOpacity>
