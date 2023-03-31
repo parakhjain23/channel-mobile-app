@@ -38,12 +38,13 @@ export function orgsReducer(state = initialState, action) {
         idAndDisplayNameMap[item?.id] = `${item?.displayName}`
       })
       idAndDisplayNameMap['all']='channel'
-      console.log(idAndDisplayNameMap);
       return {...state, userIdAndNameMapping: idAndNameMap,userIdAndDisplayNameMapping:idAndDisplayNameMap}  
     
     case Actions.NEW_USER_JOINED_ORG:
       var idAndNameMap = {};
-      action?.user?.map((item)=>{
+      var idAndDisplayNameMap={}
+      var user = [action.user]
+      user?.map((item)=>{
         idAndNameMap[item?.id] = `${item?.firstName+" "+item?.lastName}`
         idAndDisplayNameMap[item?.id] = `${item?.displayName}`
       })
