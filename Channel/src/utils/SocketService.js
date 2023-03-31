@@ -55,6 +55,7 @@ const SocketService = socket => {
   });
 
   socket.on('orgUser created', data => {
+    console.log(data,"new user created in org")
     store.dispatch(newUserJoinedAOrg(data));
   });
 };
