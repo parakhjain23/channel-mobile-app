@@ -21,8 +21,12 @@ const SocketService = socket => {
     store.dispatch(socketStatus(false))
   });
   socket.on('chat/message created', data => {
+    console.log(data,"this is data");
+console.log(
+  store.getState().channelsReducer?.teamIdAndNameMapping[data?.teamId] ,"this is team id and name mapping"
+);
     if(store.getState().channelsReducer?.teamIdAndNameMapping[data?.teamId]==undefined){
-      // console.log("inside undefined");
+      console.log("inside undefined");
       store.dispatch(getChannelByTeamIdStart(store?.getState()?.userInfoReducer?.accessToken,data?.teamId,store?.getState()?.userInfoReducer?.user?.id))
     }
     var newData = data
