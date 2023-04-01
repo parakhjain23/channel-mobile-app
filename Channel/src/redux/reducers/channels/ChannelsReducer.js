@@ -53,8 +53,6 @@ export function channelsReducer(state = initialState, action) {
           action?.channels[i]?.type;
         channelIdAndDataMapping[action?.channels[i]?._id] = action.channels[i];
       }
-      console.log(teamIdAndNameMapping,'team and name');
-      console.log(tempteamIdAndTypeMapping,'teamIdAndTypeMapping and name');
       return {
         ...state,
         channels: action.channels,
@@ -158,7 +156,6 @@ export function channelsReducer(state = initialState, action) {
       };
 
     case Actions.CREATE_NEW_CHANNEL_SUCCESS:
-      console.log('create channel succes reducer');
       var userIdAndTeamIdMapping = {};
       var teamIdAndNameMapping = {};
       var teamIdAndTypeMapping = {};
@@ -211,7 +208,6 @@ export function channelsReducer(state = initialState, action) {
       return {...state, activeChannelTeamId: null};
     
     case Actions.GET_CHANNEL_SUCCESS:
-      console.log("inside channel reducer");
       var userIdAndTeamIdMapping = {};
       var teamIdAndNameMapping = {};
       var teamIdAndTypeMapping = {};

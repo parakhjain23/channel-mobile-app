@@ -1,12 +1,10 @@
-import {useNavigation, useTheme} from '@react-navigation/native';
 import React from 'react';
 import {Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native';
 import {Linking} from 'react-native';
 import * as RootNavigation from '../../navigation/RootNavigation';
-import cheerio, {text} from 'cheerio';
+import cheerio from 'cheerio';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
-import {index} from 'cheerio/lib/api/traversing';
 
 export const RenderTextWithLinks = ({
   text,
@@ -21,7 +19,7 @@ export const RenderTextWithLinks = ({
   const urlRegex =
     /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-])?(?:\?[^\s])?)/gi;
   function findKeyByValue(value) {
-    const newValue = value.substring(1);
+    const newValue = value?.substring(1);
     for (let key in orgState?.userIdAndDisplayNameMapping) {
       if (orgState?.userIdAndDisplayNameMapping[key] === newValue) {
         return key;
@@ -103,7 +101,7 @@ export const RenderTextWithLinks = ({
 
   const openLink = async url => {
     if (await InAppBrowser.isAvailable()) {
-      const result = InAppBrowser?.open(url);
+      InAppBrowser?.open(url);
     } else {
       Linking.openURL(url);
     }

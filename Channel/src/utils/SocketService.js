@@ -11,7 +11,9 @@ import {createSocket} from './Socket';
 import {PlayLocalSoundFile} from './Sounds';
 
 const SocketService = socket => {
+  // console.log(socket,"this is socket");
   socket.on('reconnect', function () {
+    // console.log("reconnecting socket");
     createSocket(
       store.getState()?.userInfoReducer?.accessToken,
       store.getState()?.orgsReducer?.currentOrgId,
@@ -24,11 +26,7 @@ const SocketService = socket => {
     store.dispatch(socketStatus(false));
   });
   socket.on('chat/message created', data => {
-    console.log(data, 'this is data');
-    console.log(
-      store.getState().channelsReducer?.teamIdAndTypeMapping[data?.teamId],
-      'this is team id and name mapping',
-    );
+    // console.log(data, 'this is data');
     if (
       store.getState().channelsReducer?.teamIdAndTypeMapping[data?.teamId] ==
       undefined
@@ -61,16 +59,10 @@ const SocketService = socket => {
     }
   });
   socket.on('chat/message patched', data => {
-    // console.log(data,"chat patched");
-    // if (data?.deleted) {
-    //   store.dispatch(deleteMessageSuccess(data));
-    // }
-  });
-  socket.on('chat/message updated', data => {
-    // console.log(data,"chat updated");
-    // if (data?.deleted) {
-    //   store.dispatch(deleteMessageSuccess(data));
-    // }
+    console.log(data,"chat patched");
+    if (data?.deleted) {
+      store.dispatch(deleteMessageSuccess(data));
+    }
   });
 
   socket.on('chat/team created', data => {
