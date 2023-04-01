@@ -28,41 +28,37 @@ export function channelsReducer(state = initialState, action) {
       return {...state, isLoading: true};
 
     case Actions.FETCH_CHANNELS_SUCCESS:
+      var {channels, userId} = action;
       var userIdAndTeamIdMapping = {};
       var teamIdAndNameMapping = {};
-      var tempteamIdAndTypeMapping = {};
+      var teamIdAndTypeMapping = {};
       var channelIdAndDataMapping = {};
-      var key = null;
-      var teamId = null;
-      for (let i = 0; i < action?.channels?.length; i++) {
-        if (action?.channels[i]?.type == 'DIRECT_MESSAGE') {
-          key =
-            action?.channels[i].userIds[0] != action?.userId
-              ? action?.channels[i]?.userIds[0]
-              : action?.channels[i].userIds[1];
-          teamId = action?.channels[i]?._id;
-          userIdAndTeamIdMapping[key] = teamId;
+
+      channels.forEach(channel => {
+        const {_id, type, userIds} = channel;
+        channelIdAndDataMapping[_id] = channel;
+
+        if (type === 'DIRECT_MESSAGE') {
+          const dmUserId = userIds?.find(id => id !== userId);
+          userIdAndTeamIdMapping[dmUserId] = _id;
         } else {
-          if (action.channels[i].type == 'PERSONAL') {
-            action.channels[i].name = 'You ( your own personal space )';
+          if (type === 'PERSONAL') {
+            channel.name = 'You ( your own personal space )';
           }
-          key = action?.channels[i]._id;
-          teamIdAndNameMapping[key] = action?.channels[i]?.name;
+          teamIdAndNameMapping[_id] = channel?.name;
         }
-        tempteamIdAndTypeMapping[action?.channels[i]?._id] =
-          action?.channels[i]?.type;
-        channelIdAndDataMapping[action?.channels[i]?._id] = action.channels[i];
-      }
+        teamIdAndTypeMapping[_id] = type;
+      });
+
       return {
         ...state,
-        channels: action.channels,
+        channels,
         isLoading: false,
-        userIdAndTeamIdMapping: userIdAndTeamIdMapping,
-        teamIdAndNameMapping: teamIdAndNameMapping,
-        teamIdAndTypeMapping: tempteamIdAndTypeMapping,
-        channelIdAndDataMapping: channelIdAndDataMapping,
+        userIdAndTeamIdMapping,
+        teamIdAndNameMapping,
+        teamIdAndTypeMapping,
+        channelIdAndDataMapping,
       };
-
     case Actions.FETCH_CHANNEL_DETAILS_SUCCESS:
       let teamIdAndUnreadCountMapping = {};
       action?.payload?.map(team => {
@@ -122,7 +118,8 @@ export function channelsReducer(state = initialState, action) {
       action?.channelId.forEach(id => {
         if (state?.activeChannelTeamId != id) {
           tempHighlightChannels[id] = true;
-          teamIdAndUnreadCountMappingLocal[id] = (state?.teamIdAndUnreadCountMapping[id])+1
+          teamIdAndUnreadCountMappingLocal[id] =
+            state?.teamIdAndUnreadCountMapping[id] + 1;
         } else {
           tempHighlightChannels[id] = false;
         }
@@ -148,12 +145,16 @@ export function channelsReducer(state = initialState, action) {
       return {
         ...state,
         recentChannels: newRecentChannels,
-        highlightChannel: {...state?.highlightChannel, ...tempHighlightChannels},
+        highlightChannel: {
+          ...state?.highlightChannel,
+          ...tempHighlightChannels,
+        },
         teamIdAndUnreadCountMapping: {
           ...state?.teamIdAndUnreadCountMapping,
-          ...teamIdAndUnreadCountMappingLocal
-        }
+          ...teamIdAndUnreadCountMappingLocal,
+        },
       };
+
 
     case Actions.CREATE_NEW_CHANNEL_SUCCESS:
       var userIdAndTeamIdMapping = {};
@@ -201,12 +202,15 @@ export function channelsReducer(state = initialState, action) {
         ...state,
         activeChannelTeamId: action?.teamId,
         highlightChannel: tempHighlightChannels,
-        teamIdAndUnreadCountMapping: {...state?.teamIdAndUnreadCountMapping,[action?.teamId]:0}
+        teamIdAndUnreadCountMapping: {
+          ...state?.teamIdAndUnreadCountMapping,
+          [action?.teamId]: 0,
+        },
       };
 
     case Actions.RESET_ACTIVE_CHANNEL_TEAMID:
       return {...state, activeChannelTeamId: null};
-    
+
     case Actions.GET_CHANNEL_SUCCESS:
       var userIdAndTeamIdMapping = {};
       var teamIdAndNameMapping = {};
@@ -219,7 +223,7 @@ export function channelsReducer(state = initialState, action) {
         teamId = action?.channel?._id;
         userIdAndTeamIdMapping[key] = teamId;
         teamIdAndTypeMapping[teamId] = action?.channel?.type;
-      } else{
+      } else {
         key = action?.channel._id;
         teamIdAndTypeMapping[key] = action?.channel?.type;
         teamIdAndNameMapping[key] = action?.channel?.name;
@@ -241,7 +245,7 @@ export function channelsReducer(state = initialState, action) {
           ...teamIdAndTypeMapping,
         },
       };
-        
+
     default:
       return state;
   }
