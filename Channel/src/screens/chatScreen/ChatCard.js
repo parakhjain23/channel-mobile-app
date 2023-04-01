@@ -400,12 +400,13 @@ const LocalChatCard = ({
                 )}
                 {parentId != null && (
                   <View style={styles.repliedContainer}>
-                    <Text style={{color: colors.textColor}}>
-                      {
-                        chatState?.data[chat.teamId]?.parentMessages[parentId]
-                          ?.content
-                      }
-                    </Text>
+                     <RenderTextWithLinks
+                      text={chat?.parentMessage}
+                      repliedContainer={true}
+                      orgState={orgState}
+                      userInfoState={userInfoState}
+                      colors={colors}
+                    />
                   </View>
                 )}
                 <View

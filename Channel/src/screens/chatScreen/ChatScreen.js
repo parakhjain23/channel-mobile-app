@@ -236,7 +236,14 @@ const ChatScreen = ({
           <View style={{flex: 9}}>
             {teamId == undefined ||
             chatState?.data[teamId]?.isloading == true ? (
-              <ActivityIndicator />
+              <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+                <AnimatedLottieView
+                source={require('../../assests/images/attachments/loading.json')}
+                loop
+                autoPlay
+                style={{height: s(500),width:s(500)}}
+              />
+              </View>
             ) : (
               <>
                 <Animated.FlatList
@@ -468,6 +475,7 @@ const ChatScreen = ({
                             updatedAt: date,
                             attachment: attachment,
                             mentionsArr: mentionsArr,
+                            parentMessage: repliedMsgDetails?.content
                           },
                         ]),
                         sendMessageAction(

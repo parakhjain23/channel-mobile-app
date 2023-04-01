@@ -1,10 +1,9 @@
-import {useNavigation, useTheme} from '@react-navigation/native';
 import React from 'react';
 import {Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native';
 import {Linking} from 'react-native';
 import * as RootNavigation from '../../navigation/RootNavigation';
-import cheerio, {text} from 'cheerio';
+import cheerio from 'cheerio';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 
 export const RenderTextWithLinks = ({
@@ -20,7 +19,7 @@ export const RenderTextWithLinks = ({
   const urlRegex =
     /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-])?(?:\?[^\s])?)/gi;
   function findKeyByValue(value) {
-    const newValue = value.substring(1);
+    const newValue = value?.substring(1);
     for (let key in orgState?.userIdAndDisplayNameMapping) {
       if (orgState?.userIdAndDisplayNameMapping[key] === newValue) {
         return key;
@@ -35,13 +34,13 @@ export const RenderTextWithLinks = ({
       return A[p1] ? `@${A[p1]}` : match;
     });
     const parts = text?.split(/(\B@\w+)/);
-    return parts?.map((part, i) => {
+    return parts?.map((part, index) => {
       if (/^@\w+$/.test(part)) {
         let key1 = findKeyByValue(part);
         if (key1 != null) {
           return (
             <TouchableOpacity
-              key={i}
+              key={index}
               onPress={async () => {
                 key1 != 'all' &&
                   (await searchUserProfileAction(
@@ -65,7 +64,7 @@ export const RenderTextWithLinks = ({
         }
       }
       return (
-        <Text key={i} style={{color: textColor}}>
+        <Text key={index} style={{color: textColor}}>
           {part}
         </Text>
       );
@@ -102,18 +101,18 @@ export const RenderTextWithLinks = ({
 
   const openLink = async url => {
     if (await InAppBrowser.isAvailable()) {
-      const result = InAppBrowser?.open(url);
+      InAppBrowser?.open(url);
     } else {
       Linking.openURL(url);
     }
   };
   const parts = resultStr?.split(urlRegex);
 
-  return parts?.map((part, i) =>
+  return parts?.map((part, index) =>
     urlRegex.test(part) ? (
-      <View style={{maxWidth: 250}}>
+      <View key={index} style={{maxWidth: 250}}>
         <TouchableOpacity
-          key={i}
+          key={index}
           onPress={() => {
             let url = part;
             //regEx for checking if https included or not
@@ -130,7 +129,7 @@ export const RenderTextWithLinks = ({
         </TouchableOpacity>
       </View>
     ) : (
-      <Text key={i}>{highlight(part, result, repliedContainer)}</Text>
+      <Text key={index}>{highlight(part, result, repliedContainer)}</Text>
     ),
   );
 };

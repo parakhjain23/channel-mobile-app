@@ -11,6 +11,7 @@ import {
   Animated,
   KeyboardAvoidingView,
   RefreshControl,
+  Dimensions,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {getChannelsStart} from '../../redux/actions/channels/ChannelsAction';
@@ -35,7 +36,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import NoInternetComponent from '../../components/NoInternetComponent';
 import {s, vs, ms, mvs} from 'react-native-size-matters';
-import { getAllUsersOfOrgStart } from '../../redux/actions/org/GetAllUsersOfOrg';
+import {getAllUsersOfOrgStart} from '../../redux/actions/org/GetAllUsersOfOrg';
 const CreateChannelModel = ({modalizeRef, props}) => {
   const {colors} = useTheme();
   const [title, setTitle] = useState('');
@@ -195,14 +196,15 @@ const ChannelsScreen = props => {
   const isFocused = useIsFocused();
   const [isScrolling, setIsScrolling] = useState(false);
   const scrollY = new Animated.Value(0);
-
+  const {height} = Dimensions.get('window');
   const onScroll = Animated.event(
     [{nativeEvent: {contentOffset: {y: scrollY}}}],
     {
       useNativeDriver: true,
       listener: event => {
         const offsetY = event.nativeEvent.contentOffset.y;
-        setIsScrolling(offsetY > 0);
+        // setIsScrolling(offsetY > 3);
+        setIsScrolling(offsetY > height / 4);
       },
     },
   );
@@ -235,8 +237,8 @@ const ChannelsScreen = props => {
     );
     await props.getAllUsersOfOrgAction(
       props?.userInfoState?.accessToken,
-      props?.orgsState?.currentOrgId
-    )
+      props?.orgsState?.currentOrgId,
+    );
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
@@ -306,17 +308,18 @@ const ChannelsScreen = props => {
               <View
                 style={{
                   flex: 1,
-                }}
-                >
+                }}>
                 <ScrollView
                   style={{
                     marginHorizontal: 20,
                   }}
                   contentContainerStyle={{justifyContent: 'center', flex: 1}}
                   refreshControl={
-                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                  }
-                  >
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={onRefresh}
+                    />
+                  }>
                   <NoInternetComponent />
                 </ScrollView>
               </View>
@@ -365,20 +368,18 @@ const ChannelsScreen = props => {
             </View>
             {!isScrolling && (
               <TouchableOpacity
+                style={{
+                  position: 'absolute',
+                  bottom: s(10),
+                  right: s(10),
+                  backgroundColor: '#333333',
+                  borderRadius: ms(25),
+                  padding: ms(15),
+                }}
                 onPress={() => {
                   setIsScrolling(true);
                 }}>
-                <View
-                  style={{
-                    position: 'absolute',
-                    bottom: s(10),
-                    right: s(10),
-                    backgroundColor: '#333333',
-                    borderRadius: ms(25),
-                    padding: ms(15),
-                  }}>
-                  <Icon name="search" size={ms(22)} color={'white'} />
-                </View>
+                <Icon name="search" size={ms(22)} color={'white'} />
               </TouchableOpacity>
             )}
           </View>
@@ -409,7 +410,8 @@ const mapDispatchToProps = dispatch => {
     setActiveChannelTeamIdAction: teamId =>
       dispatch(setActiveChannelTeamId(teamId)),
     resetActiveChannelTeamIdAction: () => dispatch(resetActiveChannelTeamId()),
-    getAllUsersOfOrgAction:(accessToken,orgId) => dispatch(getAllUsersOfOrgStart(accessToken,orgId)),
+    getAllUsersOfOrgAction: (accessToken, orgId) =>
+      dispatch(getAllUsersOfOrgStart(accessToken, orgId)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelsScreen);

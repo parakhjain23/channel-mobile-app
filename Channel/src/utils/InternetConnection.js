@@ -4,6 +4,7 @@ import {connect, useDispatch} from 'react-redux';
 import {sendGlobalMessageApi} from '../api/messages/sendMessageApi';
 import {networkStatus} from '../redux/actions/network/NetworkActions';
 const InternetConnection = ({networkState, chatState, socketState}) => {
+  // console.log('inside interent connection');
   useEffect(() => {
     if (networkState?.isInternetConnected && socketState?.isSocketConnected) {
       Object.keys(chatState?.data)?.map(async teamId => {

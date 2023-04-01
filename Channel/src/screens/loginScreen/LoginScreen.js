@@ -23,7 +23,7 @@ const LoginScreen = (props) => {
   useEffect(() => {
     Linking.addEventListener('url',handleDeepLink)
     return () => {
-      Linking?.remove('url');
+      Linking?.removeAllListeners('url');
     };
   }, [])
   const styling = Platform.OS =='ios'? {animated:true} : {animation:{startEnter:'slide_in_left'}} 
