@@ -475,6 +475,7 @@ const ChatScreen = ({
                             updatedAt: date,
                             attachment: attachment,
                             mentionsArr: mentionsArr,
+                            parentMessage: repliedMsgDetails?.content
                           },
                         ]),
                         sendMessageAction(

@@ -66,11 +66,12 @@ const SocketService = socket => {
   });
 
   socket.on('chat/team created', data => {
-    // console.log(data,'chat team created');
-    store.dispatch(
-      createNewChannelSuccess(data, store.getState().userInfoReducer?.user?.id),
-    );
-    store.dispatch(moveChannelToTop([data?.teamId]));
+    if(data?.userIds?.includes(store?.getState()?.userInfoReducer?.user?.id)){
+      store.dispatch(
+        createNewChannelSuccess(data, store.getState().userInfoReducer?.user?.id),
+      );
+      store.dispatch(moveChannelToTop([data?.teamId]));
+    }
   });
 
   socket.on('orgUser created', data => {
