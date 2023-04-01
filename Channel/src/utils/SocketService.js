@@ -1,44 +1,62 @@
 import {moveChannelToTop} from '../redux/actions/channels/ChannelsAction';
 import {createNewChannelSuccess} from '../redux/actions/channels/CreateNewChannelAction';
-import { getChannelByTeamIdStart } from '../redux/actions/channels/GetChannelByTeamId';
+import {getChannelByTeamIdStart} from '../redux/actions/channels/GetChannelByTeamId';
 import {addNewMessage} from '../redux/actions/chat/ChatActions';
 import {deleteMessageSuccess} from '../redux/actions/chat/DeleteChatAction';
-import { newUserJoinedAOrg } from '../redux/actions/org/GetAllUsersOfOrg';
-import { socketStatus } from '../redux/actions/socket/socketActions';
+import {newUserJoinedAOrg} from '../redux/actions/org/GetAllUsersOfOrg';
+import {socketStatus} from '../redux/actions/socket/socketActions';
 import {store} from '../redux/Store';
-import { handleNotificationFromEvents } from './HandleNotification';
-import { createSocket } from './Socket';
-import { PlayLocalSoundFile } from './Sounds';
+import {handleNotificationFromEvents} from './HandleNotification';
+import {createSocket} from './Socket';
+import {PlayLocalSoundFile} from './Sounds';
 
 const SocketService = socket => {
   socket.on('reconnect', function () {
-    createSocket(store.getState()?.userInfoReducer?.accessToken,store.getState()?.orgsReducer?.currentOrgId)
+    createSocket(
+      store.getState()?.userInfoReducer?.accessToken,
+      store.getState()?.orgsReducer?.currentOrgId,
+    );
   });
   socket.on('connect', () => {
-    store.dispatch(socketStatus(true))
+    store.dispatch(socketStatus(true));
   });
   socket.on('disconnect', () => {
-    store.dispatch(socketStatus(false))
+    store.dispatch(socketStatus(false));
   });
   socket.on('chat/message created', data => {
-    console.log(data,"this is data");
-console.log(
-  store.getState().channelsReducer?.teamIdAndNameMapping[data?.teamId] ,"this is team id and name mapping"
-);
-    if(store.getState().channelsReducer?.teamIdAndNameMapping[data?.teamId]==undefined){
-      console.log("inside undefined");
-      store.dispatch(getChannelByTeamIdStart(store?.getState()?.userInfoReducer?.accessToken,data?.teamId,store?.getState()?.userInfoReducer?.user?.id))
+    console.log(data, 'this is data');
+    console.log(
+      store.getState().channelsReducer?.teamIdAndTypeMapping[data?.teamId],
+      'this is team id and name mapping',
+    );
+    if (
+      store.getState().channelsReducer?.teamIdAndTypeMapping[data?.teamId] ==
+      undefined
+    ) {
+      console.log('inside undefined');
+      store.dispatch(
+        getChannelByTeamIdStart(
+          store?.getState()?.userInfoReducer?.accessToken,
+          data?.teamId,
+          store?.getState()?.userInfoReducer?.user?.id,
+        ),
+      );
     }
-    var newData = data
+    var newData = data;
     if (!('isActivity' in newData)) {
       newData.isActivity = false;
     }
     store.dispatch(addNewMessage(newData));
     store.dispatch(moveChannelToTop([newData?.teamId]));
-    if(newData?.senderId != store?.getState()?.userInfoReducer?.user?.id){
-      PlayLocalSoundFile()
-      if(newData?.teamId != store.getState().channelsReducer?.activeChannelTeamId){
-        handleNotificationFromEvents(newData,store?.getState()?.orgsReducer?.userIdAndDisplayNameMapping)
+    if (newData?.senderId != store?.getState()?.userInfoReducer?.user?.id) {
+      PlayLocalSoundFile();
+      if (
+        newData?.teamId != store.getState().channelsReducer?.activeChannelTeamId
+      ) {
+        handleNotificationFromEvents(
+          newData,
+          store?.getState()?.orgsReducer?.userIdAndDisplayNameMapping,
+        );
       }
     }
   });
@@ -56,6 +74,7 @@ console.log(
   });
 
   socket.on('chat/team created', data => {
+    // console.log(data,'chat team created');
     store.dispatch(
       createNewChannelSuccess(data, store.getState().userInfoReducer?.user?.id),
     );
@@ -63,6 +82,7 @@ console.log(
   });
 
   socket.on('orgUser created', data => {
+    // console.log(data,'orgUser new user created in org');
     store.dispatch(newUserJoinedAOrg(data));
   });
 };
