@@ -2,7 +2,7 @@ import * as Actions from "../../Enums";
 
 const initialState = {
   user: null,
-  isLoading: true,
+  isLoading: false,
   isSignedIn: false,
   accessToken: null,
   searchedUserProfile : null
@@ -19,9 +19,9 @@ export function userInfoReducer(state = initialState, action) {
     case Actions.SIGN_OUT:
       return {initialState};
     case Actions.SEARCH_USER_PROFILE_START:
-      return{...state,searchedUserProfile:null}
+      return{...state,searchedUserProfile:null,isLoading:true}
     case Actions.SEARCH_USER_PROFILE_SUCCESS:
-      return{...state,searchedUserProfile:action?.data}
+      return{...state,searchedUserProfile:action?.data,isLoading:false}
     default:
       return state;
   }
