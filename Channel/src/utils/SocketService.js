@@ -31,7 +31,7 @@ const SocketService = socket => {
       store.getState().channelsReducer?.teamIdAndTypeMapping[data?.teamId] ==
       undefined
     ) {
-      console.log('inside undefined');
+      // console.log('inside undefined');
       store.dispatch(
         getChannelByTeamIdStart(
           store?.getState()?.userInfoReducer?.accessToken,
@@ -59,7 +59,7 @@ const SocketService = socket => {
     }
   });
   socket.on('chat/message patched', data => {
-    console.log(data,"chat patched");
+    // console.log(data,"chat patched");
     if (data?.deleted) {
       store.dispatch(deleteMessageSuccess(data));
     }
