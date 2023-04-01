@@ -17,7 +17,7 @@ export const createDmChannel = async (token,orgId,channelName,reciverUserId) => 
     });
     var result = await response.json();
     if(result?.name=='GeneralError' || result?.name=='Conflict'){
-      console.warn(result)
+      // console.log(result)
     }
     return result
   } catch (error) {

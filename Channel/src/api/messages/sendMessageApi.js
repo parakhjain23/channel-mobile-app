@@ -14,19 +14,12 @@ export const sendMessageApi = async (
     // Replace mentions with HTML tags
     function mentionHTML(userId, match, username) {
       const base64UserId = base64.encode(userId);
-      if (username == 'channel') {
-        return `<span class=\"mention\" data-index=\"0\" data-denotation-char=\"@\" data-id=\"@all\" data-username=\"channel\" data-value=\"channel\" data-identifier=\"@all\"><span contenteditable=\"false\">**<span class=\"ql-mention-denotation-char\">@</span>channel**</span></span>`;
-      }
       return `<span class=\"mention\" data-index=\"2\" data-denotation-char=\"@\" data-id=\"${userId}\" data-username=\"${username}\" data-value=\"${username}\"><span contenteditable=\"false\">[${match}](MENTION-${base64UserId})</span></span>`;
     }
 
     let mentionIndex = 0;
-    if (mentionsArr?.length > 0 || message?.includes('@channel')) {
+    if (mentionsArr?.length > 0) {
       message = message?.replace(mentionRegex, (match, username) => {
-        if (match === '@channel') {
-          mentionsArr ? mentionsArr?.push('@all') : (mentionsArr = []),
-            mentionsArr?.push('@all');
-        }
         const mentionHtml = mentionHTML(
           mentionsArr[mentionIndex],
           match,
@@ -54,7 +47,7 @@ export const sendMessageApi = async (
         parentId: parentId,
         createdAt: '2022-05-23T07:02:37.051Z',
         appId: '62b53b61b5b4a2001fb9af37',
-        senderType:'USER'
+        senderType: 'USER',
       }),
     });
     const result = await response.json();

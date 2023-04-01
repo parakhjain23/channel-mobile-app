@@ -127,14 +127,18 @@ const ChatScreen = ({
   };
 
   const handleMentionSelect = mention => {
-    mention?._source?.userId != undefined &&
-      setMentionsArr(prevUserIds => [...prevUserIds, mention?._source?.userId]);
-    onChangeMessage(prevmessage =>
-      prevmessage.replace(
-        new RegExp(`@\\w+\\s?$`),
-        `@${mention?._source?.displayName} `,
-      ),
-    );
+    mention?._source?.userId != undefined
+      ? setMentionsArr(prevUserIds => [
+          ...prevUserIds,
+          mention?._source?.userId,
+        ])
+      : setMentionsArr(prevUserIds => [...prevUserIds, '@all']),
+      onChangeMessage(prevmessage =>
+        prevmessage.replace(
+          new RegExp(`@\\w+\\s?$`),
+          `@${mention?._source?.displayName} `,
+        ),
+      );
     setMentions([]);
   };
   const renderMention = ({item, index}) =>
@@ -236,13 +240,18 @@ const ChatScreen = ({
           <View style={{flex: 9}}>
             {teamId == undefined ||
             chatState?.data[teamId]?.isloading == true ? (
-              <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
                 <AnimatedLottieView
-                source={require('../../assests/images/attachments/loading.json')}
-                loop
-                autoPlay
-                style={{height: s(500),width:s(500)}}
-              />
+                  source={require('../../assests/images/attachments/loading.json')}
+                  loop
+                  autoPlay
+                  style={{height: s(500), width: s(500)}}
+                />
               </View>
             ) : (
               <>
@@ -475,7 +484,7 @@ const ChatScreen = ({
                             updatedAt: date,
                             attachment: attachment,
                             mentionsArr: mentionsArr,
-                            parentMessage: repliedMsgDetails?.content
+                            parentMessage: repliedMsgDetails?.content,
                           },
                         ]),
                         sendMessageAction(

@@ -8,7 +8,6 @@ export const pickDocument = async (setAttachment, accessToken,setAttachmentLoadi
       allowMultiSelection: true,
       readContent: true,
     });
-    console.warn(Files, 'this is files');
     setAttachmentLoading(true);
     try {
       const FileNames = await FileUploadApi(Files, accessToken);
