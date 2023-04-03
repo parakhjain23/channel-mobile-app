@@ -31,10 +31,10 @@ const DrawerNavigation = ({orgsState, route}) => {
               ? orgsState?.orgIdAndNameMapping[orgsState?.currentOrgId]
               : 'Channel',
           headerStyle: {backgroundColor: colors.headerColor},
-          headerTitleStyle: {color: colors.textColor},
+          headerTitleStyle: {color: colors.textColor,left:0},
           headerLeft: () => (
-             <TouchableOpacity style={{padding:10}}
-              onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
+             <TouchableOpacity style={{flex:1,marginRight:0,justifyContent:'center',paddingRight:20}}
+              onPressIn={() => navigation.dispatch(DrawerActions.openDrawer())}>
               <View style={styles.container}>
                 <Icon name="bars" size={24} color={colors.secondaryColor} />
                 {count > 0 && (

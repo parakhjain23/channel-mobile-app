@@ -6,12 +6,14 @@ import DrawerNavigation from './DrawerNavigation';
 import ChatScreen from '../screens/chatScreen/ChatScreen';
 import ExploreChannels from '../screens/channelsScreen/ExploreChannels';
 import ContactDetailsPage from '../screens/userProfiles/UserProfiles';
-import { useTheme } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
+import { TouchableOpacity,Text, View } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const ProtectedNavigation = (props) => {
   const Stack = createNativeStackNavigator();
   const {colors} = useTheme();
-  //   const navigate = useNavigation();
+    const navigate = useNavigation();
   //   const {colors} = useTheme();
   //   const getShopingCartHeader = {
   //     animationDuration: 0,
@@ -52,8 +54,12 @@ const ProtectedNavigation = (props) => {
         options={({route}) => ({
           headerTitle: route?.params?.chatHeaderTitle,
           headerShown: true,
-          ...getHeader
-        })}
+          ...getHeader,
+        headerLeft:()=>(
+            <TouchableOpacity style={{paddingVertical:15,paddingRight:30}} onPressIn={()=>navigate.goBack()}>
+            <Icon name="arrow-left" size={18} color={colors.textColor}/>
+          </TouchableOpacity>
+  )})}
       />
       <Stack.Screen
         name="ExploreChannels"
