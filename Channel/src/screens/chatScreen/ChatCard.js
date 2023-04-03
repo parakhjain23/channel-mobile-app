@@ -17,7 +17,7 @@ import {ms} from 'react-native-size-matters';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import ImageViewer from 'react-native-image-zoom-viewer';
 const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
-  const {colors} = useTheme();
+  const {colors,dark} = useTheme();
   const styles = makeStyles(colors);
   const regex = /\{\{(\w+)\}\}/g;
   const result = content.replace(regex, (match, userId) => {
@@ -43,7 +43,7 @@ const ChatCard = ({
   flatListRef,
   channelType,
 }) => {
-  const {colors} = useTheme();
+  const {colors,dark} = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const [optionsVisible, setOptionsVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -313,7 +313,7 @@ const ChatCard = ({
                     style={[
                       styles.timeText,
                       styles.text,
-                      {marginHorizontal: ms(10), color:'white'},
+                      {marginHorizontal: ms(10), color:sentByMe?'white': dark ? 'white': 'black'},
                     ]}>
                     {time}
                   </Text>
@@ -435,7 +435,7 @@ const LocalChatCard = ({
                   </Text>
                   <View
                     style={{flexDirection: 'column', alignItems: 'flex-end'}}>
-                    <Icon name="access-time" color={colors.textColor} />
+                    <Icon name="access-time" color={'white'} />
                   </View>
                 </View>
               </View>
