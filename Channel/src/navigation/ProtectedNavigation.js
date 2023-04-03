@@ -6,14 +6,15 @@ import DrawerNavigation from './DrawerNavigation';
 import ChatScreen from '../screens/chatScreen/ChatScreen';
 import ExploreChannels from '../screens/channelsScreen/ExploreChannels';
 import ContactDetailsPage from '../screens/userProfiles/UserProfiles';
-import { useNavigation, useTheme } from '@react-navigation/native';
-import { TouchableOpacity,Text, View } from 'react-native';
+import {useNavigation, useTheme} from '@react-navigation/native';
+import {TouchableOpacity, Text, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import * as RootNavigation from '../navigation/RootNavigation'
 
-const ProtectedNavigation = (props) => {
+const ProtectedNavigation = props => {
   const Stack = createNativeStackNavigator();
   const {colors} = useTheme();
-    const navigate = useNavigation();
+  const navigate = useNavigation();
   //   const {colors} = useTheme();
   //   const getShopingCartHeader = {
   //     animationDuration: 0,
@@ -46,7 +47,7 @@ const ProtectedNavigation = (props) => {
         name="Org"
         component={DrawerNavigation}
         initialParams={{setScheme: props?.setScheme}}
-        options={{headerShown: false,...getHeader}}
+        options={{headerShown: false, ...getHeader}}
       />
       <Stack.Screen
         name="Chat"
@@ -55,11 +56,14 @@ const ProtectedNavigation = (props) => {
           headerTitle: route?.params?.chatHeaderTitle,
           headerShown: true,
           ...getHeader,
-        headerLeft:()=>(
-            <TouchableOpacity style={{paddingVertical:15,paddingRight:30}} onPressIn={()=>navigate.goBack()}>
-            <Icon name="arrow-left" size={18} color={colors.textColor}/>
-          </TouchableOpacity>
-  )})}
+          headerLeft: () => (
+            <TouchableOpacity
+              style={{paddingVertical: 15, paddingRight: 30}}
+              onPressIn={() => RootNavigation.goBack()}>
+              <Icon name="arrow-left" size={18} color={colors.textColor} />
+            </TouchableOpacity>
+          ),
+        })}
       />
       <Stack.Screen
         name="ExploreChannels"
@@ -67,16 +71,16 @@ const ProtectedNavigation = (props) => {
         options={({route}) => ({
           headerTitle: route?.params?.chatHeaderTitle,
           headerShown: true,
-          ...getHeader
+          ...getHeader,
         })}
       />
       <Stack.Screen
         name="UserProfiles"
         component={ContactDetailsPage}
         options={({route}) => ({
-          headerTitle: route?.params?.displayName + " Profile",
+          headerTitle: route?.params?.displayName + ' Profile',
           headerShown: true,
-          ...getHeader
+          ...getHeader,
         })}
       />
     </Stack.Navigator>

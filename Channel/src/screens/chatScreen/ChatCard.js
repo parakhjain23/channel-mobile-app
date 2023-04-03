@@ -313,7 +313,7 @@ const ChatCard = ({
                     style={[
                       styles.timeText,
                       styles.text,
-                      {marginHorizontal: ms(10)},
+                      {marginHorizontal: ms(10), color:'white'},
                     ]}>
                     {time}
                   </Text>
