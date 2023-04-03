@@ -35,8 +35,12 @@ const ChannelCard = ({item, navigation, props, resetUnreadCountAction}) => {
   return (
     <TouchableOpacity
       style={{
-        borderBottomWidth: ms(0.7),
-        borderBottomColor: 'gray',
+        borderTopWidth: ms(0.7),
+        // borderBottomColor: 'gray',
+        //light mode 
+        // borderTopColor:'#D8D8D8',
+        //dark mode 
+        borderTopColor:'#444444',
         minHeight: mvs(60),
         backgroundColor:
           (unread && colors.unreadBackgroundColor) || colors.primaryColor,

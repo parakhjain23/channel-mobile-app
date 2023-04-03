@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { s, vs, ms, mvs } from 'react-native-size-matters';
 export const makeStyles = colors => StyleSheet.create({
-    mainContainer: {flex: 1, backgroundColor: colors.primaryColor},
+    mainContainer: {flex: 1, backgroundColor: colors.primaryColor,paddingHorizontal:5},
     text: {
       color: colors.textColor
     },

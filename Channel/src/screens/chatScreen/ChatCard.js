@@ -151,7 +151,7 @@ const ChatCard = ({
                 </TouchableOpacity>
               )}
               <View style={[styles.textContainer, {maxWidth: '90%'}]}>
-                {channelType != 'DIRECT_MESSAGE' && (
+                {channelType != 'DIRECT_MESSAGE' && SenderName != 'You' && (
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text style={[styles.nameText, styles.text]}>
                       {SenderName}
@@ -306,6 +306,7 @@ const ChatCard = ({
                       searchUserProfileAction={searchUserProfileAction}
                       userInfoState={userInfoState}
                       colors={colors}
+                      sentByMe={sentByMe}
                     />
                   </Text>
                   <Text
@@ -391,7 +392,7 @@ const LocalChatCard = ({
                   styles.textContainer,
                   {backgroundColor: colors.sentByMeCardColor},
                 ]}>
-                {channelType != 'DIRECT_MESSAGE' && (
+                {channelType != 'DIRECT_MESSAGE' && SenderName != 'You'&& (
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text style={[styles.nameText, styles.text]}>
                       {SenderName}
@@ -429,19 +430,12 @@ const LocalChatCard = ({
                       orgState={orgState}
                       userInfoState={userInfoState}
                       colors={colors}
+                      sentByMe={sentByMe}
                     />
                   </Text>
                   <View
                     style={{flexDirection: 'column', alignItems: 'flex-end'}}>
                     <Icon name="access-time" color={colors.textColor} />
-                    <Text
-                      style={[
-                        styles.timeText,
-                        styles.text,
-                        {marginHorizontal: ms(10)},
-                      ]}>
-                      {time}
-                    </Text>
                   </View>
                 </View>
               </View>

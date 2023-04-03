@@ -9,12 +9,11 @@ const SearchBox = ({searchValue, changeText, isSearchFocus, hits}) => {
     <TextInput
       value={searchValue}
       onChangeText={changeText}
-      label='Search'
       style={{backgroundColor: colors?.searchBoxBackgroundColor, borderWidth: 1, borderColor: colors?.color,marginHorizontal:1}}
       underlineStyle={{backgroundColor:'transparent'}}
       underlineColorAndroid="transparent"
       clearButtonMode="always"
-      placeholder="Eg: Walkover"
+      placeholder="Search"
       left={<TextInput.Icon icon="magnify" style={{justifyContent:'center'}}/>}
     />
   );

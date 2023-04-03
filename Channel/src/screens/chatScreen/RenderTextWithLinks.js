@@ -5,6 +5,7 @@ import {Linking} from 'react-native';
 import * as RootNavigation from '../../navigation/RootNavigation';
 import cheerio from 'cheerio';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
+import { useTheme } from 'react-native-paper';
 
 export const RenderTextWithLinks = ({
   text,
@@ -14,8 +15,11 @@ export const RenderTextWithLinks = ({
   searchUserProfileAction,
   userInfoState,
   colors,
+  sentByMe
 }) => {
-  // const {colors} = useTheme();
+  const {dark} = useTheme();
+  const fontWeight = dark ? '700' : '900' 
+  const linkColor = sentByMe ? colors.sentByMeLinkColor : colors.recivedLinkColor
   const urlRegex =
     /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-])?(?:\?[^\s])?)/gi;
   function findKeyByValue(value) {
@@ -28,7 +32,7 @@ export const RenderTextWithLinks = ({
     return null;
   }
   function highlight(text, result, repliedContainer) {
-    const textColor = repliedContainer ? 'black' : colors.textColor;
+    const textColor = repliedContainer ? 'black' : sentByMe ? colors.sentByMeTextColor : colors?.textColor;
     let A = orgState?.userIdAndDisplayNameMapping;
     text = text.replace(/@{1,2}(\w+)/g, (match, p1) => {
       return A[p1] ? `@${A[p1]}` : match;
@@ -53,8 +57,8 @@ export const RenderTextWithLinks = ({
               }}>
               <Text
                 style={{
-                  color: repliedContainer ? textColor : colors.linkColor,
-                  fontWeight: '800',
+                  color: repliedContainer ? textColor : linkColor,
+                  fontWeight: fontWeight,
                   textDecorationLine: 'underline',
                 }}>
                 {part}
@@ -123,7 +127,7 @@ export const RenderTextWithLinks = ({
             openLink(url);
           }}>
           <Text
-            style={{color: colors.linkColor, textDecorationLine: 'underline'}}>
+            style={{color: linkColor, textDecorationLine: 'underline',fontWeight:fontWeight}}>
             {part}
           </Text>
         </TouchableOpacity>

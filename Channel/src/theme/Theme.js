@@ -24,12 +24,17 @@ export const DARK_THEME = {
         color: 'white',
         textColor: 'white',
         modalColor: '#252525',
-        headerColor: '#1A2421',
+        headerColor: '#333333',
         drawerBackgroundColor: '#1A2421',
         searchBoxBackgroundColor: '#E6E6E6',
         linkColor:'#F4C430',
+        // linkColor:'blue',
         sentByMeCardColor:'#2196f3',
-        receivedCardColor:'#2a2a2a'
+        // receivedCardColor:'#2a2a2a'
+        receivedCardColor:'#353535',
+        sentByMeLinkColor:'white',
+        recivedLinkColor:'#F4C430',
+        sentByMeTextColor:'white',
     }
 }
 
@@ -45,9 +50,11 @@ export const LIGHT_THEME = {
         headerColor: 'white',
         drawerBackgroundColor: 'white',
         searchBoxBackgroundColor: 'white',
-        linkColor:'blue',
-        // sentByMeCardColor:'#2196f3',
+        linkColor:'#F4C430',
         sentByMeCardColor:'#6EB5FF',
-        receivedCardColor:'white'
+        receivedCardColor:'#ECECEC',
+        sentByMeTextColor:'white',
+        sentByMeLinkColor:'white',
+        recivedLinkColor:'blue',
     }
 }

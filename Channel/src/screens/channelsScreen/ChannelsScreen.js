@@ -65,7 +65,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
       // avoidKeyboardLikeIOS={true}
       modalStyle={{
         flex: 1,
-        marginTop: '5%',
+        marginTop: '20%',
         backgroundColor: colors.modalColor,
       }}>
       <View style={{margin: ms(12), flex: 1}}>
@@ -274,7 +274,7 @@ const ChannelsScreen = props => {
     [props?.channelsByQueryState?.channels],
   );
   return (
-    <View style={{flex: 1, backgroundColor: colors.primaryColor}}>
+    <View style={{flex: 1, backgroundColor: colors.primaryColor,paddingHorizontal:5}}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : null}
         keyboardVerticalOffset={s(70)}

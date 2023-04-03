@@ -31,9 +31,11 @@ export const makeStyles = colors => StyleSheet.create({
     },
     repliedContainer: {
       padding: ms(5),
-      backgroundColor: '#d9d9d9',
-      borderRadius: ms(5),
+      // backgroundColor:'#E5E4E2',
+      backgroundColor:'#F5F5F5',
+      borderRadius: ms(2),
       marginBottom: mvs(4),
+      borderWidth: s(.3)
     },
     option: {
       margin: ms(8),
@@ -45,7 +47,7 @@ export const makeStyles = colors => StyleSheet.create({
       marginBottom: mvs(10),
     },
     container: {
-      borderWidth: ms(1),
+      // borderWidth: ms(1),
       borderRadius: ms(5),
       flexDirection: 'row',
       alignItems: 'flex-end',
