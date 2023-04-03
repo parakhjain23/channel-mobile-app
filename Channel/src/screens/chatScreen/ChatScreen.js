@@ -25,7 +25,7 @@ import {deleteMessageStart} from '../../redux/actions/chat/DeleteChatAction';
 import {ChatCardMemo, LocalChatCardMemo} from './ChatCard';
 import {getChannelsByQueryStart} from '../../redux/actions/channels/ChannelsByQueryAction';
 import {fetchSearchedUserProfileStart} from '../../redux/actions/user/searchUserProfileActions';
-import {renderTextWithLinks} from './RenderTextWithLinks';
+import {RenderTextWithLinks} from './RenderTextWithLinks';
 import {pickDocument} from './DocumentPicker';
 import {launchCameraForPhoto, launchGallery} from './ImagePicker';
 import {makeStyles} from './Styles';
@@ -341,13 +341,14 @@ const ChatScreen = ({
                   <TouchableOpacity onPress={() => setreplyOnMessage(false)}>
                     <View style={styles.replyMessageInInput}>
                       {repliedMsgDetails?.mentions?.length > 0 ? (
-                        renderTextWithLinks(
-                          repliedMsgDetails?.content,
-                          repliedMsgDetails?.mentions,
-                          userInfoState?.accessToken,
-                          orgState,
-                          width,
-                        )
+                        <RenderTextWithLinks
+                          text={repliedMsgDetails?.content}
+                          mentions={repliedMsgDetails?.mentions}
+                          repliedContainer={true}
+                          orgState={orgState}
+                          userInfoState={userInfoState}
+                          colors={colors}
+                        />
                       ) : repliedMsgDetails?.attachment?.length > 0 ? (
                         <Text style={{color: 'black'}}>
                           <Icon name="attach-file" size={16} color="black" />

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Image,
@@ -15,8 +15,9 @@ import {ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AnimatedLottieView from 'lottie-react-native';
 import {s, vs, ms, mvs} from 'react-native-size-matters';
+import { createNewDmChannelStart } from '../../redux/actions/channels/CreateNewDmChannelAction';
 
-const ContactDetailsPage = ({userInfoState, channelsState}) => {
+const ContactDetailsPage = ({userInfoState, channelsState,createDmChannelAction,orgsState}) => {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const teamId =
@@ -24,6 +25,16 @@ const ContactDetailsPage = ({userInfoState, channelsState}) => {
       userInfoState?.searchedUserProfile?.id
     ];
   const navigation = useNavigation();
+   useEffect(() => {
+      if(userInfoState?.searchedUserProfile != null){
+        if(teamId == undefined){
+          createDmChannelAction(userInfoState?.accessToken,orgsState?.currentOrgId,'',userInfoState?.searchedUserProfile?.id)
+        }
+      }
+   }, [userInfoState?.searchedUserProfile])
+   
+
+    
   return (
     <View style={styles.container}>
       {userInfoState?.isLoading ? (
@@ -94,12 +105,13 @@ const ContactDetailsPage = ({userInfoState, channelsState}) => {
           <View style={{flexDirection: 'row', justifyContent: 'center'}}>
             <TouchableOpacity
               style={[styles.button, styles.messageButton]}
-              onPress={() =>
-                navigation.navigate('Chat', {
+              onPress={async () =>
+                {
+                  navigation.navigate('Chat', {
                   chatHeaderTitle:
                     userInfoState?.searchedUserProfile?.displayName,
                   teamId: teamId,
-                })
+                })}
               }>
               <Text style={[styles.buttonText, styles.buttonTextWhite]}>
                 Message {userInfoState?.searchedUserProfile?.displayName}
@@ -115,6 +127,13 @@ const ContactDetailsPage = ({userInfoState, channelsState}) => {
 const mapStateToPros = state => ({
   userInfoState: state.userInfoReducer,
   channelsState: state.channelsReducer,
+  orgsState: state.orgsReducer
 });
-export default connect(mapStateToPros)(ContactDetailsPage);
+const mapDispatchToProps = dispatch =>{
+  return{
+    createDmChannelAction: (token, orgId, title, reciverUserId) =>
+      dispatch(createNewDmChannelStart(token, orgId, title, reciverUserId)),
+  }
+}
+export default connect(mapStateToPros,mapDispatchToProps)(ContactDetailsPage);
 // export default ContactDetailsPage;

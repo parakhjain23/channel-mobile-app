@@ -37,6 +37,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import NoInternetComponent from '../../components/NoInternetComponent';
 import {s, vs, ms, mvs} from 'react-native-size-matters';
 import {getAllUsersOfOrgStart} from '../../redux/actions/org/GetAllUsersOfOrg';
+import { getChatsReset } from '../../redux/actions/chat/ChatActions';
 const CreateChannelModel = ({modalizeRef, props}) => {
   const {colors} = useTheme();
   const [title, setTitle] = useState('');
@@ -197,6 +198,10 @@ const ChannelsScreen = props => {
   const [isScrolling, setIsScrolling] = useState(false);
   const scrollY = new Animated.Value(0);
   const {height} = Dimensions.get('window');
+  useEffect(() => {
+    props.networkState?.isInternetConnected && props.fetchChatResetAction();
+  }, [])
+  
   const onScroll = Animated.event(
     [{nativeEvent: {contentOffset: {y: scrollY}}}],
     {
@@ -394,6 +399,7 @@ const mapStateToProps = state => ({
   channelsState: state.channelsReducer,
   channelsByQueryState: state.channelsByQueryReducer,
   userInfoState: state.userInfoReducer,
+  networkState: state.networkReducer
 });
 const mapDispatchToProps = dispatch => {
   return {
@@ -412,7 +418,8 @@ const mapDispatchToProps = dispatch => {
     resetActiveChannelTeamIdAction: () => dispatch(resetActiveChannelTeamId()),
     getAllUsersOfOrgAction: (accessToken, orgId) =>
       dispatch(getAllUsersOfOrgStart(accessToken, orgId)),
+    fetchChatResetAction: () => dispatch(getChatsReset()),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelsScreen);
-//9826018514 RTO IMP NO DONT DELETE
+

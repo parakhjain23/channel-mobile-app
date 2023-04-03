@@ -37,7 +37,7 @@ export const makeStyles = colors =>
       marginBottom: 20,
     },
     button: {
-      height: 30,
+      height: 40,
       width: 150,
       borderRadius: 3,
       borderWidth: 2,
