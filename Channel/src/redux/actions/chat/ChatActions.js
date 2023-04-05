@@ -62,11 +62,12 @@ export function setGlobalMessageToSend(messageObj){
   }
 }
 
-export function addNewMessage(message){
+export function addNewMessage(message,userid){
   return {
     type: Actions.ADD_NEW_MESSAGE,
     teamId: message?.teamId,
     message : message,
-    parentMessage : message?.parentMessage
+    parentMessage : message?.parentMessage,
+    userid
   }
 }

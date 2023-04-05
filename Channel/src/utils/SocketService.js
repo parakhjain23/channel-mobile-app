@@ -26,7 +26,7 @@ const SocketService = socket => {
     store.dispatch(socketStatus(false));
   });
   socket.on('chat/message created', data => {
-    // console.log(data, 'this is new message created');
+    console.log(data, 'this is new message created');
     if (
       store.getState().channelsReducer?.teamIdAndTypeMapping[data?.teamId] ==
       undefined
@@ -44,7 +44,7 @@ const SocketService = socket => {
     if (!('isActivity' in newData)) {
       newData.isActivity = false;
     }
-    store.dispatch(addNewMessage(newData));
+    store.dispatch(addNewMessage(newData,store?.getState()?.userInfoReducer?.user?.id));
     store.dispatch(moveChannelToTop([newData?.teamId]));
     if (newData?.senderId != store?.getState()?.userInfoReducer?.user?.id) {
       PlayLocalSoundFile();

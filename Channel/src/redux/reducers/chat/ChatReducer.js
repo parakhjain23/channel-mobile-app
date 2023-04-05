@@ -2,6 +2,7 @@ import * as Actions from '../../Enums';
 
 const initialState = {
   data: {},
+  randomIdsArr:[]
 };
 
 export function chatReducer(state = initialState, action) {
@@ -75,7 +76,19 @@ export function chatReducer(state = initialState, action) {
       };
     case Actions.FETCH_CHAT_RESET:
       return initialState;
-    case Actions.ADD_NEW_MESSAGE:
+
+  case Actions.ADD_NEW_MESSAGE:
+     if(action?.message?.senderId == action?.userid){
+      action.message['randomId'] = state?.randomIdsArr[0]
+      state?.randomIdsArr?.shift()
+      for(let i = 0; i < state?.data[action?.teamId]?.messages?.length ; i++){
+        if(state?.data[action?.teamId]?.messages[i]?.randomId == action?.message?.randomId){
+          state?.data[action?.teamId]?.messages?.splice(i,1)
+          action.message['randomId'] = null
+          break;
+        }
+      }
+     }
       var tempParentMessage = {};
       var parentId = null;
       parentId = action?.parentMessage?._id;
@@ -114,6 +127,21 @@ export function chatReducer(state = initialState, action) {
       };
     case Actions.UPDATE_CURRENT_ORG_ID:
       return initialState;
+    case Actions.ADD_LOCAL_MESSAGE:
+      const {data} = action
+      return{
+        ...state,
+        data:{
+          ...state?.data,
+          [data?.teamId]:{
+            ...state?.data[data?.teamId],
+            messages:state?.data[data?.teamId]?.messages ?
+            [data,...state?.data[data?.teamId]?.messages] :
+            [data]
+          }
+        },
+        randomIdsArr: state?.randomIdsArr?.length > 0 ? state?.randomIdsArr?.push(data?.randomId) : [data?.randomId]
+      }
 
     default:
       return state;

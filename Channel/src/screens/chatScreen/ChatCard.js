@@ -17,7 +17,7 @@ import {ms} from 'react-native-size-matters';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import ImageViewer from 'react-native-image-zoom-viewer';
 const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
-  const {colors,dark} = useTheme();
+  const {colors, dark} = useTheme();
   const styles = makeStyles(colors);
   const regex = /\{\{(\w+)\}\}/g;
   const result = content.replace(regex, (match, userId) => {
@@ -43,7 +43,7 @@ const ChatCard = ({
   flatListRef,
   channelType,
 }) => {
-  const {colors,dark} = useTheme();
+  const {colors, dark} = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const [optionsVisible, setOptionsVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -309,14 +309,24 @@ const ChatCard = ({
                       sentByMe={sentByMe}
                     />
                   </Text>
-                  <Text
-                    style={[
-                      styles.timeText,
-                      styles.text,
-                      {marginHorizontal: ms(10), color:sentByMe?'white': dark ? 'white': 'black'},
-                    ]}>
-                    {time}
-                  </Text>
+                  {chat?.randomId != null ? (
+                    <View
+                      style={{flexDirection: 'column', alignItems: 'flex-end'}}>
+                      <Icon name="access-time" color={'white'} />
+                    </View>
+                  ) : (
+                    <Text
+                      style={[
+                        styles.timeText,
+                        styles.text,
+                        {
+                          marginHorizontal: ms(10),
+                          color: sentByMe ? 'white' : dark ? 'white' : 'black',
+                        },
+                      ]}>
+                      {time}
+                    </Text>
+                  )}
                 </View>
               </View>
             </View>
@@ -392,7 +402,7 @@ const LocalChatCard = ({
                   styles.textContainer,
                   {backgroundColor: colors.sentByMeCardColor},
                 ]}>
-                {channelType != 'DIRECT_MESSAGE' && SenderName != 'You'&& (
+                {channelType != 'DIRECT_MESSAGE' && SenderName != 'You' && (
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text style={[styles.nameText, styles.text]}>
                       {SenderName}
@@ -401,7 +411,7 @@ const LocalChatCard = ({
                 )}
                 {parentId != null && (
                   <View style={styles.repliedContainer}>
-                     <RenderTextWithLinks
+                    <RenderTextWithLinks
                       text={chat?.parentMessage}
                       repliedContainer={true}
                       orgState={orgState}
