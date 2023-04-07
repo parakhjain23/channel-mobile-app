@@ -5,7 +5,7 @@ import {
 } from '@react-navigation/drawer';
 import {DrawerActions, useTheme} from '@react-navigation/native';
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from 'react-redux';
 import ChannelsScreen from '../screens/channelsScreen/ChannelsScreen';
 import CustomeDrawerScreen from '../screens/drawer/CustomDrawerScreen';
@@ -33,7 +33,7 @@ const DrawerNavigation = ({orgsState, route}) => {
           headerStyle: {backgroundColor: colors.headerColor},
           headerTitleStyle: {color: colors.textColor,left:0},
           headerLeft: () => (
-             <TouchableOpacity style={{flex:1,marginRight:0,justifyContent:'center',paddingRight:20}}
+             <TouchableOpacity style={{flex:1,marginRight:0,justifyContent:'center',paddingRight:Platform?.OS =='ios' ?  45 : 20}}
               onPressIn={() => navigation.dispatch(DrawerActions.openDrawer())}>
               <View style={styles.container}>
                 <Icon name="bars" size={24} color={colors.secondaryColor} />

@@ -510,6 +510,24 @@ const ChatScreen = ({
                         repliedMsgDetails && setrepliedMsgDetails(null))
                       : message?.trim() != '' &&
                         (onChangeMessage(''),
+                        setlocalMsgAction(
+                          {
+                            randomId:randomId,
+                            content: message,
+                            createdAt: date,
+                            isLink: false,
+                            mentions: mentionsArr,
+                            orgId: orgState?.currentOrgId,
+                            parentId: repliedMsgDetails?._id,
+                            senderId: userInfoState?.user?.id,
+                            senderType: 'APP',
+                            teamId: teamId,
+                            updatedAt: date,
+                            attachment: attachment,
+                            mentionsArr: mentionsArr,
+                            parentMessage: repliedMsgDetails?.content,
+                          },
+                        ),
                         setGlobalMessageToSendAction({
                           content: message,
                           teamId: teamId,
