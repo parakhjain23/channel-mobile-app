@@ -140,7 +140,7 @@ export function chatReducer(state = initialState, action) {
             [data]
           }
         },
-        randomIdsArr: state?.randomIdsArr?.length > 0 ? state?.randomIdsArr?.push(data?.randomId) : [data?.randomId]
+        randomIdsArr: state?.randomIdsArr?.length > 0 ? [...state?.randomIdsArr,data?.randomId] : [data?.randomId]
       }
 
     default:

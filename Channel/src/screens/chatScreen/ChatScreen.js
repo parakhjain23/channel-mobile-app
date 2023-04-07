@@ -502,7 +502,6 @@ const ChatScreen = ({
                           attachment,
                           mentionsArr,
                         ),
-                        // onChangeMessage('');
                         hideOptionsMethod(),
                         setMentionsArr(''),
                         setMentions([]),
