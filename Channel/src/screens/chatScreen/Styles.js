@@ -34,6 +34,7 @@ export const makeStyles = colors => StyleSheet.create({
       borderRadius: ms(5),
       padding: ms(5),
       backgroundColor: '#d9d9d9',
+      maxHeight:ms(150),
     },
     repliedContainer: {
       padding: ms(5),
