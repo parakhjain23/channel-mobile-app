@@ -7,7 +7,7 @@ import ChatScreen from '../screens/chatScreen/ChatScreen';
 import ExploreChannels from '../screens/channelsScreen/ExploreChannels';
 import ContactDetailsPage from '../screens/userProfiles/UserProfiles';
 import {useNavigation, useTheme} from '@react-navigation/native';
-import {TouchableOpacity, Text, View} from 'react-native';
+import {TouchableOpacity, Text, View, Platform} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as RootNavigation from '../navigation/RootNavigation'
 
@@ -58,7 +58,7 @@ const ProtectedNavigation = props => {
           ...getHeader,
           headerLeft: () => (
             <TouchableOpacity
-              style={{paddingVertical: 15, paddingRight: 30}}
+              style={{paddingVertical: 15, paddingRight: Platform.OS == 'ios' ? 70: 30}}
               onPressIn={() => RootNavigation.goBack()}>
               <Icon name="arrow-left" size={18} color={colors.textColor} />
             </TouchableOpacity>

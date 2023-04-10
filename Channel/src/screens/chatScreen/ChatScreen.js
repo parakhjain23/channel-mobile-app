@@ -1,4 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import uuid from 'react-native-uuid';
 import {
   ActivityIndicator,
   FlatList,
@@ -32,6 +33,7 @@ import {makeStyles} from './Styles';
 import {useTheme} from '@react-navigation/native';
 import AnimatedLottieView from 'lottie-react-native';
 import {s, vs, ms, mvs} from 'react-native-size-matters';
+import { setLocalMsgStart } from '../../redux/actions/chat/LocalMessageActions';
 const ChatScreen = ({
   route,
   userInfoState,
@@ -47,6 +49,7 @@ const ChatScreen = ({
   getChannelsByQueryStartAction,
   channelsByQueryState,
   searchUserProfileAction,
+  setlocalMsgAction
 }) => {
   var {teamId, reciverUserId, channelType} = route.params;
   const {colors} = useTheme();
@@ -204,28 +207,7 @@ const ChatScreen = ({
       setrepliedMsgDetails,
     ],
   );
-  const renderItemLocal = useCallback(
-    ({item, index}) => (
-      <LocalChatCardMemo
-        chat={item}
-        userInfoState={userInfoState}
-        orgState={orgState}
-        deleteMessageAction={deleteMessageAction}
-        chatState={chatState}
-        setreplyOnMessage={setreplyOnMessage}
-        setrepliedMsgDetails={setrepliedMsgDetails}
-        channelType={channelType}
-      />
-    ),
-    [
-      chatState,
-      userInfoState,
-      orgState,
-      deleteMessageAction,
-      setreplyOnMessage,
-      setrepliedMsgDetails,
-    ],
-  );
+
   const onEndReached = useCallback(() => {
     fetchChatsOfTeamAction(teamId, userInfoState?.accessToken, skip);
   }, [teamId, userInfoState, skip, fetchChatsOfTeamAction]);
@@ -273,15 +255,15 @@ const ChatScreen = ({
                   keyboardShouldPersistTaps="always"
                   onScroll={onScroll}
                 />
-                {localMsg?.length > 0 && (
+                {/* {localMsg?.length > 0 && (
                   <FlatList data={localMsg} renderItem={renderItemLocal} />
-                )}
-                {chatState?.data[teamId]?.globalMessagesToSend?.length > 0 && (
+                )} */}
+                {/* {chatState?.data[teamId]?.globalMessagesToSend?.length > 0 && (
                   <FlatList
                     data={chatState?.data[teamId]?.globalMessagesToSend}
                     renderItem={renderItemLocal}
                   />
-                )}
+                )} */}
               </>
             )}
             {isScrolling && (
@@ -349,7 +331,7 @@ const ChatScreen = ({
                           userInfoState={userInfoState}
                           colors={colors}
                         />
-                      ) : repliedMsgDetails?.attachment?.length > 0 ? (
+                      ) : (repliedMsgDetails?.attachment?.length > 0 && typeof(repliedMsgDetails?.attachment) != 'string') ? (
                         <Text style={{color: 'black'}}>
                           <Icon name="attach-file" size={16} color="black" />
                           attachment
@@ -466,13 +448,14 @@ const ChatScreen = ({
                   size={ms(25)}
                   style={{color: colors.textColor, padding: ms(10)}}
                   onPress={() => {
+                    let randomId = uuid.v4()
                     networkState?.isInternetConnected
                       ? (message?.trim() != '' || attachment?.length > 0) &&
                         (onChangeMessage(''),
                         setAttachment([]),
-                        setlocalMsg([
-                          ...localMsg,
+                        setlocalMsgAction(
                           {
+                            randomId:randomId,
                             content: message,
                             createdAt: date,
                             isLink: false,
@@ -481,13 +464,13 @@ const ChatScreen = ({
                             parentId: repliedMsgDetails?._id,
                             senderId: userInfoState?.user?.id,
                             senderType: 'APP',
-                            teamId: '63e09e1f0916f000183a9d87',
+                            teamId: teamId,
                             updatedAt: date,
                             attachment: attachment,
                             mentionsArr: mentionsArr,
                             parentMessage: repliedMsgDetails?.content,
                           },
-                        ]),
+                        ),
                         sendMessageAction(
                           message,
                           teamId,
@@ -498,7 +481,6 @@ const ChatScreen = ({
                           attachment,
                           mentionsArr,
                         ),
-                        // onChangeMessage('');
                         hideOptionsMethod(),
                         setMentionsArr(''),
                         setMentions([]),
@@ -506,6 +488,24 @@ const ChatScreen = ({
                         repliedMsgDetails && setrepliedMsgDetails(null))
                       : message?.trim() != '' &&
                         (onChangeMessage(''),
+                        setlocalMsgAction(
+                          {
+                            randomId:randomId,
+                            content: message,
+                            createdAt: date,
+                            isLink: false,
+                            mentions: mentionsArr,
+                            orgId: orgState?.currentOrgId,
+                            parentId: repliedMsgDetails?._id,
+                            senderId: userInfoState?.user?.id,
+                            senderType: 'APP',
+                            teamId: teamId,
+                            updatedAt: date,
+                            attachment: attachment,
+                            mentionsArr: mentionsArr,
+                            parentMessage: repliedMsgDetails?.content,
+                          },
+                        ),
                         setGlobalMessageToSendAction({
                           content: message,
                           teamId: teamId,
@@ -566,6 +566,7 @@ const mapDispatchToProps = dispatch => {
           mentionsArr,
         ),
       ),
+    setlocalMsgAction:(data)=>dispatch(setLocalMsgStart(data)),  
     deleteMessageAction: (accessToken, msgId) =>
       dispatch(deleteMessageStart(accessToken, msgId)),
     setActiveChannelTeamIdAction: teamId =>

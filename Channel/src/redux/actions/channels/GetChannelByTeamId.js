@@ -5,7 +5,6 @@ import * as Actions from '../../Enums';
 export function* getChannelByTeamId({token,teamId,userId}){
     try {
       const response = yield call(getChannelByTeamIdApi,token,teamId)
-      console.log(response,"this is response");
       if(response.purpose == 'SpaceBot'){
         yield put(gotSpaceBot(response))
       }else{
