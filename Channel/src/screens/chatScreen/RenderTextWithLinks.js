@@ -74,8 +74,8 @@ export const RenderTextWithLinks = ({
         }
       }
       return (
-        <TouchableOpacity activeOpacity={1}>
-          <Text key={index} style={{color: textColor}}>
+        <TouchableOpacity activeOpacity={1} key={index}>
+          <Text style={{color: textColor}}>
             {part}
           </Text>
         </TouchableOpacity>
