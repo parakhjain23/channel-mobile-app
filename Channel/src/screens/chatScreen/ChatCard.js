@@ -311,7 +311,7 @@ const ChatCard = ({
                   </Text>
                   {chat?.randomId != null ? (
                     <View
-                      style={{flexDirection: 'column', alignItems: 'flex-end'}}>
+                      style={{flexDirection: 'column', alignItems: 'flex-end',width:30}}>
                       <Icon name="access-time" color={'white'} />
                     </View>
                   ) : (

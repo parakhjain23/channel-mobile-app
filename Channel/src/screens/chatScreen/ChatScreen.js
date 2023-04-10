@@ -207,28 +207,7 @@ const ChatScreen = ({
       setrepliedMsgDetails,
     ],
   );
-  const renderItemLocal = useCallback(
-    ({item, index}) => (
-      <LocalChatCardMemo
-        chat={item}
-        userInfoState={userInfoState}
-        orgState={orgState}
-        deleteMessageAction={deleteMessageAction}
-        chatState={chatState}
-        setreplyOnMessage={setreplyOnMessage}
-        setrepliedMsgDetails={setrepliedMsgDetails}
-        channelType={channelType}
-      />
-    ),
-    [
-      chatState,
-      userInfoState,
-      orgState,
-      deleteMessageAction,
-      setreplyOnMessage,
-      setrepliedMsgDetails,
-    ],
-  );
+
   const onEndReached = useCallback(() => {
     fetchChatsOfTeamAction(teamId, userInfoState?.accessToken, skip);
   }, [teamId, userInfoState, skip, fetchChatsOfTeamAction]);
@@ -352,7 +331,7 @@ const ChatScreen = ({
                           userInfoState={userInfoState}
                           colors={colors}
                         />
-                      ) : repliedMsgDetails?.attachment?.length > 0 ? (
+                      ) : (repliedMsgDetails?.attachment?.length > 0 && typeof(repliedMsgDetails?.attachment) != 'string') ? (
                         <Text style={{color: 'black'}}>
                           <Icon name="attach-file" size={16} color="black" />
                           attachment
