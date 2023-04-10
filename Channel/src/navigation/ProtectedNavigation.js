@@ -10,6 +10,7 @@ import {useNavigation, useTheme} from '@react-navigation/native';
 import {TouchableOpacity, Text, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as RootNavigation from '../navigation/RootNavigation'
+import CreateChannelScreen from '../screens/createChannelScreen/CreateChannelScreen';
 
 const ProtectedNavigation = props => {
   const Stack = createNativeStackNavigator();
@@ -79,6 +80,14 @@ const ProtectedNavigation = props => {
         component={ContactDetailsPage}
         options={({route}) => ({
           headerTitle: route?.params?.displayName + ' Profile',
+          headerShown: true,
+          ...getHeader,
+        })}
+      />
+      <Stack.Screen
+        name="CreateChannel"
+        component={CreateChannelScreen}
+        options={({route}) => ({
           headerShown: true,
           ...getHeader,
         })}

@@ -6,41 +6,45 @@ import {connect} from 'react-redux';
 import {fetchSearchedUserProfileStart} from '../../redux/actions/user/searchUserProfileActions';
 import {s, vs, ms, mvs} from 'react-native-size-matters';
 import {resetUnreadCountStart} from '../../redux/actions/channels/ChannelsAction';
-import * as RootNavigation from '../../navigation/RootNavigation'
+import * as RootNavigation from '../../navigation/RootNavigation';
 const ChannelCard = ({item, navigation, props, resetUnreadCountAction}) => {
   const {colors} = useTheme();
   const Name =
     item?.type == 'DIRECT_MESSAGE'
-      ? props?.orgsState?.userIdAndDisplayNameMapping ?
-        props?.orgsState?.userIdAndDisplayNameMapping[
-          `${
-            item.userIds[0] != props?.userInfoState?.user?.id
-              ? item.userIds[0]
-              : item.userIds[1]
-          }`
-        ] : props?.orgsState?.userIdAndNameMapping[`${
-          item.userIds[0] != props?.userInfoState?.user?.id
-            ? item.userIds[0]
-            : item.userIds[1]
-        }`] 
+      ? props?.orgsState?.userIdAndDisplayNameMapping
+        ? props?.orgsState?.userIdAndDisplayNameMapping[
+            `${
+              item.userIds[0] != props?.userInfoState?.user?.id
+                ? item.userIds[0]
+                : item.userIds[1]
+            }`
+          ]
+        : props?.orgsState?.userIdAndNameMapping[
+            `${
+              item.userIds[0] != props?.userInfoState?.user?.id
+                ? item.userIds[0]
+                : item.userIds[1]
+            }`
+          ]
       : item?.name;
   const iconName = item?.type == 'DIRECT_MESSAGE' ? 'user' : 'hashtag';
-  let unread = props?.channelsState?.teamIdAndUnreadCountMapping?.[item?._id] > 0 || 
+  let unread =
+    props?.channelsState?.teamIdAndUnreadCountMapping?.[item?._id] > 0 ||
     (props?.channelsState?.highlightChannel[item?._id] != undefined
       ? (unread = props?.channelsState?.highlightChannel[item?._id]
           ? true
           : false)
-      : false)
+      : false);
 
   return (
     <TouchableOpacity
       style={{
         borderTopWidth: ms(0.7),
         // borderBottomColor: 'gray',
-        //light mode 
+        //light mode
         // borderTopColor:'#D8D8D8',
-        //dark mode 
-        borderTopColor:'#444444',
+        //dark mode
+        borderTopColor: '#444444',
         minHeight: mvs(60),
         backgroundColor:
           (unread && colors.unreadBackgroundColor) || colors.primaryColor,
@@ -50,7 +54,11 @@ const ChannelCard = ({item, navigation, props, resetUnreadCountAction}) => {
       }}
       activeOpacity={0.8}
       onPress={() => {
-        RootNavigation.navigate('Chat', {chatHeaderTitle: Name, teamId: item?._id,channelType:item?.type})
+        RootNavigation.navigate('Chat', {
+          chatHeaderTitle: Name,
+          teamId: item?._id,
+          channelType: item?.type,
+        });
         props?.setActiveChannelTeamIdAction(item?._id);
         props?.channelsState?.teamIdAndUnreadCountMapping?.[item?._id] > 0 &&
           resetUnreadCountAction(
@@ -206,41 +214,39 @@ const UsersToAddCard = ({item, setUserIds, userIds, setsearchedUser}) => {
   const {colors} = useTheme();
   const Name = item?._source?.type == 'U' && item?._source?.title;
   return (
-    item?._source?.type == 'U' && (
-      <TouchableOpacity
+    <TouchableOpacity
+      style={{
+        borderWidth: ms(0.4),
+        borderColor: 'gray',
+        borderRadius: s(3),
+        minHeight: s(45),
+        margin: s(1),
+        flexDirection: 'column',
+        justifyContent: 'center',
+      }}
+      onPress={() => {
+        setUserIds([...userIds, item?._source?.userId]);
+        setsearchedUser('');
+      }}>
+      <View
         style={{
-          borderWidth: ms(0.4),
-          borderColor: 'gray',
-          borderRadius: s(3),
-          minHeight: s(45),
-          margin: s(1),
-          flexDirection: 'column',
-          justifyContent: 'center',
-        }}
-        onPress={() => {
-          setUserIds([...userIds, item?._source?.userId]);
-          setsearchedUser('');
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          padding: ms(13),
         }}>
-        <View
+        <Icon name="user" color={colors.textColor} />
+        <Text
           style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            padding: ms(13),
+            fontSize: ms(16, 0.5),
+            fontWeight: '400',
+            color: colors.textColor,
           }}>
-          <Icon name="user" color={colors.textColor} />
-          <Text
-            style={{
-              fontSize: ms(16, 0.5),
-              fontWeight: '400',
-              color: colors.textColor,
-            }}>
-            {' '}
-            {Name}
-          </Text>
-        </View>
-      </TouchableOpacity>
-    )
+          {' '}
+          {Name}
+        </Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 const mapStateToProps = state => ({

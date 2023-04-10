@@ -231,7 +231,8 @@ const ChannelsScreen = props => {
     setsearchValue(value);
   };
   const onOpen = () => {
-    modalizeRef.current?.open();
+    navigation?.navigate("CreateChannel")
+    // modalizeRef.current?.open();
   };
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
