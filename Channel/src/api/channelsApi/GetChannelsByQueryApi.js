@@ -33,6 +33,9 @@ export const getChannelsByQueryApi = async (query, userToken, orgId) => {
     if (result?.hits?.hits) {
       return result?.hits?.hits;
     }
+    else{
+      return []
+    }
   } catch (error) {
     console.warn(error);
   }

@@ -148,8 +148,9 @@ const SearchChannelCard = ({
   return (
     <TouchableOpacity
       style={{
-        borderWidth: ms(0.5),
-        borderColor: 'gray',
+        borderTopWidth: ms(0.7),
+        borderTopColor: '#444444',
+        minHeight: mvs(60),
         borderRadius: ms(5),
         height: s(60),
         width: '100%',
