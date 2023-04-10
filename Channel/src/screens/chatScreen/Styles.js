@@ -30,6 +30,7 @@ export const makeStyles = colors => StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'space-between',
       margin: ms(5),
+      paddingRight:ms(14),
       borderWidth: ms(0.25),
       borderRadius: ms(5),
       padding: ms(5),

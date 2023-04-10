@@ -334,7 +334,6 @@ const ChatCard = ({
         </TouchableOpacity>
       </GestureHandlerRootView>
     );
-    return;
   } else {
     return (
       <AddRemoveJoinedMsg

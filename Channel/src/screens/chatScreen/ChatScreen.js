@@ -346,6 +346,7 @@ const ChatScreen = ({
                         name="cancel"
                         size={ms(16)}
                         color="black"
+                        style={{position: 'absolute', top: ms(5), right: ms(5),zIndex:1}}
                       />
                     </View>
                   </TouchableOpacity>
@@ -359,62 +360,62 @@ const ChatScreen = ({
                 />
 
                 <View style={styles.inputContainer}>
-                  <View style={{alignSelf:'flex-end'}}>
-                  {showOptions && (
-                    <Animated.View
-                      style={[
-                        styles.optionsContainer,
-                        {transform: [{translateX: optionsPosition}]},
-                      ]}>
-                      <View style={{flexDirection: 'row'}}>
-                        <MaterialIcons
-                          name="attach-file"
-                          size={ms(20)}
-                          style={styles.attachIcon}
-                          onPress={() =>
-                            pickDocument(
-                              setAttachment,
-                              userInfoState?.accessToken,
-                              setAttachmentLoading,
-                            )
-                          }
-                        />
-                        <MaterialIcons
-                          name="camera"
-                          size={ms(20)}
-                          style={styles.attachIcon}
-                          onPress={() => {
-                            launchCameraForPhoto(
-                              userInfoState?.accessToken,
-                              setAttachment,
-                              setAttachmentLoading,
-                            );
-                          }}
-                        />
-                        <MaterialIcons
-                          name="image"
-                          size={ms(20)}
-                          style={styles.attachIcon}
-                          onPress={() => {
-                            launchGallery(
-                              userInfoState?.accessToken,
-                              setAttachment,
-                              setAttachmentLoading,
-                            );
-                          }}
-                        />
-                        <MaterialIcons
-                          name="chevron-left"
-                          size={ms(20)}
-                          style={styles.attachIcon}
-                          onPress={hideOptionsMethod}
-                          // onPress={() => setShowOptions(false)}
-                        />
-                      </View>
-                    </Animated.View>
-                  )}
+                  <View style={{alignSelf: 'flex-end'}}>
+                    {showOptions && (
+                      <Animated.View
+                        style={[
+                          styles.optionsContainer,
+                          {transform: [{translateX: optionsPosition}]},
+                        ]}>
+                        <View style={{flexDirection: 'row'}}>
+                          <MaterialIcons
+                            name="attach-file"
+                            size={ms(20)}
+                            style={styles.attachIcon}
+                            onPress={() =>
+                              pickDocument(
+                                setAttachment,
+                                userInfoState?.accessToken,
+                                setAttachmentLoading,
+                              )
+                            }
+                          />
+                          <MaterialIcons
+                            name="camera"
+                            size={ms(20)}
+                            style={styles.attachIcon}
+                            onPress={() => {
+                              launchCameraForPhoto(
+                                userInfoState?.accessToken,
+                                setAttachment,
+                                setAttachmentLoading,
+                              );
+                            }}
+                          />
+                          <MaterialIcons
+                            name="image"
+                            size={ms(20)}
+                            style={styles.attachIcon}
+                            onPress={() => {
+                              launchGallery(
+                                userInfoState?.accessToken,
+                                setAttachment,
+                                setAttachmentLoading,
+                              );
+                            }}
+                          />
+                          <MaterialIcons
+                            name="chevron-left"
+                            size={ms(20)}
+                            style={styles.attachIcon}
+                            onPress={hideOptionsMethod}
+                            // onPress={() => setShowOptions(false)}
+                          />
+                        </View>
+                      </Animated.View>
+                    )}
                   </View>
-                  <View style={{alignSelf:'flex-end'}}>
+                  <View style={{alignSelf: 'flex-end'}}>
                     {!showOptions && (
                       <MaterialIcons
                         name="add"
