@@ -58,6 +58,7 @@ const ChannelCard = ({item, navigation, props, resetUnreadCountAction}) => {
           chatHeaderTitle: Name,
           teamId: item?._id,
           channelType: item?.type,
+          userId: item?.userIds[0]!=props?.userInfoState?.user?.id ? item?.userIds[0] : item?.userIds[1],
         });
         props?.setActiveChannelTeamIdAction(item?._id);
         props?.channelsState?.teamIdAndUnreadCountMapping?.[item?._id] > 0 &&

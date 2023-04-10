@@ -9,7 +9,10 @@ import ContactDetailsPage from '../screens/userProfiles/UserProfiles';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import {TouchableOpacity, Text, View, Platform} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import * as RootNavigation from '../navigation/RootNavigation'
+import * as RootNavigation from '../navigation/RootNavigation';
+import {fetchSearchedUserProfileStart} from '../redux/actions/user/searchUserProfileActions';
+import {store} from '../redux/Store';
+import {ms} from 'react-native-size-matters';
 
 const ProtectedNavigation = props => {
   const Stack = createNativeStackNavigator();
@@ -26,6 +29,7 @@ const ProtectedNavigation = props => {
   //     },
   //     statusBarTranslucent:true
   //   };
+
   const getHeader = {
     headerTintColor: colors.textColor,
     headerStyle: {
@@ -33,7 +37,7 @@ const ProtectedNavigation = props => {
       backgroundColor: colors.headerColor,
     },
   };
-  return !props?.userInfoSate?.isSignedIn ? (
+  return !props?.userInfoState?.isSignedIn ? (
     <Stack.Navigator>
       <Stack.Screen
         name="Login"
@@ -53,12 +57,46 @@ const ProtectedNavigation = props => {
         name="Chat"
         component={ChatScreen}
         options={({route}) => ({
-          headerTitle: route?.params?.chatHeaderTitle,
+          headerTitle: () => {
+            return route?.params?.channelType === 'DIRECT_MESSAGE' ? (
+              <TouchableOpacity
+                onPress={async () => {
+                  RootNavigation.navigate('UserProfiles', {
+                    displayName: route?.params?.chatHeaderTitle,
+                  });
+                  await props?.searchUserProfileAction(
+                    route?.params?.userId,
+                    props?.userInfoState?.accessToken,
+                  );
+                }}>
+                <Text
+                  style={{
+                    color: colors?.textColor,
+                    fontSize: ms(16),
+                    fontWeight: '600',
+                  }}>
+                  {route?.params?.chatHeaderTitle}
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <Text
+                style={{
+                  color: colors?.textColor,
+                  fontSize: ms(16),
+                  fontWeight: '600',
+                }}>
+                {route?.params?.chatHeaderTitle}
+              </Text>
+            );
+          },
           headerShown: true,
           ...getHeader,
           headerLeft: () => (
             <TouchableOpacity
-              style={{paddingVertical: 15, paddingRight: Platform.OS == 'ios' ? 70: 30}}
+              style={{
+                paddingVertical: 15,
+                paddingRight: Platform.OS == 'ios' ? 70 : 30,
+              }}
               onPressIn={() => RootNavigation.goBack()}>
               <Icon name="arrow-left" size={18} color={colors.textColor} />
             </TouchableOpacity>
@@ -88,6 +126,16 @@ const ProtectedNavigation = props => {
 };
 
 const mapStateToProps = state => ({
-  userInfoSate: state.userInfoReducer,
+  userInfoState: state.userInfoReducer,
+  channelsState: state.channelsReducer,
 });
-export default connect(mapStateToProps)(ProtectedNavigation);
+const mapDispatchToProps = dispatch => {
+  return {
+    searchUserProfileAction: (userId, token) =>
+      dispatch(fetchSearchedUserProfileStart(userId, token)),
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ProtectedNavigation);
