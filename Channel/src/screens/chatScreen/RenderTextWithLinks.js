@@ -5,7 +5,7 @@ import {Linking} from 'react-native';
 import * as RootNavigation from '../../navigation/RootNavigation';
 import cheerio from 'cheerio';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
-import {useTheme} from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 
 export const RenderTextWithLinks = ({
   text,
@@ -15,13 +15,11 @@ export const RenderTextWithLinks = ({
   searchUserProfileAction,
   userInfoState,
   colors,
-  sentByMe,
+  sentByMe
 }) => {
   const {dark} = useTheme();
-  const fontWeight = dark ? '700' : '900';
-  const linkColor = sentByMe
-    ? colors.sentByMeLinkColor
-    : colors.recivedLinkColor;
+  const fontWeight = dark ? '700' : '900' 
+  const linkColor = sentByMe ? colors.sentByMeLinkColor : colors.recivedLinkColor
   const urlRegex =
     /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-])?(?:\?[^\s])?)/gi;
   function findKeyByValue(value) {
@@ -34,11 +32,7 @@ export const RenderTextWithLinks = ({
     return null;
   }
   function highlight(text, result, repliedContainer) {
-    const textColor = repliedContainer
-      ? 'black'
-      : sentByMe
-      ? colors.sentByMeTextColor
-      : colors?.textColor;
+    const textColor = repliedContainer ? 'black' : sentByMe ? colors.sentByMeTextColor : colors?.textColor;
     let A = orgState?.userIdAndDisplayNameMapping;
     text = text.replace(/@{1,2}(\w+)/g, (match, p1) => {
       return A[p1] ? `@${A[p1]}` : match;
@@ -74,11 +68,9 @@ export const RenderTextWithLinks = ({
         }
       }
       return (
-        <TouchableOpacity activeOpacity={1} key={index}>
-          <Text style={{color: textColor}}>
-            {part}
-          </Text>
-        </TouchableOpacity>
+        <Text key={index} style={{color: textColor}}>
+          {part}
+        </Text>
       );
     });
   }
@@ -135,11 +127,7 @@ export const RenderTextWithLinks = ({
             openLink(url);
           }}>
           <Text
-            style={{
-              color: linkColor,
-              textDecorationLine: 'underline',
-              fontWeight: fontWeight,
-            }}>
+            style={{color: linkColor, textDecorationLine: 'underline',fontWeight:fontWeight}}>
             {part}
           </Text>
         </TouchableOpacity>
