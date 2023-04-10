@@ -33,7 +33,7 @@ import {makeStyles} from './Styles';
 import {useTheme} from '@react-navigation/native';
 import AnimatedLottieView from 'lottie-react-native';
 import {s, vs, ms, mvs} from 'react-native-size-matters';
-import { setLocalMsgStart } from '../../redux/actions/chat/LocalMessageActions';
+import {setLocalMsgStart} from '../../redux/actions/chat/LocalMessageActions';
 const ChatScreen = ({
   route,
   userInfoState,
@@ -49,7 +49,7 @@ const ChatScreen = ({
   getChannelsByQueryStartAction,
   channelsByQueryState,
   searchUserProfileAction,
-  setlocalMsgAction
+  setlocalMsgAction,
 }) => {
   var {teamId, reciverUserId, channelType} = route.params;
   const {colors} = useTheme();
@@ -331,7 +331,8 @@ const ChatScreen = ({
                           userInfoState={userInfoState}
                           colors={colors}
                         />
-                      ) : (repliedMsgDetails?.attachment?.length > 0 && typeof(repliedMsgDetails?.attachment) != 'string') ? (
+                      ) : repliedMsgDetails?.attachment?.length > 0 &&
+                        typeof repliedMsgDetails?.attachment != 'string' ? (
                         <Text style={{color: 'black'}}>
                           <Icon name="attach-file" size={16} color="black" />
                           attachment
@@ -358,6 +359,7 @@ const ChatScreen = ({
                 />
 
                 <View style={styles.inputContainer}>
+                  <View style={{alignSelf:'flex-end'}}>
                   {showOptions && (
                     <Animated.View
                       style={[
@@ -411,15 +413,17 @@ const ChatScreen = ({
                       </View>
                     </Animated.View>
                   )}
-                  {!showOptions && (
-                    <MaterialIcons
-                      name="add"
-                      size={ms(20)}
-                      style={styles.attachIcon}
-                      onPress={showOptionsMethod}
-                      // onPress={() => setShowOptions(!showOptions)}
-                    />
-                  )}
+                  </View>
+                  <View style={{alignSelf:'flex-end'}}>
+                    {!showOptions && (
+                      <MaterialIcons
+                        name="add"
+                        size={ms(20)}
+                        style={styles.attachIcon}
+                        onPress={showOptionsMethod}
+                      />
+                    )}
+                  </View>
 
                   <TextInput
                     ref={textInputRef}
@@ -448,29 +452,27 @@ const ChatScreen = ({
                   size={ms(25)}
                   style={{color: colors.textColor, padding: ms(10)}}
                   onPress={() => {
-                    let randomId = uuid.v4()
+                    let randomId = uuid.v4();
                     networkState?.isInternetConnected
                       ? (message?.trim() != '' || attachment?.length > 0) &&
                         (onChangeMessage(''),
                         setAttachment([]),
-                        setlocalMsgAction(
-                          {
-                            randomId:randomId,
-                            content: message,
-                            createdAt: date,
-                            isLink: false,
-                            mentions: mentionsArr,
-                            orgId: orgState?.currentOrgId,
-                            parentId: repliedMsgDetails?._id,
-                            senderId: userInfoState?.user?.id,
-                            senderType: 'APP',
-                            teamId: teamId,
-                            updatedAt: date,
-                            attachment: attachment,
-                            mentionsArr: mentionsArr,
-                            parentMessage: repliedMsgDetails?.content,
-                          },
-                        ),
+                        setlocalMsgAction({
+                          randomId: randomId,
+                          content: message,
+                          createdAt: date,
+                          isLink: false,
+                          mentions: mentionsArr,
+                          orgId: orgState?.currentOrgId,
+                          parentId: repliedMsgDetails?._id,
+                          senderId: userInfoState?.user?.id,
+                          senderType: 'APP',
+                          teamId: teamId,
+                          updatedAt: date,
+                          attachment: attachment,
+                          mentionsArr: mentionsArr,
+                          parentMessage: repliedMsgDetails?.content,
+                        }),
                         sendMessageAction(
                           message,
                           teamId,
@@ -488,24 +490,22 @@ const ChatScreen = ({
                         repliedMsgDetails && setrepliedMsgDetails(null))
                       : message?.trim() != '' &&
                         (onChangeMessage(''),
-                        setlocalMsgAction(
-                          {
-                            randomId:randomId,
-                            content: message,
-                            createdAt: date,
-                            isLink: false,
-                            mentions: mentionsArr,
-                            orgId: orgState?.currentOrgId,
-                            parentId: repliedMsgDetails?._id,
-                            senderId: userInfoState?.user?.id,
-                            senderType: 'APP',
-                            teamId: teamId,
-                            updatedAt: date,
-                            attachment: attachment,
-                            mentionsArr: mentionsArr,
-                            parentMessage: repliedMsgDetails?.content,
-                          },
-                        ),
+                        setlocalMsgAction({
+                          randomId: randomId,
+                          content: message,
+                          createdAt: date,
+                          isLink: false,
+                          mentions: mentionsArr,
+                          orgId: orgState?.currentOrgId,
+                          parentId: repliedMsgDetails?._id,
+                          senderId: userInfoState?.user?.id,
+                          senderType: 'APP',
+                          teamId: teamId,
+                          updatedAt: date,
+                          attachment: attachment,
+                          mentionsArr: mentionsArr,
+                          parentMessage: repliedMsgDetails?.content,
+                        }),
                         setGlobalMessageToSendAction({
                           content: message,
                           teamId: teamId,
@@ -566,7 +566,7 @@ const mapDispatchToProps = dispatch => {
           mentionsArr,
         ),
       ),
-    setlocalMsgAction:(data)=>dispatch(setLocalMsgStart(data)),  
+    setlocalMsgAction: data => dispatch(setLocalMsgStart(data)),
     deleteMessageAction: (accessToken, msgId) =>
       dispatch(deleteMessageStart(accessToken, msgId)),
     setActiveChannelTeamIdAction: teamId =>

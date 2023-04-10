@@ -11,13 +11,11 @@ import {TouchableOpacity, Text, View, Platform} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as RootNavigation from '../navigation/RootNavigation';
 import {fetchSearchedUserProfileStart} from '../redux/actions/user/searchUserProfileActions';
-import {store} from '../redux/Store';
 import {ms} from 'react-native-size-matters';
 
 const ProtectedNavigation = props => {
   const Stack = createNativeStackNavigator();
   const {colors} = useTheme();
-  const navigate = useNavigation();
   //   const {colors} = useTheme();
   //   const getShopingCartHeader = {
   //     animationDuration: 0,
@@ -90,17 +88,17 @@ const ProtectedNavigation = props => {
             );
           },
           headerShown: true,
-          ...getHeader,
           headerLeft: () => (
             <TouchableOpacity
-              style={{
-                paddingVertical: 15,
-                paddingRight: Platform.OS == 'ios' ? 70 : 30,
-              }}
-              onPressIn={() => RootNavigation.goBack()}>
+            style={{
+              paddingVertical: 15,
+              paddingRight: Platform.OS == 'ios' ? 70 : 30,
+            }}
+            onPressIn={() => RootNavigation.goBack()}>
               <Icon name="arrow-left" size={18} color={colors.textColor} />
             </TouchableOpacity>
           ),
+          ...getHeader,
         })}
       />
       <Stack.Screen

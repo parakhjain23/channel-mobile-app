@@ -120,6 +120,7 @@ export const makeStyles = colors => StyleSheet.create({
       borderColor: '#b3b3b3',
       paddingHorizontal: ms(5),
       paddingVertical: mvs(4),
+      maxHeight: mvs(200)
     },
     attachIcon: {
       marginRight: ms(8),
