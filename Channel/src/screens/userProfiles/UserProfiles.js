@@ -43,7 +43,7 @@ const ContactDetailsPage = ({userInfoState, channelsState,createDmChannelAction,
             source={require('../../assests/images/attachments/loading.json')}
             loop
             autoPlay
-            style={{height: s(500), width: s(500)}}
+            style={{height: s(100), width: s(100)}}
           />
         </View>
       ) : (

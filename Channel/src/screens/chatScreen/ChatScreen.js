@@ -232,7 +232,7 @@ const ChatScreen = ({
                   source={require('../../assests/images/attachments/loading.json')}
                   loop
                   autoPlay
-                  style={{height: s(500), width: s(500)}}
+                  style={{height: ms(100), width: ms(100)}}
                 />
               </View>
             ) : (
