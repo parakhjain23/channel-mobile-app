@@ -1,22 +1,23 @@
 import NetInfo from '@react-native-community/netinfo';
-import React, { useEffect, useState} from 'react';
-import { connect, useDispatch } from 'react-redux';
-import { networkStatus } from '../redux/actions/network/NetworkActions';
-import { initializeSocket } from '../redux/actions/socket/socketActions';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {networkStatus} from '../redux/actions/network/NetworkActions';
+import {initializeSocket} from '../redux/actions/socket/socketActions';
 import SplashScreenComponent from '../screens/splashScreen/SplashScreen';
 import AuthNavigation from './AuthNavigation';
 
-
-const StoreAppWrapper = ({userInfoSate,orgsState}) => {
+const StoreAppWrapper = () => {
   const [showSplashScreen, setShowSplashScreen] = useState(true);
+  const userInfoState = useSelector(state => state.userInfoReducer);
+  const orgsState = useSelector(state => state.orgsReducer);
   const dispatch = useDispatch();
   useEffect(() => {
-    if(userInfoSate?.accessToken){
+    if (userInfoState?.accessToken) {
       dispatch(
-        initializeSocket(userInfoSate?.accessToken, orgsState?.currentOrgId),
+        initializeSocket(userInfoState?.accessToken, orgsState?.currentOrgId),
       );
     }
-  }, [userInfoSate?.accessToken, orgsState?.currentOrgId]);
+  }, [userInfoState?.accessToken, orgsState?.currentOrgId]);
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -27,14 +28,9 @@ const StoreAppWrapper = ({userInfoSate,orgsState}) => {
     };
   }, []);
   return showSplashScreen ? (
-    <SplashScreenComponent setShowSplashScreen={setShowSplashScreen}/>
-    // <SplashScreen setShowSplashScreen={setShowSplashScreen} />
+    <SplashScreenComponent setShowSplashScreen={setShowSplashScreen} />
   ) : (
-      <AuthNavigation />
+    <AuthNavigation />
   );
 };
-const mapStateToProps = state => ({
-  userInfoSate: state.userInfoReducer,
-  orgsState: state.orgsReducer,
-});
-export default connect(mapStateToProps)(StoreAppWrapper);
+export default StoreAppWrapper;

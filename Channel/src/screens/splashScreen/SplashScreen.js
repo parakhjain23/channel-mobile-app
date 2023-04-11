@@ -16,16 +16,13 @@ const SplashScreenComponent = ({
   signOutAction,
 }) => {
   const checkForApiUpdate = async () => {
-    if (
-      appInfoState.appVersion === '' ||
-      appInfoState.appVersion !== DeviceInfo.getReadableVersion()
-    ) {
-      await AsyncStorage.clear(),
-        signOutAction(),
-        setNewVersionOfApp(DeviceInfo.getReadableVersion());
+    const version = DeviceInfo.getReadableVersion();
+    if (appInfoState.appVersion === '' || appInfoState.appVersion !== version) {
+      await AsyncStorage.clear();
+      signOutAction();
+      setNewVersionOfApp(version);
     }
   };
-
   useEffect(() => {
     checkForApiUpdate();
     networkState?.isInternetConnected && fetchChatResetAction();
