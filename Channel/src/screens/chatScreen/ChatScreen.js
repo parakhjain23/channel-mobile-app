@@ -209,7 +209,7 @@ const ChatScreen = ({
             channelType={channelType}
           />
           {!isSameDate && displayDate && index > 0 && (
-            <View style={{borderTopWidth:ms(.3),borderColor: 'gray'}}>
+            <View style={{borderTopWidth:ms(.3),borderColor: '#444444',marginRight:ms(5)}}>
               <Text style={{color: colors?.textColor, textAlign: 'center',margin:10}}>
                 {displayDate === TodaysDate
                   ? 'Today'
