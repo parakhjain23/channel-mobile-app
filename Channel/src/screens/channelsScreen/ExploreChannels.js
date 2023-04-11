@@ -1,10 +1,11 @@
 import {useNavigation, useTheme} from '@react-navigation/native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList, Text, TouchableOpacity, View} from 'react-native';
 import {ActivityIndicator} from 'react-native';
 import {connect} from 'react-redux';
 import {setActiveChannelTeamId} from '../../redux/actions/channels/SetActiveChannelId';
 import {s, vs, ms, mvs} from 'react-native-size-matters';
+import Icon from 'react-native-vector-icons/FontAwesome';
 const ExploreChannels = props => {
   const {colors} = useTheme();
   const [channels, setChannels] = useState([]);
@@ -33,7 +34,6 @@ const ExploreChannels = props => {
           borderTopColor: 'grey',
           minHeight: mvs(60),
           borderRadius: 5,
-          height: s(60),
           width: '100%',
           flexDirection: 'column',
           justifyContent: 'center',
@@ -53,20 +53,22 @@ const ExploreChannels = props => {
             justifyContent: 'flex-start',
             padding: s(13),
           }}>
+          <Icon name={'hashtag'} size={14} color={colors.textColor} />
+          <Text>{'  '}</Text>
           <Text
             style={{
               fontSize: ms(16, 0.5),
               fontWeight: '400',
               color: colors?.textColor,
             }}>
-            # {item?.name}
+            {item?.name}
           </Text>
         </View>
       </TouchableOpacity>
     );
   };
   return (
-    <View style={{backgroundColor: colors?.primaryColor}}>
+    <View style={{backgroundColor: colors?.primaryColor, flex: 1}}>
       {channels?.length == 0 ? (
         <ActivityIndicator />
       ) : (
