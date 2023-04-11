@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import uuid from 'react-native-uuid';
 import {
-  ActivityIndicator,
   FlatList,
   KeyboardAvoidingView,
   Text,
@@ -9,7 +8,6 @@ import {
   TouchableOpacity,
   View,
   Animated,
-  useWindowDimensions,
   Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -60,13 +58,11 @@ const ChatScreen = ({
   const [message, onChangeMessage] = useState('');
   const [attachment, setAttachment] = useState([]);
   const [attachmentLoading, setAttachmentLoading] = useState(false);
-  const [localMsg, setlocalMsg] = useState([]);
   const FlatListRef = useRef(null);
   const scrollY = new Animated.Value(0);
   const [isScrolling, setIsScrolling] = useState(false);
   const [mentions, setMentions] = useState([]);
   const [mentionsArr, setMentionsArr] = useState([]);
-  const {width} = useWindowDimensions();
   const textInputRef = useRef(null);
   if (teamId == undefined) {
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
@@ -76,10 +72,6 @@ const ChatScreen = ({
       textInputRef.current.focus();
     }
   }, [repliedMsgDetails]);
-
-  useEffect(() => {
-    localMsg?.shift();
-  }, [chatState?.data[teamId]?.messages]);
   const skip =
     chatState?.data[teamId]?.messages?.length != undefined
       ? chatState?.data[teamId]?.messages?.length
@@ -183,7 +175,7 @@ const ChatScreen = ({
     [chatState?.data[teamId]?.messages],
   );
   let prevDate = null;
-  const TodaysDate = (new Date()).toDateString()
+  const TodaysDate = new Date().toDateString();
   const renderItem = useCallback(
     ({item, index}) => {
       const date = new Date(item.updatedAt);
@@ -209,11 +201,19 @@ const ChatScreen = ({
             channelType={channelType}
           />
           {!isSameDate && displayDate && index > 0 && (
-            <View style={{borderTopWidth:ms(.3),borderColor: '#444444',marginRight:ms(5)}}>
-              <Text style={{color: colors?.textColor, textAlign: 'center',margin:10}}>
-                {displayDate === TodaysDate
-                  ? 'Today'
-                  : displayDate}
+            <View
+              style={{
+                borderTopWidth: ms(0.3),
+                borderColor: '#444444',
+                marginRight: ms(5),
+              }}>
+              <Text
+                style={{
+                  color: colors?.textColor,
+                  textAlign: 'center',
+                  margin: 10,
+                }}>
+                {displayDate === TodaysDate ? 'Today' : displayDate}
               </Text>
             </View>
           )}
@@ -277,15 +277,6 @@ const ChatScreen = ({
                   keyboardShouldPersistTaps="always"
                   onScroll={onScroll}
                 />
-                {/* {localMsg?.length > 0 && (
-                  <FlatList data={localMsg} renderItem={renderItemLocal} />
-                )} */}
-                {/* {chatState?.data[teamId]?.globalMessagesToSend?.length > 0 && (
-                  <FlatList
-                    data={chatState?.data[teamId]?.globalMessagesToSend}
-                    renderItem={renderItemLocal}
-                  />
-                )} */}
               </>
             )}
             {isScrolling && (
@@ -298,11 +289,6 @@ const ChatScreen = ({
               />
             )}
           </View>
-          {/* {!networkState?.isInternetConnected && (
-            <View>
-              <Text style={{textAlign: 'center', color:colors.textColor}}>No Internet Connected!!</Text>
-            </View>
-          )} */}
           {attachmentLoading && (
             <View style={{alignItems: 'center'}}>
               <AnimatedLottieView
@@ -458,7 +444,6 @@ const ChatScreen = ({
                     editable
                     multiline
                     onChangeText={handleInputChange}
-                    // onChangeText={text => onChangeMessage(text)}
                     placeholder="Message"
                     placeholderTextColor={colors.textColor}
                     value={message}
