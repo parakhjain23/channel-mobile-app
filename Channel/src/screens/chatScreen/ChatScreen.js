@@ -182,22 +182,39 @@ const ChatScreen = ({
     () => chatState?.data[teamId]?.messages || [],
     [chatState?.data[teamId]?.messages],
   );
-
+  let prevDate = null;
   const renderItem = useCallback(
-    ({item, index}) => (
-      <ChatCardMemo
-        chat={item}
-        userInfoState={userInfoState}
-        orgState={orgState}
-        deleteMessageAction={deleteMessageAction}
-        chatState={chatState}
-        setreplyOnMessage={setreplyOnMessage}
-        setrepliedMsgDetails={setrepliedMsgDetails}
-        searchUserProfileAction={searchUserProfileAction}
-        flatListRef={FlatListRef}
-        channelType={channelType}
-      />
-    ),
+    ({item, index}) => {
+      const date = new Date(item.updatedAt);
+      const isSameDate = prevDate?.toDateString() === date.toDateString();
+      let displayDate = date?.toDateString();
+      if (!isSameDate) {
+        const prevDateString = prevDate?.toDateString();
+        displayDate = `${prevDateString}`;
+      }
+      prevDate = date;
+      return (
+        <View>
+          <ChatCardMemo
+            chat={item}
+            userInfoState={userInfoState}
+            orgState={orgState}
+            deleteMessageAction={deleteMessageAction}
+            chatState={chatState}
+            setreplyOnMessage={setreplyOnMessage}
+            setrepliedMsgDetails={setrepliedMsgDetails}
+            searchUserProfileAction={searchUserProfileAction}
+            flatListRef={FlatListRef}
+            channelType={channelType}
+          />
+          {!isSameDate && displayDate && index>0 && (
+            <Text style={{color: colors?.textColor, textAlign: 'center'}}>
+              {displayDate}
+            </Text>
+          )}
+        </View>
+      );
+    },
     [
       chatState,
       userInfoState,
@@ -346,7 +363,12 @@ const ChatScreen = ({
                         name="cancel"
                         size={ms(16)}
                         color="black"
-                        style={{position: 'absolute', top: ms(5), right: ms(5),zIndex:1}}
+                        style={{
+                          position: 'absolute',
+                          top: ms(5),
+                          right: ms(5),
+                          zIndex: 1,
+                        }}
                       />
                     </View>
                   </TouchableOpacity>

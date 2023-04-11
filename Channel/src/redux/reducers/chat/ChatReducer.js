@@ -78,7 +78,6 @@ export function chatReducer(state = initialState, action) {
       return initialState;
 
   case Actions.ADD_NEW_MESSAGE:
-    console.log("-=-=-=-=-",state?.randomIdsArr);
      if(action?.message?.senderId == action?.userid && state?.randomIdsArr?.length > 0){
       action.message['randomId'] = state?.randomIdsArr[0]
       state?.randomIdsArr?.shift()
