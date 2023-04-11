@@ -58,7 +58,10 @@ const ChannelCard = ({item, navigation, props, resetUnreadCountAction}) => {
           chatHeaderTitle: Name,
           teamId: item?._id,
           channelType: item?.type,
-          userId: item?.userIds[0]!=props?.userInfoState?.user?.id ? item?.userIds[0] : item?.userIds[1],
+          userId:
+            item?.userIds[0] != props?.userInfoState?.user?.id
+              ? item?.userIds[0]
+              : item?.userIds[1],
         });
         props?.setActiveChannelTeamIdAction(item?._id);
         props?.channelsState?.teamIdAndUnreadCountMapping?.[item?._id] > 0 &&
@@ -171,6 +174,9 @@ const SearchChannelCard = ({
           chatHeaderTitle: Name,
           teamId: teamId,
           reciverUserId: item?._source?.userId,
+          channelType:
+            item?._source?.type == 'U' ? 'DIRECT_MESSAGE' : 'CHANNEL',
+          userId: item?._source?.userId,
         });
       }}>
       <View

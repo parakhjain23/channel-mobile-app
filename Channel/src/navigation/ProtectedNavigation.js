@@ -16,18 +16,39 @@ import {ms} from 'react-native-size-matters';
 const ProtectedNavigation = props => {
   const Stack = createNativeStackNavigator();
   const {colors} = useTheme();
-  //   const {colors} = useTheme();
-  //   const getShopingCartHeader = {
-  //     animationDuration: 0,
-  //     statusBarColor: 'transparent',
-  //     headerTintColor: colors.color,
-  //     headerStyle: {
-  //       color: colors.color,
-  //       backgroundColor: colors.primaryColor,
-  //     },
-  //     statusBarTranslucent:true
-  //   };
 
+  const CustomHeaderTitle = ({route}) => {
+    return route?.params?.channelType === 'DIRECT_MESSAGE' ? (
+      <TouchableOpacity
+        onPress={async () => {
+          RootNavigation.navigate('UserProfiles', {
+            displayName: route?.params?.chatHeaderTitle,
+          });
+          await props?.searchUserProfileAction(
+            route?.params?.userId,
+            props?.userInfoState?.accessToken,
+          );
+        }}>
+        <Text
+          style={{
+            color: colors?.textColor,
+            fontSize: ms(16),
+            fontWeight: '600',
+          }}>
+          {route?.params?.chatHeaderTitle}
+        </Text>
+      </TouchableOpacity>
+    ) : (
+      <Text
+        style={{
+          color: colors?.textColor,
+          fontSize: ms(16),
+          fontWeight: '600',
+        }}>
+        {route?.params?.chatHeaderTitle}
+      </Text>
+    );
+  };
   const getHeader = {
     headerTintColor: colors.textColor,
     headerStyle: {
@@ -56,45 +77,17 @@ const ProtectedNavigation = props => {
         component={ChatScreen}
         options={({route}) => ({
           headerTitle: () => {
-            return route?.params?.channelType === 'DIRECT_MESSAGE' ? (
-              <TouchableOpacity
-                onPress={async () => {
-                  RootNavigation.navigate('UserProfiles', {
-                    displayName: route?.params?.chatHeaderTitle,
-                  });
-                  await props?.searchUserProfileAction(
-                    route?.params?.userId,
-                    props?.userInfoState?.accessToken,
-                  );
-                }}>
-                <Text
-                  style={{
-                    color: colors?.textColor,
-                    fontSize: ms(16),
-                    fontWeight: '600',
-                  }}>
-                  {route?.params?.chatHeaderTitle}
-                </Text>
-              </TouchableOpacity>
-            ) : (
-              <Text
-                style={{
-                  color: colors?.textColor,
-                  fontSize: ms(16),
-                  fontWeight: '600',
-                }}>
-                {route?.params?.chatHeaderTitle}
-              </Text>
-            );
+            return <CustomHeaderTitle route={route} />;
           },
           headerShown: true,
+          headerBackVisible: false,
           headerLeft: () => (
             <TouchableOpacity
-            style={{
-              paddingVertical: 15,
-              paddingRight: Platform.OS == 'ios' ? 70 : 30,
-            }}
-            onPressIn={() => RootNavigation.goBack()}>
+              style={{
+                paddingVertical: 15,
+                paddingRight: Platform.OS == 'ios' ? 70 : 30,
+              }}
+              onPressIn={() => RootNavigation.goBack()}>
               <Icon name="arrow-left" size={18} color={colors.textColor} />
             </TouchableOpacity>
           ),
