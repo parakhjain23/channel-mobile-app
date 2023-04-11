@@ -183,6 +183,7 @@ const ChatScreen = ({
     [chatState?.data[teamId]?.messages],
   );
   let prevDate = null;
+  const TodaysDate = (new Date()).toDateString()
   const renderItem = useCallback(
     ({item, index}) => {
       const date = new Date(item.updatedAt);
@@ -207,10 +208,14 @@ const ChatScreen = ({
             flatListRef={FlatListRef}
             channelType={channelType}
           />
-          {!isSameDate && displayDate && index>0 && (
-            <Text style={{color: colors?.textColor, textAlign: 'center'}}>
-              {displayDate}
-            </Text>
+          {!isSameDate && displayDate && index > 0 && (
+            <View style={{borderTopWidth:ms(.3),borderColor: 'gray'}}>
+              <Text style={{color: colors?.textColor, textAlign: 'center',margin:10}}>
+                {displayDate === TodaysDate
+                  ? 'Today'
+                  : displayDate}
+              </Text>
+            </View>
           )}
         </View>
       );
@@ -267,7 +272,7 @@ const ChatScreen = ({
                     chatState?.data[teamId]?.messages?.length > 20 &&
                     onEndReached
                   }
-                  onEndReachedThreshold={0.2}
+                  onEndReachedThreshold={0.1}
                   keyboardDismissMode="on-drag"
                   keyboardShouldPersistTaps="always"
                   onScroll={onScroll}
