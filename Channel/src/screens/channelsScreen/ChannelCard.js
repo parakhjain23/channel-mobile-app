@@ -68,7 +68,7 @@ const ChannelCard = ({item, navigation, props, resetUnreadCountAction}) => {
     <TouchableItem
       onPress={onPress}
       background={
-        Platform.OS === 'android' ? TouchableNativeFeedback.Ripple() : null
+        Platform.OS === 'android' ? TouchableNativeFeedback.Ripple('#00000033') : null
       }
       activeOpacity={0.8}>
       <View
