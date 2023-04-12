@@ -82,7 +82,7 @@ export function chatReducer(state = initialState, action) {
       action.message['randomId'] = state?.randomIdsArr[0]
       state?.randomIdsArr?.shift()
       for(let i = 0; i < state?.data[action?.teamId]?.messages?.length ; i++){
-        if(state?.data[action?.teamId]?.messages[i]?.randomId == action?.message?.randomId){
+        if(state?.data[action?.teamId]?.messages[i]?.randomId == action?.message?.randomId && state?.data[action?.teamId]?.messages[i]?.content == action?.message?.content){
           state?.data[action?.teamId]?.messages?.splice(i,1)
           action.message['randomId'] = null
           break;
@@ -134,11 +134,13 @@ export function chatReducer(state = initialState, action) {
       if(data?.parentMessage != undefined){
         for(let i = 0 ; i < state?.data[data?.teamId]?.messages?.length; i++){
           if(state?.data[data?.teamId]?.messages[i]?._id == data?.parentId){
+            console.log("inside if");
             parentObj[parentKey]=state?.data[data?.teamId]?.messages[i]
             break;
           }
         }
       }
+      console.log("data=-=-=",data);
       return{
         ...state,
         data:{
@@ -148,8 +150,8 @@ export function chatReducer(state = initialState, action) {
             messages:state?.data[data?.teamId]?.messages ?
             [data,...state?.data[data?.teamId]?.messages] :
             [data],
-            parentMessages: data?.parentMessage != undefined && state?.data[data?.teamId]?.parentMessages ?
-            {...parentObj,...state?.data[data?.teamId]?.parentMessages} : parentObj 
+            parentMessages: data?.parentMessage != undefined ? state?.data[data?.teamId]?.parentMessages ?
+            {...parentObj,...state?.data[data?.teamId]?.parentMessages} : parentObj :state?.data[data?.teamId]?.parentMessages
           }
         },
         randomIdsArr: state?.randomIdsArr?.length > 0 ? [...state?.randomIdsArr,data?.randomId] : [data?.randomId]

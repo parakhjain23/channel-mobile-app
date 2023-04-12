@@ -9,6 +9,7 @@ const InternetConnection = ({networkState, chatState, socketState}) => {
     if (networkState?.isInternetConnected && socketState?.isSocketConnected) {
       Object.keys(chatState?.data)?.map(async teamId => {
         while (chatState?.data[teamId]?.globalMessagesToSend?.length) {
+          console.log("inside interenet file");
           await sendGlobalMessageApi(
             chatState?.data[teamId]?.globalMessagesToSend?.shift(),
           );
