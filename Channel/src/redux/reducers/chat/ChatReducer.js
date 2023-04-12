@@ -129,6 +129,16 @@ export function chatReducer(state = initialState, action) {
       return initialState;
     case Actions.ADD_LOCAL_MESSAGE:
       const {data} = action
+      let parentKey = data?.parentId
+      let parentObj={}
+      if(data?.parentMessage != undefined){
+        for(let i = 0 ; i < state?.data[data?.teamId]?.messages?.length; i++){
+          if(state?.data[data?.teamId]?.messages[i]?._id == data?.parentId){
+            parentObj[parentKey]=state?.data[data?.teamId]?.messages[i]
+            break;
+          }
+        }
+      }
       return{
         ...state,
         data:{
@@ -137,7 +147,9 @@ export function chatReducer(state = initialState, action) {
             ...state?.data[data?.teamId],
             messages:state?.data[data?.teamId]?.messages ?
             [data,...state?.data[data?.teamId]?.messages] :
-            [data]
+            [data],
+            parentMessages: data?.parentMessage != undefined && state?.data[data?.teamId]?.parentMessages ?
+            {...parentObj,...state?.data[data?.teamId]?.parentMessages} : parentObj 
           }
         },
         randomIdsArr: state?.randomIdsArr?.length > 0 ? [...state?.randomIdsArr,data?.randomId] : [data?.randomId]

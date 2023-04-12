@@ -32,7 +32,7 @@ const ProtectedNavigation = props => {
         <Text
           style={{
             color: colors?.textColor,
-            fontSize: ms(16),
+            fontSize: ms(20),
             fontWeight: '600',
           }}>
           {route?.params?.chatHeaderTitle}
@@ -42,7 +42,7 @@ const ProtectedNavigation = props => {
       <Text
         style={{
           color: colors?.textColor,
-          fontSize: ms(16),
+          fontSize: ms(20),
           fontWeight: '600',
         }}>
         {route?.params?.chatHeaderTitle}
