@@ -11,14 +11,6 @@ export function* getUserDetails({accessToken}) {
   }
 }
 
-export function saveUserToken(token, orgId) {
-  return {
-    type: Actions.SAVE_TOKEN_AND_ORGID,
-    accessToken: token,
-    orgId: orgId,
-  };
-}
-
 export function getUserDetailsSuccess(data) {
   return {
     type: Actions.FETCH_USER_DETAILS_SUCCESS,

@@ -14,9 +14,10 @@ const initialState = {
 
 export function orgsReducer(state = initialState, action) {
   switch (action.type) {
-    case Actions.SAVE_TOKEN_AND_ORGID : 
-      return {...state, currentOrgId : action.orgId }
-
+    // case Actions.SAVE_TOKEN_AND_ORGID : 
+    //   return {...state, currentOrgId : action.orgId }
+    case Actions.SELECT_INITIAL_ORG_ID:
+      return {...state, currentOrgId: action.orgId}
     case Actions.UPDATE_CURRENT_ORG_ID :
       return {...state, currentOrgId : action.orgId}
       
@@ -74,7 +75,8 @@ export function orgsReducer(state = initialState, action) {
           count = Object.keys(updatedOrgsWithNewMessages)?.length
         }  
         return {...state,orgsWithNewMessages:updatedOrgsWithNewMessages,unreadCountForDrawerIcon:count}
-        
+       case Actions.SIGN_OUT:
+        return {...state,currentOrgId:null} 
     default:
       return state;
   }

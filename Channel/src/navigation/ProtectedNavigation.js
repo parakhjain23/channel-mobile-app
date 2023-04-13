@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import * as RootNavigation from '../navigation/RootNavigation';
 import {fetchSearchedUserProfileStart} from '../redux/actions/user/searchUserProfileActions';
 import {ms} from 'react-native-size-matters';
+import SelectWorkSpaceScreen from '../screens/selectWorkSpaceScreen/SelectWorkSpaceScreen';
 
 const ProtectedNavigation = props => {
   const Stack = createNativeStackNavigator();
@@ -56,11 +57,16 @@ const ProtectedNavigation = props => {
       backgroundColor: colors.headerColor,
     },
   };
-  return !props?.userInfoState?.isSignedIn ? (
+  return  props?.orgsState?.currentOrgId ==null ? (
     <Stack.Navigator>
       <Stack.Screen
         name="Login"
         component={LoginScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="SelectWorkSpace"
+        component={SelectWorkSpaceScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
@@ -119,6 +125,7 @@ const ProtectedNavigation = props => {
 const mapStateToProps = state => ({
   userInfoState: state.userInfoReducer,
   channelsState: state.channelsReducer,
+  orgsState: state.orgsReducer
 });
 const mapDispatchToProps = dispatch => {
   return {

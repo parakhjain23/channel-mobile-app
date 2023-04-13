@@ -9,6 +9,7 @@ export function* notifications({accessToken, deviceId}) {
 }
 
 const notificationApi = async (token, deviceId) => {
+  console.log(token,deviceId,"-=-=-");
   try {
     const myHeaders = new Headers();
     myHeaders.append(
@@ -31,7 +32,9 @@ const notificationApi = async (token, deviceId) => {
     };
 
     fetch('https://api.intospace.io/users/deviceGroups', requestOptions)
-      .then(response => response.text())
+      .then(async response => {
+        let result = await response.json()
+      })
       .catch(error => console.warn('error', error));
   } catch (error) {
     console.warn(error);

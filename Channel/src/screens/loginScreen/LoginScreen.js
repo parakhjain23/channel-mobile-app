@@ -2,27 +2,21 @@ import React, { useEffect, useState } from 'react';
 import {Button, Image, Linking, Platform, Text, View} from 'react-native';
 import { connect } from 'react-redux';
 import {
-  AppleButton,
   appleAuth,
 } from '@invertase/react-native-apple-authentication';
-import { getChannelsStart } from '../../redux/actions/channels/ChannelsAction';
-import { getOrgDetails, getOrgDetailsStart } from '../../redux/actions/org/GetOrgDetailsAction';
-import { saveUserToken } from '../../redux/actions/user/userAction';
-import { InAppBrowser } from 'react-native-inappbrowser-reborn'
-import { useTheme } from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 
 import {
   GoogleSignin,
-  GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
+import { getSpaceTokenStart } from '../../redux/actions/spaceToken/SpaceTokenActions';
+import {useNavigation, useTheme} from '@react-navigation/native';
 
-const LoginScreen = (props) => {
+const LoginScreen = ({getSpaceTokenStartAction}) => {
+  const navigation = useNavigation()
   const {colors} = useTheme();
-  // const [token,setToken] = useState( props?.route?.params?.token);
   useEffect(() => {
-    console.log("inside useEffect");
     GoogleSignin.configure({
       scopes: ['email'],
       offlineAccess: true,
@@ -39,12 +33,13 @@ const LoginScreen = (props) => {
         idToken,
         accessTokken,
       );
-      console.log(user,"this is user info from google");
       try {
         auth().onAuthStateChanged(data=>{
           if(data){
             data.getIdToken()?.then(token=>{
-              console.log("this is token", token);
+              console.log("this is token");
+              getSpaceTokenStartAction(token)
+              navigation.navigate('SelectWorkSpace')
             })
           }
         })
@@ -76,7 +71,6 @@ const LoginScreen = (props) => {
             requestedScopes: [appleAuth.Scope.FULL_NAME, appleAuth.Scope.EMAIL],
           });
           const {identityToken, nonce} = appleAuthRequestResponse;
-          console.log("inside apple auth",identityToken,nonce);
           const appleCredential = auth.AppleAuthProvider.credential(
             identityToken,
             nonce,
@@ -85,7 +79,9 @@ const LoginScreen = (props) => {
             auth().onAuthStateChanged(data=>{
               if(data){
                 data?.getIdToken()?.then(token=>{
-                  console.log("this is token from apple",token);
+                  console.log("this is token");
+                  getSpaceTokenStartAction(token)
+                  navigation.navigate('SelectWorkSpace')
                 })
               }
             })
@@ -106,12 +102,14 @@ const LoginScreen = (props) => {
       <Image source={require('../../assests/images/appIcon/icon-96x96.png')} />
       <Button
         title="Login with Google"
-        onPress={_signIn}
+        onPress={
+          _signIn
+        }
       />
-      <Button 
+    { Platform.OS == 'ios' && <Button 
         title='Login with Apple'
         onPress={onAppleButtonPress}
-      />
+      />}
     </View>
   );
 };
@@ -120,8 +118,9 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch =>{
   return {
-    saveUserTokenAction :(token,orgId)=> dispatch(saveUserToken(token,orgId)),
-    getOrgDetailsAction: (token) => dispatch(getOrgDetailsStart(token)),
+    getSpaceTokenStartAction : (firebaseToken) => dispatch(getSpaceTokenStart(firebaseToken)),
+    // saveUserTokenAction :(token,orgId)=> dispatch(saveUserToken(token,orgId)),
+    // getOrgDetailsAction: (token) => dispatch(getOrgDetailsStart(token)),
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(LoginScreen);

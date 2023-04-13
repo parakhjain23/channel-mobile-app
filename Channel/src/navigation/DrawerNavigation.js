@@ -21,7 +21,8 @@ const DrawerNavigation = ({orgsState, route}) => {
     <Drawer.Navigator
       drawerContent={props => (
         <CustomDrawerScreen {...props} setScheme={setScheme} />
-      )}>
+      )}
+      >
       <Drawer.Screen
         name="Channel"
         component={ChannelsScreen}
