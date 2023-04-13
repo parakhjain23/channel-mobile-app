@@ -6,10 +6,6 @@
 	<array>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	</array>
-	<key>NSCameraUsageDescription</key>
-	<string>Allow access to the camera to take pictures for uploading.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Allow access to the photo library to select pictures for uploading.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -28,17 +24,25 @@
 	<string>2.0.8</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-<key>CFBundleURLTypes</key>
-<array>
-    <dict>
-        <key>CFBundleURLSchemes</key>
-        <array>
-            <string>channel</string>
-        </array>
-        <key>CFBundleURLName</key>
-        <string>walkover.space.chat</string>
-    </dict>
-</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>walkover.space.chat</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>channel</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.933098662176-ttqh3qmiqio04re9758gvvis1pmbejpq</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -54,8 +58,12 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Allow access to the camera to take pictures for uploading.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Allow access to the photo library to select pictures for uploading.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
