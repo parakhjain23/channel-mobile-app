@@ -4,6 +4,7 @@ import {
   Image,
   Linking,
   Platform,
+  ActivityIndicator,
   Text,
   View,
   TouchableOpacity,
@@ -21,11 +22,11 @@ const SelectWorkSpaceScreen = ({orgsState, userInfoState}) => {
     }
   }, [selectedOrg]);
   return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',backgroundColor:'black'}}>
       <View style={{margin: 30}}>
-        <Text style={{fontSize: 18}}>Select a Work Space to continue !!!</Text>
+        <Text style={{fontSize: 20,fontWeight:'600'}}>Select a Work Space to continue !!!</Text>
       </View>
-      {orgsState?.orgs?.map(item => {
+      { orgsState?.orgs !=null ? orgsState?.orgs?.map(item => {
         return (
             <TouchableOpacity onPress={() => setselectedOrg(item?.id)}  key={item.id}
             style={{
@@ -36,15 +37,15 @@ const SelectWorkSpaceScreen = ({orgsState, userInfoState}) => {
               justifyContent: 'center',
               alignItems: 'center',
               flexDirection: 'row',
-              height: 30,
+              height: 40,
               // backgroundColor:'grey'
             }}>
-              <Text style={{fontSize: 16, textAlign: 'center'}}>
+              <Text style={{fontSize: 18, textAlign: 'center',fontWeight:'600'}}>
                 {item?.name}
               </Text>
             </TouchableOpacity>
         );
-      })}
+      }) : <ActivityIndicator size={'small'} />}
     </View>
   );
 };
