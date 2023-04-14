@@ -10,7 +10,7 @@ const initialState = {
 
 export function userInfoReducer(state = initialState, action) {
   switch (action.type) {
-    case Actions.SAVE_TOKEN_AND_ORGID:
+    case Actions.SAVE_TOKEN:
       return {...state,accessToken:action.accessToken ,isSignedIn:true}
     
     case Actions.FETCH_USER_DETAILS_SUCCESS:

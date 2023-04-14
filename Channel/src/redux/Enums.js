@@ -4,7 +4,7 @@ export const GET_ORG_SUCCESS = 'GET_ORG_SUCCESS';
 export const GET_ORG_ERROR = 'GET_ORG_ERROR';
 export const GET_ORG_RESET = 'GET_ORG_RESET';
 
-export const SAVE_TOKEN_AND_ORGID = 'SAVE_TOKEN_AND_ORGID';
+export const SAVE_TOKEN = 'SAVE_TOKEN';
 export const SIGN_OUT = 'SIGN_OUT';
 
 //SET ACTIVE CHANNEL ID

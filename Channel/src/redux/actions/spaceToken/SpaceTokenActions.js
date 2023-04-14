@@ -21,7 +21,7 @@ export function* getSpaceAccessToken({firebaseAccessToken}) {
   }
   export function saveUserToken(response) {
     return {
-      type: Actions.SAVE_TOKEN_AND_ORGID,
+      type: Actions.SAVE_TOKEN,
       accessToken:response.accessToken,
     //   orgId:response?.followedOrgs[0]?.id
     };
