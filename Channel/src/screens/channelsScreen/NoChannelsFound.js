@@ -15,7 +15,7 @@ const NoChannelsFound = ({modalizeRef, setsearchValue, props}) => {
         <TouchableOpacity
           onPress={() => {
             setsearchValue('');
-            navigation.navigate('ExploreChannels', {props: props});
+            navigation.navigate('Explore Channels', {props: props});
           }}>
           <Text
             style={[

@@ -37,7 +37,6 @@ const LoginScreen = ({getSpaceTokenStartAction}) => {
         auth().onAuthStateChanged(data=>{
           if(data){
             data.getIdToken()?.then(token=>{
-              console.log("this is token");
               getSpaceTokenStartAction(token)
               navigation.navigate('SelectWorkSpace')
             })
@@ -79,7 +78,6 @@ const LoginScreen = ({getSpaceTokenStartAction}) => {
             auth().onAuthStateChanged(data=>{
               if(data){
                 data?.getIdToken()?.then(token=>{
-                  console.log("this is token");
                   getSpaceTokenStartAction(token)
                   navigation.navigate('SelectWorkSpace')
                 })
@@ -106,10 +104,11 @@ const LoginScreen = ({getSpaceTokenStartAction}) => {
           _signIn
         }
       />
-    { Platform.OS == 'ios' && <Button 
+    { Platform.OS == 'ios' && <View style={{marginTop:10}}>
+    <Button 
         title='Login with Apple'
         onPress={onAppleButtonPress}
-      />}
+      /></View>}
     </View>
   );
 };

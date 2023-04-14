@@ -1,5 +1,7 @@
 import {useTheme} from '@react-navigation/native';
 import React from 'react';
+import {getChatsReset} from '../../redux/actions/chat/ChatActions';
+
 import {
   Text,
   TouchableOpacity,
@@ -14,11 +16,13 @@ import {fetchSearchedUserProfileStart} from '../../redux/actions/user/searchUser
 import {s, vs, ms, mvs} from 'react-native-size-matters';
 import {resetUnreadCountStart} from '../../redux/actions/channels/ChannelsAction';
 import * as RootNavigation from '../../navigation/RootNavigation';
+
 const TouchableItem =
   Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
 
-const ChannelCard = ({item, navigation, props, resetUnreadCountAction}) => {
+const ChannelCard = ({item, navigation, props, resetUnreadCountAction,resetChatsAction}) => {
   const {colors} = useTheme();
+  // console.log(props?.orgsState);
   const Name =
     item?.type == 'DIRECT_MESSAGE'
       ? props?.orgsState?.userIdAndDisplayNameMapping
@@ -29,13 +33,15 @@ const ChannelCard = ({item, navigation, props, resetUnreadCountAction}) => {
                 : item.userIds[1]
             }`
           ]
-        : props?.orgsState?.userIdAndNameMapping[
-            `${
-              item.userIds[0] != props?.userInfoState?.user?.id
-                ? item.userIds[0]
-                : item.userIds[1]
-            }`
-          ]
+        : (props?.orgsState?.userIdAndNameMapping
+          ? props?.orgsState?.userIdAndNameMapping[
+              `${
+                item.userIds[0] != props?.userInfoState?.user?.id
+                  ? item.userIds[0]
+                  : item.userIds[1]
+              }`
+            ]
+          : 'Loading....')
       : item?.name;
   const iconName = item?.type == 'DIRECT_MESSAGE' ? 'user' : 'hashtag';
   let unread =
@@ -46,6 +52,7 @@ const ChannelCard = ({item, navigation, props, resetUnreadCountAction}) => {
           : false)
       : false);
   const onPress = () => {
+    resetChatsAction();
     RootNavigation.navigate('Chat', {
       chatHeaderTitle: Name,
       teamId: item?._id,
@@ -277,6 +284,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(fetchSearchedUserProfileStart(userId, token)),
     resetUnreadCountAction: (orgId, userId, teamId, accessToken) =>
       dispatch(resetUnreadCountStart(orgId, userId, teamId, accessToken)),
+      resetChatsAction: () => dispatch(getChatsReset() )
   };
 };
 export const RenderChannels = React.memo(

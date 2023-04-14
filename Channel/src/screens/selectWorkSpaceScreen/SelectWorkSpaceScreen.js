@@ -24,7 +24,7 @@ const SelectWorkSpaceScreen = ({orgsState, userInfoState}) => {
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',backgroundColor:'black'}}>
       <View style={{margin: 30}}>
-        <Text style={{fontSize: 20,fontWeight:'600'}}>Select a Work Space to continue !!!</Text>
+        <Text style={{fontSize: 20,fontWeight:'600',color:'white'}}>Select a Work Space to continue</Text>
       </View>
       { orgsState?.orgs !=null ? orgsState?.orgs?.map(item => {
         return (
@@ -32,7 +32,7 @@ const SelectWorkSpaceScreen = ({orgsState, userInfoState}) => {
             style={{
               margin: 10,
               borderWidth: 1,
-              borderColor:'grey',
+              borderColor:'white',
               width: '60%',
               justifyContent: 'center',
               alignItems: 'center',
@@ -40,7 +40,7 @@ const SelectWorkSpaceScreen = ({orgsState, userInfoState}) => {
               height: 40,
               // backgroundColor:'grey'
             }}>
-              <Text style={{fontSize: 18, textAlign: 'center',fontWeight:'600'}}>
+              <Text style={{fontSize: 18, textAlign: 'center',fontWeight:'600',color:'white'}}>
                 {item?.name}
               </Text>
             </TouchableOpacity>

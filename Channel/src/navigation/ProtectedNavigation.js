@@ -101,7 +101,7 @@ const ProtectedNavigation = props => {
         })}
       />
       <Stack.Screen
-        name="ExploreChannels"
+        name="Explore Channels"
         component={ExploreChannels}
         options={({route}) => ({
           headerTitle: route?.params?.chatHeaderTitle,

@@ -15,12 +15,17 @@ import {Alert, Platform} from 'react-native';
 import { switchOrgStart } from '../redux/actions/org/changeCurrentOrg';
 import { increaseCountOnOrgCard, removeCountOnOrgCard } from '../redux/actions/org/UnreadCountOnOrgCardsAction';
 import { moveChannelToTop } from '../redux/actions/channels/ChannelsAction';
+import { connect } from 'react-redux';
 
-const NotificationSetup = () => {
+const NotificationSetup = ({userInfoState}) => {
   useEffect(() => {
-    setNotificationListeners();
-    initPushNotification();
-  }, [store.getState()?.userInfoReducer?.accessToken]);
+    // console.log(store.getState()?.userInfoReducer?.accessToken,"inside use effect notification");
+    if(store.getState()?.userInfoReducer?.accessToken){
+      // console.log("inside if");
+      setNotificationListeners()
+      initPushNotification()
+    }
+  }, [userInfoState.accessToken]);
   const initPushNotification = async () => {
     try {
       await Notifee.requestPermission();
@@ -55,7 +60,7 @@ const NotificationSetup = () => {
         if (store.getState().userInfoReducer?.accessToken) {
           store.dispatch(
             subscribeToNotifications(
-              store.getState().userInfoReducer?.accessToken,
+              userInfoState?.accessToken,
               token,
             ),
           );
@@ -68,7 +73,7 @@ const NotificationSetup = () => {
       });
       messaging().onMessage(async message => {
         if (
-          message?.data?.senderId != store.getState()?.userInfoReducer.user?.id
+          message?.data?.senderId != userInfoState.user?.id
         ) {
           handleNotificationFirebase(message);
           if(message?.data?.orgId != store?.getState()?.orgsReducer?.currentOrgId){
@@ -184,4 +189,9 @@ const NotificationSetup = () => {
   };
   return null;
 };
-export default NotificationSetup;
+// export default NotificationSetup;
+
+const mapStateToProps = state => ({
+  userInfoState : state?.userInfoReducer
+});
+export default connect(mapStateToProps)(NotificationSetup);
