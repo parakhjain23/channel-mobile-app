@@ -33,7 +33,6 @@ export function createNewChannelStart(
   };
 }
 export function createNewChannelSuccess(data, userId) {
-  console.log('create channel success actions ');
   return {
     type: Actions.CREATE_NEW_CHANNEL_SUCCESS,
     channel: data,
