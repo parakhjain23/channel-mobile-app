@@ -130,7 +130,7 @@ const ChannelCard = ({
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              maxWidth: '80%',
+              maxWidth: '85%',
             }}>
             <Icon name={iconName} size={14} color={colors.textColor} />
             <Text>{'  '}</Text>
@@ -139,7 +139,7 @@ const ChannelCard = ({
                 fontSize: ms(16),
                 fontWeight: unread ? '700' : '400',
                 color: colors.textColor,
-              }}>{`${Name}`}</Text>
+              }} numberOfLines={1} ellipsizeMode='tail'>{`${Name}`}</Text>
           </View>
           {teamIdAndUnreadCountMapping?.[item?._id] > 0 && (
             <View
@@ -248,7 +248,7 @@ const SearchChannelCard = ({
                 fontSize: ms(16),
                 fontWeight: '400',
                 color: colors.textColor,
-              }}>{`${Name}`}</Text>
+              }} numberOfLines={1} ellipsizeMode='tail'>{`${Name}`}</Text>
           </View>
           {item?._source?.type == 'U' && (
             <View
