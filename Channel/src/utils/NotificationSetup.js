@@ -177,12 +177,12 @@ const NotificationSetup = ({userInfoState}) => {
       store.getState()?.channelsReducer?.teamIdAndTypeMapping[teamId] ==
       'DIRECT_MESSAGE'
         ? (name =
-            store.getState().orgsReducer?.userIdAndNameMapping[
+            store.getState().orgsReducer?.userIdAndDisplayNameMapping[
               message?.data?.senderId
             ])
         : (name =
             store.getState()?.channelsReducer?.teamIdAndNameMapping[teamId]);
-      RootNavigation?.navigate('Chat', {chatHeaderTitle: name, teamId: teamId});
+      RootNavigation?.navigate('Chat', {chatHeaderTitle: name, teamId: teamId,channelType:store.getState()?.channelsReducer?.teamIdAndTypeMapping[teamId],userId: message?.data?.senderId});
     } catch (error) {
       console.warn(error);
       }

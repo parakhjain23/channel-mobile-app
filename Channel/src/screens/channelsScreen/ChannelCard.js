@@ -63,7 +63,6 @@ const ChannelCard = ({
   const shouldResetUnreadCount = teamIdAndUnreadCountMapping?.[item?._id] > 0;
 
   const onPress = useCallback(() => {
-    console.log(networkState?.isInternetConnected,"netowork status")
     networkState?.isInternetConnected && resetChatsAction();
     props.setActiveChannelTeamIdAction(item?._id);
     if (shouldResetUnreadCount) {

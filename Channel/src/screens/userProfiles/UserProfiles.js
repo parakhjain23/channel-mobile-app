@@ -32,9 +32,7 @@ const ContactDetailsPage = ({userInfoState, channelsState,createDmChannelAction,
         }
       }
    }, [userInfoState?.searchedUserProfile])
-   
 
-    
   return (
     <View style={styles.container}>
       {userInfoState?.isLoading ? (
@@ -111,6 +109,8 @@ const ContactDetailsPage = ({userInfoState, channelsState,createDmChannelAction,
                   chatHeaderTitle:
                     userInfoState?.searchedUserProfile?.displayName,
                   teamId: teamId,
+                  channelType: channelsState?.teamIdAndTypeMapping[teamId],
+                  userId:userInfoState?.searchedUserProfile?.id
                 })}
               }>
               <Text style={[styles.buttonText, styles.buttonTextWhite]}>
