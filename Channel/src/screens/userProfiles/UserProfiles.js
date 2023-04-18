@@ -130,7 +130,7 @@ const ContactDetailsPage = ({
               </View>
             </TouchableOpacity>
           )}
-          <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+         {userId != userInfoState?.user?.id && <View style={{flexDirection: 'row', justifyContent: 'center'}}>
             <TouchableOpacity
               style={[styles.button, styles.messageButton]}
               onPress={async () => {
@@ -145,7 +145,7 @@ const ContactDetailsPage = ({
                 Message {DisplayName}
               </Text>
             </TouchableOpacity>
-          </View>
+          </View>}
         </ScrollView>
       )}
     </View>

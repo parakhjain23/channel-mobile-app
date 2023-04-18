@@ -19,7 +19,6 @@ const ProtectedNavigation = props => {
   const {colors} = useTheme();
 
   const CustomHeaderTitle = ({route}) => {
-    console.log(route,"-=-=-=-=-=-");
     return route?.params?.channelType === 'DIRECT_MESSAGE' ? (
       <TouchableOpacity
         onPress={async () => {
