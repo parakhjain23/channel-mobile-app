@@ -21,7 +21,11 @@ const StoreAppWrapper = () => {
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
-      dispatch(networkStatus(state?.isConnected));
+      if(state?.isConnected){
+        dispatch(networkStatus(true))
+      }else{
+        dispatch(networkStatus(false))
+      }
     });
     return () => {
       unsubscribe();

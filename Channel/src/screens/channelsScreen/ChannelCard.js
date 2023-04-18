@@ -26,6 +26,7 @@ const ChannelCard = ({
   props,
   resetUnreadCountAction,
   resetChatsAction,
+  networkState
 }) => {
   const {colors} = useTheme();
 
@@ -62,7 +63,8 @@ const ChannelCard = ({
   const shouldResetUnreadCount = teamIdAndUnreadCountMapping?.[item?._id] > 0;
 
   const onPress = useCallback(() => {
-    resetChatsAction();
+    console.log(networkState?.isInternetConnected,"netowork status")
+    networkState?.isInternetConnected && resetChatsAction();
     props.setActiveChannelTeamIdAction(item?._id);
     if (shouldResetUnreadCount) {
       resetUnreadCountAction(currentOrgId, user?.id, item?._id, accessToken);
@@ -86,6 +88,7 @@ const ChannelCard = ({
     user?.id,
     userId,
     accessToken,
+    networkState
   ]);
 
   useLayoutEffect(() => {
@@ -320,6 +323,7 @@ const UsersToAddCard = ({item, setUserIds, userIds, setsearchedUser}) => {
 const mapStateToProps = state => ({
   userInfoState: state.userInfoReducer,
   orgsState: state.orgsReducer,
+  networkState : state.networkReducer
 });
 const mapDispatchToProps = dispatch => {
   return {
