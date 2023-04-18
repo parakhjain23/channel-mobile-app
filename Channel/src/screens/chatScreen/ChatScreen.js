@@ -201,15 +201,11 @@ const ChatScreen = ({
             channelType={channelType}
           />
           {!isSameDate && displayDate && index > 0 && (
-            <View
-              style={{
-                borderTopWidth: ms(0.3),
-                borderColor: '#444444',
-                marginRight: ms(5),
-              }}>
+            <View>
               <Text
                 style={{
-                  color: colors?.textColor,
+                  color: 'gray',
+                  fontWeight: '100',
                   textAlign: 'center',
                   margin: 10,
                 }}>
@@ -373,7 +369,7 @@ const ChatScreen = ({
                 />
 
                 <View style={styles.inputContainer}>
-                  <View style={{alignSelf: 'flex-end'}}>
+                  <View style={{justifyContent: 'center'}}>
                     {showOptions && (
                       <Animated.View
                         style={[
@@ -428,7 +424,7 @@ const ChatScreen = ({
                       </Animated.View>
                     )}
                   </View>
-                  <View style={{alignSelf: 'flex-end'}}>
+                  <View style={{justifyContent: 'center'}}>
                     {!showOptions && (
                       <MaterialIcons
                         name="add"
