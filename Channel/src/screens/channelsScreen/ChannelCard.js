@@ -42,18 +42,14 @@ const ChannelCard = ({
   const userId =
     item?.userIds[0] !== user?.id ? item?.userIds[0] : item?.userIds[1];
 
-  const Name = useMemo(() => {
-    if (item?.type === 'DIRECT_MESSAGE') {
-      if (userIdAndDisplayNameMapping) {
-        return userIdAndDisplayNameMapping[userId];
-      }
-      if (userIdAndNameMapping) {
-        return userIdAndNameMapping[userId];
-      }
-      return 'Loading...';
-    }
-    return item?.name;
-  }, [item?.type, userIdAndDisplayNameMapping, userIdAndNameMapping, userId]);
+  const Name =
+    item?.type === 'DIRECT_MESSAGE'
+      ? userIdAndDisplayNameMapping
+        ? userIdAndDisplayNameMapping[userId]
+        : userIdAndNameMapping
+        ? userIdAndNameMapping[userId]
+        : 'Loading...'
+      : item?.name;
 
   const iconName = item?.type === 'DIRECT_MESSAGE' ? 'user' : 'hashtag';
 
@@ -139,7 +135,9 @@ const ChannelCard = ({
                 fontSize: ms(16),
                 fontWeight: unread ? '700' : '400',
                 color: colors.textColor,
-              }} numberOfLines={1} ellipsizeMode='tail'>{`${Name}`}</Text>
+              }}
+              numberOfLines={1}
+              ellipsizeMode="tail">{`${Name}`}</Text>
           </View>
           {teamIdAndUnreadCountMapping?.[item?._id] > 0 && (
             <View
@@ -248,7 +246,9 @@ const SearchChannelCard = ({
                 fontSize: ms(16),
                 fontWeight: '400',
                 color: colors.textColor,
-              }} numberOfLines={1} ellipsizeMode='tail'>{`${Name}`}</Text>
+              }}
+              numberOfLines={1}
+              ellipsizeMode="tail">{`${Name}`}</Text>
           </View>
           {item?._source?.type == 'U' && (
             <View
