@@ -202,8 +202,10 @@ const ChatCard = ({
                       imageUrls={[
                         {
                           url: selectedImage?.resourceUrl,
-                          width: Dimensions.get('window')?.width - 20,
-                          height: Dimensions.get('window')?.height - 100,
+                          // width: Dimensions.get('window')?.width - 20,
+                          // height: Dimensions.get('window')?.height,
+                          freeHeight:true,
+                          freeWidth:true
                         },
                       ]}
                       enableSwipeDown={true}
