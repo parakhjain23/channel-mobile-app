@@ -1,6 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation, useTheme} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {
   Button,
   FlatList,
@@ -9,7 +8,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Switch} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 import NoInternetComponent from '../../components/NoInternetComponent';
@@ -19,11 +17,9 @@ import {
   moveChannelToTop,
 } from '../../redux/actions/channels/ChannelsAction';
 import {switchOrgStart} from '../../redux/actions/org/changeCurrentOrg';
-import {
-  moveMultipleChannelsToTop,
-  removeCountOnOrgCard,
-} from '../../redux/actions/org/UnreadCountOnOrgCardsAction';
+import {removeCountOnOrgCard} from '../../redux/actions/org/UnreadCountOnOrgCardsAction';
 import signOut from '../../redux/actions/user/userAction';
+import * as RootNavigation from '../../navigation/RootNavigation';
 
 const CustomeDrawerScreen = ({
   orgsState,
@@ -34,38 +30,11 @@ const CustomeDrawerScreen = ({
   signOutAction,
   removeCountOnOrgCardAction,
   moveChannelToTopAction,
-  setScheme,
 }) => {
   const {colors} = useTheme();
   const data = orgsState?.orgs;
   const navigation = useNavigation();
-  const [isDarkModeOn, setIsDarkModeOn] = useState(false);
-  const [isSwitchOn, setIsSwitchOn] = useState(false);
 
-  async function checkDarkMode() {
-    const theme = await AsyncStorage.getItem('theme');
-    setIsDarkModeOn(theme === 'dark');
-  }
-
-  useEffect(() => {
-    checkDarkMode();
-  }, []);
-
-  useEffect(() => {
-    setIsSwitchOn(isDarkModeOn);
-  }, [isDarkModeOn]);
-
-  const onToggleSwitch = async () => {
-    setIsSwitchOn(!isSwitchOn);
-    const currentTheme = await AsyncStorage.getItem('theme');
-    if (currentTheme == 'dark') {
-      await AsyncStorage.setItem('theme', 'light');
-      setScheme('light');
-    } else {
-      await AsyncStorage.setItem('theme', 'dark');
-      setScheme('dark');
-    }
-  };
   useEffect(() => {
     if (userInfoState?.user != null && channelsState?.channels?.length == 0) {
       getChannelsAction(
@@ -155,9 +124,20 @@ const CustomeDrawerScreen = ({
         backgroundColor: colors.drawerBackgroundColor,
       }}>
       <View style={{flex: 0.15, justifyContent: 'center'}}>
-        <View style={{flexDirection: 'row', alignItems: 'center',maxWidth:'80%'}}>
+        <TouchableOpacity
+          onPress={async () => {
+            RootNavigation.navigate('UserProfiles', {
+              displayName: userInfoState?.user?.displayName,
+              userId: userInfoState?.user?.id
+            });
+          }}
+          style={{flexDirection: 'row', alignItems: 'center', maxWidth: '80%'}}>
           <Image
-            source={{uri: userInfoState?.user?.avatarKey ? `${IMAGE_BASE_URL}${userInfoState?.user?.avatarKey}` : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVe0cFaZ9e5Hm9X-tdWRLSvoZqg2bjemBABA&usqp=CAU'}}
+            source={{
+              uri: userInfoState?.user?.avatarKey
+                ? `${IMAGE_BASE_URL}${userInfoState?.user?.avatarKey}`
+                : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVe0cFaZ9e5Hm9X-tdWRLSvoZqg2bjemBABA&usqp=CAU',
+            }}
             style={{width: 60, height: 60, borderRadius: 50}}
           />
           <View>
@@ -172,16 +152,15 @@ const CustomeDrawerScreen = ({
                 userInfoState?.user?.displayName}{' '}
               {userInfoState?.user?.lastName && userInfoState?.user?.lastName}
             </Text>
-              <Text
-                style={{
-                  marginLeft: 10,
-                  color: colors.textColor,
-                }}>
-                {userInfoState?.user?.email &&
-                  userInfoState?.user?.email}
-              </Text>
+            <Text
+              style={{
+                marginLeft: 10,
+                color: colors.textColor,
+              }}>
+              {userInfoState?.user?.email && userInfoState?.user?.email}
+            </Text>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
       <View
         style={{
@@ -205,24 +184,7 @@ const CustomeDrawerScreen = ({
       </View>
       <View
         style={{
-          flex: 0.1,
-          flexDirection: 'row',
-          borderTopColor: 'gray',
-          borderTopWidth: 0.3,
-          justifyContent: 'space-around',
-          alignItems: 'center',
-        }}>
-        <Text style={{color: colors.textColor}}>Dark Mode</Text>
-        <Switch
-          value={isSwitchOn}
-          onValueChange={onToggleSwitch}
-          color={'green'}
-          style={{}}
-        />
-      </View>
-      <View
-        style={{
-          flex: 0.1,
+          flex: 0.2,
           borderTopColor: 'gray',
           borderTopWidth: 0.3,
           justifyContent: 'center',

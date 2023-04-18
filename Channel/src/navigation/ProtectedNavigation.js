@@ -6,8 +6,8 @@ import DrawerNavigation from './DrawerNavigation';
 import ChatScreen from '../screens/chatScreen/ChatScreen';
 import ExploreChannels from '../screens/channelsScreen/ExploreChannels';
 import ContactDetailsPage from '../screens/userProfiles/UserProfiles';
-import {useNavigation, useTheme} from '@react-navigation/native';
-import {TouchableOpacity, Text, View, Platform} from 'react-native';
+import {useTheme} from '@react-navigation/native';
+import {TouchableOpacity, Text, Platform} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as RootNavigation from '../navigation/RootNavigation';
 import {fetchSearchedUserProfileStart} from '../redux/actions/user/searchUserProfileActions';
@@ -24,6 +24,7 @@ const ProtectedNavigation = props => {
         onPress={async () => {
           RootNavigation.navigate('UserProfiles', {
             displayName: route?.params?.chatHeaderTitle,
+            userId: route?.params?.userId
           });
           await props?.searchUserProfileAction(
             route?.params?.userId,
@@ -35,20 +36,24 @@ const ProtectedNavigation = props => {
             color: colors?.textColor,
             fontSize: ms(20),
             fontWeight: '600',
-          }} numberOfLines={1} ellipsizeMode='tail'>
+          }}
+          numberOfLines={1}
+          ellipsizeMode="tail">
           {route?.params?.chatHeaderTitle}
         </Text>
       </TouchableOpacity>
     ) : (
-        <Text
-          style={{
-            color: colors?.textColor,
-            fontSize: ms(20),
-            fontWeight: '600',
-            maxWidth:'90%'
-          }} numberOfLines={1} ellipsizeMode='tail'>
-          {route?.params?.chatHeaderTitle}
-        </Text>
+      <Text
+        style={{
+          color: colors?.textColor,
+          fontSize: ms(20),
+          fontWeight: '600',
+          maxWidth: '90%',
+        }}
+        numberOfLines={1}
+        ellipsizeMode="tail">
+        {route?.params?.chatHeaderTitle}
+      </Text>
     );
   };
   const getHeader = {
@@ -76,7 +81,6 @@ const ProtectedNavigation = props => {
       <Stack.Screen
         name="Org"
         component={DrawerNavigation}
-        initialParams={{setScheme: props?.setScheme}}
         options={{headerShown: false, ...getHeader}}
       />
       <Stack.Screen
