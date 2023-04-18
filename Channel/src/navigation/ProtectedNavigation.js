@@ -35,19 +35,20 @@ const ProtectedNavigation = props => {
             color: colors?.textColor,
             fontSize: ms(20),
             fontWeight: '600',
-          }}>
+          }} numberOfLines={1} ellipsizeMode='tail'>
           {route?.params?.chatHeaderTitle}
         </Text>
       </TouchableOpacity>
     ) : (
-      <Text
-        style={{
-          color: colors?.textColor,
-          fontSize: ms(20),
-          fontWeight: '600',
-        }}>
-        {route?.params?.chatHeaderTitle}
-      </Text>
+        <Text
+          style={{
+            color: colors?.textColor,
+            fontSize: ms(20),
+            fontWeight: '600',
+            maxWidth:'90%'
+          }} numberOfLines={1} ellipsizeMode='tail'>
+          {route?.params?.chatHeaderTitle}
+        </Text>
     );
   };
   const getHeader = {
@@ -57,7 +58,7 @@ const ProtectedNavigation = props => {
       backgroundColor: colors.headerColor,
     },
   };
-  return  props?.orgsState?.currentOrgId ==null ? (
+  return props?.orgsState?.currentOrgId == null ? (
     <Stack.Navigator>
       <Stack.Screen
         name="Login"
@@ -125,7 +126,7 @@ const ProtectedNavigation = props => {
 const mapStateToProps = state => ({
   userInfoState: state.userInfoReducer,
   channelsState: state.channelsReducer,
-  orgsState: state.orgsReducer
+  orgsState: state.orgsReducer,
 });
 const mapDispatchToProps = dispatch => {
   return {

@@ -37,7 +37,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import NoInternetComponent from '../../components/NoInternetComponent';
 import {s, vs, ms, mvs} from 'react-native-size-matters';
 import {getAllUsersOfOrgStart} from '../../redux/actions/org/GetAllUsersOfOrg';
-import { getChatsReset } from '../../redux/actions/chat/ChatActions';
+import {getChatsReset} from '../../redux/actions/chat/ChatActions';
 const CreateChannelModel = ({modalizeRef, props}) => {
   const {colors} = useTheme();
   const [title, setTitle] = useState('');
@@ -198,10 +198,12 @@ const ChannelsScreen = props => {
   const [isScrolling, setIsScrolling] = useState(false);
   const scrollY = new Animated.Value(0);
   const {height} = Dimensions.get('window');
+  const textInputRef = useRef(null);
+
   useEffect(() => {
     props.networkState?.isInternetConnected && props.fetchChatResetAction();
-  }, [])
-  
+  }, []);
+
   const onScroll = Animated.event(
     [{nativeEvent: {contentOffset: {y: scrollY}}}],
     {
@@ -274,7 +276,12 @@ const ChannelsScreen = props => {
     [props?.channelsByQueryState?.channels],
   );
   return (
-    <View style={{flex: 1, backgroundColor: colors.primaryColor,paddingHorizontal:5}}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: colors.primaryColor,
+        paddingHorizontal: 5,
+      }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : null}
         keyboardVerticalOffset={s(70)}
@@ -339,6 +346,7 @@ const ChannelsScreen = props => {
                   opacity: isScrolling ? 1 : 0,
                 }}>
                 <SearchBox
+                  textInputRef={textInputRef}
                   searchValue={searchValue}
                   changeText={changeText}
                   isSearchFocus={false}
@@ -383,6 +391,7 @@ const ChannelsScreen = props => {
                 }}
                 onPress={() => {
                   setIsScrolling(true);
+                  textInputRef?.current?.focus();
                 }}>
                 <Icon name="search" size={ms(22)} color={'white'} />
               </TouchableOpacity>
@@ -399,7 +408,7 @@ const mapStateToProps = state => ({
   channelsState: state.channelsReducer,
   channelsByQueryState: state.channelsByQueryReducer,
   userInfoState: state.userInfoReducer,
-  networkState: state.networkReducer
+  networkState: state.networkReducer,
 });
 const mapDispatchToProps = dispatch => {
   return {
@@ -422,4 +431,3 @@ const mapDispatchToProps = dispatch => {
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelsScreen);
-

@@ -133,12 +133,13 @@ const ChannelCard = ({
               maxWidth: '80%',
             }}>
             <Icon name={iconName} size={14} color={colors.textColor} />
+            <Text>{'  '}</Text>
             <Text
               style={{
                 fontSize: ms(16),
                 fontWeight: unread ? '700' : '400',
                 color: colors.textColor,
-              }}>{`  ${Name}`}</Text>
+              }}>{`${Name}`}</Text>
           </View>
           {teamIdAndUnreadCountMapping?.[item?._id] > 0 && (
             <View
@@ -223,7 +224,6 @@ const SearchChannelCard = ({
           borderTopColor: '#444444',
           minHeight: mvs(60),
           borderRadius: ms(5),
-          height: s(60),
           width: '100%',
           flexDirection: 'column',
           justifyContent: 'center',
@@ -239,15 +239,16 @@ const SearchChannelCard = ({
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              maxWidth: '80%',
+              maxWidth: item?._source?.type == 'U' ? '80%' : '95%',
             }}>
             <Icon name={iconName} color={colors.textColor} />
+            <Text>{'  '}</Text>
             <Text
               style={{
                 fontSize: ms(16),
                 fontWeight: '400',
                 color: colors.textColor,
-              }}>{`  ${Name}`}</Text>
+              }}>{`${Name}`}</Text>
           </View>
           {item?._source?.type == 'U' && (
             <View
