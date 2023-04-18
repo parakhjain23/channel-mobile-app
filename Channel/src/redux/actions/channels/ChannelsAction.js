@@ -34,10 +34,12 @@ export function getChannelsError(){
     }
 }
 
-export function moveChannelToTop(channelId){
+export function moveChannelToTop(channelId,senderId='',userId=''){
   return {
     type: Actions.MOVE_CHANNEL_TO_TOP,
-    channelId:channelId
+    channelId:channelId,
+    senderId:senderId,
+    userId:userId
   }
 }
 

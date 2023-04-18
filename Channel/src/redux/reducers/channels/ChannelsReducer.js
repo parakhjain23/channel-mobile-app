@@ -118,8 +118,10 @@ export function channelsReducer(state = initialState, action) {
       action?.channelId.forEach(id => {
         if (state?.activeChannelTeamId != id) {
           tempHighlightChannels[id] = true;
-          teamIdAndUnreadCountMappingLocal[id] =
-            state?.teamIdAndUnreadCountMapping[id] + 1;
+          if (action?.senderId != action?.userId) {
+            teamIdAndUnreadCountMappingLocal[id] =
+              state?.teamIdAndUnreadCountMapping[id] + 1;
+          }
         } else {
           tempHighlightChannels[id] = false;
         }
@@ -154,7 +156,6 @@ export function channelsReducer(state = initialState, action) {
           ...teamIdAndUnreadCountMappingLocal,
         },
       };
-
 
     case Actions.CREATE_NEW_CHANNEL_SUCCESS:
       var userIdAndTeamIdMapping = {};

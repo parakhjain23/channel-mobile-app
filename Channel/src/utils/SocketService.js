@@ -45,7 +45,7 @@ const SocketService = socket => {
       newData.isActivity = false;
     }
     store.dispatch(addNewMessage(newData,store?.getState()?.userInfoReducer?.user?.id));
-    store.dispatch(moveChannelToTop([newData?.teamId]));
+    store.dispatch(moveChannelToTop([newData?.teamId,newData?.senderId,store?.getState()?.userInfoReducer?.user?.id]));
     if (newData?.senderId != store?.getState()?.userInfoReducer?.user?.id) {
       PlayLocalSoundFile();
       if (
