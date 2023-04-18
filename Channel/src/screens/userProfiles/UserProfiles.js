@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Image,
@@ -15,9 +15,16 @@ import {ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AnimatedLottieView from 'lottie-react-native';
 import {s, vs, ms, mvs} from 'react-native-size-matters';
-import { createNewDmChannelStart } from '../../redux/actions/channels/CreateNewDmChannelAction';
+import {createNewDmChannelStart} from '../../redux/actions/channels/CreateNewDmChannelAction';
 
-const ContactDetailsPage = ({userInfoState, channelsState,createDmChannelAction,orgsState}) => {
+const ContactDetailsPage = ({
+  userInfoState,
+  channelsState,
+  createDmChannelAction,
+  orgsState,
+  route,
+}) => {
+  const {displayName, userId} = route?.params;
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const teamId =
@@ -25,14 +32,42 @@ const ContactDetailsPage = ({userInfoState, channelsState,createDmChannelAction,
       userInfoState?.searchedUserProfile?.id
     ];
   const navigation = useNavigation();
-   useEffect(() => {
-      if(userInfoState?.searchedUserProfile != null){
-        if(teamId == undefined){
-          createDmChannelAction(userInfoState?.accessToken,orgsState?.currentOrgId,'',userInfoState?.searchedUserProfile?.id)
-        }
+  useEffect(() => {
+    if (userInfoState?.searchedUserProfile != null) {
+      if (teamId == undefined) {
+        createDmChannelAction(
+          userInfoState?.accessToken,
+          orgsState?.currentOrgId,
+          '',
+          userInfoState?.searchedUserProfile?.id,
+        );
       }
-   }, [userInfoState?.searchedUserProfile])
-
+    }
+  }, [userInfoState?.searchedUserProfile]);
+  let FirstName = '',
+    LastName = '',
+    Email = '',
+    MobileNumber = '',
+    Avtar = '',
+    DisplayName = '',
+    UserId = '';
+  if (userId === userInfoState?.user?.id) {
+    Email = userInfoState?.user?.email;
+    FirstName = userInfoState?.user?.firstName;
+    LastName = userInfoState?.user?.lastName;
+    MobileNumber = userInfoState?.user?.mobileNumber;
+    Avtar = userInfoState?.user?.avatarKey;
+    DisplayName = displayName;
+    UserId = userId;
+  } else {
+    Email = userInfoState?.searchedUserProfile?.email;
+    FirstName = userInfoState?.searchedUserProfile?.firstName;
+    LastName = userInfoState?.searchedUserProfile?.lastName;
+    MobileNumber = userInfoState?.searchedUserProfile?.mobileNumber;
+    Avtar = userInfoState?.searchedUserProfile?.avatarKey;
+    DisplayName = userInfoState?.searchedUserProfile?.displayName;
+    UserId = userInfoState?.searchedUserProfile?.id;
+  }
   return (
     <View style={styles.container}>
       {userInfoState?.isLoading ? (
@@ -55,7 +90,7 @@ const ContactDetailsPage = ({userInfoState, channelsState,createDmChannelAction,
             <Image
               source={{
                 uri: userInfoState?.searchedUserProfile?.avatarKey
-                  ? `${IMAGE_BASE_URL}${userInfoState?.searchedUserProfile?.avatarKey}`
+                  ? `${IMAGE_BASE_URL}${Avtar}`
                   : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVe0cFaZ9e5Hm9X-tdWRLSvoZqg2bjemBABA&usqp=CAU',
               }}
               style={{
@@ -69,8 +104,7 @@ const ContactDetailsPage = ({userInfoState, channelsState,createDmChannelAction,
           <Text style={styles.name}>
             <Icon name="user" size={16} color={colors.textColor} />
             {'  '}
-            {userInfoState?.searchedUserProfile?.firstName}{' '}
-            {userInfoState?.searchedUserProfile?.lastName}
+            {FirstName} {LastName}
           </Text>
           <TouchableOpacity
             onPress={() =>
@@ -81,21 +115,17 @@ const ContactDetailsPage = ({userInfoState, channelsState,createDmChannelAction,
             <Text style={[styles.email]}>
               <Icon name="envelope" size={16} color={colors.textColor} />
               {'  '}
-              {userInfoState?.searchedUserProfile?.email}
+              {Email}
             </Text>
           </TouchableOpacity>
           {userInfoState?.searchedUserProfile?.mobileNumber && (
             <TouchableOpacity
-              onPress={() =>
-                Linking.openURL(
-                  `tel:${userInfoState?.searchedUserProfile?.mobileNumber}`,
-                )
-              }>
+              onPress={() => Linking.openURL(`tel:${MobileNumber}`)}>
               <View style={styles.email}>
                 <Text style={[styles.email]}>
                   <Icon name="phone" size={16} color={colors.textColor} />
                   {'  '}
-                  {userInfoState?.searchedUserProfile?.mobileNumber}
+                  {MobileNumber}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -103,18 +133,16 @@ const ContactDetailsPage = ({userInfoState, channelsState,createDmChannelAction,
           <View style={{flexDirection: 'row', justifyContent: 'center'}}>
             <TouchableOpacity
               style={[styles.button, styles.messageButton]}
-              onPress={async () =>
-                {
-                  navigation.navigate('Chat', {
-                  chatHeaderTitle:
-                    userInfoState?.searchedUserProfile?.displayName,
+              onPress={async () => {
+                navigation.navigate('Chat', {
+                  chatHeaderTitle: DisplayName,
                   teamId: teamId,
                   channelType: channelsState?.teamIdAndTypeMapping[teamId],
-                  userId:userInfoState?.searchedUserProfile?.id
+                  userId:UserId
                 })}
               }>
               <Text style={[styles.buttonText, styles.buttonTextWhite]}>
-                Message {userInfoState?.searchedUserProfile?.displayName}
+                Message {DisplayName}
               </Text>
             </TouchableOpacity>
           </View>
@@ -127,13 +155,13 @@ const ContactDetailsPage = ({userInfoState, channelsState,createDmChannelAction,
 const mapStateToPros = state => ({
   userInfoState: state.userInfoReducer,
   channelsState: state.channelsReducer,
-  orgsState: state.orgsReducer
+  orgsState: state.orgsReducer,
 });
-const mapDispatchToProps = dispatch =>{
-  return{
+const mapDispatchToProps = dispatch => {
+  return {
     createDmChannelAction: (token, orgId, title, reciverUserId) =>
       dispatch(createNewDmChannelStart(token, orgId, title, reciverUserId)),
-  }
-}
-export default connect(mapStateToPros,mapDispatchToProps)(ContactDetailsPage);
+  };
+};
+export default connect(mapStateToPros, mapDispatchToProps)(ContactDetailsPage);
 // export default ContactDetailsPage;
