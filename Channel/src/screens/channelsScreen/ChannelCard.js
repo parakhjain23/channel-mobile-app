@@ -1,5 +1,5 @@
 import {useTheme} from '@react-navigation/native';
-import React from 'react';
+import React, {useCallback, useLayoutEffect, useMemo} from 'react';
 import {getChatsReset} from '../../redux/actions/chat/ChatActions';
 
 import {
@@ -20,62 +20,91 @@ import * as RootNavigation from '../../navigation/RootNavigation';
 const TouchableItem =
   Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
 
-const ChannelCard = ({item, navigation, props, resetUnreadCountAction,resetChatsAction}) => {
+const ChannelCard = ({
+  item,
+  navigation,
+  props,
+  resetUnreadCountAction,
+  resetChatsAction,
+}) => {
   const {colors} = useTheme();
-  // console.log(props?.orgsState);
-  const Name =
-    item?.type == 'DIRECT_MESSAGE'
-      ? props?.orgsState?.userIdAndDisplayNameMapping
-        ? props?.orgsState?.userIdAndDisplayNameMapping[
-            `${
-              item.userIds[0] != props?.userInfoState?.user?.id
-                ? item.userIds[0]
-                : item.userIds[1]
-            }`
-          ]
-        : (props?.orgsState?.userIdAndNameMapping
-          ? props?.orgsState?.userIdAndNameMapping[
-              `${
-                item.userIds[0] != props?.userInfoState?.user?.id
-                  ? item.userIds[0]
-                  : item.userIds[1]
-              }`
-            ]
-          : 'Loading....')
-      : item?.name;
-  const iconName = item?.type == 'DIRECT_MESSAGE' ? 'user' : 'hashtag';
-  let unread =
-    props?.channelsState?.teamIdAndUnreadCountMapping?.[item?._id] > 0 ||
-    (props?.channelsState?.highlightChannel[item?._id] != undefined
-      ? (unread = props?.channelsState?.highlightChannel[item?._id]
-          ? true
-          : false)
-      : false);
-  const onPress = () => {
+
+  const userIdAndDisplayNameMapping =
+    props.orgsState?.userIdAndDisplayNameMapping;
+  const userIdAndNameMapping = props.orgsState?.userIdAndNameMapping;
+  const teamIdAndUnreadCountMapping =
+    props.channelsState?.teamIdAndUnreadCountMapping;
+  const highlightChannel = props.channelsState?.highlightChannel;
+  const user = props.userInfoState?.user;
+  const accessToken = props.userInfoState?.accessToken;
+  const currentOrgId = props.orgsState?.currentOrgId;
+
+  const userId =
+    item?.userIds[0] !== user?.id ? item?.userIds[0] : item?.userIds[1];
+
+  const Name = useMemo(() => {
+    if (item?.type === 'DIRECT_MESSAGE') {
+      if (userIdAndDisplayNameMapping) {
+        return userIdAndDisplayNameMapping[userId];
+      }
+      if (userIdAndNameMapping) {
+        return userIdAndNameMapping[userId];
+      }
+      return 'Loading...';
+    }
+    return item?.name;
+  }, [item?.type, userIdAndDisplayNameMapping, userIdAndNameMapping, userId]);
+
+  const iconName = item?.type === 'DIRECT_MESSAGE' ? 'user' : 'hashtag';
+
+  const unread = useMemo(() => {
+    const unreadCount = teamIdAndUnreadCountMapping?.[item?._id] || 0;
+    const isHighlighted = highlightChannel?.[item?._id];
+    return unreadCount > 0 || isHighlighted;
+  }, [item?._id, teamIdAndUnreadCountMapping, highlightChannel]);
+
+  const shouldResetUnreadCount = teamIdAndUnreadCountMapping?.[item?._id] > 0;
+
+  const onPress = useCallback(() => {
     resetChatsAction();
+    props.setActiveChannelTeamIdAction(item?._id);
+    if (shouldResetUnreadCount) {
+      resetUnreadCountAction(currentOrgId, user?.id, item?._id, accessToken);
+    }
+
     RootNavigation.navigate('Chat', {
       chatHeaderTitle: Name,
       teamId: item?._id,
       channelType: item?.type,
-      userId:
-        item?.userIds[0] != props?.userInfoState?.user?.id
-          ? item?.userIds[0]
-          : item?.userIds[1],
+      userId,
     });
-    props?.setActiveChannelTeamIdAction(item?._id);
-    props?.channelsState?.teamIdAndUnreadCountMapping?.[item?._id] > 0 &&
-      resetUnreadCountAction(
-        props?.orgsState?.currentOrgId,
-        props?.userInfoState?.user?.id,
-        item?._id,
-        props?.userInfoState?.accessToken,
-      );
-  };
+  }, [
+    Name,
+    currentOrgId,
+    item?._id,
+    item?.type,
+    resetChatsAction,
+    props.setActiveChannelTeamIdAction,
+    resetUnreadCountAction,
+    teamIdAndUnreadCountMapping,
+    user?.id,
+    userId,
+    accessToken,
+  ]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: Name,
+    });
+  }, [Name, navigation]);
+
   return (
     <TouchableItem
       onPress={onPress}
       background={
-        Platform.OS === 'android' ? TouchableNativeFeedback.Ripple('#00000033') : null
+        Platform.OS === 'android'
+          ? TouchableNativeFeedback.Ripple('#00000033')
+          : null
       }
       activeOpacity={0.8}>
       <View
@@ -83,8 +112,9 @@ const ChannelCard = ({item, navigation, props, resetUnreadCountAction,resetChats
           borderTopWidth: ms(0.7),
           borderTopColor: '#444444',
           minHeight: mvs(60),
-          backgroundColor:
-            (unread && colors.unreadBackgroundColor) || colors.primaryColor,
+          backgroundColor: unread
+            ? colors.unreadBackgroundColor
+            : colors.primaryColor,
           width: '100%',
           flexDirection: 'column',
           justifyContent: 'center',
@@ -110,8 +140,7 @@ const ChannelCard = ({item, navigation, props, resetUnreadCountAction,resetChats
                 color: colors.textColor,
               }}>{`  ${Name}`}</Text>
           </View>
-          {props?.channelsState?.teamIdAndUnreadCountMapping?.[item?._id] >
-            0 && (
+          {teamIdAndUnreadCountMapping?.[item?._id] > 0 && (
             <View
               style={{
                 backgroundColor: '#73e1ff',
@@ -131,7 +160,7 @@ const ChannelCard = ({item, navigation, props, resetUnreadCountAction,resetChats
                   lineHeight: ms(20),
                   overflow: 'hidden',
                 }}>
-                {props?.channelsState.teamIdAndUnreadCountMapping?.[item?._id]}
+                {teamIdAndUnreadCountMapping?.[item?._id]}
               </Text>
             </View>
           )}
@@ -140,6 +169,7 @@ const ChannelCard = ({item, navigation, props, resetUnreadCountAction,resetChats
     </TouchableItem>
   );
 };
+
 const SearchChannelCard = ({
   item,
   navigation,
@@ -154,10 +184,13 @@ const SearchChannelCard = ({
   const teamId = item?._id?.includes('_')
     ? props?.channelsState?.userIdAndTeamIdMapping[item?._source?.userId]
     : item?._id;
-  const iconName = item?._source?.type == 'U' ? 'user' : 'hashtag';
-  const onPress = () => {
-    if (teamId == undefined) {
-      props?.createDmChannelAction(
+  const iconName = useMemo(
+    () => (item?.type === 'U' ? 'user' : 'hashtag'),
+    [item?.type],
+  );
+  const onPress = useCallback(async () => {
+    if (!teamId) {
+      await props?.createDmChannelAction(
         props?.userInfoState?.accessToken,
         props?.orgsState?.currentOrgId,
         Name,
@@ -172,7 +205,16 @@ const SearchChannelCard = ({
       channelType: item?._source?.type == 'U' ? 'DIRECT_MESSAGE' : 'CHANNEL',
       userId: item?._source?.userId,
     });
-  };
+  }, [
+    teamId,
+    props?.channelsState?.userIdAndTeamIdMapping,
+    props?.createDmChannelAction,
+    item?.type,
+    Name,
+    orgsState.currentOrgId,
+    navigation,
+    userInfoState.accessToken,
+  ]);
   return (
     <TouchableItem onPress={onPress} activeOpacity={0.8}>
       <View
@@ -284,7 +326,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(fetchSearchedUserProfileStart(userId, token)),
     resetUnreadCountAction: (orgId, userId, teamId, accessToken) =>
       dispatch(resetUnreadCountStart(orgId, userId, teamId, accessToken)),
-      resetChatsAction: () => dispatch(getChatsReset() )
+    resetChatsAction: () => dispatch(getChatsReset()),
   };
 };
 export const RenderChannels = React.memo(
