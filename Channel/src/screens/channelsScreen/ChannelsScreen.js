@@ -391,7 +391,9 @@ const ChannelsScreen = props => {
                 }}
                 onPress={() => {
                   setIsScrolling(true);
-                  textInputRef?.current?.focus();
+                  setTimeout(() => {
+                    textInputRef?.current?.focus();
+                  }, 50);
                 }}>
                 <Icon name="search" size={ms(22)} color={'white'} />
               </TouchableOpacity>
