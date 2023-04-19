@@ -9,6 +9,7 @@ import {
   View,
   Animated,
   Dimensions,
+  SafeAreaView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -231,314 +232,318 @@ const ChatScreen = ({
   }, [teamId, userInfoState, skip, fetchChatsOfTeamAction]);
   const date = new Date();
   return (
-    <View style={styles.mainContainer}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : null}
-        keyboardVerticalOffset={s(70)}
-        style={{flex: 1}}>
-        <View style={{flex: 1, marginLeft: ms(10)}}>
-          <View style={{flex: 9}}>
-            {teamId == undefined ||
-            chatState?.data[teamId]?.isloading == true ? (
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <AnimatedLottieView
-                  source={require('../../assests/images/attachments/loading.json')}
-                  loop
-                  autoPlay
-                  style={{height: ms(100), width: ms(100)}}
-                />
-              </View>
-            ) : (
-              <>
-                <Animated.FlatList
-                  ref={FlatListRef}
-                  data={memoizedData}
-                  renderItem={renderItem}
-                  inverted
-                  ListFooterComponent={
-                    chatState?.data[teamId]?.messages?.length > 15 &&
-                    ListFooterComponent
-                  }
-                  onEndReached={
-                    chatState?.data[teamId]?.messages?.length > 20 &&
-                    onEndReached
-                  }
-                  onEndReachedThreshold={0.1}
-                  keyboardDismissMode="on-drag"
-                  keyboardShouldPersistTaps="always"
-                  onScroll={onScroll}
-                />
-              </>
-            )}
-            {isScrolling && (
-              <MaterialIcons
-                name="south"
-                style={styles.moveToBottom}
-                onPress={() => {
-                  FlatListRef?.current?.scrollToIndex({index: 0});
-                }}
-              />
-            )}
-          </View>
-          {attachmentLoading && (
-            <View style={{alignItems: 'center'}}>
-              <AnimatedLottieView
-                source={require('../../assests/images/attachments/uploading.json')}
-                loop
-                autoPlay
-                style={{height: s(100)}}
-              />
-            </View>
-          )}
-          <View style={{margin: ms(8), marginLeft: 0}}>
-            <View style={{flexDirection: 'row'}}>
-              <View
-                style={[
-                  replyOnMessage && styles.inputWithReplyContainer,
-                  {width: '90%'},
-                ]}>
-                {attachment?.length > 0 &&
-                  attachment?.map((item, index) => {
-                    return (
-                      <TouchableOpacity key={index}>
-                        <View style={styles.replyMessageInInput}>
-                          <Text style={styles.repliedText}>{item?.title}</Text>
-                          <MaterialIcons
-                            name="cancel"
-                            size={ms(18)}
-                            color={'black'}
-                            onPress={() => {
-                              const newAttachment = attachment.filter(
-                                (_, i) => i !== index,
-                              );
-                              setAttachment(newAttachment);
-                            }}
-                          />
-                        </View>
-                      </TouchableOpacity>
-                    );
-                  })}
-                {replyOnMessage && (
-                  <TouchableOpacity onPress={() => setreplyOnMessage(false)}>
-                    <View style={styles.replyMessageInInput}>
-                      {repliedMsgDetails?.mentions?.length > 0 ? (
-                        <RenderTextWithLinks
-                          text={repliedMsgDetails?.content}
-                          mentions={repliedMsgDetails?.mentions}
-                          repliedContainer={true}
-                          orgState={orgState}
-                          userInfoState={userInfoState}
-                          colors={colors}
-                        />
-                      ) : repliedMsgDetails?.attachment?.length > 0 &&
-                        typeof repliedMsgDetails?.attachment != 'string' ? (
-                        <Text style={{color: 'black'}}>
-                          <Icon name="attach-file" size={16} color="black" />
-                          attachment
-                        </Text>
-                      ) : (
-                        <Text style={styles.repliedText}>
-                          {repliedMsgDetails?.content}
-                        </Text>
-                      )}
-                      <MaterialIcons
-                        name="cancel"
-                        size={ms(16)}
-                        color="black"
-                        style={{
-                          position: 'absolute',
-                          top: ms(5),
-                          right: ms(5),
-                          zIndex: 1,
-                        }}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                )}
-                <FlatList
-                  data={mentions}
-                  // keyExtractor={index => index.toString()}
-                  renderItem={renderMention}
-                  style={{maxHeight: mvs(140)}}
-                  keyboardShouldPersistTaps="always"
-                />
-
-                <View style={styles.inputContainer}>
-                  <View style={{justifyContent: 'center'}}>
-                    {showOptions && (
-                      <Animated.View
-                        style={[
-                          styles.optionsContainer,
-                          {transform: [{translateX: optionsPosition}]},
-                        ]}>
-                        <View style={{flexDirection: 'row'}}>
-                          <MaterialIcons
-                            name="attach-file"
-                            size={ms(20)}
-                            style={styles.attachIcon}
-                            onPress={() =>
-                              pickDocument(
-                                setAttachment,
-                                userInfoState?.accessToken,
-                                setAttachmentLoading,
-                              )
-                            }
-                          />
-                          <MaterialIcons
-                            name="camera"
-                            size={ms(20)}
-                            style={styles.attachIcon}
-                            onPress={() => {
-                              launchCameraForPhoto(
-                                userInfoState?.accessToken,
-                                setAttachment,
-                                setAttachmentLoading,
-                              );
-                            }}
-                          />
-                          <MaterialIcons
-                            name="image"
-                            size={ms(20)}
-                            style={styles.attachIcon}
-                            onPress={() => {
-                              launchGallery(
-                                userInfoState?.accessToken,
-                                setAttachment,
-                                setAttachmentLoading,
-                              );
-                            }}
-                          />
-                          <MaterialIcons
-                            name="chevron-left"
-                            size={ms(20)}
-                            style={styles.attachIcon}
-                            onPress={hideOptionsMethod}
-                            // onPress={() => setShowOptions(false)}
-                          />
-                        </View>
-                      </Animated.View>
-                    )}
-                  </View>
-                  <View style={{justifyContent: 'center'}}>
-                    {!showOptions && (
-                      <MaterialIcons
-                        name="add"
-                        size={ms(20)}
-                        style={styles.attachIcon}
-                        onPress={showOptionsMethod}
-                      />
-                    )}
-                  </View>
-
-                  <TextInput
-                    ref={textInputRef}
-                    editable
-                    multiline
-                    onChangeText={handleInputChange}
-                    placeholder="Message"
-                    placeholderTextColor={colors.textColor}
-                    value={message}
-                    style={[
-                      replyOnMessage
-                        ? styles.inputWithReply
-                        : styles.inputWithoutReply,
-                      {color: colors.textColor},
-                    ]}
+    <SafeAreaView style={{flex:1}}>
+      <View style={styles.mainContainer}>
+        {/* <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : null}
+          keyboardVerticalOffset={s(70)}
+          style={{flex: 1}}> */}
+          <View style={{flex: 1, marginLeft: ms(10)}}>
+            <View style={{flex: 9}}>
+              {teamId == undefined ||
+              chatState?.data[teamId]?.isloading == true ? (
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <AnimatedLottieView
+                    source={require('../../assests/images/attachments/loading.json')}
+                    loop
+                    autoPlay
+                    style={{height: ms(100), width: ms(100)}}
                   />
-                  {showOptions &&
-                    message?.trim()?.length == 1 &&
-                    hideOptionsMethod()}
                 </View>
-              </View>
-              <View style={{justifyContent: 'flex-end'}}>
+              ) : (
+                <>
+                  <Animated.FlatList
+                    ref={FlatListRef}
+                    data={memoizedData}
+                    renderItem={renderItem}
+                    inverted
+                    ListFooterComponent={
+                      chatState?.data[teamId]?.messages?.length > 15 &&
+                      ListFooterComponent
+                    }
+                    onEndReached={
+                      chatState?.data[teamId]?.messages?.length > 20 &&
+                      onEndReached
+                    }
+                    onEndReachedThreshold={0.1}
+                    keyboardDismissMode="on-drag"
+                    keyboardShouldPersistTaps="always"
+                    onScroll={onScroll}
+                  />
+                </>
+              )}
+              {isScrolling && (
                 <MaterialIcons
-                  name="send"
-                  size={ms(25)}
-                  style={{color: colors.textColor, padding: ms(10)}}
+                  name="south"
+                  style={styles.moveToBottom}
                   onPress={() => {
-                    let randomId = uuid.v4();
-                    networkState?.isInternetConnected
-                      ? (message?.trim() != '' || attachment?.length > 0) &&
-                        (onChangeMessage(''),
-                        setAttachment([]),
-                        setlocalMsgAction({
-                          randomId: randomId,
-                          content: message,
-                          createdAt: date,
-                          isLink: false,
-                          mentions: mentionsArr,
-                          orgId: orgState?.currentOrgId,
-                          parentId: repliedMsgDetails?._id,
-                          senderId: userInfoState?.user?.id,
-                          senderType: 'APP',
-                          teamId: teamId,
-                          updatedAt: date,
-                          attachment: attachment,
-                          mentionsArr: mentionsArr,
-                          parentMessage: repliedMsgDetails?.content,
-                        }),
-                        sendMessageAction(
-                          message,
-                          teamId,
-                          orgState?.currentOrgId,
-                          userInfoState?.user?.id,
-                          userInfoState?.accessToken,
-                          repliedMsgDetails?._id || null,
-                          attachment,
-                          mentionsArr,
-                        ),
-                        hideOptionsMethod(),
-                        setMentionsArr(''),
-                        setMentions([]),
-                        replyOnMessage && setreplyOnMessage(false),
-                        repliedMsgDetails && setrepliedMsgDetails(null))
-                      : message?.trim() != '' &&
-                        (onChangeMessage(''),
-                        setlocalMsgAction({
-                          randomId: randomId,
-                          content: message,
-                          createdAt: date,
-                          isLink: false,
-                          mentions: mentionsArr,
-                          orgId: orgState?.currentOrgId,
-                          parentId: repliedMsgDetails?._id,
-                          senderId: userInfoState?.user?.id,
-                          senderType: 'APP',
-                          teamId: teamId,
-                          updatedAt: date,
-                          attachment: attachment,
-                          mentionsArr: mentionsArr,
-                          parentMessage: repliedMsgDetails?.content,
-                        }),
-                        setGlobalMessageToSendAction({
-                          content: message,
-                          teamId: teamId,
-                          orgId: orgState?.currentOrgId,
-                          senderId: userInfoState?.user?.id,
-                          userId: userInfoState?.user?.id,
-                          accessToken: userInfoState?.accessToken,
-                          parentId: repliedMsgDetails?.id || null,
-                          updatedAt: date,
-                          mentionsArr: mentionsArr,
-                        }),
-                        hideOptionsMethod(),
-                        setMentionsArr(''),
-                        setMentions([]),
-                        replyOnMessage && setreplyOnMessage(false),
-                        repliedMsgDetails && setrepliedMsgDetails(null));
+                    FlatListRef?.current?.scrollToIndex({index: 0});
                   }}
                 />
+              )}
+            </View>
+            {attachmentLoading && (
+              <View style={{alignItems: 'center'}}>
+                <AnimatedLottieView
+                  source={require('../../assests/images/attachments/uploading.json')}
+                  loop
+                  autoPlay
+                  style={{height: s(100)}}
+                />
+              </View>
+            )}
+            <View style={{margin: ms(1), marginLeft: 0}}>
+              <View style={{flexDirection: 'row'}}>
+                <View
+                  style={[
+                    replyOnMessage && styles.inputWithReplyContainer,
+                    {width: '90%'},
+                  ]}>
+                  {attachment?.length > 0 &&
+                    attachment?.map((item, index) => {
+                      return (
+                        <TouchableOpacity key={index}>
+                          <View style={styles.replyMessageInInput}>
+                            <Text style={styles.repliedText}>
+                              {item?.title}
+                            </Text>
+                            <MaterialIcons
+                              name="cancel"
+                              size={ms(18)}
+                              color={'black'}
+                              onPress={() => {
+                                const newAttachment = attachment.filter(
+                                  (_, i) => i !== index,
+                                );
+                                setAttachment(newAttachment);
+                              }}
+                            />
+                          </View>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  {replyOnMessage && (
+                    <TouchableOpacity onPress={() => setreplyOnMessage(false)}>
+                      <View style={styles.replyMessageInInput}>
+                        {repliedMsgDetails?.mentions?.length > 0 ? (
+                          <RenderTextWithLinks
+                            text={repliedMsgDetails?.content}
+                            mentions={repliedMsgDetails?.mentions}
+                            repliedContainer={true}
+                            orgState={orgState}
+                            userInfoState={userInfoState}
+                            colors={colors}
+                          />
+                        ) : repliedMsgDetails?.attachment?.length > 0 &&
+                          typeof repliedMsgDetails?.attachment != 'string' ? (
+                          <Text style={{color: 'black'}}>
+                            <Icon name="attach-file" size={16} color="black" />
+                            attachment
+                          </Text>
+                        ) : (
+                          <Text style={styles.repliedText}>
+                            {repliedMsgDetails?.content}
+                          </Text>
+                        )}
+                        <MaterialIcons
+                          name="cancel"
+                          size={ms(16)}
+                          color="black"
+                          style={{
+                            position: 'absolute',
+                            top: ms(5),
+                            right: ms(5),
+                            zIndex: 1,
+                          }}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  )}
+                  <FlatList
+                    data={mentions}
+                    // keyExtractor={index => index.toString()}
+                    renderItem={renderMention}
+                    style={{maxHeight: mvs(140)}}
+                    keyboardShouldPersistTaps="always"
+                  />
+
+                  <View style={styles.inputContainer}>
+                    <View style={{justifyContent: 'center'}}>
+                      {showOptions && (
+                        <Animated.View
+                          style={[
+                            styles.optionsContainer,
+                            {transform: [{translateX: optionsPosition}]},
+                          ]}>
+                          <View style={{flexDirection: 'row'}}>
+                            <MaterialIcons
+                              name="attach-file"
+                              size={ms(20)}
+                              style={styles.attachIcon}
+                              onPress={() =>
+                                pickDocument(
+                                  setAttachment,
+                                  userInfoState?.accessToken,
+                                  setAttachmentLoading,
+                                )
+                              }
+                            />
+                            <MaterialIcons
+                              name="camera"
+                              size={ms(20)}
+                              style={styles.attachIcon}
+                              onPress={() => {
+                                launchCameraForPhoto(
+                                  userInfoState?.accessToken,
+                                  setAttachment,
+                                  setAttachmentLoading,
+                                );
+                              }}
+                            />
+                            <MaterialIcons
+                              name="image"
+                              size={ms(20)}
+                              style={styles.attachIcon}
+                              onPress={() => {
+                                launchGallery(
+                                  userInfoState?.accessToken,
+                                  setAttachment,
+                                  setAttachmentLoading,
+                                );
+                              }}
+                            />
+                            <MaterialIcons
+                              name="chevron-left"
+                              size={ms(20)}
+                              style={styles.attachIcon}
+                              onPress={hideOptionsMethod}
+                              // onPress={() => setShowOptions(false)}
+                            />
+                          </View>
+                        </Animated.View>
+                      )}
+                    </View>
+                    <View style={{justifyContent: 'center'}}>
+                      {!showOptions && (
+                        <MaterialIcons
+                          name="add"
+                          size={ms(20)}
+                          style={styles.attachIcon}
+                          onPress={showOptionsMethod}
+                        />
+                      )}
+                    </View>
+
+                    <TextInput
+                      ref={textInputRef}
+                      editable
+                      multiline
+                      onChangeText={handleInputChange}
+                      placeholder="Message"
+                      placeholderTextColor={colors.textColor}
+                      value={message}
+                      style={[
+                        replyOnMessage
+                          ? styles.inputWithReply
+                          : styles.inputWithoutReply,
+                        {color: colors.textColor},
+                      ]}
+                    />
+                    {showOptions &&
+                      message?.trim()?.length == 1 &&
+                      hideOptionsMethod()}
+                  </View>
+                </View>
+                <View style={{justifyContent: 'flex-end'}}>
+                  <MaterialIcons
+                    name="send"
+                    size={ms(25)}
+                    style={{color: colors.textColor, padding: ms(10)}}
+                    onPress={() => {
+                      let randomId = uuid.v4();
+                      networkState?.isInternetConnected
+                        ? (message?.trim() != '' || attachment?.length > 0) &&
+                          (onChangeMessage(''),
+                          setAttachment([]),
+                          setlocalMsgAction({
+                            randomId: randomId,
+                            content: message,
+                            createdAt: date,
+                            isLink: false,
+                            mentions: mentionsArr,
+                            orgId: orgState?.currentOrgId,
+                            parentId: repliedMsgDetails?._id,
+                            senderId: userInfoState?.user?.id,
+                            senderType: 'APP',
+                            teamId: teamId,
+                            updatedAt: date,
+                            attachment: attachment,
+                            mentionsArr: mentionsArr,
+                            parentMessage: repliedMsgDetails?.content,
+                          }),
+                          sendMessageAction(
+                            message,
+                            teamId,
+                            orgState?.currentOrgId,
+                            userInfoState?.user?.id,
+                            userInfoState?.accessToken,
+                            repliedMsgDetails?._id || null,
+                            attachment,
+                            mentionsArr,
+                          ),
+                          hideOptionsMethod(),
+                          setMentionsArr(''),
+                          setMentions([]),
+                          replyOnMessage && setreplyOnMessage(false),
+                          repliedMsgDetails && setrepliedMsgDetails(null))
+                        : message?.trim() != '' &&
+                          (onChangeMessage(''),
+                          setlocalMsgAction({
+                            randomId: randomId,
+                            content: message,
+                            createdAt: date,
+                            isLink: false,
+                            mentions: mentionsArr,
+                            orgId: orgState?.currentOrgId,
+                            parentId: repliedMsgDetails?._id,
+                            senderId: userInfoState?.user?.id,
+                            senderType: 'APP',
+                            teamId: teamId,
+                            updatedAt: date,
+                            attachment: attachment,
+                            mentionsArr: mentionsArr,
+                            parentMessage: repliedMsgDetails?.content,
+                          }),
+                          setGlobalMessageToSendAction({
+                            content: message,
+                            teamId: teamId,
+                            orgId: orgState?.currentOrgId,
+                            senderId: userInfoState?.user?.id,
+                            userId: userInfoState?.user?.id,
+                            accessToken: userInfoState?.accessToken,
+                            parentId: repliedMsgDetails?.id || null,
+                            updatedAt: date,
+                            mentionsArr: mentionsArr,
+                          }),
+                          hideOptionsMethod(),
+                          setMentionsArr(''),
+                          setMentions([]),
+                          replyOnMessage && setreplyOnMessage(false),
+                          repliedMsgDetails && setrepliedMsgDetails(null));
+                    }}
+                  />
+                </View>
               </View>
             </View>
           </View>
-        </View>
-      </KeyboardAvoidingView>
-    </View>
+        {/* </KeyboardAvoidingView> */}
+      </View>
+    </SafeAreaView>
   );
 };
 const mapStateToProps = state => ({

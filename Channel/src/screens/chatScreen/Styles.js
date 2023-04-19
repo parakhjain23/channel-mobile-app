@@ -14,11 +14,6 @@ export const makeStyles = colors => StyleSheet.create({
     },
     inputWithoutReply: {
       flex: 1,
-      // minHeight: 40,
-      // paddingHorizontal: 10,
-      // borderWidth: 1,
-      // borderRadius: 10,
-      // borderColor: 'grey',
       paddingVertical: mvs(8),
     },
     inputWithReplyContainer: {
