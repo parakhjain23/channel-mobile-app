@@ -58,9 +58,9 @@ PODS:
     - GoogleUtilities/Logger (~> 7.8)
   - FirebaseCoreExtension (10.7.0):
     - FirebaseCore (~> 10.0)
-  - FirebaseCoreInternal (10.8.0):
+  - FirebaseCoreInternal (10.7.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
-  - FirebaseInstallations (10.8.0):
+  - FirebaseInstallations (10.7.0):
     - FirebaseCore (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
@@ -810,8 +810,8 @@ SPEC CHECKSUMS:
   FirebaseAuth: dd64c01631df724b09f33e584625775c52f7d71f
   FirebaseCore: e317665b9d744727a97e623edbbed009320afdd7
   FirebaseCoreExtension: f17247ba8c61e4d3c8d136b5e2de3cb4ac6a85b6
-  FirebaseCoreInternal: fa2899eb1f340054858d289e5a0fb935a0a74e52
-  FirebaseInstallations: b2a05a3fe707df764345d68685534d07d0664af3
+  FirebaseCoreInternal: 8845798510aae74703467480f71ac613788d0696
+  FirebaseInstallations: 59c0e4c7a816a0f76710d83f77e5369b3e45eb96
   FirebaseMessaging: ac9062bcc35ed56e15a0241d8fd317022499baf8
   Flipper: 26fc4b7382499f1281eb8cb921e5c3ad6de91fe0
   Flipper-Boost-iOSX: fd1e2b8cbef7e662a122412d7ac5f5bea715403c
@@ -887,4 +887,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: e716906d0f3f288b8db44e158b51e7d2afd1d34c
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.0
