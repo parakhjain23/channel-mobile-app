@@ -207,8 +207,7 @@ const ChatScreen = ({
             <View>
               <Text
                 style={{
-                  color: 'gray',
-                  fontWeight: '100',
+                  color: '#808080',
                   textAlign: 'center',
                   margin: 10,
                 }}>
