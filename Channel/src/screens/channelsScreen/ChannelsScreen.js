@@ -200,7 +200,7 @@ const ChannelsScreen = props => {
   const scrollY = new Animated.Value(0);
   const {height} = Dimensions.get('window');
   const textInputRef = useRef(null);
-
+  const offset = height * 0.12;
   useEffect(() => {
     props.networkState?.isInternetConnected && props.fetchChatResetAction();
   }, []);
@@ -276,8 +276,9 @@ const ChannelsScreen = props => {
     },
     [props?.channelsByQueryState?.channels],
   );
+  
   return (
-    <SafeAreaView style={{flex:1}}>
+    <SafeAreaView style={{flex: 1}}>
       <View
         style={{
           flex: 1,
@@ -286,7 +287,7 @@ const ChannelsScreen = props => {
         }}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : null}
-          keyboardVerticalOffset={s(70)}
+          keyboardVerticalOffset={offset}
           style={{flex: 1}}>
           {props?.channelsState?.isLoading ? (
             <ActivityIndicator size={'large'} color={'black'} />

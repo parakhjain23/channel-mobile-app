@@ -65,6 +65,8 @@ const ChatScreen = ({
   const [mentions, setMentions] = useState([]);
   const [mentionsArr, setMentionsArr] = useState([]);
   const textInputRef = useRef(null);
+  const {height} = Dimensions.get('window');
+  const offset = height * 0.12;
   if (teamId == undefined) {
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
   }
@@ -232,12 +234,12 @@ const ChatScreen = ({
   }, [teamId, userInfoState, skip, fetchChatsOfTeamAction]);
   const date = new Date();
   return (
-    <SafeAreaView style={{flex:1}}>
+    <SafeAreaView style={{flex: 1}}>
       <View style={styles.mainContainer}>
-        {/* <KeyboardAvoidingView
+        <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : null}
-          keyboardVerticalOffset={s(70)}
-          style={{flex: 1}}> */}
+          keyboardVerticalOffset={offset}
+          style={{flex: 1}}>
           <View style={{flex: 1, marginLeft: ms(10)}}>
             <View style={{flex: 9}}>
               {teamId == undefined ||
@@ -541,7 +543,7 @@ const ChatScreen = ({
               </View>
             </View>
           </View>
-        {/* </KeyboardAvoidingView> */}
+        </KeyboardAvoidingView>
       </View>
     </SafeAreaView>
   );
