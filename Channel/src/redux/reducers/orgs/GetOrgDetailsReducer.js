@@ -9,7 +9,8 @@ const initialState = {
   userIdAndNameMapping: null,
   userIdAndDisplayNameMapping:null,
   orgsWithNewMessages:{},
-  unreadCountForDrawerIcon:0
+  unreadCountForDrawerIcon:0,
+  noOrgsFound:false
 };
 
 export function orgsReducer(state = initialState, action) {
@@ -18,6 +19,10 @@ export function orgsReducer(state = initialState, action) {
     //   return {...state, currentOrgId : action.orgId }
     case Actions.SELECT_INITIAL_ORG_ID:
       return {...state, currentOrgId: action.orgId}
+
+    case Actions.NO_ORGS_FOUND:
+      console.log("no orgs found action");
+      return {...state,noOrgsFound:true}  
     case Actions.UPDATE_CURRENT_ORG_ID :
       return {...state, currentOrgId : action.orgId}
       

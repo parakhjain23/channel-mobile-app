@@ -22,30 +22,59 @@ const SelectWorkSpaceScreen = ({orgsState, userInfoState}) => {
     }
   }, [selectedOrg]);
   return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',backgroundColor:'black'}}>
-      <View style={{margin: 30}}>
-        <Text style={{fontSize: 20,fontWeight:'600',color:'white'}}>Select a Work Space to continue</Text>
-      </View>
-      { orgsState?.orgs !=null ? orgsState?.orgs?.map(item => {
-        return (
-            <TouchableOpacity onPress={() => setselectedOrg(item?.id)}  key={item.id}
-            style={{
-              margin: 10,
-              borderWidth: 1,
-              borderColor:'white',
-              width: '60%',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'row',
-              height: 40,
-              // backgroundColor:'grey'
-            }}>
-              <Text style={{fontSize: 18, textAlign: 'center',fontWeight:'600',color:'white'}}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'black',
+      }}>
+      {!orgsState?.noOrgsFound && (
+        <View style={{margin: 30}}>
+          <Text style={{fontSize: 20, fontWeight: '600', color: 'white'}}>
+            Select a Work Space to continue
+          </Text>
+        </View>
+      )}
+      {orgsState?.orgs != null ? (
+        orgsState?.orgs?.map(item => {
+          return (
+            <TouchableOpacity
+              onPress={() => setselectedOrg(item?.id)}
+              key={item.id}
+              style={{
+                margin: 10,
+                borderWidth: 1,
+                borderColor: 'white',
+                width: '60%',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'row',
+                height: 40,
+                // backgroundColor:'grey'
+              }}>
+              <Text
+                style={{
+                  fontSize: 18,
+                  textAlign: 'center',
+                  fontWeight: '600',
+                  color: 'white',
+                }}>
                 {item?.name}
               </Text>
             </TouchableOpacity>
-        );
-      }) : <ActivityIndicator size={'small'} />}
+          );
+        })
+      ) : orgsState?.noOrgsFound ? (
+        <View>
+          <Text style={{color: 'white', fontSize: 16,textAlign:'center'}}>
+          You are not part of any work space please contact your company's HR
+          department to add you in respective work space
+        </Text>
+        </View>
+      ) : (
+        <ActivityIndicator size={'small'} />
+      )}
     </View>
   );
 };

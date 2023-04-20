@@ -5,7 +5,11 @@ import * as Actions from '../../Enums';
 export function* getOrgDetails({accessToken}){
   try {
     var response = yield call(fetchOrgsApi, accessToken)
-    yield put(getOrgDetailsSuccess(response))
+    if(response?.length == 0){
+      yield put(noOrgsFound())
+    }else{
+      yield put(getOrgDetailsSuccess(response))
+    }
   } catch (error) {
     console.warn(error);
   }
@@ -27,4 +31,10 @@ export function getOrgDetailsReset(){
     return {
         type:Actions.GET_ORG_RESET
     }
+}
+
+export function noOrgsFound(){
+  return{
+    type:Actions.NO_ORGS_FOUND
+  }
 }
