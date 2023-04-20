@@ -89,9 +89,8 @@ const ContactDetailsPage = ({
             }}>
             <Image
               source={{
-                uri: userInfoState?.searchedUserProfile?.avatarKey
-                  ? `${IMAGE_BASE_URL}${Avtar}`
-                  : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVe0cFaZ9e5Hm9X-tdWRLSvoZqg2bjemBABA&usqp=CAU',
+                uri: Avtar && `${IMAGE_BASE_URL}${Avtar}`
+                  || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVe0cFaZ9e5Hm9X-tdWRLSvoZqg2bjemBABA&usqp=CAU',
               }}
               style={{
                 width: 150,
