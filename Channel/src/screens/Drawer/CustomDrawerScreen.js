@@ -31,6 +31,7 @@ const CustomeDrawerScreen = ({
   signOutAction,
   removeCountOnOrgCardAction,
   moveChannelToTopAction,
+  networkState
 }) => {
   const {colors} = useTheme();
   const data = orgsState?.orgs;
@@ -43,14 +44,14 @@ const CustomeDrawerScreen = ({
     signOutAction()
   }
   useEffect(() => {
-    if (userInfoState?.user != null) {
+    if (userInfoState?.user != null && networkState?.isInternetConnected) {
       getChannelsAction(
         userInfoState?.accessToken,
         orgsState?.currentOrgId,
         userInfoState?.user?.id,
       );
     }
-  }, [userInfoState?.user]);
+  }, [userInfoState?.user,networkState?.isInternetConnected]);
   const OrgCard = ({item, navigation}) => {
     var unreadCountObj = orgsState?.orgsWithNewMessages?.[item?.id];
     var count = undefined;
@@ -208,6 +209,7 @@ const mapStateToProps = state => ({
   orgsState: state.orgsReducer,
   userInfoState: state.userInfoReducer,
   channelsState: state.channelsReducer,
+  networkState : state.networkReducer
 });
 const mapDispatchToProps = dispatch => {
   return {
