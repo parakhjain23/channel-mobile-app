@@ -24,7 +24,7 @@ const ProtectedNavigation = props => {
         onPress={async () => {
           RootNavigation.navigate('UserProfiles', {
             displayName: route?.params?.chatHeaderTitle,
-            userId: route?.params?.userId
+            userId: route?.params?.userId,
           });
           await props?.searchUserProfileAction(
             route?.params?.userId,
@@ -48,10 +48,11 @@ const ProtectedNavigation = props => {
           color: colors?.textColor,
           fontSize: ms(20),
           fontWeight: '600',
-          maxWidth: '90%',
+          maxWidth: Platform.OS == 'android' ? '90%' : null,
         }}
         numberOfLines={1}
-        ellipsizeMode="tail">
+        ellipsizeMode="tail"
+        >
         {route?.params?.chatHeaderTitle}
       </Text>
     );
