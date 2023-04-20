@@ -36,7 +36,7 @@ const CustomeDrawerScreen = ({
   const navigation = useNavigation();
 
   useEffect(() => {
-    if (userInfoState?.user != null && channelsState?.channels?.length == 0) {
+    if (userInfoState?.user != null) {
       getChannelsAction(
         userInfoState?.accessToken,
         orgsState?.currentOrgId,
@@ -85,7 +85,7 @@ const CustomeDrawerScreen = ({
               source={
                 item?.iconKey
                   ? {uri: `${IMAGE_BASE_URL}${item.iconKey}`}
-                  : require('../../assests/images/appIcon/icon-48x48.png')
+                  : require('../../assests/images/appIcon/icon-72x72.png')
               }
               style={{height: 40, width: 40, marginRight: 10}}
             />
