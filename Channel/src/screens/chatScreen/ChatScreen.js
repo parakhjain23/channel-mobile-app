@@ -50,7 +50,7 @@ const ChatScreen = ({
   searchUserProfileAction,
   setlocalMsgAction,
 }) => {
-  var {teamId, reciverUserId, channelType,searchedChannel} = route.params;
+  var {teamId, reciverUserId, channelType} = route.params;
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const [replyOnMessage, setreplyOnMessage] = useState(false);
@@ -67,8 +67,6 @@ const ChatScreen = ({
   const textInputRef = useRef(null);
   const {height} = Dimensions.get('window');
   const offset = height * 0.12;
-  console.log(searchedChannel,"-=-=-=");
-  searchedChannel && textInputRef?.current?.focus()
   if (teamId == undefined) {
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
   }
