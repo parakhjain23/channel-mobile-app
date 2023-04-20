@@ -120,6 +120,7 @@ const ChatCard = ({
     return (
       <GestureHandlerRootView style={{flexDirection: 'row'}}>
         <TouchableOpacity
+          activeOpacity={0.6}
           onLongPress={sentByMe ? onLongPress : null}
           style={{flex: 1}}>
           <Swipeable
@@ -204,8 +205,8 @@ const ChatCard = ({
                           url: selectedImage?.resourceUrl,
                           // width: Dimensions.get('window')?.width - 20,
                           // height: Dimensions.get('window')?.height,
-                          freeHeight:true,
-                          freeWidth:true
+                          freeHeight: true,
+                          freeWidth: true,
                         },
                       ]}
                       enableSwipeDown={true}
@@ -313,7 +314,11 @@ const ChatCard = ({
                   </Text>
                   {chat?.randomId != null ? (
                     <View
-                      style={{flexDirection: 'column', alignItems: 'flex-end',width:30}}>
+                      style={{
+                        flexDirection: 'column',
+                        alignItems: 'flex-end',
+                        width: 30,
+                      }}>
                       <Icon name="access-time" color={'white'} />
                     </View>
                   ) : (
