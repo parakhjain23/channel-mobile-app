@@ -74,6 +74,7 @@ const ChannelCard = ({
       teamId: item?._id,
       channelType: item?.type,
       userId,
+      searchedChannel:false
     });
   }, [
     Name,
@@ -205,6 +206,7 @@ const SearchChannelCard = ({
       reciverUserId: item?._source?.userId,
       channelType: item?._source?.type == 'U' ? 'DIRECT_MESSAGE' : 'CHANNEL',
       userId: item?._source?.userId,
+      searchedChannel: true
     });
   }, [
     teamId,
