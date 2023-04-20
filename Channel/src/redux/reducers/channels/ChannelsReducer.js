@@ -1,5 +1,4 @@
 import * as Actions from '../../Enums';
-import {store} from '../../Store';
 
 const initialState = {
   channels: [],
@@ -246,7 +245,8 @@ export function channelsReducer(state = initialState, action) {
           ...teamIdAndTypeMapping,
         },
       };
-
+    case Actions.SIGN_OUT:
+      return initialState;
     default:
       return state;
   }

@@ -20,6 +20,7 @@ import {switchOrgStart} from '../../redux/actions/org/changeCurrentOrg';
 import {removeCountOnOrgCard} from '../../redux/actions/org/UnreadCountOnOrgCardsAction';
 import signOut from '../../redux/actions/user/userAction';
 import * as RootNavigation from '../../navigation/RootNavigation';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 const CustomeDrawerScreen = ({
   orgsState,
@@ -34,7 +35,13 @@ const CustomeDrawerScreen = ({
   const {colors} = useTheme();
   const data = orgsState?.orgs;
   const navigation = useNavigation();
-
+  const _signOut =async ()=>{
+    if(userInfoState?.siginInMethod == 'Google'){
+      await GoogleSignin.revokeAccess()
+      await GoogleSignin.signOut()
+    }
+    signOutAction()
+  }
   useEffect(() => {
     if (userInfoState?.user != null && channelsState?.channels?.length == 0) {
       getChannelsAction(
@@ -191,9 +198,7 @@ const CustomeDrawerScreen = ({
         }}>
         <Button
           title="Sign Out"
-          onPress={() => {
-            signOutAction();
-          }}
+          onPress={_signOut}
         />
       </View>
     </View>

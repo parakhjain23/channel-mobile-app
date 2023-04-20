@@ -12,10 +12,23 @@ import {
 import {connect} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import {setIntialOrgId} from '../../redux/actions/org/intialOrgId';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import signOut from '../../redux/actions/user/userAction';
+import {useNavigation} from '@react-navigation/native';
 
-const SelectWorkSpaceScreen = ({orgsState, userInfoState}) => {
+const SelectWorkSpaceScreen = ({userInfoState, signOutAction, orgsState,route}) => {
   const [selectedOrg, setselectedOrg] = useState(null);
+  const {email} = route.params
   const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const _signOut = async () => {
+    if (userInfoState?.siginInMethod == 'Google') {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+    }
+    signOutAction();
+    navigation.navigate('Login');
+  };
   useEffect(() => {
     if (selectedOrg != null) {
       dispatch(setIntialOrgId(selectedOrg, userInfoState?.accessToken));
@@ -29,14 +42,48 @@ const SelectWorkSpaceScreen = ({orgsState, userInfoState}) => {
         alignItems: 'center',
         backgroundColor: 'black',
       }}>
-      {!orgsState?.noOrgsFound && (
-        <View style={{margin: 30}}>
-          <Text style={{fontSize: 20, fontWeight: '600', color: 'white'}}>
-            Select a Work Space to continue
+      <View style={{margin: 30}}>
+        <Text style={{fontSize: 20, fontWeight: '600', color: 'white'}}>
+          Select a Work Space to continue
+        </Text>
+      </View>
+      {orgsState?.noOrgsFound ? (
+        <View>
+          <Text style={{color: 'white', fontSize: 16, textAlign: 'center'}}>
+            You are not part of any work space please contact your company's HR
+            department to add you in a respective work space
           </Text>
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 30,
+            }}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#fff',
+                width: '70%',
+                height: 50,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 10,
+                shadowColor: '#000',
+                shadowOffset: {width: 0, height: 2},
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+                elevation: 5,
+              }}
+              onPress={_signOut}
+              >
+              <Text style={{color: '#000', fontSize: 16, fontWeight: 'bold'}}>
+                Sign in with a different account
+              </Text>
+            </TouchableOpacity>
+            <Text style={{color:'white',marginTop:10,fontSize:16}}>{email}</Text>
+          </View>
         </View>
-      )}
-      {orgsState?.orgs != null ? (
+      ) : orgsState?.orgs?.length > 0 ? (
+        orgsState?.orgs != null &&
         orgsState?.orgs?.map(item => {
           return (
             <TouchableOpacity
@@ -65,13 +112,6 @@ const SelectWorkSpaceScreen = ({orgsState, userInfoState}) => {
             </TouchableOpacity>
           );
         })
-      ) : orgsState?.noOrgsFound ? (
-        <View>
-          <Text style={{color: 'white', fontSize: 16,textAlign:'center'}}>
-          You are not part of any work space please contact your company's HR
-          department to add you in respective work space
-        </Text>
-        </View>
       ) : (
         <ActivityIndicator size={'small'} />
       )}
@@ -87,6 +127,7 @@ const mapDispatchToProps = dispatch => {
     // getSpaceTokenStartAction : (firebaseToken) => dispatch(getSpaceTokenStart(firebaseToken)),
     // saveUserTokenAction :(token,orgId)=> dispatch(saveUserToken(token,orgId)),
     // getOrgDetailsAction: (token) => dispatch(getOrgDetailsStart(token)),
+    signOutAction: () => dispatch(signOut()),
   };
 };
 export default connect(
