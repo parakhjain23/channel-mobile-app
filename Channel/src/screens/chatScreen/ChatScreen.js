@@ -298,7 +298,7 @@ const ChatScreen = ({
                 />
               </View>
             )}
-            <View style={{margin: ms(1), marginLeft: 0}}>
+            <View style={{marginBottom: ms(10), marginLeft: 0}}>
               <View style={{flexDirection: 'row'}}>
                 <View
                   style={[
@@ -460,7 +460,7 @@ const ChatScreen = ({
                       hideOptionsMethod()}
                   </View>
                 </View>
-                <View style={{justifyContent: 'flex-end'}}>
+                <View style={{justifyContent: 'center'}}>
                   <MaterialIcons
                     name="send"
                     size={ms(25)}
