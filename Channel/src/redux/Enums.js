@@ -3,6 +3,7 @@ export const GET_ORG_START = 'GET_ORG_START';
 export const GET_ORG_SUCCESS = 'GET_ORG_SUCCESS';
 export const GET_ORG_ERROR = 'GET_ORG_ERROR';
 export const GET_ORG_RESET = 'GET_ORG_RESET';
+export const NO_ORGS_FOUND = 'NO_ORGS_FOUND'
 
 export const SAVE_TOKEN = 'SAVE_TOKEN';
 export const SIGN_OUT = 'SIGN_OUT';
