@@ -16,8 +16,8 @@ import {makeStyles} from './ChatCardStyles';
 import {ms} from 'react-native-size-matters';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import ImageViewer from 'react-native-image-zoom-viewer';
-const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
-  const {colors, dark} = useTheme();
+const AddRemoveJoinedMsg = React.memo(({senderName, content, orgState}) => {
+  const {colors} = useTheme();
   const styles = makeStyles(colors);
   const regex = /\{\{(\w+)\}\}/g;
   const result = content.replace(regex, (match, userId) => {
@@ -30,7 +30,7 @@ const AddRemoveJoinedMsg = ({senderName, content, orgState}) => {
       </Text>
     </View>
   );
-};
+});
 const ChatCard = ({
   chat,
   userInfoState,
