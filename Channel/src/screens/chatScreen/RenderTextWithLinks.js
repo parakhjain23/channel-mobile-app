@@ -5,11 +5,9 @@ import {Linking} from 'react-native';
 import * as RootNavigation from '../../navigation/RootNavigation';
 import cheerio from 'cheerio';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
-import { useTheme } from 'react-native-paper';
 
 export const RenderTextWithLinks = ({
   text,
-  mentions,
   repliedContainer,
   orgState,
   searchUserProfileAction,
@@ -17,8 +15,6 @@ export const RenderTextWithLinks = ({
   colors,
   sentByMe
 }) => {
-  const {dark} = useTheme();
-  const fontWeight = dark ? '700' : '900' 
   const linkColor = sentByMe ? colors.sentByMeLinkColor : colors.recivedLinkColor
   const urlRegex =
     /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-])?(?:\?[^\s])?)/gi;
@@ -58,7 +54,6 @@ export const RenderTextWithLinks = ({
               <Text
                 style={{
                   color: repliedContainer ? textColor : linkColor,
-                  fontWeight: fontWeight,
                   textDecorationLine: 'underline',
                 }}>
                 {part}
@@ -127,7 +122,7 @@ export const RenderTextWithLinks = ({
             openLink(url);
           }}>
           <Text
-            style={{color: linkColor, textDecorationLine: 'underline',fontWeight:fontWeight}}>
+            style={{color: linkColor, textDecorationLine: 'underline'}}>
             {part}
           </Text>
         </TouchableOpacity>
