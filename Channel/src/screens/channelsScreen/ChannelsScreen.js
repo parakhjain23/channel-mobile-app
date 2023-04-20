@@ -278,7 +278,7 @@ const ChannelsScreen = props => {
   );
   
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1,backgroundColor:colors?.primaryColor}}>
       <View
         style={{
           flex: 1,

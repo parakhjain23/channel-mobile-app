@@ -233,7 +233,7 @@ const ChatScreen = ({
   }, [teamId, userInfoState, skip, fetchChatsOfTeamAction]);
   const date = new Date();
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1,backgroundColor:colors.primaryColor}}>
       <View style={styles.mainContainer}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : null}
