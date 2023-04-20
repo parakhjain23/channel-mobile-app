@@ -11,6 +11,7 @@ export const launchCameraForPhoto = (
       skipBackup: true,
       path: 'images',
     },
+    quality: 0.5
   };
   launchCamera(optionsForCamera, async data => {
     if (data?.assets) {
@@ -49,6 +50,7 @@ export const launchGallery = (
     mediaType:'mixed',
     videoQuality:'low',
     selectionLimit: 0,
+    quality: 0.5
   };
   launchImageLibrary(options, async data => {
     if (data?.assets) {

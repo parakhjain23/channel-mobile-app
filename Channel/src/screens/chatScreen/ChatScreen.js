@@ -461,7 +461,7 @@ const ChatScreen = ({
                       hideOptionsMethod()}
                   </View>
                 </View>
-                <View style={{justifyContent: 'center'}}>
+                <View style={{justifyContent: 'flex-end'}}>
                   <MaterialIcons
                     name="send"
                     size={ms(25)}
