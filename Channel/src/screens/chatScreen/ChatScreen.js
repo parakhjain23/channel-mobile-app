@@ -239,7 +239,7 @@ const ChatScreen = ({
       <View style={styles.mainContainer}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : null}
-          keyboardVerticalOffset={offset}
+          keyboardVerticalOffset={searchedChannel ? s(80) : offset}
           style={{flex: 1}}>
           <View style={{flex: 1, marginLeft: ms(10)}}>
             <View style={{flex: 9}}>
