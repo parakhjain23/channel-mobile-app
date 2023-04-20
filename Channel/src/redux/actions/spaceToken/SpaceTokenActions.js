@@ -23,6 +23,12 @@ export function* getSpaceAccessToken({firebaseAccessToken}) {
     return {
       type: Actions.SAVE_TOKEN,
       accessToken:response.accessToken,
-    //   orgId:response?.followedOrgs[0]?.id
     };
+  }
+
+  export function setSigningMethod(signinMethod){
+    return{
+      type:Actions.SIGNIN_METHOD,
+      signinMethod
+    }
   }

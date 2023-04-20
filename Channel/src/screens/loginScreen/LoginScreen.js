@@ -5,15 +5,15 @@ import {
   appleAuth,
 } from '@invertase/react-native-apple-authentication';
 import auth from '@react-native-firebase/auth';
-
+import jwt_decode from 'jwt-decode';
 import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-import { getSpaceTokenStart } from '../../redux/actions/spaceToken/SpaceTokenActions';
+import { getSpaceTokenStart, setSigningMethod } from '../../redux/actions/spaceToken/SpaceTokenActions';
 import {useNavigation, useTheme} from '@react-navigation/native';
 
-const LoginScreen = ({getSpaceTokenStartAction}) => {
+const LoginScreen = ({getSpaceTokenStartAction,setSigningMethodAction}) => {
   const navigation = useNavigation()
   const {colors} = useTheme();
   useEffect(() => {
@@ -38,7 +38,8 @@ const LoginScreen = ({getSpaceTokenStartAction}) => {
           if(data){
             data.getIdToken()?.then(token=>{
               getSpaceTokenStartAction(token)
-              navigation.navigate('SelectWorkSpace')
+              setSigningMethodAction('Google')
+              navigation.navigate('SelectWorkSpace',{email:user.email})
             })
           }
         })
@@ -74,12 +75,16 @@ const LoginScreen = ({getSpaceTokenStartAction}) => {
             identityToken,
             nonce,
           );
+          let jwttokkenEmail = await jwt_decode(
+            appleAuthRequestResponse?.identityToken,
+          )?.email
           try {
             auth().onAuthStateChanged(data=>{
               if(data){
                 data?.getIdToken()?.then(token=>{
                   getSpaceTokenStartAction(token)
-                  navigation.navigate('SelectWorkSpace')
+                  setSigningMethodAction('Apple')
+                  navigation.navigate('SelectWorkSpace',{email:jwttokkenEmail})
                 })
               }
             })
@@ -114,12 +119,12 @@ const LoginScreen = ({getSpaceTokenStartAction}) => {
 };
 const mapStateToProps = state => ({
   userInfoSate: state.userInfoReducer,
+  orgsState: state.orgsReducer
 });
 const mapDispatchToProps = dispatch =>{
   return {
     getSpaceTokenStartAction : (firebaseToken) => dispatch(getSpaceTokenStart(firebaseToken)),
-    // saveUserTokenAction :(token,orgId)=> dispatch(saveUserToken(token,orgId)),
-    // getOrgDetailsAction: (token) => dispatch(getOrgDetailsStart(token)),
+    setSigningMethodAction :(signinMethod)=> dispatch(setSigningMethod(signinMethod))
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(LoginScreen);
