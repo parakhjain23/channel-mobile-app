@@ -67,7 +67,6 @@ const ChatScreen = ({
   const textInputRef = useRef(null);
   const {height} = Dimensions.get('window');
   const offset = height * 0.12;
-  console.log(searchedChannel,"-=-=-=");
   searchedChannel && textInputRef?.current?.focus()
   if (teamId == undefined) {
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
