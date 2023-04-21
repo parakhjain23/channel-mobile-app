@@ -114,7 +114,7 @@ const ChatScreen = ({
       setShowOptions(false);
     }, 130);
   };
-  const handleInputChange = text => {
+  const handleInputChange = useCallback((text) => {
     onChangeMessage(text);
     const mentionRegex = /@\w+/g;
     const foundMentions = text.match(mentionRegex);
@@ -126,7 +126,7 @@ const ChatScreen = ({
         ),
         setMentions(channelsByQueryState?.mentionChannels))
       : setMentions([]);
-  };
+  }, [onChangeMessage, channelsByQueryState?.mentionChannels, userInfoState?.user?.id, orgState?.currentOrgId]);
 
   const handleMentionSelect = mention => {
     mention?._source?.userId != undefined
@@ -143,7 +143,7 @@ const ChatScreen = ({
       );
     setMentions([]);
   };
-  const renderMention = ({item, index}) =>
+  const renderMention = useMemo(() => ({ item, index }) =>
     item?._source?.type == 'U' && (
       <TouchableOpacity onPress={() => handleMentionSelect(item)} key={index}>
         <View
@@ -165,7 +165,8 @@ const ChatScreen = ({
           </Text>
         </View>
       </TouchableOpacity>
-    );
+    ), [handleMentionSelect]);
+
   const screenHeight = Dimensions.get('window').height;
   const onScroll = Animated.event(
     [{nativeEvent: {contentOffset: {y: scrollY}}}],
@@ -182,7 +183,7 @@ const ChatScreen = ({
     [chatState?.data[teamId]?.messages],
   );
   let prevDate = null;
-  const TodaysDate = new Date().toDateString();
+  const todaysDateRef = useRef(new Date().toDateString());
   const renderItem = useCallback(
     ({item, index}) => {
       const date = new Date(item.updatedAt);
@@ -215,7 +216,7 @@ const ChatScreen = ({
                   textAlign: 'center',
                   margin: 10,
                 }}>
-                {displayDate === TodaysDate ? 'Today' : displayDate}
+                {displayDate === todaysDateRef.current ? 'Today' : displayDate}
               </Text>
             </View>
           )}
