@@ -8,7 +8,6 @@ import {
   View,
   Button,
   TouchableNativeFeedback,
-  StyleSheet,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
@@ -26,7 +25,7 @@ const ChannelCard = ({
   props,
   resetUnreadCountAction,
   resetChatsAction,
-  networkState
+  networkState,
 }) => {
   const {colors} = useTheme();
 
@@ -74,7 +73,7 @@ const ChannelCard = ({
       teamId: item?._id,
       channelType: item?.type,
       userId,
-      searchedChannel:false
+      searchedChannel: false,
     });
   }, [
     Name,
@@ -88,7 +87,7 @@ const ChannelCard = ({
     user?.id,
     userId,
     accessToken,
-    networkState
+    networkState,
   ]);
 
   useLayoutEffect(() => {
@@ -187,8 +186,8 @@ const SearchChannelCard = ({
     ? props?.channelsState?.userIdAndTeamIdMapping[item?._source?.userId]
     : item?._id;
   const iconName = useMemo(
-    () => (item?.type === 'U' ? 'user' : 'hashtag'),
-    [item?.type],
+    () => (item?._source?.type === 'U' ? 'user' : 'hashtag'),
+    [item?._source?.type],
   );
   const onPress = useCallback(async () => {
     if (!teamId) {
@@ -206,7 +205,7 @@ const SearchChannelCard = ({
       reciverUserId: item?._source?.userId,
       channelType: item?._source?.type == 'U' ? 'DIRECT_MESSAGE' : 'CHANNEL',
       userId: item?._source?.userId,
-      searchedChannel: true
+      searchedChannel: true,
     });
   }, [
     teamId,
@@ -324,7 +323,7 @@ const UsersToAddCard = ({item, setUserIds, userIds, setsearchedUser}) => {
 const mapStateToProps = state => ({
   userInfoState: state.userInfoReducer,
   orgsState: state.orgsReducer,
-  networkState : state.networkReducer
+  networkState: state.networkReducer,
 });
 const mapDispatchToProps = dispatch => {
   return {

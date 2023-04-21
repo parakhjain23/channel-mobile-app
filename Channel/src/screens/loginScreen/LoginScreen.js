@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import {Button, Image, Linking, Platform, Text, View} from 'react-native';
-import { connect } from 'react-redux';
-import {
-  appleAuth,
-} from '@invertase/react-native-apple-authentication';
+import React, {useEffect} from 'react';
+import {Button, Image, Platform, View} from 'react-native';
+import {connect} from 'react-redux';
+import {appleAuth} from '@invertase/react-native-apple-authentication';
 import auth from '@react-native-firebase/auth';
 import jwt_decode from 'jwt-decode';
 import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-import { getSpaceTokenStart, setSigningMethod } from '../../redux/actions/spaceToken/SpaceTokenActions';
+import {
+  getSpaceTokenStart,
+  setSigningMethod,
+} from '../../redux/actions/spaceToken/SpaceTokenActions';
 import {useNavigation, useTheme} from '@react-navigation/native';
 
-const LoginScreen = ({getSpaceTokenStartAction,setSigningMethodAction}) => {
-  const navigation = useNavigation()
+const LoginScreen = ({getSpaceTokenStartAction, setSigningMethodAction}) => {
+  const navigation = useNavigation();
   const {colors} = useTheme();
   useEffect(() => {
     GoogleSignin.configure({
@@ -25,7 +26,7 @@ const LoginScreen = ({getSpaceTokenStartAction,setSigningMethodAction}) => {
     });
   }, []);
 
-  const _signIn = async userInfoState => {
+  const _signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
       const {accessTokken, idToken, user} = await GoogleSignin.signIn();
@@ -34,15 +35,15 @@ const LoginScreen = ({getSpaceTokenStartAction,setSigningMethodAction}) => {
         accessTokken,
       );
       try {
-        auth().onAuthStateChanged(data=>{
-          if(data){
-            data.getIdToken()?.then(token=>{
-              getSpaceTokenStartAction(token)
-              setSigningMethodAction('Google')
-              navigation.navigate('SelectWorkSpace',{email:user.email})
-            })
+        auth().onAuthStateChanged(data => {
+          if (data) {
+            data.getIdToken()?.then(token => {
+              getSpaceTokenStartAction(token);
+              setSigningMethodAction('Google');
+              navigation.navigate('SelectWorkSpace', {email: user.email});
+            });
           }
-        })
+        });
       } catch (error) {
         console.log(error);
       }
@@ -77,17 +78,19 @@ const LoginScreen = ({getSpaceTokenStartAction,setSigningMethodAction}) => {
           );
           let jwttokkenEmail = await jwt_decode(
             appleAuthRequestResponse?.identityToken,
-          )?.email
+          )?.email;
           try {
-            auth().onAuthStateChanged(data=>{
-              if(data){
-                data?.getIdToken()?.then(token=>{
-                  getSpaceTokenStartAction(token)
-                  setSigningMethodAction('Apple')
-                  navigation.navigate('SelectWorkSpace',{email:jwttokkenEmail})
-                })
+            auth().onAuthStateChanged(data => {
+              if (data) {
+                data?.getIdToken()?.then(token => {
+                  getSpaceTokenStartAction(token);
+                  setSigningMethodAction('Apple');
+                  navigation.navigate('SelectWorkSpace', {
+                    email: jwttokkenEmail,
+                  });
+                });
               }
-            })
+            });
           } catch (error) {
             console.log(error);
           }
@@ -101,30 +104,29 @@ const LoginScreen = ({getSpaceTokenStartAction,setSigningMethodAction}) => {
     }
   }
   return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',backgroundColor:colors.drawerBackgroundColor}}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: colors.drawerBackgroundColor,
+      }}>
       <Image source={require('../../assests/images/appIcon/icon-96x96.png')} />
-      <Button
-        title="Login with Google"
-        onPress={
-          _signIn
-        }
-      />
-    { Platform.OS == 'ios' && <View style={{marginTop:10}}>
-    <Button 
-        title='Login with Apple'
-        onPress={onAppleButtonPress}
-      /></View>}
+      <Button title="Login with Google" onPress={_signIn} />
+      {Platform.OS == 'ios' && (
+        <View style={{marginTop: 10}}>
+          <Button title="Login with Apple" onPress={onAppleButtonPress} />
+        </View>
+      )}
     </View>
   );
 };
-const mapStateToProps = state => ({
-  userInfoSate: state.userInfoReducer,
-  orgsState: state.orgsReducer
-});
-const mapDispatchToProps = dispatch =>{
+const mapDispatchToProps = dispatch => {
   return {
-    getSpaceTokenStartAction : (firebaseToken) => dispatch(getSpaceTokenStart(firebaseToken)),
-    setSigningMethodAction :(signinMethod)=> dispatch(setSigningMethod(signinMethod))
-  }
-}
-export default connect(mapStateToProps,mapDispatchToProps)(LoginScreen);
+    getSpaceTokenStartAction: firebaseToken =>
+      dispatch(getSpaceTokenStart(firebaseToken)),
+    setSigningMethodAction: signinMethod =>
+      dispatch(setSigningMethod(signinMethod)),
+  };
+};
+export default connect(null, mapDispatchToProps)(LoginScreen);

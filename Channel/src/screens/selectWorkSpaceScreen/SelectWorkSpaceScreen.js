@@ -1,14 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  Button,
-  Image,
-  Linking,
-  Platform,
-  ActivityIndicator,
-  Text,
-  View,
-  TouchableOpacity,
-} from 'react-native';
+import {ActivityIndicator, Text, View, TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import {setIntialOrgId} from '../../redux/actions/org/intialOrgId';
@@ -16,9 +7,14 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import signOut from '../../redux/actions/user/userAction';
 import {useNavigation} from '@react-navigation/native';
 
-const SelectWorkSpaceScreen = ({userInfoState, signOutAction, orgsState,route}) => {
+const SelectWorkSpaceScreen = ({
+  userInfoState,
+  signOutAction,
+  orgsState,
+  route,
+}) => {
   const [selectedOrg, setselectedOrg] = useState(null);
-  const {email} = route.params
+  const {email} = route.params;
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const _signOut = async () => {
@@ -73,13 +69,14 @@ const SelectWorkSpaceScreen = ({userInfoState, signOutAction, orgsState,route}) 
                 shadowRadius: 3.84,
                 elevation: 5,
               }}
-              onPress={_signOut}
-              >
+              onPress={_signOut}>
               <Text style={{color: '#000', fontSize: 16, fontWeight: 'bold'}}>
                 Sign in with a different account
               </Text>
             </TouchableOpacity>
-            <Text style={{color:'white',marginTop:10,fontSize:16}}>{email}</Text>
+            <Text style={{color: 'white', marginTop: 10, fontSize: 16}}>
+              {email}
+            </Text>
           </View>
         </View>
       ) : orgsState?.orgs?.length > 0 ? (
@@ -124,9 +121,6 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => {
   return {
-    // getSpaceTokenStartAction : (firebaseToken) => dispatch(getSpaceTokenStart(firebaseToken)),
-    // saveUserTokenAction :(token,orgId)=> dispatch(saveUserToken(token,orgId)),
-    // getOrgDetailsAction: (token) => dispatch(getOrgDetailsStart(token)),
     signOutAction: () => dispatch(signOut()),
   };
 };

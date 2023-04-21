@@ -20,29 +20,28 @@ import {switchOrgStart} from '../../redux/actions/org/changeCurrentOrg';
 import {removeCountOnOrgCard} from '../../redux/actions/org/UnreadCountOnOrgCardsAction';
 import signOut from '../../redux/actions/user/userAction';
 import * as RootNavigation from '../../navigation/RootNavigation';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 const CustomeDrawerScreen = ({
   orgsState,
   userInfoState,
-  channelsState,
   getChannelsAction,
   switchOrgAction,
   signOutAction,
   removeCountOnOrgCardAction,
   moveChannelToTopAction,
-  networkState
+  networkState,
 }) => {
   const {colors} = useTheme();
   const data = orgsState?.orgs;
   const navigation = useNavigation();
-  const _signOut =async ()=>{
-    if(userInfoState?.siginInMethod == 'Google'){
-      await GoogleSignin.revokeAccess()
-      await GoogleSignin.signOut()
+  const _signOut = async () => {
+    if (userInfoState?.siginInMethod == 'Google') {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
     }
-    signOutAction()
-  }
+    signOutAction();
+  };
   useEffect(() => {
     if (userInfoState?.user != null && networkState?.isInternetConnected) {
       getChannelsAction(
@@ -51,7 +50,7 @@ const CustomeDrawerScreen = ({
         userInfoState?.user?.id,
       );
     }
-  }, [userInfoState?.user,networkState?.isInternetConnected]);
+  }, [userInfoState?.user, networkState?.isInternetConnected]);
   const OrgCard = ({item, navigation}) => {
     var unreadCountObj = orgsState?.orgsWithNewMessages?.[item?.id];
     var count = undefined;
@@ -136,7 +135,7 @@ const CustomeDrawerScreen = ({
           onPress={async () => {
             RootNavigation.navigate('UserProfiles', {
               displayName: userInfoState?.user?.displayName,
-              userId: userInfoState?.user?.id
+              userId: userInfoState?.user?.id,
             });
           }}
           style={{flexDirection: 'row', alignItems: 'center', maxWidth: '80%'}}>
@@ -197,10 +196,7 @@ const CustomeDrawerScreen = ({
           borderTopWidth: 0.3,
           justifyContent: 'center',
         }}>
-        <Button
-          title="Sign Out"
-          onPress={_signOut}
-        />
+        <Button title="Sign Out" onPress={_signOut} />
       </View>
     </View>
   );
@@ -208,8 +204,7 @@ const CustomeDrawerScreen = ({
 const mapStateToProps = state => ({
   orgsState: state.orgsReducer,
   userInfoState: state.userInfoReducer,
-  channelsState: state.channelsReducer,
-  networkState : state.networkReducer
+  networkState: state.networkReducer,
 });
 const mapDispatchToProps = dispatch => {
   return {

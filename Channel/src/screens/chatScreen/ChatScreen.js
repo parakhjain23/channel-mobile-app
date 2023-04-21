@@ -22,7 +22,7 @@ import {
   setGlobalMessageToSend,
 } from '../../redux/actions/chat/ChatActions';
 import {deleteMessageStart} from '../../redux/actions/chat/DeleteChatAction';
-import {ChatCardMemo, LocalChatCardMemo} from './ChatCard';
+import {ChatCardMemo} from './ChatCard';
 import {getChannelsByQueryStart} from '../../redux/actions/channels/ChannelsByQueryAction';
 import {fetchSearchedUserProfileStart} from '../../redux/actions/user/searchUserProfileActions';
 import {RenderTextWithLinks} from './RenderTextWithLinks';
@@ -31,7 +31,7 @@ import {launchCameraForPhoto, launchGallery} from './ImagePicker';
 import {makeStyles} from './Styles';
 import {useTheme} from '@react-navigation/native';
 import AnimatedLottieView from 'lottie-react-native';
-import {s, vs, ms, mvs} from 'react-native-size-matters';
+import {s, ms, mvs} from 'react-native-size-matters';
 import {setLocalMsgStart} from '../../redux/actions/chat/LocalMessageActions';
 const ChatScreen = ({
   route,
@@ -50,7 +50,7 @@ const ChatScreen = ({
   searchUserProfileAction,
   setlocalMsgAction,
 }) => {
-  var {teamId, reciverUserId, channelType,searchedChannel} = route.params;
+  var {teamId, reciverUserId, channelType, searchedChannel} = route.params;
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const [replyOnMessage, setreplyOnMessage] = useState(false);
@@ -67,7 +67,7 @@ const ChatScreen = ({
   const textInputRef = useRef(null);
   const {height} = Dimensions.get('window');
   const offset = height * 0.12;
-  searchedChannel && textInputRef?.current?.focus()
+
   if (teamId == undefined) {
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
   }
@@ -80,6 +80,9 @@ const ChatScreen = ({
     chatState?.data[teamId]?.messages?.length != undefined
       ? chatState?.data[teamId]?.messages?.length
       : 0;
+  useEffect(()=>{
+    searchedChannel && textInputRef?.current?.focus();
+  },[])
   useEffect(() => {
     if (
       chatState?.data[teamId]?.messages == undefined ||
@@ -234,7 +237,7 @@ const ChatScreen = ({
   }, [teamId, userInfoState, skip, fetchChatsOfTeamAction]);
   const date = new Date();
   return (
-    <SafeAreaView style={{flex: 1,backgroundColor:colors.primaryColor}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: colors.primaryColor}}>
       <View style={styles.mainContainer}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : null}
