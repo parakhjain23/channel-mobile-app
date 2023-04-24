@@ -8,19 +8,11 @@ import Notifee from '@notifee/react-native';
 import NotificationSetup from './src/utils/NotificationSetup';
 import InternetConnection from './src/utils/InternetConnection';
 import SplashScreen from 'react-native-splash-screen';
-import * as Sentry from '@sentry/react-native';
 
 const App = () => {
   useEffect(() => {
     SplashScreen.hide();
     Request();
-    Sentry.init({
-      dsn: 'https://b3b078bd820c4f6cb1e948fd23c46d59@o4504117127348224.ingest.sentry.io/4505068327075840',
-      // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-      // We recommend adjusting this value in production.
-      tracesSampleRate: 1.0,
-      // enableNative: false
-    });
   }, []);
 
   return (
@@ -33,7 +25,7 @@ const App = () => {
     </Provider>
   );
 };
-export default Sentry.wrap(App);
+export default App;
 
 async function Request() {
   await Notifee.requestPermission({
