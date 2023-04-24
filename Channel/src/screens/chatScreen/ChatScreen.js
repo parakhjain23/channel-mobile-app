@@ -309,15 +309,14 @@ const ChatScreen = ({
               )}
             </View>
             {attachmentLoading && (
-                <AnimatedLottieView
-                  source={require('../../assests/images/attachments/uploading.json')}
-                  loop
-                  autoPlay
-                  style={styles.attachmentLoading}
-                />
+              <AnimatedLottieView
+                source={require('../../assests/images/attachments/uploading.json')}
+                loop
+                autoPlay
+                style={styles.attachmentLoading}
+              />
             )}
-            <View
-              style={styles.bottomContainer}>
+            <View style={styles.bottomContainer}>
               <View
                 style={[
                   replyOnMessage && styles.inputWithReplyContainer,
@@ -480,11 +479,11 @@ const ChatScreen = ({
                   size={ms(25)}
                   style={{color: colors.textColor, padding: ms(10)}}
                   onPress={() => {
+                    onChangeMessage('');
                     let randomId = uuid.v4();
                     networkState?.isInternetConnected
                       ? (message?.trim() != '' || attachment?.length > 0) &&
-                        (onChangeMessage(''),
-                        setAttachment([]),
+                        (setAttachment([]),
                         setlocalMsgAction({
                           randomId: randomId,
                           content: message,
@@ -517,8 +516,7 @@ const ChatScreen = ({
                         replyOnMessage && setreplyOnMessage(false),
                         repliedMsgDetails && setrepliedMsgDetails(null))
                       : message?.trim() != '' &&
-                        (onChangeMessage(''),
-                        setlocalMsgAction({
+                        (setlocalMsgAction({
                           randomId: randomId,
                           content: message,
                           createdAt: date,
