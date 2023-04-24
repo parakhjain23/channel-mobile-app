@@ -33,6 +33,8 @@ import {useTheme} from '@react-navigation/native';
 import AnimatedLottieView from 'lottie-react-native';
 import {s, ms, mvs} from 'react-native-size-matters';
 import {setLocalMsgStart} from '../../redux/actions/chat/LocalMessageActions';
+import * as Sentry from '@sentry/react-native';
+
 const ChatScreen = ({
   route,
   userInfoState,
