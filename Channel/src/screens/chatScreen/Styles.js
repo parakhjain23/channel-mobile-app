@@ -1,11 +1,31 @@
-import { StyleSheet } from "react-native";
-import { s, vs, ms, mvs } from 'react-native-size-matters';
-export const makeStyles = colors => StyleSheet.create({
-    mainContainer: {flex: 1, backgroundColor: colors.primaryColor,paddingHorizontal:5},
-    text: {
-      color: colors.textColor
+import {StyleSheet} from 'react-native';
+import {s, vs, ms, mvs} from 'react-native-size-matters';
+export const makeStyles = colors =>
+  StyleSheet.create({
+    safeAreaView: {flex: 1, backgroundColor: colors.primaryColor},
+    mainContainer: {
+      flex: 1,
+      backgroundColor: colors.primaryColor,
+      paddingHorizontal: 5,
     },
-    repliedText:{
+    outerContainer: {flex: 1, marginLeft: ms(10)},
+    messageListContainer: {
+      flex: 9,
+    },
+    loadingContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    animatedLottieView: {
+      height: ms(100),
+      width: ms(100),
+    },
+    attachmentLoading: {height: s(100), alignSelf: 'center'},
+    text: {
+      color: colors.textColor,
+    },
+    repliedText: {
       color: 'black',
     },
     inputWithReply: {
@@ -25,12 +45,12 @@ export const makeStyles = colors => StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'space-between',
       margin: ms(5),
-      paddingRight:ms(14),
+      paddingRight: ms(14),
       borderWidth: ms(0.25),
       borderRadius: ms(5),
       padding: ms(5),
       backgroundColor: '#d9d9d9',
-      maxHeight:ms(150),
+      maxHeight: ms(150),
     },
     repliedContainer: {
       padding: ms(5),
@@ -38,6 +58,7 @@ export const makeStyles = colors => StyleSheet.create({
       borderRadius: ms(5),
       marginBottom: ms(4),
     },
+    mentionsList: {maxHeight: mvs(140)},
     option: {
       margin: ms(8),
       backgroundColor: 'yellow',
@@ -63,17 +84,13 @@ export const makeStyles = colors => StyleSheet.create({
       },
       shadowOpacity: 0.46,
       shadowRadius: 11.14,
-  
+
       elevation: ms(17),
     },
-    container: {
-      // borderWidth: 1,
-      // borderColor: 'gray',
-      // borderRadius: 10,
-      // flexDirection: 'row',
-      // alignItems: 'flex-end',
-      // marginBottom: 15,
-      // maxWidth: '90%',
+    bottomContainer: {
+      marginBottom: ms(10),
+      marginLeft: 0,
+      flexDirection: 'row',
     },
     sentByMe: {
       alignSelf: 'flex-end',
@@ -116,7 +133,7 @@ export const makeStyles = colors => StyleSheet.create({
       borderColor: '#b3b3b3',
       paddingHorizontal: ms(5),
       paddingVertical: mvs(4),
-      maxHeight: mvs(200)
+      maxHeight: mvs(200),
     },
     attachIcon: {
       marginRight: ms(8),
