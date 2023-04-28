@@ -12,8 +12,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 import {fetchSearchedUserProfileStart} from '../../redux/actions/user/searchUserProfileActions';
-import {s, vs, ms, mvs} from 'react-native-size-matters';
-import {resetUnreadCountStart} from '../../redux/actions/channels/ChannelsAction';
+import {s, ms, mvs} from 'react-native-size-matters';
 import * as RootNavigation from '../../navigation/RootNavigation';
 
 const TouchableItem =
@@ -23,7 +22,6 @@ const ChannelCard = ({
   item,
   navigation,
   props,
-  resetUnreadCountAction,
   resetChatsAction,
   networkState,
 }) => {
@@ -59,15 +57,8 @@ const ChannelCard = ({
     return unreadCount > 0 || isHighlighted;
   }, [item?._id, teamIdAndUnreadCountMapping, highlightChannel]);
 
-  const shouldResetUnreadCount = teamIdAndUnreadCountMapping?.[item?._id] > 0;
-
   const onPress = useCallback(() => {
     networkState?.isInternetConnected && resetChatsAction();
-    props.setActiveChannelTeamIdAction(item?._id);
-    if (shouldResetUnreadCount) {
-      resetUnreadCountAction(currentOrgId, user?.id, item?._id, accessToken);
-    }
-
     RootNavigation.navigate('Chat', {
       chatHeaderTitle: Name,
       teamId: item?._id,
@@ -75,6 +66,7 @@ const ChannelCard = ({
       userId,
       searchedChannel: false,
     });
+    props.setActiveChannelTeamIdAction(item?._id);
   }, [
     Name,
     currentOrgId,
@@ -82,7 +74,6 @@ const ChannelCard = ({
     item?.type,
     resetChatsAction,
     props.setActiveChannelTeamIdAction,
-    resetUnreadCountAction,
     teamIdAndUnreadCountMapping,
     user?.id,
     userId,
@@ -329,8 +320,6 @@ const mapDispatchToProps = dispatch => {
   return {
     searchUserProfileAction: (userId, token) =>
       dispatch(fetchSearchedUserProfileStart(userId, token)),
-    resetUnreadCountAction: (orgId, userId, teamId, accessToken) =>
-      dispatch(resetUnreadCountStart(orgId, userId, teamId, accessToken)),
     resetChatsAction: () => dispatch(getChatsReset()),
   };
 };

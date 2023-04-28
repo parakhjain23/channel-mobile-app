@@ -202,6 +202,11 @@ export function channelsReducer(state = initialState, action) {
         ...state,
         activeChannelTeamId: action?.teamId,
         highlightChannel: tempHighlightChannels,
+      };
+
+    case Actions.RESET_UNREAD_COUNT_SUCCESS:
+      return {
+        ...state,
         teamIdAndUnreadCountMapping: {
           ...state?.teamIdAndUnreadCountMapping,
           [action?.teamId]: 0,

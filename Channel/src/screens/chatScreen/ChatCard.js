@@ -71,6 +71,7 @@ const ChatCard = ({
     setOptionsVisible(false);
   }, [chatState?.data[chat?.teamId]?.messages]);
   const onLongPress = () => {
+    console.log('hello');
     setOptionsVisible(!optionsVisible);
   };
   var parentId = chat?.parentId;
@@ -121,6 +122,7 @@ const ChatCard = ({
       <GestureHandlerRootView style={{flexDirection: 'row'}}>
         <TouchableOpacity
           activeOpacity={0.6}
+          onPress={() => (optionsVisible ? onLongPress() : null)}
           onLongPress={sentByMe ? onLongPress : null}
           style={{flex: 1}}>
           <Swipeable
@@ -219,7 +221,12 @@ const ChatCard = ({
                     return item?.contentType?.includes('image') ? (
                       <TouchableOpacity
                         key={index}
-                        onPress={() => handleImagePress(index)}
+                        onPress={() =>
+                          optionsVisible
+                            ? onLongPress()
+                            : handleImagePress(index)
+                        }
+                        onLongPress={sentByMe ? onLongPress : null}
                         style={{marginVertical: ms(5), alignItems: 'center'}}>
                         <Image
                           source={{uri: item?.resourceUrl}}
@@ -239,9 +246,12 @@ const ChatCard = ({
                         ]}
                         key={index}>
                         <TouchableOpacity
-                          onPress={() => {
-                            openLink(item?.resourceUrl);
-                          }}>
+                          onPress={() =>
+                            !optionsVisible
+                              ? openLink(item?.resourceUrl)
+                              : onLongPress()
+                          }
+                          onLongPress={sentByMe ? onLongPress : null}>
                           <View
                             style={{
                               flexDirection: 'row',

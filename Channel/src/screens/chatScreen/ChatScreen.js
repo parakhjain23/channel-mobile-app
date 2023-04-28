@@ -34,6 +34,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import {s, ms, mvs} from 'react-native-size-matters';
 import {setLocalMsgStart} from '../../redux/actions/chat/LocalMessageActions';
 import * as Sentry from '@sentry/react-native';
+import { resetUnreadCountStart } from '../../redux/actions/channels/ChannelsAction';
 
 const ChatScreen = ({
   route,
@@ -51,6 +52,7 @@ const ChatScreen = ({
   channelsByQueryState,
   searchUserProfileAction,
   setlocalMsgAction,
+  resetUnreadCountAction
 }) => {
   var {teamId, reciverUserId, channelType, searchedChannel} = route.params;
   const {colors} = useTheme();
@@ -71,11 +73,17 @@ const ChatScreen = ({
   const offset = height * 0.12;
   const date = useMemo(() => new Date(), []);
   const screenHeight = Dimensions.get('window').height;
-
+  const teamIdAndUnreadCountMapping =
+    channelsState?.teamIdAndUnreadCountMapping;
+  const user = userInfoState?.user;
+  const accessToken = userInfoState?.accessToken;
+  const currentOrgId = orgState?.currentOrgId;
+  
   if (teamId == undefined) {
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
   }
-
+  const shouldResetUnreadCount = teamIdAndUnreadCountMapping?.[teamId] > 0;
+  
   useEffect(() => {
     if (repliedMsgDetails != '') {
       textInputRef.current.focus();
@@ -88,6 +96,11 @@ const ChatScreen = ({
 
   useEffect(() => {
     searchedChannel && textInputRef?.current?.focus();
+    setTimeout(() => {
+      if (shouldResetUnreadCount) {
+        resetUnreadCountAction(currentOrgId, user?.id, teamId, accessToken);
+      }
+    }, 1000);
   }, []);
 
   useEffect(() => {
@@ -605,6 +618,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(getChannelsByQueryStart(query, userToken, orgId)),
     searchUserProfileAction: (userId, token) =>
       dispatch(fetchSearchedUserProfileStart(userId, token)),
+    resetUnreadCountAction: (orgId, userId, teamId, accessToken) =>
+      dispatch(resetUnreadCountStart(orgId, userId, teamId, accessToken)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);
