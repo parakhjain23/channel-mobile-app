@@ -26,7 +26,6 @@ const ChannelCard = ({
   networkState,
 }) => {
   const {colors} = useTheme();
-
   const userIdAndDisplayNameMapping =
     props.orgsState?.userIdAndDisplayNameMapping;
   const userIdAndNameMapping = props.orgsState?.userIdAndNameMapping;
@@ -49,7 +48,12 @@ const ChannelCard = ({
         : 'Loading...'
       : item?.name;
 
-  const iconName = item?.type === 'DIRECT_MESSAGE' ? 'user' : 'hashtag';
+  const iconName =
+    item?.type === 'DIRECT_MESSAGE'
+      ? 'user'
+      : item?.type === 'PRIVATE'
+      ? 'lock'
+      : 'hashtag';
 
   const unread = useMemo(() => {
     const unreadCount = teamIdAndUnreadCountMapping?.[item?._id] || 0;
