@@ -230,7 +230,7 @@ const ChatCard = ({
                         style={{marginVertical: ms(5), alignItems: 'center'}}>
                         <Image
                           source={{uri: item?.resourceUrl}}
-                          style={{height: ms(150), width: ms(150)}}
+                          style={{height: ms(150), width: ms(150),opacity: optionsVisible ? 0.6 : 1}}
                         />
                       </TouchableOpacity>
                     ) : (
