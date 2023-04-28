@@ -34,7 +34,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import {s, ms, mvs} from 'react-native-size-matters';
 import {setLocalMsgStart} from '../../redux/actions/chat/LocalMessageActions';
 import * as Sentry from '@sentry/react-native';
-import { resetUnreadCountStart } from '../../redux/actions/channels/ChannelsAction';
+import {resetUnreadCountStart} from '../../redux/actions/channels/ChannelsAction';
 
 const ChatScreen = ({
   route,
@@ -52,7 +52,7 @@ const ChatScreen = ({
   channelsByQueryState,
   searchUserProfileAction,
   setlocalMsgAction,
-  resetUnreadCountAction
+  resetUnreadCountAction,
 }) => {
   var {teamId, reciverUserId, channelType, searchedChannel} = route.params;
   const {colors} = useTheme();
@@ -83,7 +83,7 @@ const ChatScreen = ({
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
   }
   const shouldResetUnreadCount = teamIdAndUnreadCountMapping?.[teamId] > 0;
-  
+
   useEffect(() => {
     if (repliedMsgDetails != '') {
       textInputRef.current.focus();
@@ -359,7 +359,7 @@ const ChatScreen = ({
                     );
                   })}
                 {replyOnMessage && (
-                  <TouchableOpacity onPress={() => setreplyOnMessage(false)}>
+                  <TouchableOpacity onPress={() => {setreplyOnMessage(false); setrepliedMsgDetails(null)}}>
                     <View style={styles.replyMessageInInput}>
                       {repliedMsgDetails?.mentions?.length > 0 ? (
                         <RenderTextWithLinks
@@ -530,8 +530,9 @@ const ChatScreen = ({
                         setMentions([]),
                         replyOnMessage && setreplyOnMessage(false),
                         repliedMsgDetails && setrepliedMsgDetails(null))
-                      : message?.trim() != '' &&
-                        (setlocalMsgAction({
+                      : (message?.trim() != '' || attachment?.length > 0) &&
+                        (setAttachment([]),
+                        setlocalMsgAction({
                           randomId: randomId,
                           content: message,
                           createdAt: date,
