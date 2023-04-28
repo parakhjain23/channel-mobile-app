@@ -126,6 +126,89 @@ const ChatCard = ({
       Linking.openURL(url);
     }
   };
+
+  const OptionsList = () => {
+    return (
+      <View
+        style={{
+          backgroundColor: 'white',
+          borderRadius: ms(5),
+          elevation: 5, // add elevation for Android
+          shadowColor: '#000', // add shadow properties for iOS
+          shadowOffset: {
+            width: 0,
+            height: 4,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 4,
+          paddingVertical: ms(8),
+          paddingHorizontal: ms(16),
+          marginHorizontal: ms(8),
+          marginTop: ms(5),
+          marginBottom: ms(10),
+        }}>
+        <TouchableOpacity
+          onPress={() => {
+            setOptionsVisible(false), copyToClipboard(chat?.content);
+          }}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingVertical: ms(8),
+          }}>
+          <Icon name="content-copy" size={ms(20)} />
+          <Text
+            style={[
+              styles.text,
+              styles.optionsText,
+              {paddingHorizontal: ms(10)},
+            ]}>
+            Copy
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setOptionsVisible(false), swipeFromLeftOpen();
+          }}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingVertical: ms(8),
+          }}>
+          <Icon name="reply" size={ms(20)} />
+          <Text
+            style={[
+              styles.text,
+              styles.optionsText,
+              {paddingHorizontal: ms(10)},
+            ]}>
+            Reply
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setOptionsVisible(false),
+              deleteMessageAction(userInfoState?.accessToken, chat?._id);
+          }}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingVertical: ms(8),
+          }}>
+          <Icon name="delete" color={'tomato'} size={ms(20)} />
+          <Text
+            style={[
+              styles.text,
+              styles.optionsText,
+              {color: 'tomato', paddingHorizontal: ms(10)},
+            ]}>
+            Delete
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
   if (!isActivity) {
     return (
       <GestureHandlerRootView>
@@ -349,85 +432,7 @@ const ChatCard = ({
             </View>
           </Swipeable>
         </TouchableOpacity>
-        {optionsVisible && (
-          <View
-            style={{
-              backgroundColor: 'white',
-              borderRadius: ms(5),
-              elevation: 5, // add elevation for Android
-              shadowColor: '#000', // add shadow properties for iOS
-              shadowOffset: {
-                width: 0,
-                height: 4,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 4,
-              paddingVertical: ms(8),
-              paddingHorizontal: ms(16),
-              marginHorizontal: ms(8),
-              marginTop: ms(5),
-              marginBottom: ms(10),
-            }}>
-            <TouchableOpacity
-              onPress={() => {
-                setOptionsVisible(false), copyToClipboard(chat?.content);
-              }}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingVertical: ms(8),
-              }}>
-              <Icon name="content-copy" size={ms(20)} />
-              <Text
-                style={[
-                  styles.text,
-                  styles.optionsText,
-                  {paddingHorizontal: ms(10)},
-                ]}>
-                Copy
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                setOptionsVisible(false), swipeFromLeftOpen();
-              }}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingVertical: ms(8),
-              }}>
-              <Icon name="reply" size={ms(20)} />
-              <Text
-                style={[
-                  styles.text,
-                  styles.optionsText,
-                  {paddingHorizontal: ms(10)},
-                ]}>
-                Reply
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                setOptionsVisible(false),
-                  deleteMessageAction(userInfoState?.accessToken, chat?._id);
-              }}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingVertical: ms(8),
-              }}>
-              <Icon name="delete" color={'tomato'} size={ms(20)} />
-              <Text
-                style={[
-                  styles.text,
-                  styles.optionsText,
-                  {color: 'tomato', paddingHorizontal: ms(10)},
-                ]}>
-                Delete
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
+        {optionsVisible && <OptionsList />}
       </GestureHandlerRootView>
     );
   } else {
