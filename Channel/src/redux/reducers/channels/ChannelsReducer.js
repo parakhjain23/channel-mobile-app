@@ -27,7 +27,7 @@ export function channelsReducer(state = initialState, action) {
       return {...state, isLoading: true};
 
     case Actions.FETCH_CHANNELS_SUCCESS:
-      var {channels, userId} = action;
+      var {channels, userId,userName} = action;
       var userIdAndTeamIdMapping = {};
       var teamIdAndNameMapping = {};
       var teamIdAndTypeMapping = {};
@@ -38,11 +38,12 @@ export function channelsReducer(state = initialState, action) {
         channelIdAndDataMapping[_id] = channel;
 
         if (type === 'DIRECT_MESSAGE') {
-          const dmUserId = userIds?.find(id => id !== userId);
+          let dmUserId = userIds?.find(id => id !== userId);
           userIdAndTeamIdMapping[dmUserId] = _id;
         } else {
           if (type === 'PERSONAL') {
-            channel.name = 'You ( your own personal space )';
+            userIdAndTeamIdMapping[userIds[0]]=_id
+            channel.name = userName +" (You)"
           }
           teamIdAndNameMapping[_id] = channel?.name;
         }

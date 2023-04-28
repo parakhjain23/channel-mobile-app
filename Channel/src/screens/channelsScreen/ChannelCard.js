@@ -28,7 +28,7 @@ const ChannelCard = ({
   networkState,
 }) => {
   const {colors} = useTheme();
-
+  // item?.type == 'PERSONAL' && console.log(item,"this is item");
   const userIdAndDisplayNameMapping =
     props.orgsState?.userIdAndDisplayNameMapping;
   const userIdAndNameMapping = props.orgsState?.userIdAndNameMapping;
@@ -181,7 +181,10 @@ const SearchChannelCard = ({
   orgsState,
 }) => {
   const {colors} = useTheme();
-  const Name = item?._source?.title;
+  let Name = item?._source?.title;
+  if (item?._source?.userId == userInfoState?.user?.id) {
+    Name = item?._source?.title + " (You)"
+  } 
   const teamId = item?._id?.includes('_')
     ? props?.channelsState?.userIdAndTeamIdMapping[item?._source?.userId]
     : item?._id;

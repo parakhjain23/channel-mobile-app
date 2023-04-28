@@ -45,7 +45,7 @@ const LoginScreen = ({getSpaceTokenStartAction, setSigningMethodAction}) => {
           }
         });
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
       return auth()
         .signInWithCredential(googleCredential)
@@ -58,7 +58,7 @@ const LoginScreen = ({getSpaceTokenStartAction, setSigningMethodAction}) => {
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
         alert('Play Services Not Available or Outdated');
       } else {
-        console.log(error);
+        // console.log(error);
         alert(error.message);
       }
     }
@@ -92,7 +92,7 @@ const LoginScreen = ({getSpaceTokenStartAction, setSigningMethodAction}) => {
               }
             });
           } catch (error) {
-            console.log(error);
+            // console.log(error);
           }
           return auth().signInWithCredential(appleCredential);
         } else {

@@ -73,7 +73,7 @@ const NotificationSetup = ({userInfoState}) => {
       });
       messaging().onMessage(async message => {
         if (
-          message?.data?.senderId != userInfoState.user?.id
+          message?.data?.senderId != store.getState()?.userInfoReducer?.user?.id
         ) {
           handleNotificationFirebase(message);
           if(message?.data?.orgId != store?.getState()?.orgsReducer?.currentOrgId){

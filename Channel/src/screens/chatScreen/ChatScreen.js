@@ -85,7 +85,6 @@ const ChatScreen = ({
     chatState?.data[teamId]?.messages?.length != undefined
       ? chatState?.data[teamId]?.messages?.length
       : 0;
-
   useEffect(() => {
     searchedChannel && textInputRef?.current?.focus();
   }, []);

@@ -242,6 +242,7 @@ const ChannelsScreen = props => {
       props?.userInfoState?.accessToken,
       props?.orgsState?.currentOrgId,
       props?.userInfoState?.user?.id,
+      props?.userInfoState?.user?.displayName ? props?.userInfoState?.user?.displayName :props?.userInfoState?.user?.firstName
     );
     await props.getAllUsersOfOrgAction(
       props?.userInfoState?.accessToken,

@@ -4,28 +4,29 @@ import { getChannelsApi } from '../../../api/channelsApi/getChannels';
 import { resetUnreadCountApi } from '../../../api/channelsApi/ResetUnreadCountApi';
 import * as Actions from '../../Enums';
 
-export function* getChannels({accessToken,orgId,userId}){
+export function* getChannels({accessToken,orgId,userId,userName}){
   try {
     var response = yield call(getChannelsApi,accessToken,orgId,userId) 
-    yield put(getChannelsSuccess(response,userId,accessToken,orgId))
+    yield put(getChannelsSuccess(response,userId,accessToken,orgId,userName))
   } catch (error) {
     console.warn(error);
   }
 }
 
-export function getChannelsStart(token,orgId,userId){
+export function getChannelsStart(token,orgId,userId,userName){
   return {
     type: Actions.FETCH_CHANNELS_START,
     accessToken:token,
     orgId:orgId,
-    userId:userId
+    userId:userId,
+    userName:userName
   }
 }
-export function getChannelsSuccess(data,userId,accessToken,orgId){
+export function getChannelsSuccess(data,userId,accessToken,orgId,userName){
   return {
     type: Actions.FETCH_CHANNELS_SUCCESS,
     channels:data,
-    userId:userId,accessToken,orgId
+    userId:userId,accessToken,orgId,userName
   }
 }
 export function getChannelsError(){
