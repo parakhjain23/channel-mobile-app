@@ -4,7 +4,7 @@ import cheerio, {text} from 'cheerio';
 
 export const handleNotificationFromEvents = async (data,userIdAndDisplayNameMapping) => {
   data['sameSender']=`${data?.sameSender}`
-  data['isSameDate']=`{${data?.isSameDate}}`
+  data['isSameDate']=`${data?.isSameDate}`
   data['attachment']=data?.attachment != undefined ? JSON.stringify(data?.attachment):`[]`
   data['isActivity']=data?.isActivity != undefined ? `${data?.isActivity}` :'false'
   data['mentions'] = `${data?.mentions}`;
