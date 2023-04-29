@@ -37,7 +37,6 @@ const CustomeDrawerScreen = ({
   const navigation = useNavigation();
   const _signOut = async () => {
     if (userInfoState?.siginInMethod == 'Google') {
-      await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
     }
     signOutAction();

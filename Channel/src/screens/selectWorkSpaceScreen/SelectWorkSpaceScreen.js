@@ -1,5 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, Text, View, TouchableOpacity} from 'react-native';
+import {
+  ActivityIndicator,
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import {connect} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import {setIntialOrgId} from '../../redux/actions/org/intialOrgId';
@@ -36,9 +42,9 @@ const SelectWorkSpaceScreen = ({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'black',
+        backgroundColor: '#171717',
       }}>
-      <View style={{margin: 30}}>
+      <View style={{marginTop: 50,margin:20}}>
         <Text style={{fontSize: 20, fontWeight: '600', color: 'white'}}>
           Select a Work Space to continue
         </Text>
@@ -80,35 +86,40 @@ const SelectWorkSpaceScreen = ({
           </View>
         </View>
       ) : orgsState?.orgs?.length > 0 ? (
-        orgsState?.orgs != null &&
-        orgsState?.orgs?.map(item => {
-          return (
-            <TouchableOpacity
-              onPress={() => setselectedOrg(item?.id)}
-              key={item.id}
-              style={{
-                margin: 10,
-                borderWidth: 1,
-                borderColor: 'white',
-                width: '60%',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flexDirection: 'row',
-                height: 40,
-                // backgroundColor:'grey'
-              }}>
-              <Text
-                style={{
-                  fontSize: 18,
-                  textAlign: 'center',
-                  fontWeight: '600',
-                  color: 'white',
-                }}>
-                {item?.name}
-              </Text>
-            </TouchableOpacity>
-          );
-        })
+        orgsState?.orgs != null && (
+          <ScrollView style={{flex:1}} contentContainerStyle={{justifyContent:'center',alignItems:'center'}}s>
+            {orgsState?.orgs?.map(item => {
+              return (
+                <TouchableOpacity
+                  onPress={() => setselectedOrg(item?.id)}
+                  key={item.id}
+                  style={{
+                    margin: 10,
+                    borderWidth: 1,
+                    borderColor: 'white',
+                    width: '95%',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    borderRadius:10
+                  }}
+                  activeOpacity={.6}
+                  >
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      textAlign: 'center',
+                      fontWeight: '600',
+                      color: 'white',
+                      margin:15,
+                    }}>
+                    {item?.name}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        )
       ) : (
         <ActivityIndicator size={'small'} />
       )}
