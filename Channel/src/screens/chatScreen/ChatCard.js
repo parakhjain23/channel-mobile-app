@@ -52,9 +52,12 @@ const ChatCard = ({
   const [optionsVisible, setOptionsVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const swipeableRef = useRef(null);
-  const sameSender= typeof chat?.sameSender === 'string' ? JSON.parse(chat?.sameSender) : chat?.sameSender
-  const isSameDate = typeof chat?.isSameDate === 'string' ? JSON.parse(chat?.isSameDate) : chat?.isSameDate
-
+  const sameSender= typeof chat?.sameSender === 'string' ? chat.sameSender === 'true' : chat?.sameSender
+  const isSameDate = typeof chat?.isSameDate === 'string' ? chat.isSameDate === 'true' : chat?.isSameDate
+  const isActivity =
+  typeof chat.isActivity === 'string'
+    ? chat.isActivity === 'true'
+    : chat.isActivity;
   const attachment = useMemo(() => {
     if (typeof chat?.attachment === 'string') {
       return JSON.parse(chat?.attachment);
@@ -120,10 +123,6 @@ const ChatCard = ({
     Clipboard.setString(text);
   };
 
-  const isActivity =
-    typeof chat.isActivity === 'string'
-      ? chat.isActivity === 'true'
-      : chat.isActivity;
   const openLink = async url => {
     if (await InAppBrowser.isAvailable()) {
       const result = InAppBrowser?.open(url);
