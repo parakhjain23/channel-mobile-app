@@ -130,15 +130,12 @@ export function chatReducer(state = initialState, action) {
       } else {
         action.message['sameSender'] = true;
       }
-      console.log(state?.data[action?.message?.teamId]?.messages[0]?.updatedAt,state?.data[action?.message?.teamId]?.messages[0]?.content,"=-=-=-=-=",action?.message?.updatedAt);
       const date = new Date(action?.message?.updatedAt);
       const prevsDate = new Date(
         state?.data[action?.message?.teamId]?.messages[0]?.updatedAt,
       );
-      console.log(date,"=-=-=-=-=-",prevsDate);
       const isSameDate = prevsDate?.toDateString() === date.toDateString();
       let displayDate = date?.toDateString();
-      console.log(prevsDate?.toDateString(),"previous message","=-=-=-=",date?.toDateString(),"new message");
       if (!isSameDate) {
         const prevDateString = date?.toDateString();
         displayDate = `${prevDateString}`;
