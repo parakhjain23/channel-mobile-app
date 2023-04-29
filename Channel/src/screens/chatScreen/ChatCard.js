@@ -42,12 +42,16 @@ const ChatCard = ({
   searchUserProfileAction,
   flatListRef,
   channelType,
+  index
 }) => {
   const {colors, dark} = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const [optionsVisible, setOptionsVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const swipeableRef = useRef(null);
+  const sameSender= typeof chat?.sameSender === 'string' ? JSON.parse(chat?.sameSender) : chat?.sameSender
+  const isSameDate = typeof chat?.isSameDate === 'string' ? JSON.parse(chat?.isSameDate) : chat?.isSameDate
+  // const timeToShow = typeof chat?.timeToShow === 'string' ? JSON.parse(chat?.timeToShow) : chat?.timeToShow
   const attachment = useMemo(() => {
     if (typeof chat?.attachment === 'string') {
       return JSON.parse(chat?.attachment);
@@ -118,20 +122,21 @@ const ChatCard = ({
   };
   if (!isActivity) {
     return (
-      <GestureHandlerRootView style={{flexDirection: 'row'}}>
-        <TouchableOpacity
+      <GestureHandlerRootView style={{}}>
+       <TouchableOpacity
           activeOpacity={0.6}
           onLongPress={sentByMe ? onLongPress : null}
           style={{flex: 1}}>
           <Swipeable
             ref={swipeableRef}
             renderLeftActions={LeftSwipeActions}
-            onSwipeableWillOpen={swipeFromLeftOpen}>
+            onSwipeableWillOpen={swipeFromLeftOpen}
+            >
             <View
               style={[
                 styles.container,
                 sentByMe ? styles.sentByMe : styles.received,
-                {backgroundColor: containerBackgroundColor},
+                {backgroundColor: containerBackgroundColor,marginTop: sameSender ? ms(0) : ms(10),marginBottom:4},
               ]}>
               {optionsVisible && (
                 <TouchableOpacity
@@ -152,7 +157,7 @@ const ChatCard = ({
                 </TouchableOpacity>
               )}
               <View style={[styles.textContainer, {maxWidth: '90%'}]}>
-                {channelType != 'DIRECT_MESSAGE' && SenderName != 'You' && (
+                {channelType != 'DIRECT_MESSAGE' && SenderName != 'You' && !sameSender && (
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text style={[styles.nameText, styles.text]}>
                       {SenderName}
@@ -328,7 +333,7 @@ const ChatCard = ({
                         styles.text,
                         {
                           marginHorizontal: ms(10),
-                          color: sentByMe ? 'white' : dark ? 'white' : 'black',
+                          color: sentByMe ? '#cccccc' : dark ? '#cccccc' : 'black',
                         },
                       ]}>
                       {time}
@@ -339,6 +344,19 @@ const ChatCard = ({
             </View>
           </Swipeable>
         </TouchableOpacity>
+        {!isSameDate &&(
+            <View>
+              <Text
+                style={{
+                  color: '#808080',
+                  textAlign: 'center',
+                  marginBottom: ms(10),
+                  marginTop: ms(7)
+                }}>
+                {chat?.timeToShow}
+              </Text>
+            </View>
+          )}
       </GestureHandlerRootView>
     );
   } else {

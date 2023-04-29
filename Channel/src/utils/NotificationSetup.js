@@ -3,6 +3,7 @@ import {useEffect} from 'react';
 import Notifee, {
   AndroidImportance,
   AndroidVisibility,
+  AndroidPriority
 } from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,7 +12,7 @@ import {store} from '../redux/Store';
 import {handleNotificationFirebase} from './HandleNotification';
 import * as RootNavigation from '../navigation/RootNavigation'
 import {sendMessageStart} from '../redux/actions/chat/ChatActions';
-import {Alert, Platform} from 'react-native';
+import {Alert, Platform,NativeModules} from 'react-native';
 import { switchOrgStart } from '../redux/actions/org/changeCurrentOrg';
 import { increaseCountOnOrgCard, removeCountOnOrgCard } from '../redux/actions/org/UnreadCountOnOrgCardsAction';
 import { moveChannelToTop } from '../redux/actions/channels/ChannelsAction';
@@ -19,9 +20,7 @@ import { connect } from 'react-redux';
 
 const NotificationSetup = ({userInfoState}) => {
   useEffect(() => {
-    // console.log(store.getState()?.userInfoReducer?.accessToken,"inside use effect notification");
     if(store.getState()?.userInfoReducer?.accessToken){
-      // console.log("inside if");
       setNotificationListeners()
       initPushNotification()
     }
@@ -37,6 +36,8 @@ const NotificationSetup = ({userInfoState}) => {
         sound: 'default',
         vibration: true,
         visibility: AndroidVisibility.PUBLIC,
+        lockScreenVisibility: AndroidVisibility.PUBLIC,
+        priority: AndroidPriority.MAX
       });
       const isPresent = await Notifee.isChannelCreated('foreground');
       if (!isPresent) {
@@ -48,6 +49,8 @@ const NotificationSetup = ({userInfoState}) => {
           sound: 'default',
           vibration: true,
           visibility: AndroidVisibility.PUBLIC,
+          lockScreenVisibility: AndroidVisibility.PUBLIC,
+          priority: AndroidPriority.MAX
         });
       }
     } catch (error) {}

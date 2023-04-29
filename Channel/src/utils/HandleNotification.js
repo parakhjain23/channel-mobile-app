@@ -3,6 +3,10 @@ import {store} from '../redux/Store';
 import cheerio, {text} from 'cheerio';
 
 export const handleNotificationFromEvents = async (data,userIdAndDisplayNameMapping) => {
+  console.log("inside handle notification from events",data);
+  data['sameSender']=JSON.stringify(data?.sameSender)
+  data['isSameDate']=JSON.stringify(data?.isSameDate)
+  // data['timeToShow']=data?.timeToShow != undefined ? JSON.stringify(data?.timeToShow) :''
   data['attachment']=data?.attachment != undefined ? JSON.stringify(data?.attachment):`[]`
   data['isActivity']=data?.isActivity != undefined ? `${data?.isActivity}` :'false'
   data['mentions'] = `${data?.mentions}`;

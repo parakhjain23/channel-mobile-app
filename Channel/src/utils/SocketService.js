@@ -51,6 +51,7 @@ const SocketService = socket => {
       if (
         newData?.teamId != store.getState().channelsReducer?.activeChannelTeamId
       ) {
+        console.log("inside nested if");
         handleNotificationFromEvents(
           newData,
           store?.getState()?.orgsReducer?.userIdAndDisplayNameMapping,

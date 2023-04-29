@@ -51,7 +51,7 @@ export const makeStyles = colors => StyleSheet.create({
       borderRadius: ms(5),
       flexDirection: 'row',
       alignItems: 'flex-end',
-      marginBottom: mvs(15),
+      // marginBottom: mvs(3),
       maxWidth: '90%',
     },
     sentByMe: {
@@ -78,8 +78,8 @@ export const makeStyles = colors => StyleSheet.create({
     },
     nameText: {
       fontWeight: 'bold',
-      fontSize: ms(12),
-      marginBottom: mvs(4),
+      fontSize: ms(14),
+      marginBottom: mvs(3),
     },
     messageText: {
       fontSize: ms(14),

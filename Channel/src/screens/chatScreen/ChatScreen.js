@@ -207,14 +207,14 @@ const ChatScreen = ({
   const todaysDateRef = useRef(new Date().toDateString());
   const renderItem = useCallback(
     ({item, index}) => {
-      const date = new Date(item.updatedAt);
-      const isSameDate = prevDate?.toDateString() === date.toDateString();
-      let displayDate = date?.toDateString();
-      if (!isSameDate) {
-        const prevDateString = prevDate?.toDateString();
-        displayDate = `${prevDateString}`;
-      }
-      prevDate = date;
+      // const date = new Date(item.updatedAt);
+      // const isSameDate = prevDate?.toDateString() === date.toDateString();
+      // let displayDate = date?.toDateString();
+      // if (!isSameDate) {
+      //   const prevDateString = prevDate?.toDateString();
+      //   displayDate = `${prevDateString}`;
+      // }
+      // prevDate = date;
       return (
         <View>
           <ChatCardMemo
@@ -228,8 +228,9 @@ const ChatScreen = ({
             searchUserProfileAction={searchUserProfileAction}
             flatListRef={FlatListRef}
             channelType={channelType}
+            index={index}
           />
-          {!isSameDate && displayDate && index > 0 && (
+          {/* {!isSameDate && displayDate && index > 0 && (
             <View>
               <Text
                 style={{
@@ -240,7 +241,7 @@ const ChatScreen = ({
                 {displayDate === todaysDateRef.current ? 'Today' : displayDate}
               </Text>
             </View>
-          )}
+          )} */}
         </View>
       );
     },

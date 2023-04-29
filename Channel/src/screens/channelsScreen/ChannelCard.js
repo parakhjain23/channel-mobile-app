@@ -28,7 +28,6 @@ const ChannelCard = ({
   networkState,
 }) => {
   const {colors} = useTheme();
-  // item?.type == 'PERSONAL' && console.log(item,"this is item");
   const userIdAndDisplayNameMapping =
     props.orgsState?.userIdAndDisplayNameMapping;
   const userIdAndNameMapping = props.orgsState?.userIdAndNameMapping;
