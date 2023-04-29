@@ -151,7 +151,6 @@ const ChatCard = ({
           marginHorizontal: ms(8),
           marginTop: ms(5),
           marginBottom: ms(10),
-          flexWrap: 'wrap',
         }}>
         <TouchableOpacity
           onPress={() => {
@@ -162,7 +161,7 @@ const ChatCard = ({
             alignItems: 'center',
             paddingVertical: ms(8),
           }}>
-          <Icon name="content-copy" size={ms(20)} />
+          <Icon name="content-copy" size={ms(20)} color={'black'}/>
           <Text
             style={[
               styles.text,
@@ -181,7 +180,7 @@ const ChatCard = ({
             alignItems: 'center',
             paddingVertical: ms(8),
           }}>
-          <Icon name="reply" size={ms(20)} />
+          <Icon name="reply" size={ms(20)} color={'black'}/>
           <Text
             style={[
               styles.text,
