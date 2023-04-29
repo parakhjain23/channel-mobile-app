@@ -177,6 +177,7 @@ const SearchChannelCard = ({
 }) => {
   const {colors} = useTheme();
   const Name = item?._source?.title;
+  const isArchived = item?._source?.isArchived;
   const teamId = item?._id?.includes('_')
     ? props?.channelsState?.userIdAndTeamIdMapping[item?._source?.userId]
     : item?._id;
@@ -244,6 +245,7 @@ const SearchChannelCard = ({
                 fontSize: ms(16),
                 fontWeight: '400',
                 color: colors.textColor,
+                textDecorationLine: isArchived ? 'line-through' : null
               }}
               numberOfLines={1}
               ellipsizeMode="tail">{`${Name}`}</Text>
