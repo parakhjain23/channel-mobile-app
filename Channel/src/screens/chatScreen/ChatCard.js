@@ -133,7 +133,6 @@ const ChatCard = ({
   };
 
   const OptionsList = ({sentByMe}) => {
-    console.log(sentByMe,"=-=-=-=--");
     return (
       <View
         style={{
