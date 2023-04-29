@@ -12,7 +12,7 @@ const ErrorScreen = () => {
     AsyncStorage.clear();
     setTimeout(() => {
       Sentry.nativeCrash();
-    }, 2000);
+    }, 3500);
   }, []);
   return (
     <View
