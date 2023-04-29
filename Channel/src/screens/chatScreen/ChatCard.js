@@ -127,14 +127,14 @@ const ChatCard = ({
     }
   };
 
-  const OptionsList = () => {
+  const OptionsList = ({sentByMe}) => {
     return (
       <View
         style={{
           backgroundColor: 'white',
           borderRadius: ms(5),
           elevation: 5, // add elevation for Android
-          shadowColor: '#000', // add shadow properties for iOS
+          shadowColor: colors?.secondarColor, // add shadow properties for iOS
           shadowOffset: {
             width: 0,
             height: 4,
@@ -146,6 +146,7 @@ const ChatCard = ({
           marginHorizontal: ms(8),
           marginTop: ms(5),
           marginBottom: ms(10),
+          flexWrap: 'wrap',
         }}>
         <TouchableOpacity
           onPress={() => {
@@ -185,26 +186,28 @@ const ChatCard = ({
             Reply
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            setOptionsVisible(false),
-              deleteMessageAction(userInfoState?.accessToken, chat?._id);
-          }}
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingVertical: ms(8),
-          }}>
-          <Icon name="delete" color={'tomato'} size={ms(20)} />
-          <Text
-            style={[
-              styles.text,
-              styles.optionsText,
-              {color: 'tomato', paddingHorizontal: ms(10)},
-            ]}>
-            Delete
-          </Text>
-        </TouchableOpacity>
+        {sentByMe && (
+          <TouchableOpacity
+            onPress={() => {
+              setOptionsVisible(false),
+                deleteMessageAction(userInfoState?.accessToken, chat?._id);
+            }}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              paddingVertical: ms(8),
+            }}>
+            <Icon name="delete" color={'tomato'} size={ms(20)} />
+            <Text
+              style={[
+                styles.text,
+                styles.optionsText,
+                {color: 'tomato', paddingHorizontal: ms(10)},
+              ]}>
+              Delete
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     );
   };
@@ -215,7 +218,7 @@ const ChatCard = ({
         <TouchableOpacity
           activeOpacity={0.6}
           onPress={() => (optionsVisible ? onLongPress() : null)}
-          onLongPress={sentByMe ? onLongPress : null}
+          onLongPress={onLongPress}
           style={{flex: 1}}>
           <Swipeable
             ref={swipeableRef}
@@ -250,7 +253,7 @@ const ChatCard = ({
                           )
                         : onLongPress();
                     }}
-                    onLongPress={sentByMe ? onLongPress : null}>
+                    onLongPress={onLongPress}>
                     {chatState?.data[chat.teamId]?.parentMessages[parentId]
                       ?.attachment?.length > 0 ? (
                       <Text style={{color: 'black'}}>
@@ -305,7 +308,7 @@ const ChatCard = ({
                             ? onLongPress()
                             : handleImagePress(index)
                         }
-                        onLongPress={sentByMe ? onLongPress : null}
+                        onLongPress={onLongPress}
                         style={{marginVertical: ms(5), alignItems: 'center'}}>
                         <Image
                           source={{uri: item?.resourceUrl}}
@@ -334,7 +337,7 @@ const ChatCard = ({
                               ? openLink(item?.resourceUrl)
                               : onLongPress()
                           }
-                          onLongPress={sentByMe ? onLongPress : null}>
+                          onLongPress={onLongPress}>
                           <View
                             style={{
                               flexDirection: 'row',
@@ -432,7 +435,7 @@ const ChatCard = ({
             </View>
           </Swipeable>
         </TouchableOpacity>
-        {optionsVisible && <OptionsList />}
+        {optionsVisible && <OptionsList sentByMe={sentByMe} />}
       </GestureHandlerRootView>
     );
   } else {
