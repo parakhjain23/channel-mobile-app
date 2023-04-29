@@ -133,6 +133,7 @@ const ChatCard = ({
   };
 
   const OptionsList = ({sentByMe}) => {
+    console.log(sentByMe,"=-=-=-=--");
     return (
       <View
         style={{
@@ -453,7 +454,7 @@ const ChatCard = ({
               </Text>
             </View>
           )}
-        {optionsVisible && <OptionsList />}
+        {optionsVisible && <OptionsList sentByMe={sentByMe} />}
       </GestureHandlerRootView>
     );
   } else {
