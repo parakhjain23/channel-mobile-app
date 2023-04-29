@@ -18,7 +18,7 @@ const SearchBox = ({searchValue, changeText, textInputRef}) => {
       }}
       underlineStyle={{backgroundColor: 'transparent'}}
       underlineColorAndroid="transparent"
-      clearButtonMode="always"
+      // clearButtonMode="always"
       placeholder="Search"
       left={
         <TextInput.Icon icon="magnify" style={{justifyContent: 'center'}} />
