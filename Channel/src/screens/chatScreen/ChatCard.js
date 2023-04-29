@@ -17,7 +17,7 @@ import {ms} from 'react-native-size-matters';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import Clipboard from '@react-native-community/clipboard';
-import MarkdownDisplay from 'react-native-markdown-display';
+
 
 const AddRemoveJoinedMsg = React.memo(({senderName, content, orgState}) => {
   const {colors} = useTheme();
@@ -54,23 +54,6 @@ const ChatCard = ({
   const swipeableRef = useRef(null);
   const sameSender= typeof chat?.sameSender === 'string' ? JSON.parse(chat?.sameSender) : chat?.sameSender
   const isSameDate = typeof chat?.isSameDate === 'string' ? JSON.parse(chat?.isSameDate) : chat?.isSameDate
-  // const renderRules = {
-  //   mention: {
-  //     react: (node) => {
-  //       const { username } = node.attributes;
-  //       return (
-  //         <TouchableOpacity onPress={() => handleMentionPress(username)} style={{backgroundColor:'red',borderWidth:2,borderColor:'yellow',width:100}}>
-  //           <Text style={{ fontWeight: 'bold', textDecorationLine: 'underline'}}>@{username}</Text>
-  //         </TouchableOpacity>
-  //       );
-  //     }
-  //   }
-  // };
-  const htmlString = '<h1>Hello World</h1><p>This is some HTML</p>'
-  function handleMentionPress(username) {
-    // Emit an event with the username
-    console.log(`Mention clicked: ${username}`);
-  }
 
   const attachment = useMemo(() => {
     if (typeof chat?.attachment === 'string') {
@@ -251,7 +234,7 @@ const ChatCard = ({
               style={[
                 styles.container,
                 sentByMe ? styles.sentByMe : styles.received,
-                {backgroundColor: containerBackgroundColor,marginTop: sameSender ? ms(0) : ms(10),marginBottom:4},
+                {backgroundColor: containerBackgroundColor,marginTop: sameSender ? ms(0) : ms(10),marginBottom: index == 0 ? 10 :3},
               ]}>
               <View style={[styles.textContainer, {maxWidth: '90%'}]}>
                 {channelType != 'DIRECT_MESSAGE' && SenderName != 'You' && !sameSender && (
