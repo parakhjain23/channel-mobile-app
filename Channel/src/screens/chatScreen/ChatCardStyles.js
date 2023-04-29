@@ -5,6 +5,9 @@ export const makeStyles = colors => StyleSheet.create({
     text: {
       color: colors.textColor,
     },
+    optionsText:{
+      fontSize: ms(16)
+    },
     inputWithReply: {
       padding: ms(10),
     },

@@ -16,6 +16,9 @@ import {makeStyles} from './ChatCardStyles';
 import {ms} from 'react-native-size-matters';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import ImageViewer from 'react-native-image-zoom-viewer';
+import Clipboard from '@react-native-community/clipboard';
+import MarkdownDisplay from 'react-native-markdown-display';
+
 const AddRemoveJoinedMsg = React.memo(({senderName, content, orgState}) => {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
@@ -51,7 +54,24 @@ const ChatCard = ({
   const swipeableRef = useRef(null);
   const sameSender= typeof chat?.sameSender === 'string' ? JSON.parse(chat?.sameSender) : chat?.sameSender
   const isSameDate = typeof chat?.isSameDate === 'string' ? JSON.parse(chat?.isSameDate) : chat?.isSameDate
-  // const timeToShow = typeof chat?.timeToShow === 'string' ? JSON.parse(chat?.timeToShow) : chat?.timeToShow
+  // const renderRules = {
+  //   mention: {
+  //     react: (node) => {
+  //       const { username } = node.attributes;
+  //       return (
+  //         <TouchableOpacity onPress={() => handleMentionPress(username)} style={{backgroundColor:'red',borderWidth:2,borderColor:'yellow',width:100}}>
+  //           <Text style={{ fontWeight: 'bold', textDecorationLine: 'underline'}}>@{username}</Text>
+  //         </TouchableOpacity>
+  //       );
+  //     }
+  //   }
+  // };
+  const htmlString = '<h1>Hello World</h1><p>This is some HTML</p>'
+  function handleMentionPress(username) {
+    // Emit an event with the username
+    console.log(`Mention clicked: ${username}`);
+  }
+
   const attachment = useMemo(() => {
     if (typeof chat?.attachment === 'string') {
       return JSON.parse(chat?.attachment);
@@ -74,8 +94,11 @@ const ChatCard = ({
   useEffect(() => {
     setOptionsVisible(false);
   }, [chatState?.data[chat?.teamId]?.messages]);
+
   const onLongPress = () => {
     setOptionsVisible(!optionsVisible);
+    !optionsVisible &&
+      handleRepliedMessagePress(false, chatState, chat, flatListRef);
   };
   var parentId = chat?.parentId;
   const date = useMemo(() => new Date(chat?.updatedAt), [chat?.updatedAt]);
@@ -109,6 +132,11 @@ const ChatCard = ({
       </View>
     );
   };
+
+  const copyToClipboard = text => {
+    Clipboard.setString(text);
+  };
+
   const isActivity =
     typeof chat.isActivity === 'string'
       ? chat.isActivity === 'true'
@@ -120,11 +148,95 @@ const ChatCard = ({
       Linking.openURL(url);
     }
   };
+
+  const OptionsList = () => {
+    return (
+      <View
+        style={{
+          backgroundColor: 'white',
+          borderRadius: ms(5),
+          elevation: 5, // add elevation for Android
+          shadowColor: '#000', // add shadow properties for iOS
+          shadowOffset: {
+            width: 0,
+            height: 4,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 4,
+          paddingVertical: ms(8),
+          paddingHorizontal: ms(16),
+          marginHorizontal: ms(8),
+          marginTop: ms(5),
+          marginBottom: ms(10),
+        }}>
+        <TouchableOpacity
+          onPress={() => {
+            setOptionsVisible(false), copyToClipboard(chat?.content);
+          }}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingVertical: ms(8),
+          }}>
+          <Icon name="content-copy" size={ms(20)} />
+          <Text
+            style={[
+              styles.text,
+              styles.optionsText,
+              {paddingHorizontal: ms(10)},
+            ]}>
+            Copy
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setOptionsVisible(false), swipeFromLeftOpen();
+          }}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingVertical: ms(8),
+          }}>
+          <Icon name="reply" size={ms(20)} />
+          <Text
+            style={[
+              styles.text,
+              styles.optionsText,
+              {paddingHorizontal: ms(10)},
+            ]}>
+            Reply
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setOptionsVisible(false),
+              deleteMessageAction(userInfoState?.accessToken, chat?._id);
+          }}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingVertical: ms(8),
+          }}>
+          <Icon name="delete" color={'tomato'} size={ms(20)} />
+          <Text
+            style={[
+              styles.text,
+              styles.optionsText,
+              {color: 'tomato', paddingHorizontal: ms(10)},
+            ]}>
+            Delete
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
   if (!isActivity) {
     return (
-      <GestureHandlerRootView style={{}}>
-       <TouchableOpacity
+      <GestureHandlerRootView>
+        <TouchableOpacity
           activeOpacity={0.6}
+          onPress={() => (optionsVisible ? onLongPress() : null)}
           onLongPress={sentByMe ? onLongPress : null}
           style={{flex: 1}}>
           <Swipeable
@@ -138,24 +250,6 @@ const ChatCard = ({
                 sentByMe ? styles.sentByMe : styles.received,
                 {backgroundColor: containerBackgroundColor,marginTop: sameSender ? ms(0) : ms(10),marginBottom:4},
               ]}>
-              {optionsVisible && (
-                <TouchableOpacity
-                  onPress={() => {
-                    setOptionsVisible(false),
-                      deleteMessageAction(
-                        userInfoState?.accessToken,
-                        chat?._id,
-                      );
-                  }}
-                  style={{
-                    alignItems: 'center',
-                    alignSelf: 'center',
-                    paddingHorizontal: ms(20),
-                  }}>
-                  <Icon name="delete" color={'tomato'} />
-                  <Text style={[styles.text, {color: 'tomato'}]}>Delete</Text>
-                </TouchableOpacity>
-              )}
               <View style={[styles.textContainer, {maxWidth: '90%'}]}>
                 {channelType != 'DIRECT_MESSAGE' && SenderName != 'You' && !sameSender && (
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -167,14 +261,19 @@ const ChatCard = ({
                 {parentId != null && (
                   <TouchableOpacity
                     style={[styles.repliedContainer]}
-                    onPress={() =>
-                      handleRepliedMessagePress(
-                        chatState?.data[chat.teamId]?.parentMessages[parentId],
-                        chatState,
-                        chat,
-                        flatListRef,
-                      )
-                    }>
+                    onPress={() => {
+                      !optionsVisible
+                        ? handleRepliedMessagePress(
+                            chatState?.data[chat.teamId]?.parentMessages[
+                              parentId
+                            ],
+                            chatState,
+                            chat,
+                            flatListRef,
+                          )
+                        : onLongPress();
+                    }}
+                    onLongPress={sentByMe ? onLongPress : null}>
                     {chatState?.data[chat.teamId]?.parentMessages[parentId]
                       ?.attachment?.length > 0 ? (
                       <Text style={{color: 'black'}}>
@@ -224,11 +323,20 @@ const ChatCard = ({
                     return item?.contentType?.includes('image') ? (
                       <TouchableOpacity
                         key={index}
-                        onPress={() => handleImagePress(index)}
+                        onPress={() =>
+                          optionsVisible
+                            ? onLongPress()
+                            : handleImagePress(index)
+                        }
+                        onLongPress={sentByMe ? onLongPress : null}
                         style={{marginVertical: ms(5), alignItems: 'center'}}>
                         <Image
                           source={{uri: item?.resourceUrl}}
-                          style={{height: ms(150), width: ms(150)}}
+                          style={{
+                            height: ms(150),
+                            width: ms(150),
+                            opacity: optionsVisible ? 0.6 : 1,
+                          }}
                         />
                       </TouchableOpacity>
                     ) : (
@@ -244,9 +352,12 @@ const ChatCard = ({
                         ]}
                         key={index}>
                         <TouchableOpacity
-                          onPress={() => {
-                            openLink(item?.resourceUrl);
-                          }}>
+                          onPress={() =>
+                            !optionsVisible
+                              ? openLink(item?.resourceUrl)
+                              : onLongPress()
+                          }
+                          onLongPress={sentByMe ? onLongPress : null}>
                           <View
                             style={{
                               flexDirection: 'row',
@@ -357,6 +468,7 @@ const ChatCard = ({
               </Text>
             </View>
           )}
+        {optionsVisible && <OptionsList />}
       </GestureHandlerRootView>
     );
   } else {
@@ -387,6 +499,18 @@ const handleRepliedMessagePress = (
         animated: true,
         viewPosition: 0,
         viewOffset: 0,
+      });
+    }
+  } else {
+    const index = chatState?.data[chat.teamId]?.messages.findIndex(
+      item => item?._id === chat?._id,
+    );
+    if (index !== -1) {
+      flatListRef?.current?.scrollToIndex({
+        index,
+        animated: true,
+        viewPosition: 0,
+        viewOffset: ms(50),
       });
     }
   }
