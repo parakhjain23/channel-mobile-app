@@ -3,10 +3,8 @@ import {store} from '../redux/Store';
 import cheerio, {text} from 'cheerio';
 
 export const handleNotificationFromEvents = async (data,userIdAndDisplayNameMapping) => {
-  console.log("inside handle notification from events",data);
-  data['sameSender']=JSON.stringify(data?.sameSender)
-  data['isSameDate']=JSON.stringify(data?.isSameDate)
-  // data['timeToShow']=data?.timeToShow != undefined ? JSON.stringify(data?.timeToShow) :''
+  data['sameSender']=`${data?.sameSender}`
+  data['isSameDate']=`{${data?.isSameDate}}`
   data['attachment']=data?.attachment != undefined ? JSON.stringify(data?.attachment):`[]`
   data['isActivity']=data?.isActivity != undefined ? `${data?.isActivity}` :'false'
   data['mentions'] = `${data?.mentions}`;
@@ -130,7 +128,6 @@ export const handleNotificationFromEvents = async (data,userIdAndDisplayNameMapp
   });
 };
 export const handleNotificationFirebase = async firebaseData => {
-  // console.log(firebaseData,'-=-=-=-=-=-=');
   var title = firebaseData?.notification?.title;
   var body = firebaseData?.notification?.body;
   if(firebaseData?.data?.orgId != store?.getState()?.orgsReducer?.currentOrgId){
