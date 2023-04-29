@@ -9,6 +9,7 @@ export const sendMessageApi = async (
   attachment,
   mentionsArr = [],
 ) => {
+  console.log(message,'message ins the api');
   try {
     const mentionRegex = /@(\w+)/g;
     // Replace mentions with HTML tags

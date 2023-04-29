@@ -33,6 +33,8 @@ import {useTheme} from '@react-navigation/native';
 import AnimatedLottieView from 'lottie-react-native';
 import {s, ms, mvs} from 'react-native-size-matters';
 import {setLocalMsgStart} from '../../redux/actions/chat/LocalMessageActions';
+import QuillEditor, {QuillToolbar} from 'react-native-cn-quill';
+
 const ChatScreen = ({
   route,
   userInfoState,
@@ -69,7 +71,8 @@ const ChatScreen = ({
   const offset = height * 0.12;
   const date = useMemo(() => new Date(), []);
   const screenHeight = Dimensions.get('window').height;
-
+  const editor = React.createRef();
+  console.log(message, '=-=-');
   if (teamId == undefined) {
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
   }
@@ -122,9 +125,11 @@ const ChatScreen = ({
   };
   const handleInputChange = useCallback(
     text => {
+      console.log(text,'=-=--=-=-=-=-=-=-');
       onChangeMessage(text);
       const mentionRegex = /@\w+/g;
-      const foundMentions = text.match(mentionRegex);
+      const foundMentions = text?.match(mentionRegex);
+      console.log(foundMentions,'=-=-');
       foundMentions?.length > 0
         ? (getChannelsByQueryStartAction(
             foundMentions?.[foundMentions?.length - 1].replace('@', ''),
@@ -452,8 +457,44 @@ const ChatScreen = ({
                       />
                     )}
                   </View>
-
-                  <TextInput
+                  {/* <View style={{flex: 1, maxHeight: 200, minHeight: 100}}> */}
+                  <QuillEditor
+                    onHtmlChange={value => handleInputChange(value?.html)}
+                    ref={textInputRef}
+                    theme={{
+                      background: 'transparent',
+                      color: colors?.textColor,
+                      placeholder: 'Message',
+                    }}
+                    style={[
+                      replyOnMessage
+                        ? styles.inputWithReply
+                        : styles.inputWithoutReply,
+                      {
+                        color: colors.textColor,
+                        backgroundColor: 'transparent',
+                      },
+                    ]}
+                  />
+                  {/* <QuillToolbar
+                      editor={editor}
+                      options="full"
+                      theme="light"
+                    /> */}
+                  {/* </View> */}
+                  {/* <QuillEditor
+                    style={[
+                      replyOnMessage
+                        ? styles.inputWithReply
+                        : styles.inputWithoutReply,
+                      {
+                        backgroundColor: 'transparent',
+                      },
+                    ]}
+                    onHtmlChange={value => onChangeMessage(value)}
+                    ref={textInputRef}
+                  /> */}
+                  {/* <TextInput
                     ref={textInputRef}
                     editable
                     multiline
@@ -467,9 +508,10 @@ const ChatScreen = ({
                         : styles.inputWithoutReply,
                       {color: colors.textColor},
                     ]}
-                  />
+                  /> */}
+
                   {showOptions &&
-                    message?.trim()?.length == 1 &&
+                    message?.html?.trim()?.length == 1 &&
                     hideOptionsMethod()}
                 </View>
               </View>
@@ -480,13 +522,15 @@ const ChatScreen = ({
                   style={{color: colors.textColor, padding: ms(10)}}
                   onPress={() => {
                     onChangeMessage('');
+                    textInputRef.current.setText('');
                     let randomId = uuid.v4();
                     networkState?.isInternetConnected
-                      ? (message?.trim() != '' || attachment?.length > 0) &&
+                      ? (message?.html?.trim()?.length > 0 ||
+                          attachment?.length != 0) &&
                         (setAttachment([]),
                         setlocalMsgAction({
                           randomId: randomId,
-                          content: message,
+                          content: message?.html || '',
                           createdAt: date,
                           isLink: false,
                           mentions: mentionsArr,
@@ -501,7 +545,7 @@ const ChatScreen = ({
                           parentMessage: repliedMsgDetails?.content,
                         }),
                         sendMessageAction(
-                          message,
+                          message?.html || '',
                           teamId,
                           orgState?.currentOrgId,
                           userInfoState?.user?.id,
@@ -515,10 +559,10 @@ const ChatScreen = ({
                         setMentions([]),
                         replyOnMessage && setreplyOnMessage(false),
                         repliedMsgDetails && setrepliedMsgDetails(null))
-                      : message?.trim() != '' &&
+                      : message?.html?.trim() != '' &&
                         (setlocalMsgAction({
                           randomId: randomId,
-                          content: message,
+                          content: message?.html,
                           createdAt: date,
                           isLink: false,
                           mentions: mentionsArr,
@@ -552,6 +596,7 @@ const ChatScreen = ({
                 />
               </View>
             </View>
+            <QuillToolbar editor={textInputRef} options="basic" theme="light" />
           </View>
         </KeyboardAvoidingView>
       </View>
