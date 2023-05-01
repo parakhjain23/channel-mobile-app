@@ -8,6 +8,7 @@ import App from './App';
 import {name as appName} from './app.json';
 import AppSentry from './AppSentry';
 if (__DEV__) {
+  console.log("-0-0-0-");
   AppRegistry.registerComponent(appName, () => App);
 } else {
   AppRegistry.registerComponent(appName, () => AppSentry);

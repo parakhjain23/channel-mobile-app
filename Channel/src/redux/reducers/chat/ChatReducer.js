@@ -195,12 +195,12 @@ export function chatReducer(state = initialState, action) {
           }
         }
       }
-      if(action?.message?.senderId != state?.data[action?.message?.teamId]?.messages[0]?.senderId){
-        data['sameSender'] = false;
-      }else{
-        data['sameSender'] = true;
-      }
-      data['isSameDate'] = true;
+      // if(action?.message?.senderId != state?.data[action?.message?.teamId]?.messages[0]?.senderId){
+      //   data['sameSender'] = false;
+      // }else{
+      //   data['sameSender'] = true;
+      // }
+      // data['isSameDate'] = true;
       return {
         ...state,
         data: {
