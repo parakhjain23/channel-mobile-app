@@ -205,6 +205,7 @@ import {useEffect} from 'react';
 import Notifee, {
   AndroidImportance,
   AndroidVisibility,
+  AndroidPriority
 } from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -239,6 +240,9 @@ const NotificationSetup = ({userInfoState}) => {
         sound: 'default',
         vibration: true,
         visibility: AndroidVisibility.PUBLIC,
+        visibility: AndroidVisibility.PUBLIC,
+        lockScreenVisibility: AndroidVisibility.PUBLIC,
+        priority: AndroidPriority.MAX
       });
       const isPresent = await Notifee.isChannelCreated('foreground');
       if (!isPresent) {
@@ -250,6 +254,9 @@ const NotificationSetup = ({userInfoState}) => {
           sound: 'default',
           vibration: true,
           visibility: AndroidVisibility.PUBLIC,
+          visibility: AndroidVisibility.PUBLIC,
+        lockScreenVisibility: AndroidVisibility.PUBLIC,
+        priority: AndroidPriority.MAX
         });
       }
     } catch (error) {}
