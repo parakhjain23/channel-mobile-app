@@ -1,11 +1,15 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Image, Platform, View} from 'react-native';
 import {connect} from 'react-redux';
-import {appleAuth} from '@invertase/react-native-apple-authentication';
+import {
+  AppleButton,
+  appleAuth,
+} from '@invertase/react-native-apple-authentication';
 import auth from '@react-native-firebase/auth';
 import jwt_decode from 'jwt-decode';
 import {
   GoogleSignin,
+  GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import {
@@ -13,6 +17,7 @@ import {
   setSigningMethod,
 } from '../../redux/actions/spaceToken/SpaceTokenActions';
 import {useNavigation, useTheme} from '@react-navigation/native';
+import {ms} from 'react-native-size-matters';
 
 const LoginScreen = ({getSpaceTokenStartAction, setSigningMethodAction}) => {
   const navigation = useNavigation();
@@ -112,10 +117,23 @@ const LoginScreen = ({getSpaceTokenStartAction, setSigningMethodAction}) => {
         backgroundColor: colors.drawerBackgroundColor,
       }}>
       <Image source={require('../../assests/images/appIcon/icon-96x96.png')} />
-      <Button title="Login with Google" onPress={_signIn} />
+      <GoogleSigninButton
+        style={{width: ms(192), height: ms(48)}}
+        size={GoogleSigninButton.Size.Wide}
+        color={GoogleSigninButton.Color.Light}
+        onPress={_signIn}
+      />
       {Platform.OS == 'ios' && (
         <View style={{marginTop: 10}}>
-          <Button title="Login with Apple" onPress={onAppleButtonPress} />
+          <AppleButton
+            buttonStyle={AppleButton.Style.BLACK}
+            buttonType={AppleButton.Type.SIGN_IN}
+            style={{
+              width: ms(192), // You must specify a width
+              height: ms(48), // You must specify a height
+            }}
+            onPress={() => onAppleButtonPress()}
+          />
         </View>
       )}
     </View>

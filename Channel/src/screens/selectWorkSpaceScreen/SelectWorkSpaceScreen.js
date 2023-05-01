@@ -87,7 +87,7 @@ const SelectWorkSpaceScreen = ({
         </View>
       ) : orgsState?.orgs?.length > 0 ? (
         orgsState?.orgs != null && (
-          <ScrollView style={{flex:1}} contentContainerStyle={{justifyContent:'center',alignItems:'center'}}s>
+          <ScrollView style={{flex:1}}>
             {orgsState?.orgs?.map(item => {
               return (
                 <TouchableOpacity
