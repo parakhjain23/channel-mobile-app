@@ -23,11 +23,9 @@ import {connect} from 'react-redux';
 
 const NotificationSetup = ({userInfoState}) => {
   useEffect(() => {
-    // console.log(store.getState()?.userInfoReducer?.accessToken,"inside use effect notification");
-    if (store.getState()?.userInfoReducer?.accessToken) {
-      // console.log("inside if");
-      setNotificationListeners();
-      initPushNotification();
+    if(store.getState()?.userInfoReducer?.accessToken){
+      setNotificationListeners()
+      initPushNotification()
     }
   }, [userInfoState.accessToken]);
   const initPushNotification = async () => {
@@ -197,8 +195,13 @@ const NotificationSetup = ({userInfoState}) => {
         break;
     }
   };
-  const openChat = message => {
+  const openChat = async message => {
     try {
+      if(message?.data?.orgId != store?.getState()?.orgsReducer?.currentOrgId){
+        await  store.dispatch(switchOrgStart(store?.getState()?.userInfoReducer?.accessToken,message?.data?.orgId,store?.getState()?.userInfoReducer?.user?.id))
+        await store.dispatch(moveChannelToTop(Object.keys(store.getState()?.orgsReducer?.orgsWithNewMessages[message?.data?.orgId])))
+        await store.dispatch(removeCountOnOrgCard(message?.data?.orgId))
+    }
       var teamId = message?.data?.teamId;
       var name = null;
       store.getState()?.channelsReducer?.teamIdAndTypeMapping[teamId] ==

@@ -142,7 +142,6 @@ export const handleNotificationFromEvents = async (
 };
 
 export const handleNotificationFirebase = async firebaseData => {
-  // console.log(firebaseData,'-=-=-=-=-=-=');
   var title = firebaseData?.notification?.title;
   var body = firebaseData?.notification?.body;
   if (
