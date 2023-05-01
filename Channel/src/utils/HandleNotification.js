@@ -127,6 +127,7 @@ export const handleNotificationFromEvents = async (data,userIdAndDisplayNameMapp
     },
   });
 };
+
 export const handleNotificationFirebase = async firebaseData => {
   var title = firebaseData?.notification?.title;
   var body = firebaseData?.notification?.body;
