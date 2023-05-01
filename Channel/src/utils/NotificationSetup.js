@@ -3,7 +3,6 @@ import {useEffect} from 'react';
 import Notifee, {
   AndroidImportance,
   AndroidVisibility,
-  AndroidPriority,
 } from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -23,9 +22,11 @@ import {connect} from 'react-redux';
 
 const NotificationSetup = ({userInfoState}) => {
   useEffect(() => {
-    if(store.getState()?.userInfoReducer?.accessToken){
-      setNotificationListeners()
-      initPushNotification()
+    // console.log(store.getState()?.userInfoReducer?.accessToken,"inside use effect notification");
+    if (store.getState()?.userInfoReducer?.accessToken) {
+      // console.log("inside if");
+      setNotificationListeners();
+      initPushNotification();
     }
   }, [userInfoState.accessToken]);
   const initPushNotification = async () => {
@@ -39,9 +40,6 @@ const NotificationSetup = ({userInfoState}) => {
         sound: 'default',
         vibration: true,
         visibility: AndroidVisibility.PUBLIC,
-        visibility: AndroidVisibility.PUBLIC,
-        lockScreenVisibility: AndroidVisibility.PUBLIC,
-        priority: AndroidPriority.MAX,
       });
       const isPresent = await Notifee.isChannelCreated('foreground');
       if (!isPresent) {
@@ -53,9 +51,6 @@ const NotificationSetup = ({userInfoState}) => {
           sound: 'default',
           vibration: true,
           visibility: AndroidVisibility.PUBLIC,
-          visibility: AndroidVisibility.PUBLIC,
-          lockScreenVisibility: AndroidVisibility.PUBLIC,
-          priority: AndroidPriority.MAX,
         });
       }
     } catch (error) {}
@@ -197,11 +192,27 @@ const NotificationSetup = ({userInfoState}) => {
   };
   const openChat = async message => {
     try {
-      if(message?.data?.orgId != store?.getState()?.orgsReducer?.currentOrgId){
-        await  store.dispatch(switchOrgStart(store?.getState()?.userInfoReducer?.accessToken,message?.data?.orgId,store?.getState()?.userInfoReducer?.user?.id))
-        await store.dispatch(moveChannelToTop(Object.keys(store.getState()?.orgsReducer?.orgsWithNewMessages[message?.data?.orgId])))
-        await store.dispatch(removeCountOnOrgCard(message?.data?.orgId))
-    }
+      if (
+        message?.data?.orgId != store?.getState()?.orgsReducer?.currentOrgId
+      ) {
+        await store.dispatch(
+          switchOrgStart(
+            store?.getState()?.userInfoReducer?.accessToken,
+            message?.data?.orgId,
+            store?.getState()?.userInfoReducer?.user?.id,
+          ),
+        );
+        await store.dispatch(
+          moveChannelToTop(
+            Object.keys(
+              store.getState()?.orgsReducer?.orgsWithNewMessages[
+                message?.data?.orgId
+              ],
+            ),
+          ),
+        );
+        await store.dispatch(removeCountOnOrgCard(message?.data?.orgId));
+      }
       var teamId = message?.data?.teamId;
       var name = null;
       store.getState()?.channelsReducer?.teamIdAndTypeMapping[teamId] ==
@@ -225,6 +236,7 @@ const NotificationSetup = ({userInfoState}) => {
   };
   return null;
 };
+// export default NotificationSetup;
 
 const mapStateToProps = state => ({
   userInfoState: state?.userInfoReducer,

@@ -2,24 +2,19 @@ import Notifee, {AndroidImportance} from '@notifee/react-native';
 import {store} from '../redux/Store';
 import cheerio, {text} from 'cheerio';
 
-export const handleNotificationFromEvents = async (
-  data,
-  userIdAndDisplayNameMapping,
-) => {
+export const handleNotificationFromEvents = async (data,userIdAndDisplayNameMapping) => {
   data['sameSender'] = `${data?.sameSender}`;
   data['isSameDate'] = `${data?.isSameDate}`;
-  data['attachment'] =
-    data?.attachment != undefined ? JSON.stringify(data?.attachment) : `[]`;
-  data['isActivity'] =
-    data?.isActivity != undefined ? `${data?.isActivity}` : 'false';
+  data['attachment']=data?.attachment != undefined ? JSON.stringify(data?.attachment):`[]`
+  data['isActivity']=data?.isActivity != undefined ? `${data?.isActivity}` :'false'
   data['mentions'] = `${data?.mentions}`;
   data['showInMainConversation'] = `${data?.showInMainConversation}`;
   data['isLink'] = `${data?.isLink}`;
   data['parentId'] == null
     ? delete data['parentId']
     : (data['parentId'] = `${data?.parentId}`);
-  if (data?.mentions?.length > 0) {
-    var resultStr = '';
+  if(data?.mentions?.length > 0){
+    var resultStr=''
     const $ = cheerio.load(`<div>${data?.content}</div>`);
     $('span[contenteditable="false"]').remove();
     $('*')
@@ -39,14 +34,12 @@ export const handleNotificationFromEvents = async (
       });
     resultStr = resultStr.trim();
     resultStr = resultStr.replace(/@{1,2}(\w+)/g, (match, p1) => {
-      return userIdAndDisplayNameMapping[p1]
-        ? `@${userIdAndDisplayNameMapping[p1]}`
-        : match;
+      return userIdAndDisplayNameMapping[p1] ? `@${userIdAndDisplayNameMapping[p1]}` : match;
     });
-    data['content'] = resultStr;
+    data['content'] = resultStr
   }
-  if (data?.attachment.length > 2) {
-    data['content'] = 'Shared an Attachment';
+  if(data?.attachment.length > 2){
+    data['content'] = 'Shared an Attachment'
   }
   var channelType =
     store.getState().channelsReducer?.teamIdAndTypeMapping[data?.teamId];
@@ -55,37 +48,31 @@ export const handleNotificationFromEvents = async (
   var activityContent;
   if (channelType == 'DIRECT_MESSAGE') {
     title = store.getState().orgsReducer?.userIdAndNameMapping[data?.senderId];
-    if (data['isActivity'] == 'true') {
+    if(data['isActivity']=='true'){
       const regex = /\{\{(\w+)\}\}/g;
-      activityContent = data?.content?.replace(regex, (match, userId) => {
-        return (
-          store?.getState()?.orgsReducer?.userIdAndNameMapping[userId] || match
-        ); // return the name if it exists, or the original match if not
-      });
-      body = activityContent;
-    } else {
+       activityContent  = data?.content?.replace(regex, (match, userId) => {
+        return store?.getState()?.orgsReducer?.userIdAndNameMapping[userId] || match; // return the name if it exists, or the original match if not 
+          })  
+      body = activityContent    
+    }else{
       body = data?.content;
     }
-  } else {
+  } else{
     title =
       store.getState().channelsReducer?.teamIdAndNameMapping[data?.teamId];
-    if (data['isActivity'] == 'true') {
-      const regex = /\{\{(\w+)\}\}/g;
-      activityContent = data?.content?.replace(regex, (match, userId) => {
-        return (
-          store?.getState()?.orgsReducer?.userIdAndNameMapping[userId] || match
-        ); // return the name if it exists, or the original match if not
-      });
-      body =
-        store.getState().orgsReducer?.userIdAndNameMapping[data.senderId] +
-        ' : ' +
-        activityContent;
-    } else {
-      body =
-        store.getState().orgsReducer?.userIdAndNameMapping[data.senderId] +
-        ' : ' +
-        data?.content;
-    }
+      if(data['isActivity']=='true'){
+        const regex = /\{\{(\w+)\}\}/g;
+       activityContent  = data?.content?.replace(regex, (match, userId) => {
+        return store?.getState()?.orgsReducer?.userIdAndNameMapping[userId] || match; // return the name if it exists, or the original match if not 
+          })  
+        body =  store.getState().orgsReducer?.userIdAndNameMapping[data.senderId] +
+        ' : ' + activityContent
+        }else{
+          body =
+          store.getState().orgsReducer?.userIdAndNameMapping[data.senderId] +
+          ' : ' +
+          data?.content;
+        }
   }
   await Notifee.displayNotification({
     title: title,
@@ -136,26 +123,17 @@ export const handleNotificationFromEvents = async (
           },
         },
       ],
-      categoryId: 'channel',
+      categoryId: 'channel'
     },
   });
 };
-
 export const handleNotificationFirebase = async firebaseData => {
+  // console.log(firebaseData,'-=-=-=-=-=-=');
   var title = firebaseData?.notification?.title;
   var body = firebaseData?.notification?.body;
-  if (
-    firebaseData?.data?.orgId != store?.getState()?.orgsReducer?.currentOrgId
-  ) {
-    title = `New Message in ${
-      store?.getState()?.orgsReducer?.orgIdAndNameMapping[
-        firebaseData?.data?.orgId
-      ]
-    }`;
-    body =
-      firebaseData?.notification?.title +
-      ' : ' +
-      firebaseData?.notification?.body;
+  if(firebaseData?.data?.orgId != store?.getState()?.orgsReducer?.currentOrgId){
+    title = `New Message in ${store?.getState()?.orgsReducer?.orgIdAndNameMapping[firebaseData?.data?.orgId]}`
+    body = firebaseData?.notification?.title+" : "+ firebaseData?.notification?.body
   }
   await Notifee.displayNotification({
     title: title,
