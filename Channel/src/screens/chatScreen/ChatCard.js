@@ -13,7 +13,7 @@ import {Linking} from 'react-native';
 import {RenderTextWithLinks, renderTextWithLinks} from './RenderTextWithLinks';
 import {useTheme} from '@react-navigation/native';
 import {makeStyles} from './ChatCardStyles';
-import {ms, s} from 'react-native-size-matters';
+import {ms} from 'react-native-size-matters';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import Clipboard from '@react-native-community/clipboard';
@@ -270,9 +270,9 @@ const ChatCard = ({
         /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-])?(?:\?[^\s])?)/gi;
       const emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
       const matchUrlRegx = node?.data?.split(urlRegex);
-      const parts = node?.data?.split(' ');
-      return parts?.map((part, index) =>
-        urlRegex?.test(part) ? (
+      const matchEmailRegx = node?.data?.split(emailRegex);
+      return matchUrlRegx?.map((part, index) =>
+        urlRegex.test(part) ? (
           <View key={index} style={{maxWidth: 250}}>
             <TouchableOpacity
               key={index}
@@ -289,14 +289,6 @@ const ChatCard = ({
               </Text>
             </TouchableOpacity>
           </View>
-        ) : emailRegex?.test(part) ? (
-          <TouchableOpacity
-            key={index}
-            onPress={() => Linking.openURL(`mailto:${part}`)}>
-            <Text style={{color: linkColor, textDecorationLine: 'underline'}}>
-              {part}
-            </Text>
-          </TouchableOpacity>
         ) : (
           <Text key={index} style={{color: textColor}}>
             {part}

@@ -538,7 +538,7 @@ const ChatScreen = ({
                     textInputRef.current.setText('');
                     let randomId = uuid.v4();
                     networkState?.isInternetConnected
-                      ? (message?.length > 0 ||
+                      ? (message!=null ||
                           attachment?.length != 0) &&
                         (setAttachment([]),
                         setlocalMsgAction({
