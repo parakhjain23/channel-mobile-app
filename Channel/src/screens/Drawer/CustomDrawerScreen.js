@@ -93,7 +93,7 @@ const CustomeDrawerScreen = ({
               source={
                 item?.iconKey
                   ? {uri: `${IMAGE_BASE_URL}${item.iconKey}`}
-                  : require('../../assests/images/appIcon/icon-72x72.png')
+                  : require('../../assests/images/appIcon/icon72size.png')
               }
               style={{height: 40, width: 40, marginRight: 10}}
             />

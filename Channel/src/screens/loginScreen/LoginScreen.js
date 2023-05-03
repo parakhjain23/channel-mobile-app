@@ -116,7 +116,7 @@ const LoginScreen = ({getSpaceTokenStartAction, setSigningMethodAction}) => {
         alignItems: 'center',
         backgroundColor: colors.drawerBackgroundColor,
       }}>
-      <Image source={require('../../assests/images/appIcon/icon-96x96.png')} />
+      <Image source={require('../../assests/images/appIcon/icon96size.png')} />
       <GoogleSigninButton
         style={{width: ms(192), height: ms(48)}}
         size={GoogleSigninButton.Size.Wide}
