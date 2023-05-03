@@ -566,11 +566,17 @@ PODS:
   - RNScreens (3.19.0):
     - React-Core
     - React-RCTImage
+  - RNSentry (5.3.1):
+    - React-Core
+    - Sentry/HybridSDK (= 8.4.0)
   - RNSound (0.11.2):
     - React-Core
     - RNSound/Core (= 0.11.2)
   - RNSound/Core (0.11.2):
     - React-Core
+  - Sentry/HybridSDK (8.4.0):
+    - SentryPrivate (= 8.4.0)
+  - SentryPrivate (8.4.0)
   - SocketRocket (0.6.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -656,6 +662,7 @@ DEPENDENCIES:
   - "RNNotifee (from `../node_modules/@notifee/react-native`)"
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - "RNSentry (from `../node_modules/@sentry/react-native/RNSentry.podspec`)"
   - RNSound (from `../node_modules/react-native-sound`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -692,6 +699,8 @@ SPEC REPOS:
     - nanopb
     - OpenSSL-Universal
     - PromisesObjC
+    - Sentry
+    - SentryPrivate
     - SocketRocket
     - YogaKit
 
@@ -798,6 +807,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSentry:
+    :podspec: "../node_modules/@sentry/react-native/RNSentry.podspec"
   RNSound:
     :path: "../node_modules/react-native-sound"
   Yoga:
@@ -886,11 +897,14 @@ SPEC CHECKSUMS:
   RNNotifee: da8dcf09f079ea22f46e239d7c406e10d4525a5f
   RNReanimated: 73afd1a9b4087e403163e0d300854cb99260c9b6
   RNScreens: ea4cd3a853063cda19a4e3c28d2e52180c80f4eb
+  RNSentry: 68d5b2339fc7cd864e8076279345cc90174fa583
   RNSound: 6c156f925295bdc83e8e422e7d8b38d33bc71852
+  Sentry: 16d46dd5ca10e7f4469a2611805a3de123188add
+  SentryPrivate: 2bb4f8d9ff558b25ac70b66c1dedc58a7c43630b
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 99652481fcd320aefa4a7ef90095b95acd181952
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: e716906d0f3f288b8db44e158b51e7d2afd1d34c
+PODFILE CHECKSUM: 75a58979597be3c3303c55300fe9d2516416fd1a
 
 COCOAPODS: 1.12.0
