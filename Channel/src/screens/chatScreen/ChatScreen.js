@@ -35,6 +35,7 @@ import {s, ms, mvs} from 'react-native-size-matters';
 import {setLocalMsgStart} from '../../redux/actions/chat/LocalMessageActions';
 import QuillEditor, {QuillToolbar} from 'react-native-cn-quill';
 import {resetUnreadCountStart} from '../../redux/actions/channels/ChannelsAction';
+import HTMLView from 'react-native-htmlview';
 
 const ChatScreen = ({
   route,
@@ -78,7 +79,7 @@ const ChatScreen = ({
   const user = userInfoState?.user;
   const accessToken = userInfoState?.accessToken;
   const currentOrgId = orgState?.currentOrgId;
-  
+
   if (teamId == undefined) {
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
   }
@@ -136,11 +137,11 @@ const ChatScreen = ({
   };
   const handleInputChange = useCallback(
     text => {
-      console.log(text,'=-=--=-=-=-=-=-=-');
+      console.log(text, '=-=--=-=-=-=-=-=-');
       onChangeMessage(text);
       const mentionRegex = /@\w+/g;
       const foundMentions = text?.match(mentionRegex);
-      console.log(foundMentions,'=-=-');
+      console.log(foundMentions, '=-=-');
       foundMentions?.length > 0
         ? (getChannelsByQueryStartAction(
             foundMentions?.[foundMentions?.length - 1].replace('@', ''),
@@ -274,6 +275,44 @@ const ChatScreen = ({
     fetchChatsOfTeamAction(teamId, userInfoState?.accessToken, skip);
   }, [teamId, userInfoState, skip, fetchChatsOfTeamAction]);
 
+  function renderNode(node, index, siblings, parent, defaultRenderer) {
+    if (node.attribs?.class == 'mention') {
+      return (
+        <TouchableOpacity
+          key={index}
+          onPress={async () => {
+            node?.attribs?.['data-id'] != '@all' &&
+              (await searchUserProfileAction(
+                node?.attribs?.['data-id'],
+                userInfoState?.accessToken,
+              )) &&
+              RootNavigation.navigate('UserProfiles', {
+                displayName:
+                  orgState?.userIdAndDisplayNameMapping[
+                    node?.attribs?.['data-id']
+                  ],
+              });
+          }}>
+          <Text style={{color: 'white', textDecorationLine: 'underline'}}>
+            @{node?.attribs?.['data-value']}
+          </Text>
+        </TouchableOpacity>
+      );
+    } else if (node?.attribs?.class == 'ql-syntax') {
+      return (
+        <View
+          key={index}
+          style={{
+            borderWidth: 1,
+            borderColor: 'black',
+            padding: 10,
+            borderRadius: 8,
+          }}>
+          <Text>{node?.children[0]?.data}</Text>
+        </View>
+      );
+    }
+  }
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.mainContainer}>
@@ -361,16 +400,16 @@ const ChatScreen = ({
                     );
                   })}
                 {replyOnMessage && (
-                  <TouchableOpacity onPress={() => {setreplyOnMessage(false); setrepliedMsgDetails(null)}}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setreplyOnMessage(false);
+                      setrepliedMsgDetails(null);
+                    }}>
                     <View style={styles.replyMessageInInput}>
                       {repliedMsgDetails?.mentions?.length > 0 ? (
-                        <RenderTextWithLinks
-                          text={repliedMsgDetails?.content}
-                          mentions={repliedMsgDetails?.mentions}
-                          repliedContainer={true}
-                          orgState={orgState}
-                          userInfoState={userInfoState}
-                          colors={colors}
+                        <HTMLView
+                          value={repliedMsgDetails?.content}
+                          renderNode={renderNode}
                         />
                       ) : repliedMsgDetails?.attachment?.length > 0 &&
                         typeof repliedMsgDetails?.attachment != 'string' ? (
@@ -380,7 +419,10 @@ const ChatScreen = ({
                         </Text>
                       ) : (
                         <Text style={styles.repliedText}>
-                          {repliedMsgDetails?.content}
+                          <HTMLView
+                            value={repliedMsgDetails?.content}
+                            renderNode={renderNode}
+                          />
                         </Text>
                       )}
                       <MaterialIcons
@@ -571,7 +613,8 @@ const ChatScreen = ({
                         setMentions([]),
                         replyOnMessage && setreplyOnMessage(false),
                         repliedMsgDetails && setrepliedMsgDetails(null))
-                      : (message?.html?.trim() != '' || attachment?.length > 0) &&
+                      : (message?.html?.trim() != '' ||
+                          attachment?.length > 0) &&
                         (setAttachment([]),
                         setlocalMsgAction({
                           randomId: randomId,

@@ -17,7 +17,8 @@ import {ms} from 'react-native-size-matters';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import Clipboard from '@react-native-community/clipboard';
-
+import HTMLView from 'react-native-htmlview';
+import * as RootNavigation from '../../navigation/RootNavigation';
 
 const AddRemoveJoinedMsg = React.memo(({senderName, content, orgState}) => {
   const {colors} = useTheme();
@@ -45,19 +46,25 @@ const ChatCard = ({
   searchUserProfileAction,
   flatListRef,
   channelType,
-  index
+  index,
 }) => {
   const {colors, dark} = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const [optionsVisible, setOptionsVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const swipeableRef = useRef(null);
-  const sameSender= typeof chat?.sameSender === 'string' ? chat.sameSender === 'true' : chat?.sameSender
-  const isSameDate = typeof chat?.isSameDate === 'string' ? chat.isSameDate === 'true' : chat?.isSameDate
+  const sameSender =
+    typeof chat?.sameSender === 'string'
+      ? chat.sameSender === 'true'
+      : chat?.sameSender;
+  const isSameDate =
+    typeof chat?.isSameDate === 'string'
+      ? chat.isSameDate === 'true'
+      : chat?.isSameDate;
   const isActivity =
-  typeof chat.isActivity === 'string'
-    ? chat.isActivity === 'true'
-    : chat.isActivity;
+    typeof chat.isActivity === 'string'
+      ? chat.isActivity === 'true'
+      : chat.isActivity;
   const attachment = useMemo(() => {
     if (typeof chat?.attachment === 'string') {
       return JSON.parse(chat?.attachment);
@@ -160,7 +167,7 @@ const ChatCard = ({
             alignItems: 'center',
             paddingVertical: ms(8),
           }}>
-          <Icon name="content-copy" size={ms(20)} color={'black'}/>
+          <Icon name="content-copy" size={ms(20)} color={'black'} />
           <Text
             style={[
               styles.text,
@@ -179,7 +186,7 @@ const ChatCard = ({
             alignItems: 'center',
             paddingVertical: ms(8),
           }}>
-          <Icon name="reply" size={ms(20)} color={'black'}/>
+          <Icon name="reply" size={ms(20)} color={'black'} />
           <Text
             style={[
               styles.text,
@@ -214,7 +221,45 @@ const ChatCard = ({
       </View>
     );
   };
-
+  function renderNode(node, index, siblings, parent, defaultRenderer) {
+    if (node.attribs?.class == 'mention') {
+      // const specialSyle = node.attribs.style
+      return (
+        <TouchableOpacity
+          key={index}
+          onPress={async () => {
+            node?.attribs?.['data-id'] != '@all' &&
+              (await searchUserProfileAction(
+                node?.attribs?.['data-id'],
+                userInfoState?.accessToken,
+              )) &&
+              RootNavigation.navigate('UserProfiles', {
+                displayName:
+                  orgState?.userIdAndDisplayNameMapping[
+                    node?.attribs?.['data-id']
+                  ],
+              });
+          }}>
+          <Text style={{color: 'white', textDecorationLine: 'underline'}}>
+            @{node?.attribs?.['data-value']}
+          </Text>
+        </TouchableOpacity>
+      );
+    } else if (node?.attribs?.class == 'ql-syntax') {
+      return (
+        <View
+          key={index}
+          style={{
+            borderWidth: 1,
+            borderColor: 'black',
+            padding: 10,
+            borderRadius: 8,
+          }}>
+          <Text>{node?.children[0]?.data}</Text>
+        </View>
+      );
+    }
+  }
   if (!isActivity) {
     return (
       <GestureHandlerRootView>
@@ -226,22 +271,27 @@ const ChatCard = ({
           <Swipeable
             ref={swipeableRef}
             renderLeftActions={LeftSwipeActions}
-            onSwipeableWillOpen={swipeFromLeftOpen}
-            >
+            onSwipeableWillOpen={swipeFromLeftOpen}>
             <View
               style={[
                 styles.container,
                 sentByMe ? styles.sentByMe : styles.received,
-                {backgroundColor: containerBackgroundColor,marginTop: sameSender ? ms(0) : ms(10),marginBottom: index == 0 ? 10 :3},
+                {
+                  backgroundColor: containerBackgroundColor,
+                  marginTop: sameSender ? ms(0) : ms(10),
+                  marginBottom: index == 0 ? 10 : 3,
+                },
               ]}>
               <View style={[styles.textContainer, {maxWidth: '90%'}]}>
-                {channelType != 'DIRECT_MESSAGE' && SenderName != 'You' && !sameSender && (
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text style={[styles.nameText, styles.text]}>
-                      {SenderName}
-                    </Text>
-                  </View>
-                )}
+                {channelType != 'DIRECT_MESSAGE' &&
+                  SenderName != 'You' &&
+                  !sameSender && (
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <Text style={[styles.nameText, styles.text]}>
+                        {SenderName}
+                      </Text>
+                    </View>
+                  )}
                 {parentId != null && (
                   <TouchableOpacity
                     style={[styles.repliedContainer]}
@@ -264,20 +314,27 @@ const ChatCard = ({
                         <Icon name="attach-file" size={ms(14)} /> attachment
                       </Text>
                     ) : (
-                      <RenderTextWithLinks
-                        text={
+                      // <RenderTextWithLinks
+                      //   text={
+                      //     chatState?.data[chat.teamId]?.parentMessages[parentId]
+                      //       ?.content
+                      //   }
+                      //   mentions={
+                      //     chatState?.data[chat.teamId]?.parentMessages[parentId]
+                      //       ?.mentions
+                      //   }
+                      //   repliedContainer={true}
+                      //   orgState={orgState}
+                      //   searchUserProfileAction={searchUserProfileAction}
+                      //   userInfoState={userInfoState}
+                      //   colors={colors}
+                      // />
+                      <HTMLView
+                        value={
                           chatState?.data[chat.teamId]?.parentMessages[parentId]
                             ?.content
                         }
-                        mentions={
-                          chatState?.data[chat.teamId]?.parentMessages[parentId]
-                            ?.mentions
-                        }
-                        repliedContainer={true}
-                        orgState={orgState}
-                        searchUserProfileAction={searchUserProfileAction}
-                        userInfoState={userInfoState}
-                        colors={colors}
+                        renderNode={renderNode}
                       />
                     )}
                   </TouchableOpacity>
@@ -401,7 +458,8 @@ const ChatCard = ({
                       // styles.text,
                       {maxWidth: '90%', color: 'white'},
                     ]}>
-                    <RenderTextWithLinks
+                    <HTMLView value={chat?.content} renderNode={renderNode} />
+                    {/* <RenderTextWithLinks
                       text={chat?.content}
                       mentions={chat?.mentions}
                       repliedContainer={false}
@@ -410,7 +468,7 @@ const ChatCard = ({
                       userInfoState={userInfoState}
                       colors={colors}
                       sentByMe={sentByMe}
-                    />
+                    /> */}
                   </Text>
                   {chat?.randomId != null ? (
                     <View
@@ -428,7 +486,11 @@ const ChatCard = ({
                         styles.text,
                         {
                           marginHorizontal: ms(10),
-                          color: sentByMe ? '#cccccc' : dark ? '#cccccc' : 'black',
+                          color: sentByMe
+                            ? '#cccccc'
+                            : dark
+                            ? '#cccccc'
+                            : 'black',
                         },
                       ]}>
                       {time}
@@ -439,19 +501,19 @@ const ChatCard = ({
             </View>
           </Swipeable>
         </TouchableOpacity>
-        {!isSameDate &&(
-            <View>
-              <Text
-                style={{
-                  color: '#808080',
-                  textAlign: 'center',
-                  marginBottom: ms(10),
-                  marginTop: ms(7)
-                }}>
-                {chat?.timeToShow}
-              </Text>
-            </View>
-          )}
+        {!isSameDate && (
+          <View>
+            <Text
+              style={{
+                color: '#808080',
+                textAlign: 'center',
+                marginBottom: ms(10),
+                marginTop: ms(7),
+              }}>
+              {chat?.timeToShow}
+            </Text>
+          </View>
+        )}
         {optionsVisible && <OptionsList sentByMe={sentByMe} />}
       </GestureHandlerRootView>
     );
