@@ -10,6 +10,7 @@ const initialState = {
   teamIdAndNameMapping: {},
   teamIdAndTypeMapping: {},
   teamIdAndUnreadCountMapping: {},
+  teamIdAndBadgeCountMapping:{}
 };
 
 export function channelsReducer(state = initialState, action) {
@@ -61,12 +62,15 @@ export function channelsReducer(state = initialState, action) {
       };
     case Actions.FETCH_CHANNEL_DETAILS_SUCCESS:
       let teamIdAndUnreadCountMapping = {};
+      let teamIdAndBadgeCountMapping = {}
       action?.payload?.map(team => {
         teamIdAndUnreadCountMapping[team?.teamId] = team?.unreadCount;
+        teamIdAndBadgeCountMapping[team?.teamId]=team?.badgeCount
       });
       return {
         ...state,
         teamIdAndUnreadCountMapping: teamIdAndUnreadCountMapping,
+        teamIdAndBadgeCountMapping: teamIdAndBadgeCountMapping
       };
 
     case Actions.FETCH_RECENT_CHANNELS_SUCCESS:
@@ -114,6 +118,7 @@ export function channelsReducer(state = initialState, action) {
     case Actions.MOVE_CHANNEL_TO_TOP:
       var tempHighlightChannels = {};
       let teamIdAndUnreadCountMappingLocal = {};
+      let teamIdAndBadgeCountMappingLocal = {}
       const newRecentChannels = [...state?.recentChannels]; // create a new copy of recentChannels array
       action?.channelId.forEach(id => {
         if (state?.activeChannelTeamId != id) {
@@ -121,6 +126,8 @@ export function channelsReducer(state = initialState, action) {
           if (action?.senderId != action?.userId) {
             teamIdAndUnreadCountMappingLocal[id] =
               state?.teamIdAndUnreadCountMapping[id] + 1;
+            teamIdAndBadgeCountMappingLocal[id]=
+              0
           }
         } else {
           tempHighlightChannels[id] = false;
@@ -155,6 +162,10 @@ export function channelsReducer(state = initialState, action) {
           ...state?.teamIdAndUnreadCountMapping,
           ...teamIdAndUnreadCountMappingLocal,
         },
+        teamIdAndBadgeCountMapping:{
+          ...state?.teamIdAndBadgeCountMapping,
+          ...teamIdAndBadgeCountMappingLocal
+        }
       };
 
     case Actions.CREATE_NEW_CHANNEL_SUCCESS:
@@ -210,8 +221,12 @@ export function channelsReducer(state = initialState, action) {
         ...state,
         teamIdAndUnreadCountMapping: {
           ...state?.teamIdAndUnreadCountMapping,
-          [action?.teamId]: 0,
+          [action?.teamId]: action?.response?.unreadCount,
         },
+        teamIdAndBadgeCountMapping:{
+          ...state?.teamIdAndBadgeCountMapping,
+          [action?.teamId]: action?.response?.badgeCount
+        }
       };
 
     case Actions.RESET_ACTIVE_CHANNEL_TEAMID:

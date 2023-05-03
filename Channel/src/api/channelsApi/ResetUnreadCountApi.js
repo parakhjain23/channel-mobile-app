@@ -3,6 +3,8 @@ export const resetUnreadCountApi = async (
   userId,
   teamId,
   accessToken,
+  badgeCount,
+  unreadCount
 ) => {
   try {
     var response = await fetch(
@@ -14,13 +16,13 @@ export const resetUnreadCountApi = async (
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          unreadCount: 0,
-          badgeCount: 0,
+          unreadCount: unreadCount,
+          badgeCount: badgeCount,
         }),
       },
     );
     const result = await response.json();
-    // return result;
+    return result[0];
   } catch (error) {
     console.warn(error,"error in reset unread count api");
   }
