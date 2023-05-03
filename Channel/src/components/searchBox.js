@@ -1,5 +1,5 @@
 import React from 'react';
-import {SearchBar} from '@rneui/themed';
+// import {SearchBar} from '@rneui/themed';
 import {TextInput} from 'react-native-paper';
 import {useTheme} from '@react-navigation/native';
 
@@ -18,10 +18,13 @@ const SearchBox = ({searchValue, changeText, textInputRef}) => {
       }}
       underlineStyle={{backgroundColor: 'transparent'}}
       underlineColorAndroid="transparent"
-      clearButtonMode="always"
+      // clearButtonMode="always"
       placeholder="Search"
       left={
         <TextInput.Icon icon="magnify" style={{justifyContent: 'center'}} />
+      }
+      right={
+        searchValue!='' && <TextInput.Icon icon="close" style={{justifyContent: 'center'}} onPressIn={()=>{changeText('')}}/>
       }
     />
   );

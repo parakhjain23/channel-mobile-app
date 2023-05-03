@@ -506,6 +506,8 @@ PODS:
     - React-Core
   - RNCAsyncStorage (1.17.11):
     - React-Core
+  - RNCClipboard (1.5.1):
+    - React-Core
   - RNCPushNotificationIOS (1.10.1):
     - React-Core
   - RNDeviceInfo (10.4.0):
@@ -564,11 +566,17 @@ PODS:
   - RNScreens (3.19.0):
     - React-Core
     - React-RCTImage
+  - RNSentry (5.3.1):
+    - React-Core
+    - Sentry/HybridSDK (= 8.4.0)
   - RNSound (0.11.2):
     - React-Core
     - RNSound/Core (= 0.11.2)
   - RNSound/Core (0.11.2):
     - React-Core
+  - Sentry/HybridSDK (8.4.0):
+    - SentryPrivate (= 8.4.0)
+  - SentryPrivate (8.4.0)
   - SocketRocket (0.6.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -642,6 +650,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNAppleAuthentication (from `../node_modules/@invertase/react-native-apple-authentication`)"
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
+  - "RNCClipboard (from `../node_modules/@react-native-community/clipboard`)"
   - "RNCPushNotificationIOS (from `../node_modules/@react-native-community/push-notification-ios`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
@@ -653,6 +662,7 @@ DEPENDENCIES:
   - "RNNotifee (from `../node_modules/@notifee/react-native`)"
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - "RNSentry (from `../node_modules/@sentry/react-native/RNSentry.podspec`)"
   - RNSound (from `../node_modules/react-native-sound`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -689,6 +699,8 @@ SPEC REPOS:
     - nanopb
     - OpenSSL-Universal
     - PromisesObjC
+    - Sentry
+    - SentryPrivate
     - SocketRocket
     - YogaKit
 
@@ -771,6 +783,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@invertase/react-native-apple-authentication"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
+  RNCClipboard:
+    :path: "../node_modules/@react-native-community/clipboard"
   RNCPushNotificationIOS:
     :path: "../node_modules/@react-native-community/push-notification-ios"
   RNDeviceInfo:
@@ -793,6 +807,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSentry:
+    :podspec: "../node_modules/@sentry/react-native/RNSentry.podspec"
   RNSound:
     :path: "../node_modules/react-native-sound"
   Yoga:
@@ -869,6 +885,7 @@ SPEC CHECKSUMS:
   ReactCommon: 095366164a276d91ea704ce53cb03825c487a3f2
   RNAppleAuthentication: 0571c08da8c327ae2afc0261b48b4a515b0286a6
   RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
+  RNCClipboard: 41d8d918092ae8e676f18adada19104fa3e68495
   RNCPushNotificationIOS: 87b8d16d3ede4532745e05b03c42cff33a36cc45
   RNDeviceInfo: 749f2e049dcd79e2e44f134f66b73a06951b5066
   RNFBApp: 0f6bd7ee155a50f5e68cd68aab2709a4d24bfdff
@@ -880,11 +897,14 @@ SPEC CHECKSUMS:
   RNNotifee: da8dcf09f079ea22f46e239d7c406e10d4525a5f
   RNReanimated: 73afd1a9b4087e403163e0d300854cb99260c9b6
   RNScreens: ea4cd3a853063cda19a4e3c28d2e52180c80f4eb
+  RNSentry: 68d5b2339fc7cd864e8076279345cc90174fa583
   RNSound: 6c156f925295bdc83e8e422e7d8b38d33bc71852
+  Sentry: 16d46dd5ca10e7f4469a2611805a3de123188add
+  SentryPrivate: 2bb4f8d9ff558b25ac70b66c1dedc58a7c43630b
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 99652481fcd320aefa4a7ef90095b95acd181952
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: e716906d0f3f288b8db44e158b51e7d2afd1d34c
+PODFILE CHECKSUM: 75a58979597be3c3303c55300fe9d2516416fd1a
 
 COCOAPODS: 1.12.0

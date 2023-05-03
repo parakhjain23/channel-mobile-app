@@ -37,7 +37,6 @@ const CustomeDrawerScreen = ({
   const navigation = useNavigation();
   const _signOut = async () => {
     if (userInfoState?.siginInMethod == 'Google') {
-      await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
     }
     signOutAction();
@@ -48,6 +47,7 @@ const CustomeDrawerScreen = ({
         userInfoState?.accessToken,
         orgsState?.currentOrgId,
         userInfoState?.user?.id,
+        userInfoState?.user?.displayName ? userInfoState?.user?.displayName : userInfoState?.user?.firstName
       );
     }
   }, [userInfoState?.user, networkState?.isInternetConnected]);
@@ -67,6 +67,7 @@ const CustomeDrawerScreen = ({
             userInfoState?.accessToken,
             item?.id,
             userInfoState?.user?.id,
+            userInfoState?.user?.displayName ? userInfoState?.user?.displayName : userInfoState?.user?.firstName
           );
           count != undefined &&
             (await moveChannelToTopAction(Object.keys(unreadCountObj))) &&
@@ -92,7 +93,7 @@ const CustomeDrawerScreen = ({
               source={
                 item?.iconKey
                   ? {uri: `${IMAGE_BASE_URL}${item.iconKey}`}
-                  : require('../../assests/images/appIcon/icon-72x72.png')
+                  : require('../../assests/images/appIcon/icon72size.png')
               }
               style={{height: 40, width: 40, marginRight: 10}}
             />
@@ -208,10 +209,10 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => {
   return {
-    getChannelsAction: (token, orgId, userId) =>
-      dispatch(getChannelsStart(token, orgId, userId)),
-    switchOrgAction: (accessToken, orgId, userId) =>
-      dispatch(switchOrgStart(accessToken, orgId, userId)),
+    getChannelsAction: (token, orgId, userId , userName) =>
+      dispatch(getChannelsStart(token, orgId, userId,userName)),
+    switchOrgAction: (accessToken, orgId, userId,userName) =>
+      dispatch(switchOrgStart(accessToken, orgId, userId,userName)),
     signOutAction: () => dispatch(signOut()),
     removeCountOnOrgCardAction: orgId => dispatch(removeCountOnOrgCard(orgId)),
     moveChannelToTopAction: teamIdArr => dispatch(moveChannelToTop(teamIdArr)),

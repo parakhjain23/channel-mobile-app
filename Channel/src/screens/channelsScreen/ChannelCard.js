@@ -12,8 +12,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 import {fetchSearchedUserProfileStart} from '../../redux/actions/user/searchUserProfileActions';
-import {s, vs, ms, mvs} from 'react-native-size-matters';
-import {resetUnreadCountStart} from '../../redux/actions/channels/ChannelsAction';
+import {s, ms, mvs} from 'react-native-size-matters';
 import * as RootNavigation from '../../navigation/RootNavigation';
 
 const TouchableItem =
@@ -23,12 +22,10 @@ const ChannelCard = ({
   item,
   navigation,
   props,
-  resetUnreadCountAction,
   resetChatsAction,
   networkState,
 }) => {
   const {colors} = useTheme();
-
   const userIdAndDisplayNameMapping =
     props.orgsState?.userIdAndDisplayNameMapping;
   const userIdAndNameMapping = props.orgsState?.userIdAndNameMapping;
@@ -51,7 +48,12 @@ const ChannelCard = ({
         : 'Loading...'
       : item?.name;
 
-  const iconName = item?.type === 'DIRECT_MESSAGE' ? 'user' : 'hashtag';
+  const iconName =
+    item?.type === 'DIRECT_MESSAGE'
+      ? 'user'
+      : item?.type === 'PRIVATE'
+      ? 'lock'
+      : 'hashtag';
 
   const unread = useMemo(() => {
     const unreadCount = teamIdAndUnreadCountMapping?.[item?._id] || 0;
@@ -59,15 +61,8 @@ const ChannelCard = ({
     return unreadCount > 0 || isHighlighted;
   }, [item?._id, teamIdAndUnreadCountMapping, highlightChannel]);
 
-  const shouldResetUnreadCount = teamIdAndUnreadCountMapping?.[item?._id] > 0;
-
   const onPress = useCallback(() => {
     networkState?.isInternetConnected && resetChatsAction();
-    props.setActiveChannelTeamIdAction(item?._id);
-    if (shouldResetUnreadCount) {
-      resetUnreadCountAction(currentOrgId, user?.id, item?._id, accessToken);
-    }
-
     RootNavigation.navigate('Chat', {
       chatHeaderTitle: Name,
       teamId: item?._id,
@@ -75,6 +70,7 @@ const ChannelCard = ({
       userId,
       searchedChannel: false,
     });
+    props.setActiveChannelTeamIdAction(item?._id);
   }, [
     Name,
     currentOrgId,
@@ -82,7 +78,6 @@ const ChannelCard = ({
     item?.type,
     resetChatsAction,
     props.setActiveChannelTeamIdAction,
-    resetUnreadCountAction,
     teamIdAndUnreadCountMapping,
     user?.id,
     userId,
@@ -181,7 +176,11 @@ const SearchChannelCard = ({
   orgsState,
 }) => {
   const {colors} = useTheme();
-  const Name = item?._source?.title;
+  let Name = item?._source?.title;
+  if (item?._source?.userId == userInfoState?.user?.id) {
+    Name = item?._source?.title + " (You)"
+  } 
+  const isArchived = item?._source?.isArchived;
   const teamId = item?._id?.includes('_')
     ? props?.channelsState?.userIdAndTeamIdMapping[item?._source?.userId]
     : item?._id;
@@ -249,6 +248,7 @@ const SearchChannelCard = ({
                 fontSize: ms(16),
                 fontWeight: '400',
                 color: colors.textColor,
+                textDecorationLine: isArchived ? 'line-through' : null
               }}
               numberOfLines={1}
               ellipsizeMode="tail">{`${Name}`}</Text>
@@ -329,8 +329,6 @@ const mapDispatchToProps = dispatch => {
   return {
     searchUserProfileAction: (userId, token) =>
       dispatch(fetchSearchedUserProfileStart(userId, token)),
-    resetUnreadCountAction: (orgId, userId, teamId, accessToken) =>
-      dispatch(resetUnreadCountStart(orgId, userId, teamId, accessToken)),
     resetChatsAction: () => dispatch(getChatsReset()),
   };
 };

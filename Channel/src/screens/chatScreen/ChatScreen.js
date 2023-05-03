@@ -34,6 +34,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import {s, ms, mvs} from 'react-native-size-matters';
 import {setLocalMsgStart} from '../../redux/actions/chat/LocalMessageActions';
 import QuillEditor, {QuillToolbar} from 'react-native-cn-quill';
+import {resetUnreadCountStart} from '../../redux/actions/channels/ChannelsAction';
 
 const ChatScreen = ({
   route,
@@ -51,6 +52,7 @@ const ChatScreen = ({
   channelsByQueryState,
   searchUserProfileAction,
   setlocalMsgAction,
+  resetUnreadCountAction,
 }) => {
   var {teamId, reciverUserId, channelType, searchedChannel} = route.params;
   const {colors} = useTheme();
@@ -71,11 +73,16 @@ const ChatScreen = ({
   const offset = height * 0.12;
   const date = useMemo(() => new Date(), []);
   const screenHeight = Dimensions.get('window').height;
-  const editor = React.createRef();
-  console.log(message, '=-=-');
+  const teamIdAndUnreadCountMapping =
+    channelsState?.teamIdAndUnreadCountMapping;
+  const user = userInfoState?.user;
+  const accessToken = userInfoState?.accessToken;
+  const currentOrgId = orgState?.currentOrgId;
+  
   if (teamId == undefined) {
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
   }
+  const shouldResetUnreadCount = teamIdAndUnreadCountMapping?.[teamId] > 0;
 
   useEffect(() => {
     if (repliedMsgDetails != '') {
@@ -86,9 +93,13 @@ const ChatScreen = ({
     chatState?.data[teamId]?.messages?.length != undefined
       ? chatState?.data[teamId]?.messages?.length
       : 0;
-
   useEffect(() => {
     searchedChannel && textInputRef?.current?.focus();
+    setTimeout(() => {
+      if (shouldResetUnreadCount) {
+        resetUnreadCountAction(currentOrgId, user?.id, teamId, accessToken);
+      }
+    }, 1000);
   }, []);
 
   useEffect(() => {
@@ -211,14 +222,14 @@ const ChatScreen = ({
   const todaysDateRef = useRef(new Date().toDateString());
   const renderItem = useCallback(
     ({item, index}) => {
-      const date = new Date(item.updatedAt);
-      const isSameDate = prevDate?.toDateString() === date.toDateString();
-      let displayDate = date?.toDateString();
-      if (!isSameDate) {
-        const prevDateString = prevDate?.toDateString();
-        displayDate = `${prevDateString}`;
-      }
-      prevDate = date;
+      // const date = new Date(item.updatedAt);
+      // const isSameDate = prevDate?.toDateString() === date.toDateString();
+      // let displayDate = date?.toDateString();
+      // if (!isSameDate) {
+      //   const prevDateString = prevDate?.toDateString();
+      //   displayDate = `${prevDateString}`;
+      // }
+      // prevDate = date;
       return (
         <View>
           <ChatCardMemo
@@ -232,8 +243,9 @@ const ChatScreen = ({
             searchUserProfileAction={searchUserProfileAction}
             flatListRef={FlatListRef}
             channelType={channelType}
+            index={index}
           />
-          {!isSameDate && displayDate && index > 0 && (
+          {/* {!isSameDate && displayDate && index > 0 && (
             <View>
               <Text
                 style={{
@@ -244,7 +256,7 @@ const ChatScreen = ({
                 {displayDate === todaysDateRef.current ? 'Today' : displayDate}
               </Text>
             </View>
-          )}
+          )} */}
         </View>
       );
     },
@@ -349,7 +361,7 @@ const ChatScreen = ({
                     );
                   })}
                 {replyOnMessage && (
-                  <TouchableOpacity onPress={() => setreplyOnMessage(false)}>
+                  <TouchableOpacity onPress={() => {setreplyOnMessage(false); setrepliedMsgDetails(null)}}>
                     <View style={styles.replyMessageInInput}>
                       {repliedMsgDetails?.mentions?.length > 0 ? (
                         <RenderTextWithLinks
@@ -559,8 +571,9 @@ const ChatScreen = ({
                         setMentions([]),
                         replyOnMessage && setreplyOnMessage(false),
                         repliedMsgDetails && setrepliedMsgDetails(null))
-                      : message?.html?.trim() != '' &&
-                        (setlocalMsgAction({
+                      : (message?.html?.trim() != '' || attachment?.length > 0) &&
+                        (setAttachment([]),
+                        setlocalMsgAction({
                           randomId: randomId,
                           content: message?.html,
                           createdAt: date,
@@ -648,6 +661,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(getChannelsByQueryStart(query, userToken, orgId)),
     searchUserProfileAction: (userId, token) =>
       dispatch(fetchSearchedUserProfileStart(userId, token)),
+    resetUnreadCountAction: (orgId, userId, teamId, accessToken) =>
+      dispatch(resetUnreadCountStart(orgId, userId, teamId, accessToken)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);

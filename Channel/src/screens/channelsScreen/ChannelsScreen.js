@@ -242,6 +242,7 @@ const ChannelsScreen = props => {
       props?.userInfoState?.accessToken,
       props?.orgsState?.currentOrgId,
       props?.userInfoState?.user?.id,
+      props?.userInfoState?.user?.displayName ? props?.userInfoState?.user?.displayName :props?.userInfoState?.user?.firstName
     );
     await props.getAllUsersOfOrgAction(
       props?.userInfoState?.accessToken,
@@ -418,8 +419,8 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => {
   return {
-    getChannelsAction: (token, orgId, userId) =>
-      dispatch(getChannelsStart(token, orgId, userId)),
+    getChannelsAction: (token, orgId, userId,userName) =>
+      dispatch(getChannelsStart(token, orgId, userId,userName)),
     getChannelsByQueryStartAction: (query, userToken, orgId) =>
       dispatch(getChannelsByQueryStart(query, userToken, orgId)),
     createNewChannelAction: (token, orgId, title, channelType, userIds) =>
