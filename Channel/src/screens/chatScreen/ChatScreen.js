@@ -278,25 +278,11 @@ const ChatScreen = ({
   function renderNode(node, index, siblings, parent, defaultRenderer) {
     if (node.attribs?.class == 'mention') {
       return (
-        <TouchableOpacity
+        <Text
           key={index}
-          onPress={async () => {
-            node?.attribs?.['data-id'] != '@all' &&
-              (await searchUserProfileAction(
-                node?.attribs?.['data-id'],
-                userInfoState?.accessToken,
-              )) &&
-              RootNavigation.navigate('UserProfiles', {
-                displayName:
-                  orgState?.userIdAndDisplayNameMapping[
-                    node?.attribs?.['data-id']
-                  ],
-              });
-          }}>
-          <Text style={{color: 'white', textDecorationLine: 'underline'}}>
-            @{node?.attribs?.['data-value']}
-          </Text>
-        </TouchableOpacity>
+          style={{color: 'black', textDecorationLine: 'underline'}}>
+          @{node?.attribs?.['data-value']}
+        </Text>
       );
     } else if (node?.attribs?.class == 'ql-syntax') {
       return (
@@ -407,6 +393,14 @@ const ChatScreen = ({
                     }}>
                     <View style={styles.replyMessageInInput}>
                       {repliedMsgDetails?.mentions?.length > 0 ? (
+                        //   <RenderTextWithLinks
+                        //   text={repliedMsgDetails?.content}
+                        //   mentions={repliedMsgDetails?.mentions}
+                        //   repliedContainer={true}
+                        //   orgState={orgState}
+                        //   userInfoState={userInfoState}
+                        //   colors={colors}
+                        // />
                         <HTMLView
                           value={repliedMsgDetails?.content}
                           renderNode={renderNode}
@@ -530,40 +524,6 @@ const ChatScreen = ({
                       },
                     ]}
                   />
-                  {/* <QuillToolbar
-                      editor={editor}
-                      options="full"
-                      theme="light"
-                    /> */}
-                  {/* </View> */}
-                  {/* <QuillEditor
-                    style={[
-                      replyOnMessage
-                        ? styles.inputWithReply
-                        : styles.inputWithoutReply,
-                      {
-                        backgroundColor: 'transparent',
-                      },
-                    ]}
-                    onHtmlChange={value => onChangeMessage(value)}
-                    ref={textInputRef}
-                  /> */}
-                  {/* <TextInput
-                    ref={textInputRef}
-                    editable
-                    multiline
-                    onChangeText={handleInputChange}
-                    placeholder="Message"
-                    placeholderTextColor={colors.textColor}
-                    value={message}
-                    style={[
-                      replyOnMessage
-                        ? styles.inputWithReply
-                        : styles.inputWithoutReply,
-                      {color: colors.textColor},
-                    ]}
-                  /> */}
-
                   {showOptions &&
                     message?.html?.trim()?.length == 1 &&
                     hideOptionsMethod()}

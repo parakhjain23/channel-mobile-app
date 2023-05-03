@@ -113,6 +113,12 @@ const ChatCard = ({
       return orgState?.userIdAndNameMapping[chat?.senderId];
     }
   }, [chat?.senderId, orgState, userInfoState]);
+  const linkColor = sentByMe
+    ? colors.sentByMeLinkColor
+    : colors.recivedLinkColor;
+
+  const textColor = sentByMe ? colors.sentByMeTextColor : colors?.textColor;
+
   const swipeFromLeftOpen = () => {
     setrepliedMsgDetails(chat);
     setreplyOnMessage(true);
@@ -223,7 +229,6 @@ const ChatCard = ({
   };
   function renderNode(node, index, siblings, parent, defaultRenderer) {
     if (node.attribs?.class == 'mention') {
-      // const specialSyle = node.attribs.style
       return (
         <TouchableOpacity
           key={index}
@@ -240,7 +245,7 @@ const ChatCard = ({
                   ],
               });
           }}>
-          <Text style={{color: 'white', textDecorationLine: 'underline'}}>
+          <Text style={{color: linkColor, textDecorationLine: 'underline'}}>
             @{node?.attribs?.['data-value']}
           </Text>
         </TouchableOpacity>
@@ -251,12 +256,44 @@ const ChatCard = ({
           key={index}
           style={{
             borderWidth: 1,
-            borderColor: 'black',
+            borderColor: textColor,
             padding: 10,
             borderRadius: 8,
           }}>
-          <Text>{node?.children[0]?.data}</Text>
+          <Text style={{color: textColor}}>{node?.children[0]?.data}</Text>
         </View>
+      );
+    } else if (node?.name == 'br') {
+      return <></>;
+    } else {
+      const urlRegex =
+        /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-])?(?:\?[^\s])?)/gi;
+      const emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
+      const matchUrlRegx = node?.data?.split(urlRegex);
+      const matchEmailRegx = node?.data?.split(emailRegex);
+      return matchUrlRegx?.map((part, index) =>
+        urlRegex.test(part) ? (
+          <View key={index} style={{maxWidth: 250}}>
+            <TouchableOpacity
+              key={index}
+              onPress={() => {
+                let url = part;
+                //regEx for checking if https included or not
+                if (!/^https?:\/\//i.test(url)) {
+                  url = 'https://' + url;
+                }
+                openLink(url);
+              }}>
+              <Text style={{color: linkColor, textDecorationLine: 'underline'}}>
+                {part}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <Text key={index} style={{color: textColor}}>
+            {part}
+          </Text>
+        ),
       );
     }
   }
@@ -314,21 +351,6 @@ const ChatCard = ({
                         <Icon name="attach-file" size={ms(14)} /> attachment
                       </Text>
                     ) : (
-                      // <RenderTextWithLinks
-                      //   text={
-                      //     chatState?.data[chat.teamId]?.parentMessages[parentId]
-                      //       ?.content
-                      //   }
-                      //   mentions={
-                      //     chatState?.data[chat.teamId]?.parentMessages[parentId]
-                      //       ?.mentions
-                      //   }
-                      //   repliedContainer={true}
-                      //   orgState={orgState}
-                      //   searchUserProfileAction={searchUserProfileAction}
-                      //   userInfoState={userInfoState}
-                      //   colors={colors}
-                      // />
                       <HTMLView
                         value={
                           chatState?.data[chat.teamId]?.parentMessages[parentId]
@@ -544,7 +566,7 @@ const handleRepliedMessagePress = (
         index,
         animated: true,
         viewPosition: 0,
-        viewOffset: 0,
+        viewOffset: 50,
       });
     }
   } else {
