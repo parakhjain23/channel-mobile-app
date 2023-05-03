@@ -141,7 +141,6 @@ const ChatScreen = ({
       onChangeMessage(text);
       const mentionRegex = /@\w+/g;
       const foundMentions = text?.match(mentionRegex);
-      console.log(foundMentions, '=-=-');
       foundMentions?.length > 0
         ? (getChannelsByQueryStartAction(
             foundMentions?.[foundMentions?.length - 1].replace('@', ''),
@@ -539,12 +538,12 @@ const ChatScreen = ({
                     textInputRef.current.setText('');
                     let randomId = uuid.v4();
                     networkState?.isInternetConnected
-                      ? (message?.html?.trim()?.length > 0 ||
+                      ? (message?.length > 0 ||
                           attachment?.length != 0) &&
                         (setAttachment([]),
                         setlocalMsgAction({
                           randomId: randomId,
-                          content: message?.html || '',
+                          content: message || '',
                           createdAt: date,
                           isLink: false,
                           mentions: mentionsArr,
@@ -559,7 +558,7 @@ const ChatScreen = ({
                           parentMessage: repliedMsgDetails?.content,
                         }),
                         sendMessageAction(
-                          message?.html || '',
+                          message || '',
                           teamId,
                           orgState?.currentOrgId,
                           userInfoState?.user?.id,
@@ -578,7 +577,7 @@ const ChatScreen = ({
                         (setAttachment([]),
                         setlocalMsgAction({
                           randomId: randomId,
-                          content: message?.html,
+                          content: message,
                           createdAt: date,
                           isLink: false,
                           mentions: mentionsArr,
