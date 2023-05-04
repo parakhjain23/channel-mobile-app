@@ -3,9 +3,11 @@ import {
   Dimensions,
   Image,
   Modal,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import {GestureHandlerRootView, Swipeable} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -18,6 +20,7 @@ import InAppBrowser from 'react-native-inappbrowser-reborn';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import Clipboard from '@react-native-community/clipboard';
 import HTMLView from 'react-native-htmlview';
+import {RenderHTML} from 'react-native-render-html';
 import * as RootNavigation from '../../navigation/RootNavigation';
 
 const AddRemoveJoinedMsg = React.memo(({senderName, content, orgState}) => {
@@ -53,6 +56,7 @@ const ChatCard = ({
   const [optionsVisible, setOptionsVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const swipeableRef = useRef(null);
+  const {width} = useWindowDimensions();
   const sameSender =
     typeof chat?.sameSender === 'string'
       ? chat.sameSender === 'true'
@@ -263,40 +267,52 @@ const ChatCard = ({
           <Text style={{color: textColor}}>{node?.children[0]?.data}</Text>
         </View>
       );
-    } else if (node?.name == 'br') {
-      return <></>;
-    } else {
-      const urlRegex =
-        /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-])?(?:\?[^\s])?)/gi;
-      const emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
-      const matchUrlRegx = node?.data?.split(urlRegex);
-      const matchEmailRegx = node?.data?.split(emailRegex);
-      return matchUrlRegx?.map((part, index) =>
-        urlRegex.test(part) ? (
-          <View key={index} style={{maxWidth: 250}}>
-            <TouchableOpacity
-              key={index}
-              onPress={() => {
-                let url = part;
-                //regEx for checking if https included or not
-                if (!/^https?:\/\//i.test(url)) {
-                  url = 'https://' + url;
-                }
-                openLink(url);
-              }}>
-              <Text style={{color: linkColor, textDecorationLine: 'underline'}}>
-                {part}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <Text key={index} style={{color: textColor}}>
-            {part}
-          </Text>
-        ),
-      );
     }
+    // else {
+    //   const urlRegex =
+    //     /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-])?(?:\?[^\s])?)/gi;
+    //   const emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
+    //   const matchUrlRegx = node?.data?.split(urlRegex);
+    //   const matchEmailRegx = node?.data?.split(emailRegex);
+    //   return matchUrlRegx?.map((part, index) =>
+    //     urlRegex.test(part) ? (
+    //       <View key={index} style={{maxWidth: 250}}>
+    //         <TouchableOpacity
+    //           key={index}
+    //           onPress={() => {
+    //             let url = part;
+    //             //regEx for checking if https included or not
+    //             if (!/^https?:\/\//i.test(url)) {
+    //               url = 'https://' + url;
+    //             }
+    //             openLink(url);
+    //           }}>
+    //           <Text style={{color: linkColor, textDecorationLine: 'underline'}}>
+    //             {part}
+    //           </Text>
+    //         </TouchableOpacity>
+    //       </View>
+    //     ) : (
+    //       <Text key={index} style={{color: textColor, marginBottom: 10}}>
+    //         {part}
+    //       </Text>
+    //     ),
+    //   );
+    // }
   }
+  const tagsStyles = StyleSheet.create({
+    body: {
+      color: textColor,
+    },
+    a: {
+      color: linkColor,
+    },
+  });
+  const htmlStyles = {
+    div: {
+      color: textColor,
+    },
+  };
   if (!isActivity) {
     return (
       <GestureHandlerRootView>
@@ -350,13 +366,17 @@ const ChatCard = ({
                       <Text style={{color: 'black'}}>
                         <Icon name="attach-file" size={ms(14)} /> attachment
                       </Text>
-                    ) : (
+                    ) : chat?.mentions?.length > 0 ? (
                       <HTMLView
-                        value={
-                          chatState?.data[chat.teamId]?.parentMessages[parentId]
-                            ?.content
-                        }
+                        value={`<div>${chat?.content}</div>`}
                         renderNode={renderNode}
+                        stylesheet={htmlStyles}
+                      />
+                    ) : (
+                      <RenderHTML
+                        source={{html: chat?.content}}
+                        contentWidth={width}
+                        tagsStyles={tagsStyles}
                       />
                     )}
                   </TouchableOpacity>
@@ -474,14 +494,27 @@ const ChatCard = ({
                     justifyContent: 'space-between',
                     alignItems: 'flex-end',
                   }}>
-                  <Text
+                  {/* <Text
                     style={[
                       styles.messageText,
                       // styles.text,
                       {maxWidth: '90%', color: 'white'},
-                    ]}>
-                    <HTMLView value={chat?.content} renderNode={renderNode} />
-                    {/* <RenderTextWithLinks
+                    ]}> */}
+                  {chat?.mentions?.length > 0 ? (
+                    <HTMLView
+                      value={`<div>${chat?.content}</div>`}
+                      renderNode={renderNode}
+                      stylesheet={htmlStyles}
+                    />
+                  ) : (
+                    <RenderHTML
+                      source={{html: chat?.content}}
+                      contentWidth={width}
+                      tagsStyles={tagsStyles}
+                    />
+                  )}
+
+                  {/* <RenderTextWithLinks
                       text={chat?.content}
                       mentions={chat?.mentions}
                       repliedContainer={false}
@@ -491,7 +524,7 @@ const ChatCard = ({
                       colors={colors}
                       sentByMe={sentByMe}
                     /> */}
-                  </Text>
+                  {/* </Text> */}
                   {chat?.randomId != null ? (
                     <View
                       style={{
@@ -582,4 +615,10 @@ const handleRepliedMessagePress = (
       });
     }
   }
+};
+
+const htmlStyles = {
+  div: {
+    color: 'black',
+  },
 };

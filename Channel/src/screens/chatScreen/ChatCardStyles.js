@@ -56,7 +56,7 @@ export const makeStyles = colors => StyleSheet.create({
       flexDirection: 'row',
       alignItems: 'flex-end',
       // marginBottom: mvs(3),
-      maxWidth: '90%',
+      // maxWidth: '90%',
     },
     sentByMe: {
       alignSelf: 'flex-end',
