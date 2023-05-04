@@ -125,7 +125,7 @@ export function channelsReducer(state = initialState, action) {
           tempHighlightChannels[id] = true;
           if (action?.senderId != action?.userId) {
             teamIdAndUnreadCountMappingLocal[id] =
-              state?.teamIdAndUnreadCountMapping[id] + 1;
+              state?.teamIdAndUnreadCountMapping[id] !=undefined ? state?.teamIdAndUnreadCountMapping[id] + 1: 1;
             teamIdAndBadgeCountMappingLocal[id]=
               0
           }
