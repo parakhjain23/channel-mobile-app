@@ -229,6 +229,75 @@ const ChatCard = ({
       </View>
     );
   };
+  const tagsStyles = StyleSheet.create({
+    body: {
+      color: textColor,
+    },
+    a: {
+      color: linkColor,
+    },
+    ol: {
+      marginTop: 0,
+      marginBottom: 0,
+    },
+    ul: {
+      marginTop: 0,
+      marginBottom: 0,
+    },
+    li: {
+      marginTop: 0,
+      marginBottom: 0,
+    },
+    p: {
+      marginTop: 0,
+      marginBottom: 0,
+    },
+    h1: {
+      marginTop: 0,
+      marginBottom: 0,
+    },
+    h2: {
+      marginTop: 0,
+      marginBottom: 0,
+    },
+    h3: {
+      marginTop: 0,
+      marginBottom: 0,
+    },
+    h4: {
+      marginTop: 0,
+      marginBottom: 0,
+    },
+    h5: {
+      marginTop: 0,
+      marginBottom: 0,
+    },
+    h6: {
+      marginTop: 0,
+      marginBottom: 0,
+    },
+    strong: {
+      marginTop: 0,
+      marginBottom: 0,
+    },
+    em: {
+      marginTop: 0,
+      marginBottom: 0,
+    },
+    code: {
+      marginTop: 0,
+      marginBottom: 0,
+    },
+    blockquote: {
+      marginTop: 0,
+      marginBottom: 0,
+    },
+  });
+  const htmlStyles = {
+    div: {
+      color: textColor,
+    },
+  };
   function renderNode(node, index, siblings, parent, defaultRenderer) {
     if (node.attribs?.class == 'mention') {
       return (
@@ -298,17 +367,24 @@ const ChatCard = ({
     //   );
     // }
   }
-  const tagsStyles = StyleSheet.create({
-    body: {
-      color: textColor,
-    },
-    a: {
-      color: linkColor,
-    },
-  });
-  const htmlStyles = {
-    div: {
-      color: textColor,
+  const emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
+  const renderers = {
+    span: (htmlAttribs, children, index) => {
+      if (htmlAttribs?.tnode?.init?.textNode?.parent?.name === 'span') {
+        return (
+          <TouchableOpacity
+            key={index}
+            onPress={() =>
+              Linking.openURL(
+                `mailTo:${htmlAttribs?.tnode?.init?.textNode?.data}`,
+              )
+            }>
+            <Text style={{color: linkColor, textDecorationLine: 'underline'}}>
+              {htmlAttribs?.tnode?.init?.textNode?.data}
+            </Text>
+          </TouchableOpacity>
+        );
+      }
     },
   };
   if (!isActivity) {
@@ -372,9 +448,10 @@ const ChatCard = ({
                       />
                     ) : (
                       <RenderHTML
-                        source={{html: chat?.content}}
+                        source={{html: `<div>${chat?.content}</div>`}}
                         contentWidth={width}
                         tagsStyles={tagsStyles}
+                        renderersProps={renderersProps}
                       />
                     )}
                   </TouchableOpacity>
@@ -507,9 +584,15 @@ const ChatCard = ({
                       />
                     ) : (
                       <RenderHTML
-                        source={{html: chat?.content}}
+                        source={{
+                          html: chat?.content?.replace(
+                            emailRegex,
+                            '<span>$&</span>',
+                          ),
+                        }}
                         contentWidth={width}
                         tagsStyles={tagsStyles}
+                        renderers={renderers}
                       />
                     )}
                   </View>
@@ -608,10 +691,4 @@ const handleRepliedMessagePress = (
       });
     }
   }
-};
-
-const htmlStyles = {
-  div: {
-    color: 'black',
-  },
 };
