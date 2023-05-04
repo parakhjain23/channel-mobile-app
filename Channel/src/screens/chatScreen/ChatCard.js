@@ -523,7 +523,7 @@ const ChatCard = ({
                         style={{
                           flexDirection: 'column',
                           alignItems: 'flex-end',
-                          width: 30,
+                          width: ms(20),
                         }}>
                         <Icon name="access-time" color={'white'} />
                       </View>
