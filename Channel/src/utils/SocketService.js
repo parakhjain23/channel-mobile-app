@@ -1,4 +1,5 @@
 import {moveChannelToTop} from '../redux/actions/channels/ChannelsAction';
+import { closeChannelSuccess } from '../redux/actions/channels/CloseChannelActions';
 import {createNewChannelSuccess} from '../redux/actions/channels/CreateNewChannelAction';
 import {getChannelByTeamIdStart} from '../redux/actions/channels/GetChannelByTeamId';
 import {addNewMessage} from '../redux/actions/chat/ChatActions';
@@ -11,9 +12,7 @@ import {createSocket} from './Socket';
 import {PlayLocalSoundFile} from './Sounds';
 
 const SocketService = socket => {
-  // console.log(socket,"this is socket");
   socket.on('reconnect', function () {
-    // console.log("reconnecting socket");
     createSocket(
       store.getState()?.userInfoReducer?.accessToken,
       store.getState()?.orgsReducer?.currentOrgId,
@@ -26,12 +25,10 @@ const SocketService = socket => {
     store.dispatch(socketStatus(false));
   });
   socket.on('chat/message created', data => {
-    // console.log(data, 'this is new message created');
     if (
       store.getState().channelsReducer?.teamIdAndTypeMapping[data?.teamId] ==
       undefined
     ) {
-      // console.log('inside undefined');
       store.dispatch(
         getChannelByTeamIdStart(
           store?.getState()?.userInfoReducer?.accessToken,
@@ -59,12 +56,16 @@ const SocketService = socket => {
     }
   });
   socket.on('chat/message patched', data => {
-    // console.log(data,"chat patched");
     if (data?.deleted) {
       store.dispatch(deleteMessageSuccess(data));
     }
   });
 
+  socket.on('chat/team updated', data => {
+    if (data?.isArchived) {
+      store.dispatch(closeChannelSuccess(data?._id));
+    }
+  });
   socket.on('chat/team created', data => {
     if(data?.userIds?.includes(store?.getState()?.userInfoReducer?.user?.id)){
       store.dispatch(
@@ -75,7 +76,6 @@ const SocketService = socket => {
   });
 
   socket.on('orgUser created', data => {
-    // console.log(data,'orgUser new user created in org');
     store.dispatch(newUserJoinedAOrg(data));
   });
 };

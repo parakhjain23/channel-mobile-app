@@ -266,6 +266,14 @@ export function channelsReducer(state = initialState, action) {
           ...teamIdAndTypeMapping,
         },
       };
+    case Actions.CLOSE_CHANNEL_SUCCESS:
+      for(let i =0 ; i < state?.recentChannels?.length ; i++){
+        if(action?.teamId == state?.recentChannels[i]?._id){
+          state?.recentChannels?.splice(i,1)
+          break; 
+        }
+      }
+      return {...state}
     case Actions.SIGN_OUT:
       return initialState;
     default:

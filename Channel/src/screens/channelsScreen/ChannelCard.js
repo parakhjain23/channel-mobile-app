@@ -17,6 +17,7 @@ import {s, ms, mvs} from 'react-native-size-matters';
 import * as RootNavigation from '../../navigation/RootNavigation';
 import {GestureHandlerRootView, Swipeable} from 'react-native-gesture-handler';
 import {resetUnreadCountStart} from '../../redux/actions/channels/ChannelsAction';
+import { closeChannelStart } from '../../redux/actions/channels/CloseChannelActions';
 
 const TouchableItem =
   Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
@@ -28,6 +29,7 @@ const ChannelCard = ({
   resetChatsAction,
   networkState,
   markAsUnreadAction,
+  closeChannelAction,
 }) => {
   const {colors} = useTheme();
   const userIdAndDisplayNameMapping =
@@ -91,7 +93,15 @@ const ChannelCard = ({
     networkState,
   ]);
   const renderRightActions = (progress, dragX) => {
-    return item?.type != 'PUBLIC' && unread ? null : (
+    const scale = dragX.interpolate({
+      inputRange: [-70, 0],
+      outputRange: [1, 0],
+      extrapolate: 'clamp',
+    });
+    return item?.type != 'PUBLIC' &&
+      (props?.channelsState?.teamIdAndUnreadCountMapping[item?._id] > 0 ||
+        props?.channelsState?.teamIdAndBadgeCountMapping[item?._id] >
+          0) ? null : (
       <Animated.View
         style={{
           flexDirection: 'row',
@@ -99,6 +109,7 @@ const ChannelCard = ({
           justifyContent: 'flex-end',
           paddingVertical: 10,
           paddingHorizontal: 15,
+          transform: [{scale}],
         }}>
         {item?.type != 'DIRECT_MESSAGE' &&
           item?.type != 'DEFAULT' &&
@@ -110,6 +121,16 @@ const ChannelCard = ({
                 paddingHorizontal: 20,
                 borderRadius: 5,
                 marginRight: 10,
+              }}
+              onPress={() => {
+                closeChannelAction(
+                  Name,
+                  item?._id,
+                  item?.type,
+                  props?.userInfoState?.accessToken,
+                ),
+                swipeableRef?.current?.close();
+
               }}>
               <Text
                 style={{
@@ -121,7 +142,7 @@ const ChannelCard = ({
               </Text>
             </TouchableOpacity>
           )}
-        {!unread && (
+        {props?.channelsState?.teamIdAndBadgeCountMapping[item?._id] == 0 && (
           <TouchableOpacity
             style={{
               backgroundColor: '#ff9800',
@@ -129,8 +150,8 @@ const ChannelCard = ({
               paddingHorizontal: 20,
               borderRadius: 5,
             }}
-            onPress={() =>
-             { markAsUnreadAction(
+            onPress={() => {
+              markAsUnreadAction(
                 item?.orgId,
                 props?.userInfoState?.user?.id,
                 item?._id,
@@ -138,8 +159,8 @@ const ChannelCard = ({
                 1,
                 0,
               ),
-              swipeableRef?.current?.close()}
-            }>
+                swipeableRef?.current?.close();
+            }}>
             <Text
               style={{
                 color: 'white',
@@ -442,6 +463,8 @@ const mapDispatchToProps = dispatch => {
           unreadCount,
         ),
       ),
+    closeChannelAction: (name, teamId, type, accessToken) =>
+      dispatch(closeChannelStart(name,teamId,type,accessToken)),
   };
 };
 export const RenderChannels = React.memo(

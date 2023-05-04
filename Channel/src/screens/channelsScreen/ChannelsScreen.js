@@ -255,7 +255,7 @@ const ChannelsScreen = props => {
   const renderItemChannels = useCallback(
     ({item, index}) => {
       return (
-        <RenderChannels item={item} navigation={navigation} props={props} />
+       !item?.isArchived && <RenderChannels item={item} navigation={navigation} props={props} />
       );
     },
     [
