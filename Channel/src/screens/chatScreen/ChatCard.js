@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
-  Dimensions,
   Image,
   Modal,
   StyleSheet,
@@ -12,7 +11,6 @@ import {
 import {GestureHandlerRootView, Swipeable} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Linking} from 'react-native';
-import {RenderTextWithLinks, renderTextWithLinks} from './RenderTextWithLinks';
 import {useTheme} from '@react-navigation/native';
 import {makeStyles} from './ChatCardStyles';
 import {ms} from 'react-native-size-matters';
@@ -335,7 +333,7 @@ const ChatCard = ({
                   marginBottom: index == 0 ? 10 : 3,
                 },
               ]}>
-              <View style={[styles.textContainer, {maxWidth: '90%'}]}>
+              <View style={[styles.textContainer]}>
                 {channelType != 'DIRECT_MESSAGE' &&
                   SenderName != 'You' &&
                   !sameSender && (
@@ -496,61 +494,56 @@ const ChatCard = ({
                   }}>
                   {/* <Text
                     style={[
-                      styles.messageText,
+                      // styles.messageText,
                       // styles.text,
                       {maxWidth: '90%', color: 'white'},
                     ]}> */}
-                  {chat?.mentions?.length > 0 ? (
-                    <HTMLView
-                      value={`<div>${chat?.content}</div>`}
-                      renderNode={renderNode}
-                      stylesheet={htmlStyles}
-                    />
-                  ) : (
-                    <RenderHTML
-                      source={{html: chat?.content}}
-                      contentWidth={width}
-                      tagsStyles={tagsStyles}
-                    />
-                  )}
-
-                  {/* <RenderTextWithLinks
-                      text={chat?.content}
-                      mentions={chat?.mentions}
-                      repliedContainer={false}
-                      orgState={orgState}
-                      searchUserProfileAction={searchUserProfileAction}
-                      userInfoState={userInfoState}
-                      colors={colors}
-                      sentByMe={sentByMe}
-                    /> */}
+                  <View style={{flexDirection: 'row', maxWidth: '90%'}}>
+                    {chat?.mentions?.length > 0 ? (
+                      <HTMLView
+                        value={`<div>${chat?.content}</div>`}
+                        renderNode={renderNode}
+                        stylesheet={htmlStyles}
+                      />
+                    ) : (
+                      <RenderHTML
+                        source={{html: chat?.content}}
+                        contentWidth={width}
+                        tagsStyles={tagsStyles}
+                      />
+                    )}
+                  </View>
                   {/* </Text> */}
-                  {chat?.randomId != null ? (
-                    <View
-                      style={{
-                        flexDirection: 'column',
-                        alignItems: 'flex-end',
-                        width: 30,
-                      }}>
-                      <Icon name="access-time" color={'white'} />
-                    </View>
-                  ) : (
-                    <Text
-                      style={[
-                        styles.timeText,
-                        styles.text,
-                        {
-                          marginHorizontal: ms(10),
-                          color: sentByMe
-                            ? '#cccccc'
-                            : dark
-                            ? '#cccccc'
-                            : 'black',
-                        },
-                      ]}>
-                      {time}
-                    </Text>
-                  )}
+                  <View
+                    style={{
+                      justifyContent: 'flex-end',
+                    }}>
+                    {chat?.randomId != null ? (
+                      <View
+                        style={{
+                          flexDirection: 'column',
+                          alignItems: 'flex-end',
+                          width: 30,
+                        }}>
+                        <Icon name="access-time" color={'white'} />
+                      </View>
+                    ) : (
+                      <Text
+                        style={[
+                          styles.timeText,
+                          styles.text,
+                          {
+                            color: sentByMe
+                              ? '#cccccc'
+                              : dark
+                              ? '#cccccc'
+                              : 'black',
+                          },
+                        ]}>
+                        {time}
+                      </Text>
+                    )}
+                  </View>
                 </View>
               </View>
             </View>

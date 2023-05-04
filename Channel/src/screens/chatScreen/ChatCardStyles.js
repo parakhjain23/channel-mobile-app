@@ -1,13 +1,14 @@
-import { StyleSheet } from "react-native";
-import { s, vs, ms, mvs } from 'react-native-size-matters';
+import {StyleSheet} from 'react-native';
+import {s, vs, ms, mvs} from 'react-native-size-matters';
 
-export const makeStyles = colors => StyleSheet.create({
+export const makeStyles = colors =>
+  StyleSheet.create({
     text: {
       color: colors.textColor,
     },
-    optionsText:{
+    optionsText: {
       fontSize: ms(16),
-      color: 'black'
+      color: 'black',
     },
     inputWithReply: {
       padding: ms(10),
@@ -36,10 +37,10 @@ export const makeStyles = colors => StyleSheet.create({
     repliedContainer: {
       padding: ms(5),
       // backgroundColor:'#E5E4E2',
-      backgroundColor:'#F5F5F5',
+      backgroundColor: '#F5F5F5',
       borderRadius: ms(2),
       marginBottom: mvs(4),
-      borderWidth: s(.3)
+      borderWidth: s(0.3),
     },
     option: {
       margin: ms(8),
@@ -90,6 +91,7 @@ export const makeStyles = colors => StyleSheet.create({
     },
     timeText: {
       fontSize: ms(9),
+      marginLeft: ms(5),
       marginRight: ms(-3),
       marginBottom: ms(-4),
     },
