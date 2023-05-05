@@ -259,51 +259,7 @@ const ChatCard = ({
           </Text>
         </TouchableOpacity>
       );
-    } else if (node?.attribs?.class == 'ql-syntax') {
-      return (
-        <View
-          key={index}
-          style={{
-            borderWidth: 1,
-            borderColor: textColor,
-            padding: 10,
-            borderRadius: 8,
-          }}>
-          <Text style={{color: textColor}}>{node?.children[0]?.data}</Text>
-        </View>
-      );
     }
-    // else {
-    //   const urlRegex =
-    //     /((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+(?:#[\w\-])?(?:\?[^\s])?)/gi;
-    //   const emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
-    //   const matchUrlRegx = node?.data?.split(urlRegex);
-    //   const matchEmailRegx = node?.data?.split(emailRegex);
-    //   return matchUrlRegx?.map((part, index) =>
-    //     urlRegex.test(part) ? (
-    //       <View key={index} style={{maxWidth: 250}}>
-    //         <TouchableOpacity
-    //           key={index}
-    //           onPress={() => {
-    //             let url = part;
-    //             //regEx for checking if https included or not
-    //             if (!/^https?:\/\//i.test(url)) {
-    //               url = 'https://' + url;
-    //             }
-    //             openLink(url);
-    //           }}>
-    //           <Text style={{color: linkColor, textDecorationLine: 'underline'}}>
-    //             {part}
-    //           </Text>
-    //         </TouchableOpacity>
-    //       </View>
-    //     ) : (
-    //       <Text key={index} style={{color: textColor, marginBottom: 10}}>
-    //         {part}
-    //       </Text>
-    //     ),
-    //   );
-    // }
   }
   const emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
   const renderers = {
@@ -323,6 +279,7 @@ const ChatCard = ({
           </TouchableOpacity>
         );
       }
+      return null;
     },
   };
   if (!isActivity) {

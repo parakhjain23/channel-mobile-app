@@ -53,6 +53,8 @@ export const makeStyles = colors =>
       padding: ms(5),
       backgroundColor: '#d9d9d9',
       maxHeight: ms(80),
+      minHeight: ms(25),
+      overflow: 'hidden',
     },
     repliedContainer: {
       padding: ms(5),

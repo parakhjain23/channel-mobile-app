@@ -11,6 +11,7 @@ import {
   Dimensions,
   SafeAreaView,
   ScrollView,
+  useWindowDimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -37,6 +38,8 @@ import {setLocalMsgStart} from '../../redux/actions/chat/LocalMessageActions';
 import QuillEditor, {QuillToolbar} from 'react-native-cn-quill';
 import {resetUnreadCountStart} from '../../redux/actions/channels/ChannelsAction';
 import HTMLView from 'react-native-htmlview';
+import RenderHTML from 'react-native-render-html';
+import {tagsStyles} from './HtmlStyles';
 
 const ChatScreen = ({
   route,
@@ -81,6 +84,8 @@ const ChatScreen = ({
   const user = userInfoState?.user;
   const accessToken = userInfoState?.accessToken;
   const currentOrgId = orgState?.currentOrgId;
+  const emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
+  const {width} = useWindowDimensions();
 
   if (teamId == undefined) {
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
@@ -421,10 +426,15 @@ const ChatScreen = ({
                           attachment
                         </Text>
                       ) : (
-                        <HTMLView
-                          value={`<div>${repliedMsgDetails?.content}</div>`}
-                          renderNode={renderNode}
-                          stylesheet={htmlStyles}
+                        <RenderHTML
+                          source={{
+                            html: repliedMsgDetails?.content?.replace(
+                              emailRegex,
+                              '<span>$&</span>',
+                            ),
+                          }}
+                          contentWidth={width}
+                          tagsStyles={tagsStyles('black', 'black')}
                         />
                       )}
                       <MaterialIcons
