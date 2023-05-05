@@ -151,7 +151,6 @@ const ChatScreen = ({
   };
   const handleInputChange = useCallback(
     text => {
-      console.log(text, '=-=--=-=-=-=-=-=-');
       onChangeMessage(text);
       const mentionRegex = /@\w+/g;
       const foundMentions = text?.match(mentionRegex);
