@@ -442,16 +442,23 @@ const ChatCard = ({
                       </Text>
                     ) : chat?.mentions?.length > 0 ? (
                       <HTMLView
-                        value={`<div>${chat?.content}</div>`}
+                        value={`<div>${
+                          chatState?.data[chat.teamId]?.parentMessages[parentId]
+                            ?.content
+                        }</div>`}
                         renderNode={renderNode}
                         stylesheet={htmlStyles}
                       />
                     ) : (
                       <RenderHTML
-                        source={{html: `<div>${chat?.content}</div>`}}
+                        source={{
+                          html: chatState?.data[chat.teamId]?.parentMessages[
+                            parentId
+                          ]?.content?.replace(emailRegex, '<span>$&</span>'),
+                        }}
                         contentWidth={width}
-                        tagsStyles={tagsStyles}
-                        renderersProps={renderersProps}
+                        tagsStyles={{body: {color: 'black'}}}
+                        renderers={renderers}
                       />
                     )}
                   </TouchableOpacity>

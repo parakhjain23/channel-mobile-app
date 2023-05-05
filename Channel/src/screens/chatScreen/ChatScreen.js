@@ -10,6 +10,7 @@ import {
   Animated,
   Dimensions,
   SafeAreaView,
+  ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -76,8 +77,7 @@ const ChatScreen = ({
   const screenHeight = Dimensions.get('window').height;
   const teamIdAndUnreadCountMapping =
     channelsState?.teamIdAndUnreadCountMapping;
-  const teamIdAndBadgeCountMapping =
-    channelsState?.teamIdAndBadgeCountMapping;
+  const teamIdAndBadgeCountMapping = channelsState?.teamIdAndBadgeCountMapping;
   const user = userInfoState?.user;
   const accessToken = userInfoState?.accessToken;
   const currentOrgId = orgState?.currentOrgId;
@@ -85,7 +85,9 @@ const ChatScreen = ({
   if (teamId == undefined) {
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
   }
-  const shouldResetUnreadCount = teamIdAndUnreadCountMapping?.[teamId] > 0 || teamIdAndBadgeCountMapping?.[teamId] > 0;
+  const shouldResetUnreadCount =
+    teamIdAndUnreadCountMapping?.[teamId] > 0 ||
+    teamIdAndBadgeCountMapping?.[teamId] > 0;
 
   useEffect(() => {
     if (repliedMsgDetails != '') {
@@ -100,7 +102,14 @@ const ChatScreen = ({
     searchedChannel && textInputRef?.current?.focus();
     setTimeout(() => {
       if (shouldResetUnreadCount) {
-        resetUnreadCountAction(currentOrgId, user?.id, teamId, accessToken,0,0);
+        resetUnreadCountAction(
+          currentOrgId,
+          user?.id,
+          teamId,
+          accessToken,
+          0,
+          0,
+        );
       }
     }, 1000);
   }, []);
@@ -300,6 +309,11 @@ const ChatScreen = ({
       );
     }
   }
+  const htmlStyles = {
+    div: {
+      color: 'black',
+    },
+  };
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.mainContainer}>
@@ -388,23 +402,17 @@ const ChatScreen = ({
                   })}
                 {replyOnMessage && (
                   <TouchableOpacity
+                    activeOpacity={0.9}
                     onPress={() => {
                       setreplyOnMessage(false);
                       setrepliedMsgDetails(null);
                     }}>
                     <View style={styles.replyMessageInInput}>
                       {repliedMsgDetails?.mentions?.length > 0 ? (
-                        //   <RenderTextWithLinks
-                        //   text={repliedMsgDetails?.content}
-                        //   mentions={repliedMsgDetails?.mentions}
-                        //   repliedContainer={true}
-                        //   orgState={orgState}
-                        //   userInfoState={userInfoState}
-                        //   colors={colors}
-                        // />
                         <HTMLView
-                          value={repliedMsgDetails?.content}
+                          value={`<div>${repliedMsgDetails?.content}</div>`}
                           renderNode={renderNode}
+                          stylesheet={htmlStyles}
                         />
                       ) : repliedMsgDetails?.attachment?.length > 0 &&
                         typeof repliedMsgDetails?.attachment != 'string' ? (
@@ -413,12 +421,11 @@ const ChatScreen = ({
                           attachment
                         </Text>
                       ) : (
-                        <Text style={styles.repliedText}>
-                          <HTMLView
-                            value={repliedMsgDetails?.content}
-                            renderNode={renderNode}
-                          />
-                        </Text>
+                        <HTMLView
+                          value={`<div>${repliedMsgDetails?.content}</div>`}
+                          renderNode={renderNode}
+                          stylesheet={htmlStyles}
+                        />
                       )}
                       <MaterialIcons
                         name="cancel"
@@ -540,8 +547,7 @@ const ChatScreen = ({
                     textInputRef.current.setText('');
                     let randomId = uuid.v4();
                     networkState?.isInternetConnected
-                      ? (message!=null ||
-                          attachment?.length != 0) &&
+                      ? (message != null || attachment?.length != 0) &&
                         (setAttachment([]),
                         setlocalMsgAction({
                           randomId: randomId,
@@ -665,8 +671,24 @@ const mapDispatchToProps = dispatch => {
       dispatch(getChannelsByQueryStart(query, userToken, orgId)),
     searchUserProfileAction: (userId, token) =>
       dispatch(fetchSearchedUserProfileStart(userId, token)),
-    resetUnreadCountAction: (orgId, userId, teamId, accessToken,badgeCount,unreadCount) =>
-      dispatch(resetUnreadCountStart(orgId, userId, teamId, accessToken,badgeCount,unreadCount)),
+    resetUnreadCountAction: (
+      orgId,
+      userId,
+      teamId,
+      accessToken,
+      badgeCount,
+      unreadCount,
+    ) =>
+      dispatch(
+        resetUnreadCountStart(
+          orgId,
+          userId,
+          teamId,
+          accessToken,
+          badgeCount,
+          unreadCount,
+        ),
+      ),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);
