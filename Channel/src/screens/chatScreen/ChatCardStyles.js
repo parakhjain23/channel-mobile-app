@@ -36,11 +36,15 @@ export const makeStyles = colors =>
     },
     repliedContainer: {
       padding: ms(5),
-      // backgroundColor:'#E5E4E2',
       backgroundColor: '#F5F5F5',
-      borderRadius: ms(2),
+      borderRadius: ms(3),
       marginBottom: mvs(4),
       borderWidth: s(0.3),
+      maxHeight: ms(80),
+      borderLeftColor:'#b38b6d',
+      borderLeftWidth: ms(4),
+      flexDirection: 'row',
+      overflow: 'hidden'
     },
     option: {
       margin: ms(8),

@@ -47,7 +47,7 @@ export const makeStyles = colors =>
       margin: ms(5),
       paddingRight: ms(14),
       borderWidth: ms(0.3),
-      borderLeftColor: '#09834D',
+      borderLeftColor: '#b38b6d',
       borderLeftWidth: 4,
       borderRadius: ms(5),
       padding: ms(5),
