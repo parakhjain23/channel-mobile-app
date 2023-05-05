@@ -20,6 +20,7 @@ import Clipboard from '@react-native-community/clipboard';
 import HTMLView from 'react-native-htmlview';
 import {RenderHTML} from 'react-native-render-html';
 import * as RootNavigation from '../../navigation/RootNavigation';
+import {tagsStyles} from './HtmlStyles';
 
 const AddRemoveJoinedMsg = React.memo(({senderName, content, orgState}) => {
   const {colors} = useTheme();
@@ -229,70 +230,7 @@ const ChatCard = ({
       </View>
     );
   };
-  const tagsStyles = StyleSheet.create({
-    body: {
-      color: textColor,
-    },
-    a: {
-      color: linkColor,
-    },
-    ol: {
-      marginTop: 0,
-      marginBottom: 0,
-    },
-    ul: {
-      marginTop: 0,
-      marginBottom: 0,
-    },
-    li: {
-      marginTop: 0,
-      marginBottom: 0,
-    },
-    p: {
-      marginTop: 0,
-      marginBottom: 0,
-    },
-    h1: {
-      marginTop: 0,
-      marginBottom: 0,
-    },
-    h2: {
-      marginTop: 0,
-      marginBottom: 0,
-    },
-    h3: {
-      marginTop: 0,
-      marginBottom: 0,
-    },
-    h4: {
-      marginTop: 0,
-      marginBottom: 0,
-    },
-    h5: {
-      marginTop: 0,
-      marginBottom: 0,
-    },
-    h6: {
-      marginTop: 0,
-      marginBottom: 0,
-    },
-    strong: {
-      marginTop: 0,
-      marginBottom: 0,
-    },
-    em: {
-      marginTop: 0,
-      marginBottom: 0,
-    },
-    code: {
-      marginTop: 0,
-      marginBottom: 0,
-    },
-    blockquote: {
-      marginTop: 0,
-      marginBottom: 0,
-    },
-  });
+
   const htmlStyles = {
     div: {
       color: textColor,
@@ -582,7 +520,12 @@ const ChatCard = ({
                       // styles.text,
                       {maxWidth: '90%', color: 'white'},
                     ]}> */}
-                  <View style={{flexDirection: 'row', maxWidth: '90%',paddingRight:ms(10)}}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      maxWidth: '90%',
+                      paddingRight: ms(10),
+                    }}>
                     {chat?.mentions?.length > 0 ? (
                       <HTMLView
                         value={`<div>${chat?.content}</div>`}
@@ -598,7 +541,7 @@ const ChatCard = ({
                           ),
                         }}
                         contentWidth={width}
-                        tagsStyles={tagsStyles}
+                        tagsStyles={tagsStyles(textColor, linkColor)}
                         renderers={renderers}
                       />
                     )}
