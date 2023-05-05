@@ -9,8 +9,9 @@ export const sendMessageApi = async (
   attachment,
   mentionsArr = [],
 ) => {
-  console.log(message,'message ins the api');
   try {
+    const regex = /(https?:\/\/[^\s]+)/g;
+    message = message.replace(regex, '<a href="$1">$1</a>');
     const mentionRegex = /@(\w+)/g;
     // Replace mentions with HTML tags
     function mentionHTML(userId, match, username) {
@@ -68,15 +69,18 @@ export const sendGlobalMessageApi = async messageObj => {
 
     let mentionIndex = 0;
     if (messageObj?.mentionsArr?.length > 0) {
-      message = messageObj?.content?.replace(mentionRegex, (match, username) => {
-        const mentionHtml = mentionHTML(
-          message?.mentionsArr[mentionIndex],
-          match,
-          username,
-        );
-        mentionIndex++;
-        return mentionHtml;
-      });
+      message = messageObj?.content?.replace(
+        mentionRegex,
+        (match, username) => {
+          const mentionHtml = mentionHTML(
+            message?.mentionsArr[mentionIndex],
+            match,
+            username,
+          );
+          mentionIndex++;
+          return mentionHtml;
+        },
+      );
     }
     var response = await fetch('https://api.intospace.io/chat/message', {
       method: 'POST',

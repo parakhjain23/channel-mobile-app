@@ -33,7 +33,6 @@ import {useTheme} from '@react-navigation/native';
 import AnimatedLottieView from 'lottie-react-native';
 import {s, ms, mvs} from 'react-native-size-matters';
 import {setLocalMsgStart} from '../../redux/actions/chat/LocalMessageActions';
-import QuillEditor, {QuillToolbar} from 'react-native-cn-quill';
 import {resetUnreadCountStart} from '../../redux/actions/channels/ChannelsAction';
 import HTMLView from 'react-native-htmlview';
 import RenderHTML from 'react-native-render-html';
@@ -476,7 +475,7 @@ const ChatScreen = ({
                       </Animated.View>
                     )}
                   </View>
-                  
+
                   <View style={{justifyContent: 'center'}}>
                     {!showOptions && (
                       <MaterialIcons
@@ -487,26 +486,21 @@ const ChatScreen = ({
                       />
                     )}
                   </View>
-
-                  <QuillEditor
-                    onHtmlChange={value => handleInputChange(value?.html)}
+                  <TextInput
                     ref={textInputRef}
-                    theme={{
-                      background: 'transparent',
-                      color: colors?.textColor,
-                      placeholder: 'Message',
-                    }}
+                    editable
+                    multiline
+                    onChangeText={handleInputChange}
+                    placeholder="Message"
+                    placeholderTextColor={colors.textColor}
+                    value={message}
                     style={[
                       replyOnMessage
                         ? styles.inputWithReply
                         : styles.inputWithoutReply,
-                      {
-                        color: colors.textColor,
-                        backgroundColor: 'transparent',
-                      },
+                      {color: colors.textColor},
                     ]}
                   />
-
                   {showOptions &&
                     message?.html?.trim()?.length == 1 &&
                     hideOptionsMethod()}
@@ -518,15 +512,14 @@ const ChatScreen = ({
                   size={ms(25)}
                   style={{color: colors.textColor, padding: ms(10)}}
                   onPress={() => {
-                    onChangeMessage('');
-                    textInputRef.current.setText('');
                     let randomId = uuid.v4();
                     networkState?.isInternetConnected
-                      ? (message != null || attachment?.length != 0) &&
-                        (setAttachment([]),
+                      ? (message?.trim() != '' || attachment?.length > 0) &&
+                        (onChangeMessage(''),
+                        setAttachment([]),
                         setlocalMsgAction({
                           randomId: randomId,
-                          content: message || '',
+                          content: message,
                           createdAt: date,
                           isLink: false,
                           mentions: mentionsArr,
@@ -541,7 +534,7 @@ const ChatScreen = ({
                           parentMessage: repliedMsgDetails?.content,
                         }),
                         sendMessageAction(
-                          message || '',
+                          message,
                           teamId,
                           orgState?.currentOrgId,
                           userInfoState?.user?.id,
@@ -555,9 +548,8 @@ const ChatScreen = ({
                         setMentions([]),
                         replyOnMessage && setreplyOnMessage(false),
                         repliedMsgDetails && setrepliedMsgDetails(null))
-                      : (message?.html?.trim() != '' ||
-                          attachment?.length > 0) &&
-                        (setAttachment([]),
+                      : message?.trim() != '' &&
+                        (onChangeMessage(''),
                         setlocalMsgAction({
                           randomId: randomId,
                           content: message,
@@ -594,7 +586,6 @@ const ChatScreen = ({
                 />
               </View>
             </View>
-            <QuillToolbar editor={textInputRef} options="basic" theme="light" />
           </View>
         </KeyboardAvoidingView>
       </View>
