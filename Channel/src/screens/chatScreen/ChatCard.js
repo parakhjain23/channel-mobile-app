@@ -278,6 +278,29 @@ const ChatCard = ({
             </Text>
           </TouchableOpacity>
         );
+      } else if (htmlAttribs?.tnode?.classes[0] === 'mention') {
+        return (
+          <TouchableOpacity
+            key={index}
+            onPress={async () => {
+              htmlAttribs?.tnode?.init?.domNode?.attribs?.['data-id'] !=
+                '@all' &&
+                (await searchUserProfileAction(
+                  htmlAttribs?.tnode?.init?.domNode?.attribs?.['data-id'],
+                  userInfoState?.accessToken,
+                )) &&
+                RootNavigation.navigate('UserProfiles', {
+                  displayName:
+                    orgState?.userIdAndDisplayNameMapping[
+                      htmlAttribs?.tnode?.init?.domNode?.attribs?.['data-id']
+                    ],
+                });
+            }}>
+            <Text style={{color: linkColor, textDecorationLine: 'underline'}}>
+              @{htmlAttribs?.tnode?.init?.domNode?.attribs?.['data-value']}
+            </Text>
+          </TouchableOpacity>
+        );
       }
       return null;
     },
@@ -484,12 +507,20 @@ const ChatCard = ({
                       paddingRight: ms(10),
                     }}>
                     {chat?.mentions?.length > 0 ? (
-                      <HTMLView
-                        value={`<div>${chat?.content}</div>`}
-                        renderNode={renderNode}
-                        stylesheet={htmlStyles}
+                      <RenderHTML
+                        source={{
+                          html: chat?.content,
+                        }}
+                        contentWidth={width}
+                        tagsStyles={tagsStyles(textColor, linkColor)}
+                        renderers={renderers}
                       />
                     ) : (
+                      // <HTMLView
+                      //   value={`<div>${chat?.content}</div>`}
+                      //   renderNode={renderNode}
+                      //   stylesheet={htmlStyles}
+                      // />
                       <RenderHTML
                         source={{
                           html: chat?.content?.replace(
