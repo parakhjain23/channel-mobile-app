@@ -582,7 +582,7 @@ const ChatCard = ({
                       // styles.text,
                       {maxWidth: '90%', color: 'white'},
                     ]}> */}
-                  <View style={{flexDirection: 'row', maxWidth: '90%'}}>
+                  <View style={{flexDirection: 'row', maxWidth: '90%',paddingRight:ms(10)}}>
                     {chat?.mentions?.length > 0 ? (
                       <HTMLView
                         value={`<div>${chat?.content}</div>`}
