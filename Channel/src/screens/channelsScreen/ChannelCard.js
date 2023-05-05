@@ -17,7 +17,7 @@ import {s, ms, mvs} from 'react-native-size-matters';
 import * as RootNavigation from '../../navigation/RootNavigation';
 import {GestureHandlerRootView, Swipeable} from 'react-native-gesture-handler';
 import {resetUnreadCountStart} from '../../redux/actions/channels/ChannelsAction';
-import { closeChannelStart } from '../../redux/actions/channels/CloseChannelActions';
+import {closeChannelStart} from '../../redux/actions/channels/CloseChannelActions';
 
 const TouchableItem =
   Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
@@ -107,8 +107,8 @@ const ChannelCard = ({
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'flex-end',
-          paddingVertical: 10,
-          paddingHorizontal: 15,
+          // paddingVertical: 10,
+          // paddingHorizontal: 15,
           transform: [{scale}],
         }}>
         {item?.type != 'DIRECT_MESSAGE' &&
@@ -117,10 +117,9 @@ const ChannelCard = ({
             <TouchableOpacity
               style={{
                 backgroundColor: '#f44336',
-                paddingVertical: 8,
-                paddingHorizontal: 20,
-                borderRadius: 5,
-                marginRight: 10,
+                justifyContent: 'center',
+                paddingHorizontal: 15,
+                height: '100%',
               }}
               onPress={() => {
                 closeChannelAction(
@@ -129,16 +128,16 @@ const ChannelCard = ({
                   item?.type,
                   props?.userInfoState?.accessToken,
                 ),
-                swipeableRef?.current?.close();
-
+                  swipeableRef?.current?.close();
               }}>
               <Text
                 style={{
                   color: 'white',
                   fontWeight: 'bold',
                   fontSize: 14,
+                  textAlign: 'center',
                 }}>
-                Close Channel
+                Close{'\n'}Channel
               </Text>
             </TouchableOpacity>
           )}
@@ -146,9 +145,9 @@ const ChannelCard = ({
           <TouchableOpacity
             style={{
               backgroundColor: '#ff9800',
-              paddingVertical: 8,
-              paddingHorizontal: 20,
-              borderRadius: 5,
+              justifyContent: 'center',
+              paddingHorizontal: 15,
+              height: '100%',
             }}
             onPress={() => {
               markAsUnreadAction(
@@ -166,8 +165,9 @@ const ChannelCard = ({
                 color: 'white',
                 fontWeight: 'bold',
                 fontSize: 14,
+                textAlign: 'center',
               }}>
-              Mark as Unread
+              Mark as{'\n'}Unread
             </Text>
           </TouchableOpacity>
         )}
@@ -464,7 +464,7 @@ const mapDispatchToProps = dispatch => {
         ),
       ),
     closeChannelAction: (name, teamId, type, accessToken) =>
-      dispatch(closeChannelStart(name,teamId,type,accessToken)),
+      dispatch(closeChannelStart(name, teamId, type, accessToken)),
   };
 };
 export const RenderChannels = React.memo(
