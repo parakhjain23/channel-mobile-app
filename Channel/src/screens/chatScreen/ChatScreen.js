@@ -10,7 +10,6 @@ import {
   Animated,
   Dimensions,
   SafeAreaView,
-  ScrollView,
   useWindowDimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -27,7 +26,6 @@ import {deleteMessageStart} from '../../redux/actions/chat/DeleteChatAction';
 import {ChatCardMemo} from './ChatCard';
 import {getChannelsByQueryStart} from '../../redux/actions/channels/ChannelsByQueryAction';
 import {fetchSearchedUserProfileStart} from '../../redux/actions/user/searchUserProfileActions';
-import {RenderTextWithLinks} from './RenderTextWithLinks';
 import {pickDocument} from './DocumentPicker';
 import {launchCameraForPhoto, launchGallery} from './ImagePicker';
 import {makeStyles} from './Styles';
@@ -68,16 +66,18 @@ const ChatScreen = ({
   const [message, onChangeMessage] = useState('');
   const [attachment, setAttachment] = useState([]);
   const [attachmentLoading, setAttachmentLoading] = useState(false);
-  const FlatListRef = useRef(null);
-  const scrollY = new Animated.Value(0);
+  const [mentionsArr, setMentionsArr] = useState([]);
   const [isScrolling, setIsScrolling] = useState(false);
   const [mentions, setMentions] = useState([]);
-  const [mentionsArr, setMentionsArr] = useState([]);
+  const FlatListRef = useRef(null);
   const textInputRef = useRef(null);
-  const {height} = Dimensions.get('window');
+  const scrollY = new Animated.Value(0);
   const offset = height * 0.12;
-  const date = useMemo(() => new Date(), []);
+  const {height} = Dimensions.get('window');
   const screenHeight = Dimensions.get('window').height;
+  const {width} = useWindowDimensions();
+  const date = useMemo(() => new Date(), []);
+
   const teamIdAndUnreadCountMapping =
     channelsState?.teamIdAndUnreadCountMapping;
   const teamIdAndBadgeCountMapping = channelsState?.teamIdAndBadgeCountMapping;
@@ -85,7 +85,6 @@ const ChatScreen = ({
   const accessToken = userInfoState?.accessToken;
   const currentOrgId = orgState?.currentOrgId;
   const emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
-  const {width} = useWindowDimensions();
 
   if (teamId == undefined) {
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
@@ -234,46 +233,23 @@ const ChatScreen = ({
     () => chatState?.data[teamId]?.messages || [],
     [chatState?.data[teamId]?.messages],
   );
-  let prevDate = null;
-  const todaysDateRef = useRef(new Date().toDateString());
+
   const renderItem = useCallback(
     ({item, index}) => {
-      // const date = new Date(item.updatedAt);
-      // const isSameDate = prevDate?.toDateString() === date.toDateString();
-      // let displayDate = date?.toDateString();
-      // if (!isSameDate) {
-      //   const prevDateString = prevDate?.toDateString();
-      //   displayDate = `${prevDateString}`;
-      // }
-      // prevDate = date;
       return (
-        <View>
-          <ChatCardMemo
-            chat={item}
-            userInfoState={userInfoState}
-            orgState={orgState}
-            deleteMessageAction={deleteMessageAction}
-            chatState={chatState}
-            setreplyOnMessage={setreplyOnMessage}
-            setrepliedMsgDetails={setrepliedMsgDetails}
-            searchUserProfileAction={searchUserProfileAction}
-            flatListRef={FlatListRef}
-            channelType={channelType}
-            index={index}
-          />
-          {/* {!isSameDate && displayDate && index > 0 && (
-            <View>
-              <Text
-                style={{
-                  color: '#808080',
-                  textAlign: 'center',
-                  margin: 10,
-                }}>
-                {displayDate === todaysDateRef.current ? 'Today' : displayDate}
-              </Text>
-            </View>
-          )} */}
-        </View>
+        <ChatCardMemo
+          chat={item}
+          userInfoState={userInfoState}
+          orgState={orgState}
+          deleteMessageAction={deleteMessageAction}
+          chatState={chatState}
+          setreplyOnMessage={setreplyOnMessage}
+          setrepliedMsgDetails={setrepliedMsgDetails}
+          searchUserProfileAction={searchUserProfileAction}
+          flatListRef={FlatListRef}
+          channelType={channelType}
+          index={index}
+        />
       );
     },
     [
@@ -298,19 +274,6 @@ const ChatScreen = ({
           style={{color: 'black', textDecorationLine: 'underline'}}>
           @{node?.attribs?.['data-value']}
         </Text>
-      );
-    } else if (node?.attribs?.class == 'ql-syntax') {
-      return (
-        <View
-          key={index}
-          style={{
-            borderWidth: 1,
-            borderColor: 'black',
-            padding: 10,
-            borderRadius: 8,
-          }}>
-          <Text>{node?.children[0]?.data}</Text>
-        </View>
       );
     }
   }
@@ -513,6 +476,7 @@ const ChatScreen = ({
                       </Animated.View>
                     )}
                   </View>
+                  
                   <View style={{justifyContent: 'center'}}>
                     {!showOptions && (
                       <MaterialIcons
@@ -523,7 +487,7 @@ const ChatScreen = ({
                       />
                     )}
                   </View>
-                  {/* <View style={{flex: 1, maxHeight: 200, minHeight: 100}}> */}
+
                   <QuillEditor
                     onHtmlChange={value => handleInputChange(value?.html)}
                     ref={textInputRef}
@@ -542,6 +506,7 @@ const ChatScreen = ({
                       },
                     ]}
                   />
+
                   {showOptions &&
                     message?.html?.trim()?.length == 1 &&
                     hideOptionsMethod()}
