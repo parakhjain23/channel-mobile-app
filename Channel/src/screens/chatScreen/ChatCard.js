@@ -262,49 +262,50 @@ const ChatCard = ({
     }
   }
   const emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
-  const renderers = {
-    span: (htmlAttribs, children, index) => {
-      if (htmlAttribs?.tnode?.init?.textNode?.parent?.name === 'span') {
-        return (
-          <TouchableOpacity
-            key={index}
-            onPress={() =>
-              Linking.openURL(
-                `mailTo:${htmlAttribs?.tnode?.init?.textNode?.data}`,
-              )
-            }>
-            <Text style={{color: linkColor, textDecorationLine: 'underline'}}>
-              {htmlAttribs?.tnode?.init?.textNode?.data}
-            </Text>
-          </TouchableOpacity>
-        );
-      } else if (htmlAttribs?.tnode?.classes[0] === 'mention') {
-        return (
-          <TouchableOpacity
-            key={index}
-            onPress={async () => {
-              htmlAttribs?.tnode?.init?.domNode?.attribs?.['data-id'] !=
-                '@all' &&
-                (await searchUserProfileAction(
-                  htmlAttribs?.tnode?.init?.domNode?.attribs?.['data-id'],
-                  userInfoState?.accessToken,
-                )) &&
-                RootNavigation.navigate('UserProfiles', {
-                  displayName:
-                    orgState?.userIdAndDisplayNameMapping[
-                      htmlAttribs?.tnode?.init?.domNode?.attribs?.['data-id']
-                    ],
-                });
-            }}>
-            <Text style={{color: linkColor, textDecorationLine: 'underline'}}>
-              @{htmlAttribs?.tnode?.init?.domNode?.attribs?.['data-value']}
-            </Text>
-          </TouchableOpacity>
-        );
-      }
-      return null;
-    },
-  };
+  // const renderers = {
+  //   span: (htmlAttribs, children, index) => {
+  //     // if (htmlAttribs?.tnode?.init?.textNode?.parent?.name === 'span') {
+  //     //   return (
+  //     //     <TouchableOpacity
+  //     //       key={index}
+  //     //       onPress={() =>
+  //     //         Linking.openURL(
+  //     //           `mailTo:${htmlAttribs?.tnode?.init?.textNode?.data}`,
+  //     //         )
+  //     //       }>
+  //     //       <Text style={{color: linkColor, textDecorationLine: 'underline'}}>
+  //     //         {htmlAttribs?.tnode?.init?.textNode?.data}
+  //     //       </Text>
+  //     //     </TouchableOpacity>
+  //     //   );
+  //     // }
+  //     if (htmlAttribs?.tnode?.classes[0] === 'mention') {
+  //       return (
+  //         <TouchableOpacity
+  //           key={index}
+  //           onPress={async () => {
+  //             htmlAttribs?.tnode?.init?.domNode?.attribs?.['data-id'] !=
+  //               '@all' &&
+  //               (await searchUserProfileAction(
+  //                 htmlAttribs?.tnode?.init?.domNode?.attribs?.['data-id'],
+  //                 userInfoState?.accessToken,
+  //               )) &&
+  //               RootNavigation.navigate('UserProfiles', {
+  //                 displayName:
+  //                   orgState?.userIdAndDisplayNameMapping[
+  //                     htmlAttribs?.tnode?.init?.domNode?.attribs?.['data-id']
+  //                   ],
+  //               });
+  //           }}>
+  //           <Text style={{color: linkColor, textDecorationLine: 'underline'}}>
+  //             @{htmlAttribs?.tnode?.init?.domNode?.attribs?.['data-value']}
+  //           </Text>
+  //         </TouchableOpacity>
+  //       );
+  //     }
+  //     return null;
+  //   },
+  // };
   if (!isActivity) {
     return (
       <GestureHandlerRootView>
@@ -372,11 +373,14 @@ const ChatCard = ({
                         source={{
                           html: chatState?.data[chat.teamId]?.parentMessages[
                             parentId
-                          ]?.content?.replace(emailRegex, '<span>$&</span>'),
+                          ]?.content?.replace(
+                            emailRegex,
+                            '<a href="mailTo:$&">$&</a>',
+                          ),
                         }}
                         contentWidth={width}
                         tagsStyles={{body: {color: 'black'}}}
-                        renderers={renderers}
+                        // renderers={renderers}
                       />
                     )}
                   </TouchableOpacity>
@@ -507,30 +511,22 @@ const ChatCard = ({
                       paddingRight: ms(10),
                     }}>
                     {chat?.mentions?.length > 0 ? (
-                      <RenderHTML
-                        source={{
-                          html: chat?.content,
-                        }}
-                        contentWidth={width}
-                        tagsStyles={tagsStyles(textColor, linkColor)}
-                        renderers={renderers}
+                      <HTMLView
+                        value={`<div>${chat?.content}</div>`}
+                        renderNode={renderNode}
+                        stylesheet={htmlStyles}
                       />
                     ) : (
-                      // <HTMLView
-                      //   value={`<div>${chat?.content}</div>`}
-                      //   renderNode={renderNode}
-                      //   stylesheet={htmlStyles}
-                      // />
                       <RenderHTML
                         source={{
                           html: chat?.content?.replace(
                             emailRegex,
-                            '<span>$&</span>',
+                            '<a href="mailTo:$&">$&</a>',
                           ),
                         }}
                         contentWidth={width}
                         tagsStyles={tagsStyles(textColor, linkColor)}
-                        renderers={renderers}
+                        // renderers={renderers}
                       />
                     )}
                   </View>
