@@ -1,5 +1,5 @@
 import {useTheme} from '@react-navigation/native';
-import React, {useCallback, useLayoutEffect, useMemo} from 'react';
+import React, {useCallback, useLayoutEffect, useMemo, useRef} from 'react';
 import {getChatsReset} from '../../redux/actions/chat/ChatActions';
 
 import {
@@ -8,12 +8,16 @@ import {
   View,
   Button,
   TouchableNativeFeedback,
+  Animated,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 import {fetchSearchedUserProfileStart} from '../../redux/actions/user/searchUserProfileActions';
 import {s, ms, mvs} from 'react-native-size-matters';
 import * as RootNavigation from '../../navigation/RootNavigation';
+import {GestureHandlerRootView, Swipeable} from 'react-native-gesture-handler';
+import {resetUnreadCountStart} from '../../redux/actions/channels/ChannelsAction';
+import { closeChannelStart } from '../../redux/actions/channels/CloseChannelActions';
 
 const TouchableItem =
   Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
@@ -24,6 +28,8 @@ const ChannelCard = ({
   props,
   resetChatsAction,
   networkState,
+  markAsUnreadAction,
+  closeChannelAction,
 }) => {
   const {colors} = useTheme();
   const userIdAndDisplayNameMapping =
@@ -31,13 +37,15 @@ const ChannelCard = ({
   const userIdAndNameMapping = props.orgsState?.userIdAndNameMapping;
   const teamIdAndUnreadCountMapping =
     props.channelsState?.teamIdAndUnreadCountMapping;
+  const teamIdAndBadgeCountMapping =
+    props?.channelsState?.teamIdAndBadgeCountMapping;
   const highlightChannel = props.channelsState?.highlightChannel;
   const user = props.userInfoState?.user;
   const accessToken = props.userInfoState?.accessToken;
   const currentOrgId = props.orgsState?.currentOrgId;
-
   const userId =
     item?.userIds[0] !== user?.id ? item?.userIds[0] : item?.userIds[1];
+  const swipeableRef = useRef(null);
 
   const Name =
     item?.type === 'DIRECT_MESSAGE'
@@ -84,6 +92,88 @@ const ChannelCard = ({
     accessToken,
     networkState,
   ]);
+  const renderRightActions = (progress, dragX) => {
+    const scale = dragX.interpolate({
+      inputRange: [-70, 0],
+      outputRange: [1, 0],
+      extrapolate: 'clamp',
+    });
+    return item?.type != 'PUBLIC' &&
+      (props?.channelsState?.teamIdAndUnreadCountMapping[item?._id] > 0 ||
+        props?.channelsState?.teamIdAndBadgeCountMapping[item?._id] >
+          0) ? null : (
+      <Animated.View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          paddingVertical: 10,
+          paddingHorizontal: 15,
+          transform: [{scale}],
+        }}>
+        {item?.type != 'DIRECT_MESSAGE' &&
+          item?.type != 'DEFAULT' &&
+          item?.type != 'PERSONAL' && (
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#f44336',
+                paddingVertical: 8,
+                paddingHorizontal: 20,
+                borderRadius: 5,
+                marginRight: 10,
+              }}
+              onPress={() => {
+                closeChannelAction(
+                  Name,
+                  item?._id,
+                  item?.type,
+                  props?.userInfoState?.accessToken,
+                ),
+                swipeableRef?.current?.close();
+
+              }}>
+              <Text
+                style={{
+                  color: 'white',
+                  fontWeight: 'bold',
+                  fontSize: 14,
+                }}>
+                Close Channel
+              </Text>
+            </TouchableOpacity>
+          )}
+        {props?.channelsState?.teamIdAndBadgeCountMapping[item?._id] == 0 && (
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#ff9800',
+              paddingVertical: 8,
+              paddingHorizontal: 20,
+              borderRadius: 5,
+            }}
+            onPress={() => {
+              markAsUnreadAction(
+                item?.orgId,
+                props?.userInfoState?.user?.id,
+                item?._id,
+                props?.userInfoState?.accessToken,
+                1,
+                0,
+              ),
+                swipeableRef?.current?.close();
+            }}>
+            <Text
+              style={{
+                color: 'white',
+                fontWeight: 'bold',
+                fontSize: 14,
+              }}>
+              Mark as Unread
+            </Text>
+          </TouchableOpacity>
+        )}
+      </Animated.View>
+    );
+  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -92,77 +182,102 @@ const ChannelCard = ({
   }, [Name, navigation]);
 
   return (
-    <TouchableItem
-      onPress={onPress}
-      background={
-        Platform.OS === 'android'
-          ? TouchableNativeFeedback.Ripple('#00000033')
-          : null
-      }
-      activeOpacity={0.8}>
-      <View
-        style={{
-          borderTopWidth: ms(0.7),
-          borderTopColor: '#444444',
-          minHeight: mvs(60),
-          backgroundColor: unread
-            ? colors.unreadBackgroundColor
-            : colors.primaryColor,
-          width: '100%',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: ms(13),
-          }}>
+    <GestureHandlerRootView>
+      <Swipeable renderRightActions={renderRightActions} ref={swipeableRef}>
+        <TouchableItem
+          onPress={onPress}
+          background={
+            Platform.OS === 'android'
+              ? TouchableNativeFeedback.Ripple('#00000033')
+              : null
+          }
+          activeOpacity={0.8}>
           <View
             style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              maxWidth: '85%',
+              borderTopWidth: ms(0.7),
+              borderTopColor: '#444444',
+              minHeight: mvs(60),
+              backgroundColor: colors.primaryColor,
+              width: '100%',
+              flexDirection: 'column',
+              justifyContent: 'center',
             }}>
-            <Icon name={iconName} size={14} color={colors.textColor} />
-            <Text>{'  '}</Text>
-            <Text
-              style={{
-                fontSize: ms(16),
-                fontWeight: unread ? '700' : '400',
-                color: colors.textColor,
-              }}
-              numberOfLines={1}
-              ellipsizeMode="tail">{`${Name}`}</Text>
-          </View>
-          {teamIdAndUnreadCountMapping?.[item?._id] > 0 && (
             <View
               style={{
-                backgroundColor: '#73e1ff',
-                paddingHorizontal: ms(5),
-                paddingVertical: mvs(2),
-                borderRadius: ms(5),
-                overflow: 'hidden',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: ms(13),
               }}>
-              <Text
+              <View
                 style={{
-                  color: 'black',
-                  fontSize: ms(11),
-                  fontWeight: 'bold',
-                  textAlign: 'center',
-                  minWidth: ms(15),
-                  height: ms(20),
-                  lineHeight: ms(20),
-                  overflow: 'hidden',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  maxWidth: '85%',
                 }}>
-                {teamIdAndUnreadCountMapping?.[item?._id]}
-              </Text>
+                <Icon name={iconName} size={14} color={colors.textColor} />
+                <Text>{'  '}</Text>
+                <Text
+                  style={{
+                    fontSize: ms(16),
+                    fontWeight: unread ? '700' : '400',
+                    color: colors.textColor,
+                  }}
+                  numberOfLines={1}
+                  ellipsizeMode="tail">{`${Name}`}</Text>
+              </View>
+              {teamIdAndUnreadCountMapping?.[item?._id] > 0 ? (
+                <View
+                  style={{
+                    backgroundColor: '#73e1ff',
+                    paddingHorizontal: ms(5),
+                    paddingVertical: mvs(2),
+                    borderRadius: ms(5),
+                    overflow: 'hidden',
+                  }}>
+                  <Text
+                    style={{
+                      color: 'black',
+                      fontSize: ms(11),
+                      fontWeight: 'bold',
+                      textAlign: 'center',
+                      minWidth: ms(15),
+                      height: ms(20),
+                      lineHeight: ms(20),
+                      overflow: 'hidden',
+                    }}>
+                    {teamIdAndUnreadCountMapping?.[item?._id]}
+                  </Text>
+                </View>
+              ) : (
+                teamIdAndBadgeCountMapping?.[item?._id] > 0 && (
+                  <View
+                    style={{
+                      backgroundColor: 'red',
+                      paddingHorizontal: ms(5),
+                      paddingVertical: mvs(2),
+                      borderRadius: ms(5),
+                      overflow: 'hidden',
+                    }}>
+                    <Text
+                      style={{
+                        color: 'black',
+                        fontSize: ms(11),
+                        fontWeight: 'bold',
+                        textAlign: 'center',
+                        minWidth: ms(15),
+                        height: ms(20),
+                        lineHeight: ms(20),
+                        overflow: 'hidden',
+                      }}></Text>
+                  </View>
+                )
+              )}
             </View>
-          )}
-        </View>
-      </View>
-    </TouchableItem>
+          </View>
+        </TouchableItem>
+      </Swipeable>
+    </GestureHandlerRootView>
   );
 };
 
@@ -178,8 +293,8 @@ const SearchChannelCard = ({
   const {colors} = useTheme();
   let Name = item?._source?.title;
   if (item?._source?.userId == userInfoState?.user?.id) {
-    Name = item?._source?.title + " (You)"
-  } 
+    Name = item?._source?.title + ' (You)';
+  }
   const isArchived = item?._source?.isArchived;
   const teamId = item?._id?.includes('_')
     ? props?.channelsState?.userIdAndTeamIdMapping[item?._source?.userId]
@@ -248,7 +363,7 @@ const SearchChannelCard = ({
                 fontSize: ms(16),
                 fontWeight: '400',
                 color: colors.textColor,
-                textDecorationLine: isArchived ? 'line-through' : null
+                textDecorationLine: isArchived ? 'line-through' : null,
               }}
               numberOfLines={1}
               ellipsizeMode="tail">{`${Name}`}</Text>
@@ -330,6 +445,26 @@ const mapDispatchToProps = dispatch => {
     searchUserProfileAction: (userId, token) =>
       dispatch(fetchSearchedUserProfileStart(userId, token)),
     resetChatsAction: () => dispatch(getChatsReset()),
+    markAsUnreadAction: (
+      orgId,
+      userId,
+      teamId,
+      accessToken,
+      badgeCount,
+      unreadCount,
+    ) =>
+      dispatch(
+        resetUnreadCountStart(
+          orgId,
+          userId,
+          teamId,
+          accessToken,
+          badgeCount,
+          unreadCount,
+        ),
+      ),
+    closeChannelAction: (name, teamId, type, accessToken) =>
+      dispatch(closeChannelStart(name,teamId,type,accessToken)),
   };
 };
 export const RenderChannels = React.memo(

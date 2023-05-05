@@ -76,6 +76,8 @@ const ChatScreen = ({
   const screenHeight = Dimensions.get('window').height;
   const teamIdAndUnreadCountMapping =
     channelsState?.teamIdAndUnreadCountMapping;
+  const teamIdAndBadgeCountMapping =
+    channelsState?.teamIdAndBadgeCountMapping;
   const user = userInfoState?.user;
   const accessToken = userInfoState?.accessToken;
   const currentOrgId = orgState?.currentOrgId;
@@ -83,7 +85,7 @@ const ChatScreen = ({
   if (teamId == undefined) {
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
   }
-  const shouldResetUnreadCount = teamIdAndUnreadCountMapping?.[teamId] > 0;
+  const shouldResetUnreadCount = teamIdAndUnreadCountMapping?.[teamId] > 0 || teamIdAndBadgeCountMapping?.[teamId] > 0;
 
   useEffect(() => {
     if (repliedMsgDetails != '') {
@@ -98,7 +100,7 @@ const ChatScreen = ({
     searchedChannel && textInputRef?.current?.focus();
     setTimeout(() => {
       if (shouldResetUnreadCount) {
-        resetUnreadCountAction(currentOrgId, user?.id, teamId, accessToken);
+        resetUnreadCountAction(currentOrgId, user?.id, teamId, accessToken,0,0);
       }
     }, 1000);
   }, []);
@@ -663,8 +665,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(getChannelsByQueryStart(query, userToken, orgId)),
     searchUserProfileAction: (userId, token) =>
       dispatch(fetchSearchedUserProfileStart(userId, token)),
-    resetUnreadCountAction: (orgId, userId, teamId, accessToken) =>
-      dispatch(resetUnreadCountStart(orgId, userId, teamId, accessToken)),
+    resetUnreadCountAction: (orgId, userId, teamId, accessToken,badgeCount,unreadCount) =>
+      dispatch(resetUnreadCountStart(orgId, userId, teamId, accessToken,badgeCount,unreadCount)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);

@@ -17,10 +17,10 @@ import {
   increaseCountOnOrgCard,
   removeCountOnOrgCard,
 } from '../redux/actions/org/UnreadCountOnOrgCardsAction';
-import {moveChannelToTop} from '../redux/actions/channels/ChannelsAction';
+import {moveChannelToTop, resetUnreadCountStart} from '../redux/actions/channels/ChannelsAction';
 import {connect} from 'react-redux';
 
-const NotificationSetup = ({userInfoState}) => {
+const NotificationSetup = ({userInfoState,resetUnreadCountAction}) => {
   useEffect(() => {
     // console.log(store.getState()?.userInfoReducer?.accessToken,"inside use effect notification");
     if (store.getState()?.userInfoReducer?.accessToken) {
@@ -172,6 +172,7 @@ const NotificationSetup = ({userInfoState}) => {
     }
     switch (event?.detail?.pressAction?.id) {
       case 'mark_as_read':
+        resetUnreadCountAction(event?.detail?.notification?.data?.orgId,userInfoState?.user?.id,event?.detail?.notification?.data?.teamId,userInfoState?.user?.accessToken)
         Notifee.cancelNotification(event?.detail?.notification?.id);
         break;
       case 'reply':
@@ -241,4 +242,9 @@ const NotificationSetup = ({userInfoState}) => {
 const mapStateToProps = state => ({
   userInfoState: state?.userInfoReducer,
 });
-export default connect(mapStateToProps)(NotificationSetup);
+const mapDispatchToProps = dispatch =>{
+  return {
+    resetUnreadCountAction : (currentOrgId, userId, teamId, accessToken,badgeCount,unreadCount) => dispatch(resetUnreadCountStart(currentOrgId, userId, teamId, accessToken,badgeCount,unreadCount))
+  }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(NotificationSetup);

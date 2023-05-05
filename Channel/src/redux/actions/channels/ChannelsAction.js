@@ -59,7 +59,7 @@ export function getChannelDetailsSuccess(data) {
   };
 }
 
-export function* resetUnreadCount({orgId, userId, teamId, accessToken}) {
+export function* resetUnreadCount({orgId, userId, teamId, accessToken,badgeCount,unreadCount}) {
   try {
     var response = yield call(
       resetUnreadCountApi,
@@ -67,24 +67,30 @@ export function* resetUnreadCount({orgId, userId, teamId, accessToken}) {
       userId,
       teamId,
       accessToken,
+      badgeCount,
+      unreadCount
     );
-    yield put(resetUnreadCountSuccess(teamId));
+    yield put(resetUnreadCountSuccess(response,teamId));
   } catch (error) {
     console.warn(error);
   }
 }
-export function resetUnreadCountStart(orgId, userId, teamId, accessToken) {
+export function resetUnreadCountStart(orgId, userId, teamId, accessToken,badgeCount,unreadCount) {
   return {
     type: Actions.RESET_UNREAD_COUNT_START,
     orgId,
     userId,
     teamId,
     accessToken,
+    badgeCount,
+    unreadCount
   };
 }
-export function resetUnreadCountSuccess(teamId) {
+export function resetUnreadCountSuccess(response , teamId) {
   return {
     type: Actions.RESET_UNREAD_COUNT_SUCCESS,
     teamId: teamId,
+    response:response
   };
 }
+
