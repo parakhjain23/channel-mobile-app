@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  Vibration,
   View,
   useWindowDimensions,
 } from 'react-native';
@@ -123,6 +124,7 @@ const ChatCard = ({
   const textColor = sentByMe ? colors.sentByMeTextColor : colors?.textColor;
 
   const swipeFromLeftOpen = () => {
+    Vibration.vibrate(30);
     setrepliedMsgDetails(chat);
     setreplyOnMessage(true);
     swipeableRef?.current?.close();
@@ -316,6 +318,7 @@ const ChatCard = ({
           style={{flex: 1}}>
           <Swipeable
             ref={swipeableRef}
+            leftThreshold={40}
             renderLeftActions={LeftSwipeActions}
             onSwipeableWillOpen={swipeFromLeftOpen}>
             <View
