@@ -280,6 +280,66 @@ const ChatScreen = ({
       color: 'black',
     },
   };
+
+  const onSendPress = () => {
+    const localMessage = message;
+    onChangeMessage('');
+    const randomId = uuid.v4();
+    const messageContent = {
+      randomId: randomId,
+      content: localMessage,
+      createdAt: date,
+      isLink: false,
+      mentions: mentionsArr,
+      orgId: orgState?.currentOrgId,
+      parentId: repliedMsgDetails?._id,
+      senderId: userInfoState?.user?.id,
+      senderType: 'APP',
+      teamId: teamId,
+      updatedAt: date,
+      attachment: attachment,
+      mentionsArr: mentionsArr,
+      parentMessage: repliedMsgDetails?.content,
+    };
+    setlocalMsgAction(messageContent);
+    if (
+      networkState?.isInternetConnected &&
+      (localMessage?.trim() !== '' || attachment?.length > 0)
+    ) {
+      sendMessageAction(
+        localMessage,
+        teamId,
+        orgState?.currentOrgId,
+        userInfoState?.user?.id,
+        userInfoState?.accessToken,
+        repliedMsgDetails?._id || null,
+        attachment,
+        mentionsArr,
+      ),
+        showOptions && hideOptionsMethod(),
+        mentionsArr?.length > 0 && setMentionsArr(''),
+        mentions?.length > 0 && setMentions([]),
+        replyOnMessage && setreplyOnMessage(false),
+        repliedMsgDetails && setrepliedMsgDetails(null);
+    } else if (localMessage?.trim() !== '') {
+      setGlobalMessageToSendAction({
+        content: localMessage,
+        teamId: teamId,
+        orgId: orgState?.currentOrgId,
+        senderId: userInfoState?.user?.id,
+        userId: userInfoState?.user?.id,
+        accessToken: userInfoState?.accessToken,
+        parentId: repliedMsgDetails?.id || null,
+        updatedAt: date,
+        mentionsArr: mentionsArr,
+      }),
+        showOptions && hideOptionsMethod(),
+        mentionsArr?.length > 0 && setMentionsArr(''),
+        mentions?.length > 0 && setMentions([]),
+        replyOnMessage && setreplyOnMessage(false),
+        repliedMsgDetails && setrepliedMsgDetails(null);
+    }
+  };
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.mainContainer}>
@@ -510,78 +570,7 @@ const ChatScreen = ({
                   name="send"
                   size={ms(25)}
                   style={{color: colors.textColor, padding: ms(10)}}
-                  onPress={() => {
-                    let randomId = uuid.v4();
-                    networkState?.isInternetConnected
-                      ? (message?.trim() != '' || attachment?.length > 0) &&
-                        (onChangeMessage(''),
-                        setAttachment([]),
-                        setlocalMsgAction({
-                          randomId: randomId,
-                          content: message,
-                          createdAt: date,
-                          isLink: false,
-                          mentions: mentionsArr,
-                          orgId: orgState?.currentOrgId,
-                          parentId: repliedMsgDetails?._id,
-                          senderId: userInfoState?.user?.id,
-                          senderType: 'APP',
-                          teamId: teamId,
-                          updatedAt: date,
-                          attachment: attachment,
-                          mentionsArr: mentionsArr,
-                          parentMessage: repliedMsgDetails?.content,
-                        }),
-                        sendMessageAction(
-                          message,
-                          teamId,
-                          orgState?.currentOrgId,
-                          userInfoState?.user?.id,
-                          userInfoState?.accessToken,
-                          repliedMsgDetails?._id || null,
-                          attachment,
-                          mentionsArr,
-                        ),
-                        hideOptionsMethod(),
-                        setMentionsArr(''),
-                        setMentions([]),
-                        replyOnMessage && setreplyOnMessage(false),
-                        repliedMsgDetails && setrepliedMsgDetails(null))
-                      : message?.trim() != '' &&
-                        (onChangeMessage(''),
-                        setlocalMsgAction({
-                          randomId: randomId,
-                          content: message,
-                          createdAt: date,
-                          isLink: false,
-                          mentions: mentionsArr,
-                          orgId: orgState?.currentOrgId,
-                          parentId: repliedMsgDetails?._id,
-                          senderId: userInfoState?.user?.id,
-                          senderType: 'APP',
-                          teamId: teamId,
-                          updatedAt: date,
-                          attachment: attachment,
-                          mentionsArr: mentionsArr,
-                          parentMessage: repliedMsgDetails?.content,
-                        }),
-                        setGlobalMessageToSendAction({
-                          content: message,
-                          teamId: teamId,
-                          orgId: orgState?.currentOrgId,
-                          senderId: userInfoState?.user?.id,
-                          userId: userInfoState?.user?.id,
-                          accessToken: userInfoState?.accessToken,
-                          parentId: repliedMsgDetails?.id || null,
-                          updatedAt: date,
-                          mentionsArr: mentionsArr,
-                        }),
-                        hideOptionsMethod(),
-                        setMentionsArr(''),
-                        setMentions([]),
-                        replyOnMessage && setreplyOnMessage(false),
-                        repliedMsgDetails && setrepliedMsgDetails(null));
-                  }}
+                  onPress={onSendPress}
                 />
               </View>
             </View>
