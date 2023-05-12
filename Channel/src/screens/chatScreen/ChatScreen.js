@@ -71,8 +71,8 @@ const ChatScreen = ({
   const FlatListRef = useRef(null);
   const textInputRef = useRef(null);
   const scrollY = new Animated.Value(0);
-  const offset = height * 0.12;
   const {height} = Dimensions.get('window');
+  const offset = height * 0.12;
   const screenHeight = Dimensions.get('window').height;
   const {width} = useWindowDimensions();
   const date = useMemo(() => new Date(), []);
