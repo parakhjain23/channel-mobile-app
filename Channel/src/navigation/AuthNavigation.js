@@ -26,7 +26,7 @@ const AuthNavigation = () => {
     <NavigationContainer
       ref={navigationRef}
       linking={linking}
-      theme={scheme == 'dark' ? DARK_THEME : LIGHT_THEME}>
+      theme={scheme === 'light' ? LIGHT_THEME : DARK_THEME}>
       <ProtectedNavigation />
     </NavigationContainer>
   );
