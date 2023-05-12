@@ -1,7 +1,6 @@
 import {useNavigation, useTheme} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 import {
-  Button,
   FlatList,
   Image,
   Text,
@@ -18,16 +17,13 @@ import {
 } from '../../redux/actions/channels/ChannelsAction';
 import {switchOrgStart} from '../../redux/actions/org/changeCurrentOrg';
 import {removeCountOnOrgCard} from '../../redux/actions/org/UnreadCountOnOrgCardsAction';
-import signOut from '../../redux/actions/user/userAction';
 import * as RootNavigation from '../../navigation/RootNavigation';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 const CustomeDrawerScreen = ({
   orgsState,
   userInfoState,
   getChannelsAction,
   switchOrgAction,
-  signOutAction,
   removeCountOnOrgCardAction,
   moveChannelToTopAction,
   networkState,
@@ -35,19 +31,16 @@ const CustomeDrawerScreen = ({
   const {colors} = useTheme();
   const data = orgsState?.orgs;
   const navigation = useNavigation();
-  const _signOut = async () => {
-    if (userInfoState?.siginInMethod == 'Google') {
-      await GoogleSignin.signOut();
-    }
-    signOutAction();
-  };
+
   useEffect(() => {
     if (userInfoState?.user != null && networkState?.isInternetConnected) {
       getChannelsAction(
         userInfoState?.accessToken,
         orgsState?.currentOrgId,
         userInfoState?.user?.id,
-        userInfoState?.user?.displayName ? userInfoState?.user?.displayName : userInfoState?.user?.firstName
+        userInfoState?.user?.displayName
+          ? userInfoState?.user?.displayName
+          : userInfoState?.user?.firstName,
       );
     }
   }, [userInfoState?.user, networkState?.isInternetConnected]);
@@ -67,7 +60,9 @@ const CustomeDrawerScreen = ({
             userInfoState?.accessToken,
             item?.id,
             userInfoState?.user?.id,
-            userInfoState?.user?.displayName ? userInfoState?.user?.displayName : userInfoState?.user?.firstName
+            userInfoState?.user?.displayName
+              ? userInfoState?.user?.displayName
+              : userInfoState?.user?.firstName,
           );
           count != undefined &&
             (await moveChannelToTopAction(Object.keys(unreadCountObj))) &&
@@ -190,15 +185,6 @@ const CustomeDrawerScreen = ({
           </View>
         )}
       </View>
-      <View
-        style={{
-          flex: 0.2,
-          borderTopColor: 'gray',
-          borderTopWidth: 0.3,
-          justifyContent: 'center',
-        }}>
-        <Button title="Sign Out" onPress={_signOut} />
-      </View>
     </View>
   );
 };
@@ -209,11 +195,10 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => {
   return {
-    getChannelsAction: (token, orgId, userId , userName) =>
-      dispatch(getChannelsStart(token, orgId, userId,userName)),
-    switchOrgAction: (accessToken, orgId, userId,userName) =>
-      dispatch(switchOrgStart(accessToken, orgId, userId,userName)),
-    signOutAction: () => dispatch(signOut()),
+    getChannelsAction: (token, orgId, userId, userName) =>
+      dispatch(getChannelsStart(token, orgId, userId, userName)),
+    switchOrgAction: (accessToken, orgId, userId, userName) =>
+      dispatch(switchOrgStart(accessToken, orgId, userId, userName)),
     removeCountOnOrgCardAction: orgId => dispatch(removeCountOnOrgCard(orgId)),
     moveChannelToTopAction: teamIdArr => dispatch(moveChannelToTop(teamIdArr)),
   };

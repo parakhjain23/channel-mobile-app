@@ -16,11 +16,15 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import AnimatedLottieView from 'lottie-react-native';
 import {s, vs, ms, mvs} from 'react-native-size-matters';
 import {createNewDmChannelStart} from '../../redux/actions/channels/CreateNewDmChannelAction';
+import {Button} from 'react-native';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import signOut from '../../redux/actions/user/userAction';
 
 const ContactDetailsPage = ({
   userInfoState,
   channelsState,
   createDmChannelAction,
+  signOutAction,
   orgsState,
   route,
 }) => {
@@ -68,6 +72,14 @@ const ContactDetailsPage = ({
     DisplayName = userInfoState?.searchedUserProfile?.displayName;
     UserId = userInfoState?.searchedUserProfile?.id;
   }
+
+  const _signOut = async () => {
+    if (userInfoState?.siginInMethod == 'Google') {
+      await GoogleSignin.signOut();
+    }
+    signOutAction();
+  };
+
   return (
     <View style={styles.container}>
       {userInfoState?.isLoading ? (
@@ -89,8 +101,9 @@ const ContactDetailsPage = ({
             }}>
             <Image
               source={{
-                uri: Avtar && `${IMAGE_BASE_URL}${Avtar}`
-                  || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVe0cFaZ9e5Hm9X-tdWRLSvoZqg2bjemBABA&usqp=CAU',
+                uri:
+                  (Avtar && `${IMAGE_BASE_URL}${Avtar}`) ||
+                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVe0cFaZ9e5Hm9X-tdWRLSvoZqg2bjemBABA&usqp=CAU',
               }}
               style={{
                 width: 150,
@@ -129,23 +142,36 @@ const ContactDetailsPage = ({
               </View>
             </TouchableOpacity>
           )}
-         {userId != userInfoState?.user?.id && <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-            <TouchableOpacity
-              style={[styles.button, styles.messageButton]}
-              onPress={async () => {
-                navigation.navigate('Chat', {
-                  chatHeaderTitle: DisplayName,
-                  teamId: teamId,
-                  channelType: channelsState?.teamIdAndTypeMapping[teamId],
-                  userId:UserId
-                })}
-              }>
-              <Text style={[styles.buttonText, styles.buttonTextWhite]}>
-                Message {DisplayName}
-              </Text>
-            </TouchableOpacity>
-          </View>}
+          {userId != userInfoState?.user?.id && (
+            <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+              <TouchableOpacity
+                style={[styles.button, styles.messageButton]}
+                onPress={async () => {
+                  navigation.navigate('Chat', {
+                    chatHeaderTitle: DisplayName,
+                    teamId: teamId,
+                    channelType: channelsState?.teamIdAndTypeMapping[teamId],
+                    userId: UserId,
+                  });
+                }}>
+                <Text style={[styles.buttonText, styles.buttonTextWhite]}>
+                  Message {DisplayName}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </ScrollView>
+      )}
+      {userId == userInfoState?.user?.id && (
+        <View
+          style={{
+            borderTopColor: 'gray',
+            // borderTopWidth: 0.3,
+            justifyContent: 'center',
+            marginBottom: 40,
+          }}>
+          <Button title="Sign Out" onPress={_signOut} />
+        </View>
       )}
     </View>
   );
@@ -160,6 +186,7 @@ const mapDispatchToProps = dispatch => {
   return {
     createDmChannelAction: (token, orgId, title, reciverUserId) =>
       dispatch(createNewDmChannelStart(token, orgId, title, reciverUserId)),
+    signOutAction: () => dispatch(signOut()),
   };
 };
 export default connect(mapStateToPros, mapDispatchToProps)(ContactDetailsPage);
