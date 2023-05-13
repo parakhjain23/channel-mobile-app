@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.airbnb.android.react.lottie.LottiePackage;
+import com.dooboolab.audiorecorderplayer.RNAudioRecorderPlayerPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 

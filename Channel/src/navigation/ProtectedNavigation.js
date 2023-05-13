@@ -13,6 +13,7 @@ import * as RootNavigation from '../navigation/RootNavigation';
 import {fetchSearchedUserProfileStart} from '../redux/actions/user/searchUserProfileActions';
 import {ms} from 'react-native-size-matters';
 import SelectWorkSpaceScreen from '../screens/selectWorkSpaceScreen/SelectWorkSpaceScreen';
+import VoiceRecording from '../screens/chatScreen/VoiceRecording';
 
 const ProtectedNavigation = props => {
   const Stack = createNativeStackNavigator();
@@ -77,7 +78,12 @@ const ProtectedNavigation = props => {
       />
     </Stack.Navigator>
   ) : (
-    <Stack.Navigator initialRouteName="Org">
+    <Stack.Navigator initialRouteName="Voice">
+      <Stack.Screen
+        name="Voice"
+        component={VoiceRecording}
+        options={{...getHeader}}
+      />
       <Stack.Screen
         name="Org"
         component={DrawerNavigation}
