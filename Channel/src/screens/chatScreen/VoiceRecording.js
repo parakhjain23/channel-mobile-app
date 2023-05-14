@@ -33,49 +33,49 @@ const VoiceRecording = () => {
     });
   };
 
-  const uploadSound = async () => {
-    try {
-      const folder = uuid.v4();
-      const presignedUrl = await fetch(
-        'https://api.intospace.io/chat/fileUpload',
-        {
-          method: 'POST',
-          headers: {
-            Authorization:
-              'eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJlbWFpbCI6InBhcmFraGphaW4yMzAxQGdtYWlsLmNvbSIsImlhdCI6MTY4MTg5Nzk0OCwiZXhwIjoxNzEzNDU1NTQ4LCJhdWQiOiJodHRwczovL3lvdXJkb21haW4uY29tIiwiaXNzIjoiZmVhdGhlcnMiLCJzdWIiOiJRbjA5d2F1ZWxCcHNGTmRPIiwianRpIjoiOWQzNjc0YjQtOGY0My00N2NkLTljNTItYzQzMTQyZDlhMjZmIn0.oACw14GBEBX65QaxTHhgrKyBQQMzOj_lBFvxxkIc0CY',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            fileNames: [`${folder}/sound.mp4`],
-          }),
-        },
-      );
-      const Genereated_URL = await presignedUrl.json();
-      const signedUrls = Object.values(Genereated_URL);
-      const uploadPromises = signedUrls.map(async (s3BucketUrl, index) => {
-        const fileUri = await fetch(recordingUrl);
-        const audioBody = await fileUri.blob();
-        const fileType = audioBody?._data?.type;
-        await UploadDocumentApi(s3BucketUrl, fileType, audioBody);
-        return `${folder}/sound.mp4`;
-      });
-      const uploadedFileNames = await Promise.all(uploadPromises);
-      return uploadedFileNames;
-    } catch (error) {
-      console.warn(error);
-      return null;
-    }
-  };
+  // const uploadSound = async () => {
+  //   try {
+  //     const folder = uuid.v4();
+  //     const presignedUrl = await fetch(
+  //       'https://api.intospace.io/chat/fileUpload',
+  //       {
+  //         method: 'POST',
+  //         headers: {
+  //           Authorization:
+  //             'eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJlbWFpbCI6InBhcmFraGphaW4yMzAxQGdtYWlsLmNvbSIsImlhdCI6MTY4MTg5Nzk0OCwiZXhwIjoxNzEzNDU1NTQ4LCJhdWQiOiJodHRwczovL3lvdXJkb21haW4uY29tIiwiaXNzIjoiZmVhdGhlcnMiLCJzdWIiOiJRbjA5d2F1ZWxCcHNGTmRPIiwianRpIjoiOWQzNjc0YjQtOGY0My00N2NkLTljNTItYzQzMTQyZDlhMjZmIn0.oACw14GBEBX65QaxTHhgrKyBQQMzOj_lBFvxxkIc0CY',
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify({
+  //           fileNames: [`${folder}/sound.mp4`],
+  //         }),
+  //       },
+  //     );
+  //     const Genereated_URL = await presignedUrl.json();
+  //     const signedUrls = Object.values(Genereated_URL);
+  //     const uploadPromises = signedUrls.map(async (s3BucketUrl, index) => {
+  //       const fileUri = await fetch(recordingUrl);
+  //       const audioBody = await fileUri.blob();
+  //       const fileType = audioBody?._data?.type;
+  //       await UploadDocumentApi(s3BucketUrl, fileType, audioBody);
+  //       return `${folder}/sound.mp4`;
+  //     });
+  //     const uploadedFileNames = await Promise.all(uploadPromises);
+  //     return uploadedFileNames;
+  //   } catch (error) {
+  //     console.warn(error);
+  //     return null;
+  //   }
+  // };
 
-  const UploadDocumentApi = async (s3BucketUrl, fileType, imageBody) => {
-    await fetch(s3BucketUrl, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': fileType,
-      },
-      body: imageBody,
-    });
-  };
+  // const UploadDocumentApi = async (s3BucketUrl, fileType, imageBody) => {
+  //   await fetch(s3BucketUrl, {
+  //     method: 'PUT',
+  //     headers: {
+  //       'Content-Type': fileType,
+  //     },
+  //     body: imageBody,
+  //   });
+  // };
 
   return (
     <View>
@@ -99,11 +99,19 @@ export const onStartRecord = async () => {
   console.log(result, 'this is on start result');
 };
 
-export async function onStopRecord(setrecordingUrl) {
+export async function onStopRecord(setrecordingUrl,setvoiceAttachment) {
   const result = await AudioRecorderPlay.stopRecorder();
   AudioRecorderPlay.removeRecordBackListener();
   console.log(result, 'this is result on stop');
   setrecordingUrl(result);
+  setvoiceAttachment([{
+    title: 'recording',
+    key: '123',
+    resourceUrl: result,
+    contentType: 'sound/mp3',
+    // size: 18164,
+    encoding: '',
+  }])
 }
 
 export const onStartPlay = async () => {

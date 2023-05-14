@@ -1,13 +1,12 @@
 import uuid from 'react-native-uuid';
-import { NativeModules } from 'react-native';
-const { NSData,NSTemporaryDirectory } = NativeModules;
 
 export const FileUploadApi = async (Files, accessToken) => {
+  console.log(Files, 'in file upload');
   const fileNames = Files?.map(item => {
     const folder = uuid.v4();
     return `${folder}/${item?.name || item?.fileName}`;
   });
-
+  console.log(fileNames, 'fileNames in file upload');
   try {
     const presignedUrl = await fetch(
       'https://api.intospace.io/chat/fileUpload',
@@ -24,7 +23,7 @@ export const FileUploadApi = async (Files, accessToken) => {
     );
     const Genereated_URL = await presignedUrl.json();
     const signedUrls = Object.values(Genereated_URL);
-
+    console.log(signedUrls, 'signedurl');
     const uploadPromises = signedUrls.map(async (s3BucketUrl, index) => {
       const fileUri = await fetch(Files[index]?.uri);
       const imageBody = await fileUri.blob();

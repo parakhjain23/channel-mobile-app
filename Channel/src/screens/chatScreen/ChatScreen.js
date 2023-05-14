@@ -12,7 +12,6 @@ import {
   SafeAreaView,
   useWindowDimensions,
   Platform,
-  NativeModules,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -48,6 +47,7 @@ import VoiceRecording, {
 import WebView from 'react-native-webview';
 import RNFS from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob';
+import {uploadRecording} from './VoicePicker';
 
 const ChatScreen = ({
   route,
@@ -92,7 +92,7 @@ const ChatScreen = ({
   const [showPlayer, setShowPlayer] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioDataUrl, setAudioDataUrl] = useState('');
-
+  const [voiceAttachment, setvoiceAttachment] = useState('');
   const teamIdAndUnreadCountMapping =
     channelsState?.teamIdAndUnreadCountMapping;
   const teamIdAndBadgeCountMapping = channelsState?.teamIdAndBadgeCountMapping;
@@ -107,6 +107,7 @@ const ChatScreen = ({
   const shouldResetUnreadCount =
     teamIdAndUnreadCountMapping?.[teamId] > 0 ||
     teamIdAndBadgeCountMapping?.[teamId] > 0;
+
   useEffect(() => {
     const fetchAudioDataUrl = async () => {
       if (showPlayer) {
@@ -318,8 +319,8 @@ const ChatScreen = ({
       color: 'black',
     },
   };
-
-  const onSendPress = () => {
+  console.log(attachment, 'atttachment in chat screen ');
+  const onSendPress = async () => {
     const localMessage = message;
     onChangeMessage('');
     const randomId = uuid.v4();
@@ -335,26 +336,30 @@ const ChatScreen = ({
       senderType: 'APP',
       teamId: teamId,
       updatedAt: date,
-      attachment: attachment,
+      attachment: showPlayer ? voiceAttachment : attachment,
       mentionsArr: mentionsArr,
       parentMessage: repliedMsgDetails?.content,
     };
     setlocalMsgAction(messageContent);
+
     if (
       networkState?.isInternetConnected &&
-      (localMessage?.trim() !== '' || attachment?.length > 0)
+      (localMessage?.trim() !== '' || attachment?.length > 0 || showPlayer)
     ) {
-      attachment?.length > 0 && setAttachment([]),
-        sendMessageAction(
-          localMessage,
-          teamId,
-          orgState?.currentOrgId,
-          userInfoState?.user?.id,
-          userInfoState?.accessToken,
-          repliedMsgDetails?._id || null,
-          attachment,
-          mentionsArr,
-        ),
+      if (showPlayer) {
+        await uploadRecording(recordingUrl, setAttachment, accessToken);
+      }
+      sendMessageAction(
+        localMessage,
+        teamId,
+        orgState?.currentOrgId,
+        userInfoState?.user?.id,
+        userInfoState?.accessToken,
+        repliedMsgDetails?._id || null,
+        attachment,
+        mentionsArr,
+      ),
+        // attachment?.length > 0 && setAttachment([]),
         showOptions && hideOptionsMethod(),
         mentionsArr?.length > 0 && setMentionsArr(''),
         mentions?.length > 0 && setMentions([]),
@@ -674,7 +679,7 @@ const ChatScreen = ({
                     size={ms(25)}
                     style={{color: colors.textColor, padding: ms(10)}}
                     onPress={() => {
-                      onStopRecord(setrecordingUrl),
+                      onStopRecord(setrecordingUrl, setvoiceAttachment),
                         setisRecording(false),
                         setShowPlayer(true);
                     }}
