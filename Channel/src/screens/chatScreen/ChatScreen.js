@@ -321,6 +321,7 @@ const ChatScreen = ({
   };
   console.log(attachment, 'atttachment in chat screen ');
   const onSendPress = async () => {
+    let response;
     const localMessage = message;
     onChangeMessage('');
     const randomId = uuid.v4();
@@ -347,7 +348,7 @@ const ChatScreen = ({
       (localMessage?.trim() !== '' || attachment?.length > 0 || showPlayer)
     ) {
       if (showPlayer) {
-        await uploadRecording(recordingUrl, setAttachment, accessToken);
+        response = await uploadRecording(recordingUrl, accessToken);
       }
       sendMessageAction(
         localMessage,
@@ -356,33 +357,35 @@ const ChatScreen = ({
         userInfoState?.user?.id,
         userInfoState?.accessToken,
         repliedMsgDetails?._id || null,
-        attachment,
+        attachment?.length > 0 ? attachment : response || [],
         mentionsArr,
       ),
-        // attachment?.length > 0 && setAttachment([]),
+        attachment?.length > 0 && setAttachment([]),
         showOptions && hideOptionsMethod(),
         mentionsArr?.length > 0 && setMentionsArr(''),
         mentions?.length > 0 && setMentions([]),
         replyOnMessage && setreplyOnMessage(false),
         repliedMsgDetails && setrepliedMsgDetails(null);
+      showPlayer && setShowPlayer(false);
     } else if (localMessage?.trim() !== '') {
-      attachment?.length > 0 && setAttachment([]),
-        setGlobalMessageToSendAction({
-          content: localMessage,
-          teamId: teamId,
-          orgId: orgState?.currentOrgId,
-          senderId: userInfoState?.user?.id,
-          userId: userInfoState?.user?.id,
-          accessToken: userInfoState?.accessToken,
-          parentId: repliedMsgDetails?.id || null,
-          updatedAt: date,
-          mentionsArr: mentionsArr,
-        }),
+      setGlobalMessageToSendAction({
+        content: localMessage,
+        teamId: teamId,
+        orgId: orgState?.currentOrgId,
+        senderId: userInfoState?.user?.id,
+        userId: userInfoState?.user?.id,
+        accessToken: userInfoState?.accessToken,
+        parentId: repliedMsgDetails?.id || null,
+        updatedAt: date,
+        mentionsArr: mentionsArr,
+      }),
+        attachment?.length > 0 && setAttachment([]),
         showOptions && hideOptionsMethod(),
         mentionsArr?.length > 0 && setMentionsArr(''),
         mentions?.length > 0 && setMentions([]),
         replyOnMessage && setreplyOnMessage(false),
         repliedMsgDetails && setrepliedMsgDetails(null);
+      showPlayer && setShowPlayer(false);
     }
   };
   return (
