@@ -78,12 +78,7 @@ const ProtectedNavigation = props => {
       />
     </Stack.Navigator>
   ) : (
-    <Stack.Navigator initialRouteName="Voice">
-      <Stack.Screen
-        name="Voice"
-        component={VoiceRecording}
-        options={{...getHeader}}
-      />
+    <Stack.Navigator initialRouteName="Org">
       <Stack.Screen
         name="Org"
         component={DrawerNavigation}
@@ -138,6 +133,11 @@ const ProtectedNavigation = props => {
           headerShown: true,
           ...getHeader,
         })}
+      />
+      <Stack.Screen
+        name="Voice"
+        component={VoiceRecording}
+        options={{...getHeader}}
       />
     </Stack.Navigator>
   );

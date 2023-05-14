@@ -37,6 +37,13 @@ import {resetUnreadCountStart} from '../../redux/actions/channels/ChannelsAction
 import HTMLView from 'react-native-htmlview';
 import RenderHTML from 'react-native-render-html';
 import {tagsStyles} from './HtmlStyles';
+import VoiceRecording, {
+  onStartPlay,
+  onStartRecord,
+  onStopPlay,
+  onStopRecord,
+} from './VoiceRecording';
+import WebView from 'react-native-webview';
 
 const ChatScreen = ({
   route,
@@ -76,6 +83,10 @@ const ChatScreen = ({
   const screenHeight = Dimensions.get('window').height;
   const {width} = useWindowDimensions();
   const date = useMemo(() => new Date(), []);
+  const [recordingUrl, setrecordingUrl] = useState('');
+  const [isRecording, setisRecording] = useState(false);
+  const [showPlayer, setShowPlayer] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const teamIdAndUnreadCountMapping =
     channelsState?.teamIdAndUnreadCountMapping;
@@ -474,6 +485,50 @@ const ChatScreen = ({
                     </View>
                   </TouchableOpacity>
                 )}
+                {showPlayer && (
+                  <TouchableOpacity
+                    activeOpacity={0.9}
+                    onPress={() => {
+                      // setShowPlayer(false);
+                      // setIsPlaying(false);
+                    }}>
+                    <View style={styles.playerContainer}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          // justifyContent: 'center',
+                          height: ms(100),
+                          flex: 1,
+                          alignItems: 'center',
+                        }}>
+                        <WebView
+                          source={{
+                            html: `
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
+      <style>
+        body, html { margin: 0; padding: 0; flex:1}
+        audio { width: 100%;}
+      </style>
+      <audio controls>
+          <source src="file:////data/user/0/walkover.space.chat/cache/sound.mp4" type="sound/mp4" />
+        </audio>
+    `,
+                          }}
+                          style={{flex: 1}}
+                        />
+                      </View>
+                      <MaterialIcons
+                        name="cancel"
+                        size={ms(18)}
+                        color={'black'}
+                        onPress={() => {
+                          setShowPlayer(false);
+                        }}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                )}
+
                 <FlatList
                   data={mentions}
                   renderItem={renderMention}
@@ -547,33 +602,64 @@ const ChatScreen = ({
                       />
                     )}
                   </View>
-                  <TextInput
-                    ref={textInputRef}
-                    editable
-                    multiline
-                    onChangeText={handleInputChange}
-                    placeholder="Message"
-                    placeholderTextColor={colors.textColor}
-                    value={message}
-                    style={[
-                      replyOnMessage
-                        ? styles.inputWithReply
-                        : styles.inputWithoutReply,
-                      {color: colors.textColor},
-                    ]}
-                  />
+                  {isRecording ? (
+                    <AnimatedLottieView
+                      source={require('../../assests/images/attachments/recordingWave.json')}
+                      loop
+                      autoPlay
+                      style={{width: '100%'}}
+                    />
+                  ) : (
+                    <TextInput
+                      ref={textInputRef}
+                      editable
+                      multiline
+                      onChangeText={handleInputChange}
+                      placeholder="Message"
+                      placeholderTextColor={colors.textColor}
+                      value={message}
+                      style={[
+                        replyOnMessage
+                          ? styles.inputWithReply
+                          : styles.inputWithoutReply,
+                        {color: colors.textColor},
+                      ]}
+                    />
+                  )}
                   {showOptions &&
                     message?.html?.trim()?.length == 1 &&
                     hideOptionsMethod()}
                 </View>
               </View>
               <View style={{justifyContent: 'flex-end'}}>
-                <MaterialIcons
-                  name="send"
-                  size={ms(25)}
-                  style={{color: colors.textColor, padding: ms(10)}}
-                  onPress={onSendPress}
-                />
+                {message?.length > 0 || showPlayer ? (
+                  <MaterialIcons
+                    name="send"
+                    size={ms(25)}
+                    style={{color: colors.textColor, padding: ms(10)}}
+                    onPress={onSendPress}
+                  />
+                ) : !isRecording ? (
+                  <MaterialIcons
+                    name="mic"
+                    size={ms(25)}
+                    style={{color: colors.textColor, padding: ms(10)}}
+                    onPress={() => {
+                      onStartRecord(), setisRecording(true);
+                    }}
+                  />
+                ) : (
+                  <MaterialIcons
+                    name="mic-off"
+                    size={ms(25)}
+                    style={{color: colors.textColor, padding: ms(10)}}
+                    onPress={() => {
+                      onStopRecord(setrecordingUrl),
+                        setisRecording(false),
+                        setShowPlayer(true);
+                    }}
+                  />
+                )}
               </View>
             </View>
           </View>

@@ -6,9 +6,34 @@ import uuid from 'react-native-uuid';
 const AudioRecorderPlay = new AudioRecorderPlayer();
 const VoiceRecording = () => {
   const [recordingUrl, setrecordingUrl] = useState('');
+  console.log('in voice recording component');
   useEffect(() => {
     requestPermission();
-  });
+  }, []);
+  const onStartRecord = async () => {
+    const result = await AudioRecorderPlay.startRecorder();
+    AudioRecorderPlay.addRecordBackListener(e => {
+      console.log(e);
+      console.log(e.currentPosition);
+    });
+    console.log(result, 'this is on start result');
+  };
+
+  async function onStopRecord() {
+    const result = await AudioRecorderPlay.stopRecorder();
+    AudioRecorderPlay.removeRecordBackListener();
+    console.log(result, 'this is result on stop');
+    setrecordingUrl(result);
+  }
+
+  const onStartPlay = async () => {
+    const result = await AudioRecorderPlay.startPlayer();
+    AudioRecorderPlay.addPlayBackListener(e => {
+      console.log(e);
+      console.log(e.currentPosition);
+    });
+  };
+
   const uploadSound = async () => {
     try {
       const folder = uuid.v4();
@@ -18,7 +43,7 @@ const VoiceRecording = () => {
           method: 'POST',
           headers: {
             Authorization:
-            'token',
+              'eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJlbWFpbCI6InBhcmFraGphaW4yMzAxQGdtYWlsLmNvbSIsImlhdCI6MTY4MTg5Nzk0OCwiZXhwIjoxNzEzNDU1NTQ4LCJhdWQiOiJodHRwczovL3lvdXJkb21haW4uY29tIiwiaXNzIjoiZmVhdGhlcnMiLCJzdWIiOiJRbjA5d2F1ZWxCcHNGTmRPIiwianRpIjoiOWQzNjc0YjQtOGY0My00N2NkLTljNTItYzQzMTQyZDlhMjZmIn0.oACw14GBEBX65QaxTHhgrKyBQQMzOj_lBFvxxkIc0CY',
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
@@ -54,34 +79,6 @@ const VoiceRecording = () => {
     });
   };
 
-  const onStartRecord = async () => {
-    const result = await AudioRecorderPlay.startRecorder();
-    AudioRecorderPlay.addRecordBackListener(e => {
-      console.log(e);
-      console.log(e.currentPosition);
-    });
-    console.log(result, 'this is on start result');
-  };
-
-  const onStopRecord = async () => {
-    const result = await AudioRecorderPlay.stopRecorder();
-    AudioRecorderPlay.removeRecordBackListener();
-    console.log(result, 'this is result on stop');
-    setrecordingUrl(result);
-  };
-
-  const onStartPlay = async () => {
-    const result = await AudioRecorderPlay.startPlayer();
-    AudioRecorderPlay.addPlayBackListener(e => {
-      console.log(e);
-      console.log(e.currentPosition);
-    });
-  };
-
-  const onStopPlay = async () => {
-    const result = await AudioRecorderPlay.stopPlayer();
-    AudioRecorderPlay.removePlayBackListener();
-  };
   return (
     <View>
       <Button title="Start Recording" onPress={onStartRecord} />
@@ -95,7 +92,34 @@ const VoiceRecording = () => {
 };
 
 export default VoiceRecording;
+export const onStartRecord = async () => {
+  const result = await AudioRecorderPlay.startRecorder();
+  AudioRecorderPlay.addRecordBackListener(e => {
+    console.log(e);
+    console.log(e.currentPosition);
+  });
+  console.log(result, 'this is on start result');
+};
 
+export async function onStopRecord(setrecordingUrl) {
+  const result = await AudioRecorderPlay.stopRecorder();
+  AudioRecorderPlay.removeRecordBackListener();
+  console.log(result, 'this is result on stop');
+  setrecordingUrl(result);
+}
+
+export const onStartPlay = async () => {
+  const result = await AudioRecorderPlay.startPlayer();
+  AudioRecorderPlay.addPlayBackListener(e => {
+    console.log(e);
+    console.log(e.currentPosition);
+  });
+};
+
+export const onStopPlay = async () => {
+  const result = await AudioRecorderPlay.stopPlayer();
+  AudioRecorderPlay.removePlayBackListener();
+};
 async function requestPermission() {
   if (Platform.OS === 'android') {
     try {
