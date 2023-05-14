@@ -1,46 +1,44 @@
-export const addUsersToChannelApi = async (userIds,teamId,orgId,token) => {
-    console.log(userIds,teamId,orgId,token,"-0-0-0-0-0-");
-    try {
-      
-      var response = await fetch(`https://api.intospace.io/chat/team/${teamId}`, {
+export const addUsersToChannelApi = async (userIds, teamId, orgId, token) => {
+  try {
+    const requests = userIds.map(userId => 
+      fetch(`https://api.intospace.io/chat/teamUser`, {
         method: 'POST',
         headers: {
           Authorization: token,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          type: channelType,
-          name: channelName,
-          isArchived:true
+          userId: userId,
+          teamId: teamId,
+          orgId: orgId,
         }),
-      });
-      var result = await response.json();
-      return result
-    } catch (error) {
-      console.warn(error);
-    }
-  };
-  
-  export const removeUserFromChannelApi = async (userIds,teamId,orgId,token) => {
-    console.log(userIds,teamId,orgId,token,"-0-0-0-0-0-");
-    try {
-      
-      var response = await fetch(`https://api.intospace.io/chat/team/${teamId}`, {
-        method: 'POST',
+      }).then(response => response.json())
+    );
+
+    const results = await Promise.all(requests);
+    return results;
+  } catch (error) {
+    console.warn(error);
+  }
+};
+
+
+export const removeUserFromChannelApi = async (userIds, teamId, orgId, token) => {
+  try {
+    const requests = userIds.map(userId => 
+      fetch(`https://api.intospace.io/chat/teamUser?orgId=${orgId}&userId=${userId}&teamId=${teamId}`, {
+        method: 'DELETE',
         headers: {
           Authorization: token,
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          type: channelType,
-          name: channelName,
-          isArchived:true
-        }),
-      });
-      var result = await response.json();
-      return result
-    } catch (error) {
-      console.warn(error);
-    }
-  };
-  
+        }
+      }).then(response => response.json())
+    );
+
+    const results = await Promise.all(requests);
+    return results;
+  } catch (error) {
+    console.warn(error);
+  }
+};
+

@@ -169,11 +169,8 @@ const ChatScreen = ({
   const handleInputChange = useCallback(
     text => {
       onChangeMessage(text);
-      console.log(text, 'this is message');
-
       const words = text.split(' ');
       const currentWord = words[words.length - 1];
-
       if (currentWord.startsWith('@')) {
         getChannelsByQueryStartAction(
           currentWord.replace('@', ''),
@@ -182,7 +179,7 @@ const ChatScreen = ({
         );
         setMentions(channelsByQueryState?.mentionChannels);
       } else if (words[0].startsWith('/') && words.length === 1 && channelType != 'DIRECT_MESSAGE' && channelType !='PERSONAL') {
-        setActivities(['invite', 'remove']);
+        setActivities(['Invite', 'Remove']);
         setMentions([]);
       } else {
         setMentions([]);
@@ -270,7 +267,7 @@ const ChatScreen = ({
                 name="account-circle"
                 size={20}
                 color={colors.textColor}
-              />
+              /> 
               <Text style={{fontSize: 16, margin: 4, color: colors.textColor}}>
                 {item}
               </Text>
@@ -346,13 +343,12 @@ const ChatScreen = ({
   const onSendPress = () => {
     const localMessage = message;
     onChangeMessage('');
-    if(action == 'invite'){
+    if(action == 'Invite'){
       addUsersToChannelAction(mentionsArr,teamId,orgState?.currentOrgId,userInfoState?.accessToken)
       setaction('')
       setMentions([])
       setMentionsArr([])
-    }else if(action == 'remove'){
-      console.log("inside remove action");
+    }else if(action == 'Remove'){
       removeUserFromChannelAction(mentionsArr,teamId,orgState?.currentOrgId,userInfoState?.accessToken)
       setaction('')
       setMentions([])
