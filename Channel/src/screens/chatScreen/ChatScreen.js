@@ -163,16 +163,21 @@ const ChatScreen = ({
   const handleInputChange = useCallback(
     text => {
       onChangeMessage(text);
-      const mentionRegex = /@\w+/g;
-      const foundMentions = text?.match(mentionRegex);
-      foundMentions?.length > 0
-        ? (getChannelsByQueryStartAction(
-            foundMentions?.[foundMentions?.length - 1].replace('@', ''),
-            userInfoState?.user?.id,
-            orgState?.currentOrgId,
-          ),
-          setMentions(channelsByQueryState?.mentionChannels))
-        : setMentions([]);
+      console.log(text, "this is message");
+  
+      const words = text.split(' ');
+      const currentWord = words[words.length - 1];
+      
+      if (currentWord.startsWith('@')) {
+        getChannelsByQueryStartAction(
+          currentWord.replace('@', ''),
+          userInfoState?.user?.id,
+          orgState?.currentOrgId,
+        )
+        setMentions(channelsByQueryState?.mentionChannels)
+      } else {
+        setMentions([]);
+      }
     },
     [
       onChangeMessage,
@@ -191,12 +196,14 @@ const ChatScreen = ({
       : setMentionsArr(prevUserIds => [...prevUserIds, '@all']),
       onChangeMessage(prevmessage =>
         prevmessage.replace(
-          new RegExp(`@\\w+\\s?$`),
+          new RegExp(`@\\w*\\s?$`),
           `@${mention?._source?.displayName} `,
         ),
       );
     setMentions([]);
   };
+  
+  
 
   const renderMention = useMemo(
     () =>
