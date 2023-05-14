@@ -6,7 +6,6 @@ import uuid from 'react-native-uuid';
 const AudioRecorderPlay = new AudioRecorderPlayer();
 const VoiceRecording = () => {
   const [recordingUrl, setrecordingUrl] = useState('');
-  console.log('in voice recording component');
   useEffect(() => {
     requestPermission();
   }, []);
@@ -53,7 +52,6 @@ const VoiceRecording = () => {
       );
       const Genereated_URL = await presignedUrl.json();
       const signedUrls = Object.values(Genereated_URL);
-      console.log(signedUrls, '=-=-=-');
       const uploadPromises = signedUrls.map(async (s3BucketUrl, index) => {
         const fileUri = await fetch(recordingUrl);
         const audioBody = await fileUri.blob();

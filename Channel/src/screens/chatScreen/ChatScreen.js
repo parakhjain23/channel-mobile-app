@@ -11,6 +11,8 @@ import {
   Dimensions,
   SafeAreaView,
   useWindowDimensions,
+  Platform,
+  NativeModules,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -44,6 +46,8 @@ import VoiceRecording, {
   onStopRecord,
 } from './VoiceRecording';
 import WebView from 'react-native-webview';
+import RNFS from 'react-native-fs';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const ChatScreen = ({
   route,
@@ -87,6 +91,7 @@ const ChatScreen = ({
   const [isRecording, setisRecording] = useState(false);
   const [showPlayer, setShowPlayer] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [audioDataUrl, setAudioDataUrl] = useState('');
 
   const teamIdAndUnreadCountMapping =
     channelsState?.teamIdAndUnreadCountMapping;
@@ -102,6 +107,28 @@ const ChatScreen = ({
   const shouldResetUnreadCount =
     teamIdAndUnreadCountMapping?.[teamId] > 0 ||
     teamIdAndBadgeCountMapping?.[teamId] > 0;
+  useEffect(() => {
+    const fetchAudioDataUrl = async () => {
+      if (showPlayer) {
+        console.log('inside showplayer');
+        try {
+          const dirs = RNFetchBlob.fs.dirs;
+          const path = Platform.select({
+            ios: `${dirs.CacheDir}/sound.m4a`,
+            android: `${dirs.CacheDir}/sound.mp4`,
+          });
+          const filePath = path; // Replace with your file path
+          const fileContent = await RNFS.readFile(filePath, 'base64');
+          const mimeType = 'audio/mp4'; // Adjust the MIME type based on the file format
+          const dataUrl = `data:${mimeType};base64,${fileContent}`;
+          setAudioDataUrl(dataUrl);
+        } catch (error) {
+          console.error('Error fetching audio data:', error);
+        }
+      }
+    };
+    fetchAudioDataUrl();
+  }, [showPlayer]);
 
   useEffect(() => {
     if (repliedMsgDetails != '') {
@@ -486,47 +513,40 @@ const ChatScreen = ({
                   </TouchableOpacity>
                 )}
                 {showPlayer && (
-                  <TouchableOpacity
-                    activeOpacity={0.9}
-                    onPress={() => {
-                      // setShowPlayer(false);
-                      // setIsPlaying(false);
-                    }}>
-                    <View style={styles.playerContainer}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          // justifyContent: 'center',
-                          height: ms(100),
-                          flex: 1,
-                          alignItems: 'center',
-                        }}>
-                        <WebView
-                          source={{
-                            html: `
-      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
-      <style>
-        body, html { margin: 0; padding: 0; flex:1}
-        audio { width: 100%;}
-      </style>
-      <audio controls>
-          <source src="file:////data/user/0/walkover.space.chat/cache/sound.mp4" type="sound/mp4" />
-        </audio>
-    `,
-                          }}
-                          style={{flex: 1}}
-                        />
-                      </View>
-                      <MaterialIcons
-                        name="cancel"
-                        size={ms(18)}
-                        color={'black'}
-                        onPress={() => {
-                          setShowPlayer(false);
+                  <View style={styles.playerContainer}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        // justifyContent: 'center',
+                        height: ms(100),
+                        flex: 1,
+                        alignItems: 'center',
+                      }}>
+                      <WebView
+                        source={{
+                          html: `
+                            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
+                            <style>
+                              body, html { margin: 0; padding: 0; flex:1}
+                              audio { width: 100%;}
+                            </style>
+                            <audio controls>
+                            <source src="${audioDataUrl}" type="audio/mp4">
+                              </audio>
+                             `,
                         }}
+                        style={{flex: 1}}
                       />
                     </View>
-                  </TouchableOpacity>
+                    <MaterialIcons
+                      name="cancel"
+                      size={ms(18)}
+                      color={'black'}
+                      onPress={() => {
+                        setShowPlayer(false);
+                      }}
+                    />
+                  </View>
                 )}
 
                 <FlatList
