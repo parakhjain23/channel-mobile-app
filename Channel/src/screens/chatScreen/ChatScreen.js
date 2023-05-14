@@ -660,7 +660,7 @@ const ChatScreen = ({
                 </View>
               </View>
               <View style={{justifyContent: 'flex-end'}}>
-                {message?.length > 0 || showPlayer ? (
+                {message?.length > 0 || showPlayer || attachment?.length > 0 ? (
                   <MaterialIcons
                     name="send"
                     size={ms(25)}

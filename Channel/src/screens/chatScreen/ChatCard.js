@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   Image,
   Modal,
-  StyleSheet,
   Text,
   TouchableOpacity,
   Vibration,
@@ -22,6 +21,7 @@ import HTMLView from 'react-native-htmlview';
 import {RenderHTML} from 'react-native-render-html';
 import * as RootNavigation from '../../navigation/RootNavigation';
 import {tagsStyles} from './HtmlStyles';
+import WebView from 'react-native-webview';
 
 const AddRemoveJoinedMsg = React.memo(({senderName, content, orgState}) => {
   const {colors} = useTheme();
@@ -264,50 +264,7 @@ const ChatCard = ({
     }
   }
   const emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
-  // const renderers = {
-  //   span: (htmlAttribs, children, index) => {
-  //     // if (htmlAttribs?.tnode?.init?.textNode?.parent?.name === 'span') {
-  //     //   return (
-  //     //     <TouchableOpacity
-  //     //       key={index}
-  //     //       onPress={() =>
-  //     //         Linking.openURL(
-  //     //           `mailTo:${htmlAttribs?.tnode?.init?.textNode?.data}`,
-  //     //         )
-  //     //       }>
-  //     //       <Text style={{color: linkColor, textDecorationLine: 'underline'}}>
-  //     //         {htmlAttribs?.tnode?.init?.textNode?.data}
-  //     //       </Text>
-  //     //     </TouchableOpacity>
-  //     //   );
-  //     // }
-  //     if (htmlAttribs?.tnode?.classes[0] === 'mention') {
-  //       return (
-  //         <TouchableOpacity
-  //           key={index}
-  //           onPress={async () => {
-  //             htmlAttribs?.tnode?.init?.domNode?.attribs?.['data-id'] !=
-  //               '@all' &&
-  //               (await searchUserProfileAction(
-  //                 htmlAttribs?.tnode?.init?.domNode?.attribs?.['data-id'],
-  //                 userInfoState?.accessToken,
-  //               )) &&
-  //               RootNavigation.navigate('UserProfiles', {
-  //                 displayName:
-  //                   orgState?.userIdAndDisplayNameMapping[
-  //                     htmlAttribs?.tnode?.init?.domNode?.attribs?.['data-id']
-  //                   ],
-  //               });
-  //           }}>
-  //           <Text style={{color: linkColor, textDecorationLine: 'underline'}}>
-  //             @{htmlAttribs?.tnode?.init?.domNode?.attribs?.['data-value']}
-  //           </Text>
-  //         </TouchableOpacity>
-  //       );
-  //     }
-  //     return null;
-  //   },
-  // };
+
   if (!isActivity) {
     return (
       <GestureHandlerRootView>
@@ -429,6 +386,32 @@ const ChatCard = ({
                           }}
                         />
                       </TouchableOpacity>
+                    ) : item?.contentType?.includes('audio/mpeg') ? (
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          height: ms(50),
+                          width: ms(280),
+                          flex: 1,
+                          alignItems: 'center',
+                          overflow: 'hidden',
+                        }}>
+                        <WebView
+                          source={{
+                            html: `
+                            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
+                            <style>
+                              body, html { margin: 0; padding: 0; flex:1}
+                              audio { width: 100%;}
+                            </style>
+                            <audio controls>
+                            <source src="${item?.resourceUrl}" type="audio/mp4">
+                              </audio>
+                             `,
+                          }}
+                          style={{flex: 1}}
+                        />
+                      </View>
                     ) : (
                       <View
                         style={[
