@@ -44,6 +44,7 @@ import VoiceRecording, {
   onStopRecord,
 } from './VoiceRecording';
 import WebView from 'react-native-webview';
+import { addUserToChannelStart, removeUserFromChannelStart } from '../../redux/actions/channelActivities/inviteUserToChannelAction';
 
 const ChatScreen = ({
   route,
@@ -62,6 +63,8 @@ const ChatScreen = ({
   searchUserProfileAction,
   setlocalMsgAction,
   resetUnreadCountAction,
+  addUsersToChannelAction,
+  removeUserFromChannelAction
 }) => {
   var {teamId, reciverUserId, channelType, searchedChannel} = route.params;
   const {colors} = useTheme();
@@ -87,7 +90,8 @@ const ChatScreen = ({
   const [isRecording, setisRecording] = useState(false);
   const [showPlayer, setShowPlayer] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-
+  const [Activities, setActivities] = useState('');
+  const [action, setaction] = useState(null);
   const teamIdAndUnreadCountMapping =
     channelsState?.teamIdAndUnreadCountMapping;
   const teamIdAndBadgeCountMapping = channelsState?.teamIdAndBadgeCountMapping;
@@ -160,23 +164,29 @@ const ChatScreen = ({
       setShowOptions(false);
     }, 130);
   };
+  //  const [activities, setActivities] = useState([]);
+
   const handleInputChange = useCallback(
     text => {
       onChangeMessage(text);
-      console.log(text, "this is message");
-  
+      console.log(text, 'this is message');
+
       const words = text.split(' ');
       const currentWord = words[words.length - 1];
-      
+
       if (currentWord.startsWith('@')) {
         getChannelsByQueryStartAction(
           currentWord.replace('@', ''),
           userInfoState?.user?.id,
           orgState?.currentOrgId,
-        )
-        setMentions(channelsByQueryState?.mentionChannels)
+        );
+        setMentions(channelsByQueryState?.mentionChannels);
+      } else if (words[0].startsWith('/') && words.length === 1 && channelType != 'DIRECT_MESSAGE' && channelType !='PERSONAL') {
+        setActivities(['invite', 'remove']);
+        setMentions([]);
       } else {
         setMentions([]);
+        setActivities([]);
       }
     },
     [
@@ -202,8 +212,14 @@ const ChatScreen = ({
       );
     setMentions([]);
   };
-  
-  
+
+  const handleActionSelect = action => {
+    setaction(action);
+    onChangeMessage(prevmessage =>
+      prevmessage.replace(new RegExp(`/\\w*\\s?$`), `/${action} `),
+    );
+    setActivities([]);
+  };
 
   const renderMention = useMemo(
     () =>
@@ -234,7 +250,35 @@ const ChatScreen = ({
         ),
     [handleMentionSelect],
   );
-
+  const renderActions = useMemo(
+    () =>
+      ({item, index}) =>
+        (
+          <TouchableOpacity
+            onPress={() => handleActionSelect(item)}
+            key={index}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                borderWidth: ms(0.7),
+                borderTopColor: 'grey',
+                margin: s(2),
+                padding: s(2),
+              }}>
+              <MaterialIcons
+                name="account-circle"
+                size={20}
+                color={colors.textColor}
+              />
+              <Text style={{fontSize: 16, margin: 4, color: colors.textColor}}>
+                {item}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        ),
+    [handleActionSelect],
+  );
   const onScroll = Animated.event(
     [{nativeEvent: {contentOffset: {y: scrollY}}}],
     {
@@ -302,62 +346,76 @@ const ChatScreen = ({
   const onSendPress = () => {
     const localMessage = message;
     onChangeMessage('');
-    const randomId = uuid.v4();
-    const messageContent = {
-      randomId: randomId,
-      content: localMessage,
-      createdAt: date,
-      isLink: false,
-      mentions: mentionsArr,
-      orgId: orgState?.currentOrgId,
-      parentId: repliedMsgDetails?._id,
-      senderId: userInfoState?.user?.id,
-      senderType: 'APP',
-      teamId: teamId,
-      updatedAt: date,
-      attachment: attachment,
-      mentionsArr: mentionsArr,
-      parentMessage: repliedMsgDetails?.content,
-    };
-    setlocalMsgAction(messageContent);
-    if (
-      networkState?.isInternetConnected &&
-      (localMessage?.trim() !== '' || attachment?.length > 0)
-    ) {
-      attachment?.length > 0 && setAttachment([]),
-        sendMessageAction(
-          localMessage,
-          teamId,
-          orgState?.currentOrgId,
-          userInfoState?.user?.id,
-          userInfoState?.accessToken,
-          repliedMsgDetails?._id || null,
-          attachment,
-          mentionsArr,
-        ),
-        showOptions && hideOptionsMethod(),
-        mentionsArr?.length > 0 && setMentionsArr(''),
-        mentions?.length > 0 && setMentions([]),
-        replyOnMessage && setreplyOnMessage(false),
-        repliedMsgDetails && setrepliedMsgDetails(null);
-    } else if (localMessage?.trim() !== '') {
-      attachment?.length > 0 && setAttachment([]),
-        setGlobalMessageToSendAction({
-          content: localMessage,
-          teamId: teamId,
-          orgId: orgState?.currentOrgId,
-          senderId: userInfoState?.user?.id,
-          userId: userInfoState?.user?.id,
-          accessToken: userInfoState?.accessToken,
-          parentId: repliedMsgDetails?.id || null,
-          updatedAt: date,
-          mentionsArr: mentionsArr,
-        }),
-        showOptions && hideOptionsMethod(),
-        mentionsArr?.length > 0 && setMentionsArr(''),
-        mentions?.length > 0 && setMentions([]),
-        replyOnMessage && setreplyOnMessage(false),
-        repliedMsgDetails && setrepliedMsgDetails(null);
+    if(action == 'invite'){
+      addUsersToChannelAction(mentionsArr,teamId,orgState?.currentOrgId,userInfoState?.accessToken)
+      setaction('')
+      setMentions([])
+      setMentionsArr([])
+    }else if(action == 'remove'){
+      console.log("inside remove action");
+      removeUserFromChannelAction(mentionsArr,teamId,orgState?.currentOrgId,userInfoState?.accessToken)
+      setaction('')
+      setMentions([])
+      setMentionsArr([])
+    }
+    else{
+      const randomId = uuid.v4();
+      const messageContent = {
+        randomId: randomId,
+        content: localMessage,
+        createdAt: date,
+        isLink: false,
+        mentions: mentionsArr,
+        orgId: orgState?.currentOrgId,
+        parentId: repliedMsgDetails?._id,
+        senderId: userInfoState?.user?.id,
+        senderType: 'APP',
+        teamId: teamId,
+        updatedAt: date,
+        attachment: attachment,
+        mentionsArr: mentionsArr,
+        parentMessage: repliedMsgDetails?.content,
+      };
+      setlocalMsgAction(messageContent);
+      if (
+        networkState?.isInternetConnected &&
+        (localMessage?.trim() !== '' || attachment?.length > 0)
+      ) {
+        attachment?.length > 0 && setAttachment([]),
+          sendMessageAction(
+            localMessage,
+            teamId,
+            orgState?.currentOrgId,
+            userInfoState?.user?.id,
+            userInfoState?.accessToken,
+            repliedMsgDetails?._id || null,
+            attachment,
+            mentionsArr,
+          ),
+          showOptions && hideOptionsMethod(),
+          mentionsArr?.length > 0 && setMentionsArr(''),
+          mentions?.length > 0 && setMentions([]),
+          replyOnMessage && setreplyOnMessage(false),
+          repliedMsgDetails && setrepliedMsgDetails(null);
+      } else if (localMessage?.trim() !== '') {
+        attachment?.length > 0 && setAttachment([]),
+          setGlobalMessageToSendAction({
+            content: localMessage,
+            teamId: teamId,
+            orgId: orgState?.currentOrgId,
+            senderId: userInfoState?.user?.id,
+            userId: userInfoState?.user?.id,
+            accessToken: userInfoState?.accessToken,
+            parentId: repliedMsgDetails?.id || null,
+            updatedAt: date,
+            mentionsArr: mentionsArr,
+          }),
+          showOptions && hideOptionsMethod(),
+          mentionsArr?.length > 0 && setMentionsArr(''),
+          mentions?.length > 0 && setMentions([]),
+          replyOnMessage && setreplyOnMessage(false),
+          repliedMsgDetails && setrepliedMsgDetails(null);
+      }
     }
   };
   return (
@@ -542,7 +600,12 @@ const ChatScreen = ({
                   style={styles.mentionsList}
                   keyboardShouldPersistTaps="always"
                 />
-
+                <FlatList
+                  data={Activities}
+                  renderItem={renderActions}
+                  style={styles.mentionsList}
+                  keyboardShouldPersistTaps="always"
+                />
                 <View style={styles.inputContainer}>
                   <View style={{justifyContent: 'center'}}>
                     {showOptions && (
@@ -709,6 +772,8 @@ const mapDispatchToProps = dispatch => {
           mentionsArr,
         ),
       ),
+    removeUserFromChannelAction:(userIds,teamId,orgId,accessToken)=>dispatch(removeUserFromChannelStart(userIds,teamId,orgId,accessToken)),
+    addUsersToChannelAction : (userIds,teamId,orgId,accessToken)=> dispatch(addUserToChannelStart(userIds,teamId,orgId,accessToken)),   
     setlocalMsgAction: data => dispatch(setLocalMsgStart(data)),
     deleteMessageAction: (accessToken, msgId) =>
       dispatch(deleteMessageStart(accessToken, msgId)),
