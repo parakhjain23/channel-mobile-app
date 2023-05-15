@@ -8,6 +8,7 @@ import { getRecentChannels } from "../actions/channels/RecentChannelsAction";
 import { getAllUsersOfOrg } from "../actions/org/GetAllUsersOfOrg";
 import * as Actions from '../Enums';
 import { closeChannel } from "../actions/channels/CloseChannelActions";
+import { addUserToChannel, removeUserFromChannel } from "../actions/channelActivities/inviteUserToChannelAction";
 
 function* ChannelSaga() {
     yield takeLatest(Actions.FETCH_CHANNELS_START,getChannels)
@@ -23,6 +24,8 @@ function* ChannelSaga() {
     yield takeLatest(Actions.RESET_UNREAD_COUNT_START,resetUnreadCount)
     yield takeLatest(Actions.GET_CHANNEL_START,getChannelByTeamId)
     yield takeLatest(Actions.CLOSE_CHANNEL_START,closeChannel)
+    yield takeLatest(Actions.ADD_USER_TO_CHANNEL,addUserToChannel)
+    yield takeLatest(Actions.REMOVE_USER_FROM_CHANNEL,removeUserFromChannel)
 
 }
 
