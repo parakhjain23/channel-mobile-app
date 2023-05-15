@@ -12,6 +12,7 @@ import {
   SafeAreaView,
   useWindowDimensions,
   Platform,
+  Image,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -52,6 +53,7 @@ import {
   addUserToChannelStart,
   removeUserFromChannelStart,
 } from '../../redux/actions/channelActivities/inviteUserToChannelAction';
+import {ACTIVITIES} from '../../constants/Constants';
 
 const ChatScreen = ({
   route,
@@ -99,7 +101,7 @@ const ChatScreen = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioDataUrl, setAudioDataUrl] = useState('');
   const [voiceAttachment, setvoiceAttachment] = useState('');
-  const [Activities, setActivities] = useState('');
+  const [Activities, setActivities] = useState(false);
   const [action, setaction] = useState(null);
   const teamIdAndUnreadCountMapping =
     channelsState?.teamIdAndUnreadCountMapping;
@@ -108,7 +110,7 @@ const ChatScreen = ({
   const accessToken = userInfoState?.accessToken;
   const currentOrgId = orgState?.currentOrgId;
   const emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
-  
+
   if (teamId == undefined) {
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
   }
@@ -216,11 +218,11 @@ const ChatScreen = ({
         channelType != 'DIRECT_MESSAGE' &&
         channelType != 'PERSONAL'
       ) {
-        setActivities(['Invite', 'Remove']);
+        setActivities(true);
         setMentions([]);
       } else {
         setMentions([]);
-        setActivities([]);
+        setActivities(false);
       }
     },
     [
@@ -252,7 +254,7 @@ const ChatScreen = ({
     onChangeMessage(prevmessage =>
       prevmessage.replace(new RegExp(`/\\w*\\s?$`), `/${action} `),
     );
-    setActivities([]);
+    setActivities(false);
   };
 
   const renderMention = useMemo(
@@ -289,7 +291,7 @@ const ChatScreen = ({
       ({item, index}) =>
         (
           <TouchableOpacity
-            onPress={() => handleActionSelect(item)}
+            onPress={() => handleActionSelect(item?.name)}
             key={index}>
             <View
               style={{
@@ -300,14 +302,24 @@ const ChatScreen = ({
                 margin: s(2),
                 padding: s(2),
               }}>
-              <MaterialIcons
-                name="account-circle"
-                size={20}
-                color={colors.textColor}
+              <Image
+                source={require('../../assests/images/appIcon/icon48size.png')}
+                style={{height: 30, width: 30}}
               />
-              <Text style={{fontSize: 16, margin: 4, color: colors.textColor}}>
-                {item}
-              </Text>
+              <View>
+                <Text
+                  style={{fontSize: 16, margin: 4, color: colors.textColor}}>
+                  {item?.name}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 13,
+                    marginLeft: 4,
+                    color: colors.textColor,
+                  }}>
+                  {item?.desc}
+                </Text>
+              </View>
             </View>
           </TouchableOpacity>
         ),
@@ -376,7 +388,7 @@ const ChatScreen = ({
       color: 'black',
     },
   };
-  console.log(attachment, 'atttachment in chat screen ');
+
   const onSendPress = async () => {
     let response;
     const localMessage = message;
@@ -642,12 +654,14 @@ const ChatScreen = ({
                   style={styles.mentionsList}
                   keyboardShouldPersistTaps="always"
                 />
-                <FlatList
-                  data={Activities}
-                  renderItem={renderActions}
-                  style={styles.mentionsList}
-                  keyboardShouldPersistTaps="always"
-                />
+                {Activities && (
+                  <FlatList
+                    data={ACTIVITIES}
+                    renderItem={renderActions}
+                    style={styles.mentionsList}
+                    keyboardShouldPersistTaps="always"
+                  />
+                )}
                 <View style={styles.inputContainer}>
                   <View style={{justifyContent: 'center'}}>
                     {showOptions && (

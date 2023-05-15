@@ -372,7 +372,7 @@ const ChannelsScreen = props => {
                   color={'white'}
                   animated={false}
                   uppercase={false}
-                  icon={() => <Icon name="add" size={20} color={'white'} />}
+                  icon={() => <Icon name="add" size={ms(20)} color={'white'} />}
                   style={{
                     backgroundColor: '#333333', // change the background color to light grey
                     borderRadius: ms(50),
@@ -383,7 +383,6 @@ const ChannelsScreen = props => {
                     textAlign: 'center',
                     lineHeight: ms(14),
                   }}
-                  // label={`New\nChannel`}
                 />
               </View>
               {!isScrolling && (
@@ -393,7 +392,7 @@ const ChannelsScreen = props => {
                     bottom: s(10),
                     right: s(10),
                     backgroundColor: '#333333',
-                    borderRadius: ms(25),
+                    borderRadius: ms(50),
                     padding: ms(15),
                   }}
                   onPress={() => {

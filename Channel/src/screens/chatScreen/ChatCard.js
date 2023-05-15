@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Linking} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 import {makeStyles} from './ChatCardStyles';
-import {ms} from 'react-native-size-matters';
+import {ms, s} from 'react-native-size-matters';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import Clipboard from '@react-native-community/clipboard';
@@ -391,23 +391,24 @@ const ChatCard = ({
                         style={{
                           flexDirection: 'row',
                           height: ms(50),
-                          width: ms(280),
+                          width: s(250),
                           flex: 1,
                           alignItems: 'center',
                           overflow: 'hidden',
+                          justifyContent: 'center', // Align center horizontally
                         }}>
                         <WebView
                           source={{
                             html: `
-                            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
-                            <style>
-                              body, html { margin: 0; padding: 0; flex:1}
-                              audio { width: 100%;}
-                            </style>
-                            <audio controls>
-                            <source src="${item?.resourceUrl}" type="audio/mp4">
-                              </audio>
-                             `,
+                                  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
+                                  <style>
+                                    body, html { margin: 0; padding: 0; flex: 1; display: flex; align-items: center;}
+                                    audio { width: 100%;}
+                                  </style>
+                                  <audio controls>
+                                    <source src="${item?.resourceUrl}" type="audio/mp4">
+                                  </audio>
+                                `,
                           }}
                           style={{flex: 1}}
                         />

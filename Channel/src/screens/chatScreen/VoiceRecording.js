@@ -57,6 +57,8 @@ export const onStartRecord = async () => {
 export async function onStopRecord(setrecordingUrl, setvoiceAttachment) {
   const result = await AudioRecorderPlay.stopRecorder();
   AudioRecorderPlay.removeRecordBackListener();
+  console.log(result,'=-=-=result on stop record =-=-=-=');
+
   setrecordingUrl(result);
   setvoiceAttachment([
     {
