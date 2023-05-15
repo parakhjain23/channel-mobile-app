@@ -26,7 +26,7 @@ export const DARK_THEME = {
         modalColor: '#252525',
         headerColor: '#333333',
         drawerBackgroundColor: '#1A2421',
-        searchBoxBackgroundColor: '#D3D3D3',
+        searchBoxBackgroundColor: '#262626',
         linkColor:'#F4C430',
         sentByMeCardColor:'#007AFF',
         // receivedCardColor:'#2a2a2a'

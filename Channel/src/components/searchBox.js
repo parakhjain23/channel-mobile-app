@@ -16,15 +16,30 @@ const SearchBox = ({searchValue, changeText, textInputRef}) => {
         borderColor: colors?.color,
         marginHorizontal: 1,
       }}
+      textColor={colors?.textColor}
       underlineStyle={{backgroundColor: 'transparent'}}
       underlineColorAndroid="transparent"
       // clearButtonMode="always"
       placeholder="Search"
+      placeholderTextColor={colors?.textColor}
       left={
-        <TextInput.Icon icon="magnify" style={{justifyContent: 'center'}} />
+        <TextInput.Icon
+          icon="magnify"
+          style={{justifyContent: 'center'}}
+          iconColor={colors?.textColor}
+        />
       }
       right={
-        searchValue!='' && <TextInput.Icon icon="close" style={{justifyContent: 'center'}} onPressIn={()=>{changeText('')}}/>
+        searchValue != '' && (
+          <TextInput.Icon
+            icon="close"
+            style={{justifyContent: 'center'}}
+            onPressIn={() => {
+              changeText('');
+            }}
+            iconColor={colors?.textColor}
+          />
+        )
       }
     />
   );

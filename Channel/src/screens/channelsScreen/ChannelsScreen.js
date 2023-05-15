@@ -294,7 +294,7 @@ const ChannelsScreen = props => {
           keyboardVerticalOffset={offset}
           style={{flex: 1}}>
           {props?.channelsState?.isLoading ? (
-            <ActivityIndicator size={'large'} color={'black'} />
+            <ActivityIndicator size={'large'} color={colors?.textColor} />
           ) : (
             <View style={{flex: 1}}>
               {searchValue != '' ? (

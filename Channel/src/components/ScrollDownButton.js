@@ -42,11 +42,7 @@ const useKeyboard = () => {
 
   return {isKeyboardVisible, viewportHeight};
 };
-const ScrollDownButton = ({
-  scrollToBottom,
-  isVisible,
-  isNewMessage,
-}) => {
+const ScrollDownButton = ({scrollToBottom, isVisible, isNewMessage}) => {
   const {isKeyboardVisible, viewportHeight} = useKeyboard();
   const translateY = useSharedValue(0);
 
@@ -69,12 +65,12 @@ const ScrollDownButton = ({
           ? -viewportHeight * 0.03
           : isVisible
           ? -viewportHeight * 0.02
-          : viewportHeight * 0.50
+          : viewportHeight * 0.5
         : isVisible && isKeyboardVisible
         ? -viewportHeight * 0.03
         : isVisible
         ? -viewportHeight * 0.03
-        : viewportHeight * 0.50);
+        : viewportHeight * 0.5);
   });
 
   translateY.value = derivedValue.value;
@@ -91,7 +87,7 @@ const ScrollDownButton = ({
           scrollToBottom();
         }}
         style={styles.touchableArrow}>
-        <FontAwesome name="angle-double-down" size={20} color={'#000'} />
+        <FontAwesome name="angle-double-down" size={20} color={'#000000'} />
       </TouchableOpacity>
     </Animated.View>
   );
