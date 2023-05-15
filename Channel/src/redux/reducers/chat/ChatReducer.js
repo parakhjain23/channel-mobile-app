@@ -223,7 +223,24 @@ export function chatReducer(state = initialState, action) {
             ? [...state?.randomIdsArr, data?.randomId]
             : [data?.randomId],
       };
-
+    case Actions.CHAT_EDIT_SUCCESS:
+      for (let i = 0; i < state?.data[action.teamId]?.messages?.length; i++) {
+        if (
+          state?.data[action.teamId]?.messages[i]._id == action.msgIdToEdit
+        ) {
+          state.data[action.teamId].messages[i]=action?.newMessage
+          break ;
+        }
+      }
+      if(action?.newMessage?.senderId != state?.data[action?.newMessage?.teamId]?.messages[0]?.senderId){
+        action.newMessage['sameSender'] = false;
+      }else{
+        action.newMessage['sameSender'] = true;
+      }
+      action.newMessage['isSameDate'] = true;
+      return {
+        ...state,
+      };
     default:
       return state;
   }

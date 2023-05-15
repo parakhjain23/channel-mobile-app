@@ -10,7 +10,7 @@ import {subscribeToNotifications} from '../redux/actions/socket/socketActions';
 import {store} from '../redux/Store';
 import {handleNotificationFirebase} from './HandleNotification';
 import * as RootNavigation from '../navigation/RootNavigation';
-import {sendMessageStart} from '../redux/actions/chat/ChatActions';
+import {getChatsReset, sendMessageStart} from '../redux/actions/chat/ChatActions';
 import {Alert, Platform} from 'react-native';
 import {switchOrgStart} from '../redux/actions/org/changeCurrentOrg';
 import {
@@ -20,11 +20,9 @@ import {
 import {moveChannelToTop, resetUnreadCountStart} from '../redux/actions/channels/ChannelsAction';
 import {connect} from 'react-redux';
 
-const NotificationSetup = ({userInfoState,resetUnreadCountAction}) => {
+const NotificationSetup = ({userInfoState,resetUnreadCountAction,resetChatsAction}) => {
   useEffect(() => {
-    // console.log(store.getState()?.userInfoReducer?.accessToken,"inside use effect notification");
     if (store.getState()?.userInfoReducer?.accessToken) {
-      // console.log("inside if");
       setNotificationListeners();
       initPushNotification();
     }
@@ -214,6 +212,7 @@ const NotificationSetup = ({userInfoState,resetUnreadCountAction}) => {
         );
         await store.dispatch(removeCountOnOrgCard(message?.data?.orgId));
       }
+      resetChatsAction()
       var teamId = message?.data?.teamId;
       var name = null;
       store.getState()?.channelsReducer?.teamIdAndTypeMapping[teamId] ==
@@ -244,7 +243,8 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch =>{
   return {
-    resetUnreadCountAction : (currentOrgId, userId, teamId, accessToken,badgeCount,unreadCount) => dispatch(resetUnreadCountStart(currentOrgId, userId, teamId, accessToken,badgeCount,unreadCount))
+    resetUnreadCountAction : (currentOrgId, userId, teamId, accessToken,badgeCount,unreadCount) => dispatch(resetUnreadCountStart(currentOrgId, userId, teamId, accessToken,badgeCount,unreadCount)),
+    resetChatsAction: () => dispatch(getChatsReset()),
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(NotificationSetup);

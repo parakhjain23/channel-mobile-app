@@ -3,6 +3,7 @@ import { closeChannelSuccess } from '../redux/actions/channels/CloseChannelActio
 import {createNewChannelSuccess} from '../redux/actions/channels/CreateNewChannelAction';
 import {getChannelByTeamIdStart} from '../redux/actions/channels/GetChannelByTeamId';
 import {addNewMessage} from '../redux/actions/chat/ChatActions';
+import { messageEditSuccess } from '../redux/actions/chat/ChatUpdateActions';
 import {deleteMessageSuccess} from '../redux/actions/chat/DeleteChatAction';
 import {newUserJoinedAOrg} from '../redux/actions/org/GetAllUsersOfOrg';
 import {socketStatus} from '../redux/actions/socket/socketActions';
@@ -58,6 +59,9 @@ const SocketService = socket => {
   socket.on('chat/message patched', data => {
     if (data?.deleted) {
       store.dispatch(deleteMessageSuccess(data));
+    }
+    if(data?.isEdited){
+      store.dispatch(messageEditSuccess(data))
     }
   });
 
