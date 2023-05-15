@@ -54,6 +54,7 @@ import {
   removeUserFromChannelStart,
 } from '../../redux/actions/channelActivities/inviteUserToChannelAction';
 import {ACTIVITIES} from '../../constants/Constants';
+import ScrollDownButton from '../../components/ScrollDownButton';
 
 const ChatScreen = ({
   route,
@@ -257,6 +258,9 @@ const ChatScreen = ({
     setActivities(false);
   };
 
+  const scrollToBottom = () => {
+    FlatListRef?.current?.scrollToOffset({animating: true, offset: 0});
+  };
   const renderMention = useMemo(
     () =>
       ({item, index}) =>
@@ -520,15 +524,11 @@ const ChatScreen = ({
                   />
                 </>
               )}
-              {isScrolling && (
-                <MaterialIcons
-                  name="south"
-                  style={styles.moveToBottom}
-                  onPress={() => {
-                    FlatListRef?.current?.scrollToIndex({index: 0});
-                  }}
-                />
-              )}
+              <ScrollDownButton
+                scrollToBottom={scrollToBottom}
+                isVisible={isScrolling}
+                isNewMessage={false}
+              />
             </View>
             {attachmentLoading && (
               <AnimatedLottieView
