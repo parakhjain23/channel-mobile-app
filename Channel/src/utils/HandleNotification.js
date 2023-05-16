@@ -6,7 +6,6 @@ export const handleNotificationFromEvents = async (data,userIdAndDisplayNameMapp
   data['openChannel']=`${data?.openChannel}`
   data['sameSender'] = `${data?.sameSender}`;
   data['isSameDate'] = `${data?.isSameDate}`;
-  data['attachment']=data?.attachment != undefined ? JSON.stringify(data?.attachment):`[]`
   data['isActivity']=data?.isActivity != undefined ? `${data?.isActivity}` :'false'
   data['mentions'] = `${data?.mentions}`;
   data['showInMainConversation'] = `${data?.showInMainConversation}`;
@@ -39,9 +38,14 @@ export const handleNotificationFromEvents = async (data,userIdAndDisplayNameMapp
     });
     data['content'] = resultStr
   }
-  if(data?.attachment.length > 2){
-    data['content'] = 'Shared an Attachment'
+  if(data?.attachment.length > 0){
+    if(data?.attachment[0]?.title?.includes('sound')){
+      data['content'] = 'sent a Voice note'
+    }else{
+      data['content'] = 'Shared an Attachment'
+    }
   }
+  data['attachment']=data?.attachment != undefined ? JSON.stringify(data?.attachment):`[]`
   var channelType =
     store.getState().channelsReducer?.teamIdAndTypeMapping[data?.teamId];
   var title;
