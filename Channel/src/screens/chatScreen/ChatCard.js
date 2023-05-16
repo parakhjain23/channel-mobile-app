@@ -388,6 +388,7 @@ const ChatCard = ({
                       </TouchableOpacity>
                     ) : item?.contentType?.includes('audio/mpeg') ? (
                       <View
+                        key={index}
                         style={{
                           flexDirection: 'row',
                           height: ms(50),
