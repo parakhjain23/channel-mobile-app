@@ -611,7 +611,7 @@ const ChatScreen = ({
                     </View>
                   </TouchableOpacity>
                 )}
-                {showPlayer && (
+                {/* {showPlayer && (
                   <View style={styles.playerContainer}>
                     <View
                       style={{
@@ -646,7 +646,7 @@ const ChatScreen = ({
                       }}
                     />
                   </View>
-                )}
+                )} */}
 
                 <FlatList
                   data={mentions}
@@ -663,94 +663,131 @@ const ChatScreen = ({
                   />
                 )}
                 <View style={styles.inputContainer}>
-                  <View style={{justifyContent: 'center'}}>
-                    {showOptions && (
-                      <Animated.View
-                        style={[
-                          styles.optionsContainer,
-                          {transform: [{translateX: optionsPosition}]},
-                        ]}>
-                        <View style={{flexDirection: 'row'}}>
-                          <MaterialIcons
-                            name="attach-file"
-                            size={ms(20)}
-                            style={styles.attachIcon}
-                            onPress={() =>
-                              pickDocument(
-                                setAttachment,
-                                userInfoState?.accessToken,
-                                setAttachmentLoading,
-                              )
-                            }
-                          />
-                          <MaterialIcons
-                            name="camera"
-                            size={ms(20)}
-                            style={styles.attachIcon}
-                            onPress={() => {
-                              launchCameraForPhoto(
-                                userInfoState?.accessToken,
-                                setAttachment,
-                                setAttachmentLoading,
-                              );
-                            }}
-                          />
-                          <MaterialIcons
-                            name="image"
-                            size={ms(20)}
-                            style={styles.attachIcon}
-                            onPress={() => {
-                              launchGallery(
-                                userInfoState?.accessToken,
-                                setAttachment,
-                                setAttachmentLoading,
-                              );
-                            }}
-                          />
-                          <MaterialIcons
-                            name="chevron-left"
-                            size={ms(20)}
-                            style={styles.attachIcon}
-                            onPress={hideOptionsMethod}
-                          />
-                        </View>
-                      </Animated.View>
-                    )}
-                  </View>
-
-                  <View style={{justifyContent: 'center'}}>
-                    {!showOptions && (
-                      <MaterialIcons
-                        name="add"
-                        size={ms(20)}
-                        style={styles.attachIcon}
-                        onPress={showOptionsMethod}
-                      />
-                    )}
-                  </View>
                   {isRecording ? (
-                    <AnimatedLottieView
-                      source={require('../../assests/images/attachments/recordingWave.json')}
-                      loop
-                      autoPlay
-                      style={{width: '100%'}}
-                    />
+                    <View style={{flex: 1, minHeight: 40}}>
+                      <AnimatedLottieView
+                        source={require('../../assests/images/attachments/recordingWave.json')}
+                        loop
+                        autoPlay
+                      />
+                    </View>
+                  ) : showPlayer ? (
+                    <View style={styles.playerContainer}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          // justifyContent: 'center',
+                          height: ms(100),
+                          flex: 1,
+                          alignItems: 'center',
+                        }}>
+                        <WebView
+                          source={{
+                            html: `
+                              <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
+                              <style>
+                                body, html { margin: 0; padding: 0; flex:1}
+                                audio { width: 100%;}
+                              </style>
+                              <audio controls>
+                              <source src="${audioDataUrl}" type="audio/mp4">
+                                </audio>
+                               `,
+                          }}
+                          style={{flex: 1}}
+                        />
+                      </View>
+                      <MaterialIcons
+                        name="cancel"
+                        size={ms(18)}
+                        color={'black'}
+                        onPress={() => {
+                          setShowPlayer(false);
+                        }}
+                      />
+                    </View>
                   ) : (
-                    <TextInput
-                      ref={textInputRef}
-                      editable
-                      multiline
-                      onChangeText={handleInputChange}
-                      placeholder="Message"
-                      placeholderTextColor={colors.textColor}
-                      value={message}
-                      style={[
-                        replyOnMessage
-                          ? styles.inputWithReply
-                          : styles.inputWithoutReply,
-                        {color: colors.textColor},
-                      ]}
-                    />
+                    <>
+                      <View style={{justifyContent: 'center'}}>
+                        {showOptions && (
+                          <Animated.View
+                            style={[
+                              styles.optionsContainer,
+                              {transform: [{translateX: optionsPosition}]},
+                            ]}>
+                            <View style={{flexDirection: 'row'}}>
+                              <MaterialIcons
+                                name="attach-file"
+                                size={ms(20)}
+                                style={styles.attachIcon}
+                                onPress={() =>
+                                  pickDocument(
+                                    setAttachment,
+                                    userInfoState?.accessToken,
+                                    setAttachmentLoading,
+                                  )
+                                }
+                              />
+                              <MaterialIcons
+                                name="camera"
+                                size={ms(20)}
+                                style={styles.attachIcon}
+                                onPress={() => {
+                                  launchCameraForPhoto(
+                                    userInfoState?.accessToken,
+                                    setAttachment,
+                                    setAttachmentLoading,
+                                  );
+                                }}
+                              />
+                              <MaterialIcons
+                                name="image"
+                                size={ms(20)}
+                                style={styles.attachIcon}
+                                onPress={() => {
+                                  launchGallery(
+                                    userInfoState?.accessToken,
+                                    setAttachment,
+                                    setAttachmentLoading,
+                                  );
+                                }}
+                              />
+                              <MaterialIcons
+                                name="chevron-left"
+                                size={ms(20)}
+                                style={styles.attachIcon}
+                                onPress={hideOptionsMethod}
+                              />
+                            </View>
+                          </Animated.View>
+                        )}
+                      </View>
+                      <View style={{justifyContent: 'center'}}>
+                        {!showOptions && (
+                          <MaterialIcons
+                            name="add"
+                            size={ms(20)}
+                            style={styles.attachIcon}
+                            onPress={showOptionsMethod}
+                          />
+                        )}
+                      </View>
+                      <TextInput
+                        ref={textInputRef}
+                        editable
+                        multiline
+                        onChangeText={handleInputChange}
+                        placeholder="Message"
+                        placeholderTextColor={colors.textColor}
+                        value={message}
+                        style={[
+                          replyOnMessage
+                            ? styles.inputWithReply
+                            : styles.inputWithoutReply,
+                          {color: colors.textColor},
+                        ]}
+                      />
+                    </>
                   )}
                   {showOptions &&
                     message?.html?.trim()?.length == 1 &&
