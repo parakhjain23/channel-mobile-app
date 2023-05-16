@@ -1,4 +1,4 @@
-import {View, Text, PermissionsAndroid, Button} from 'react-native';
+import {View, Text, PermissionsAndroid, Button, Platform} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 
@@ -58,6 +58,7 @@ const AudioRecorderPlay = new AudioRecorderPlayer();
 
 export const onStartRecord = async (setIsRecording) => {
   try {
+   if(Platform.OS == 'android'){
     const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.RECORD_AUDIO
     );
@@ -73,6 +74,14 @@ export const onStartRecord = async (setIsRecording) => {
       console.log('Recording permission denied.');
       // You can show an alert or take appropriate action if permission is not granted.
     }
+   }else{
+    setIsRecording(true)
+    const result = await AudioRecorderPlay.startRecorder();
+    AudioRecorderPlay.addRecordBackListener(e => {
+      console.log(e);
+      console.log(e.currentPosition);
+    });
+   }
   } catch (error) {
     console.log('Error occurred while checking recording permission:', error);
   }
