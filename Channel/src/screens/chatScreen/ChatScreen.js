@@ -771,7 +771,7 @@ const ChatScreen = ({
                     size={ms(25)}
                     style={{color: colors.textColor, padding: ms(10)}}
                     onPress={() => {
-                      onStartRecord(), setisRecording(true);
+                      onStartRecord(setisRecording) 
                     }}
                   />
                 ) : (
