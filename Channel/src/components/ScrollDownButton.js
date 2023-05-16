@@ -65,12 +65,12 @@ const ScrollDownButton = ({scrollToBottom, isVisible, isNewMessage}) => {
           ? -viewportHeight * 0.03
           : isVisible
           ? -viewportHeight * 0.02
-          : viewportHeight * 0.5
+          : viewportHeight * 0.9
         : isVisible && isKeyboardVisible
         ? -viewportHeight * 0.03
         : isVisible
         ? -viewportHeight * 0.03
-        : viewportHeight * 0.5);
+        : viewportHeight * 0.9);
   });
 
   translateY.value = derivedValue.value;
