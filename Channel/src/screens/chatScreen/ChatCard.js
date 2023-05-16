@@ -560,8 +560,8 @@ const ChatCard = ({
               style={{
                 color: '#808080',
                 textAlign: 'center',
-                marginBottom: ms(10),
-                marginTop: ms(7),
+                marginTop: ms(15),
+                marginBottom: ms(3),
               }}>
               {chat?.timeToShow}
             </Text>
