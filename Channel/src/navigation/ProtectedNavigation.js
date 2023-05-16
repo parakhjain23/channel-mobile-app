@@ -30,30 +30,36 @@ const ProtectedNavigation = props => {
             route?.params?.userId,
             props?.userInfoState?.accessToken,
           );
-        }}>
+        }}
+        style={{flexDirection: 'row', flex: 1}}>
         <Text
           style={{
             color: colors?.textColor,
             fontSize: ms(20),
             fontWeight: '600',
+            maxWidth: Platform.OS == 'android' ? '90%' : null,
           }}
           numberOfLines={1}
-          ellipsizeMode="tail">
+          // ellipsizeMode="tail"
+        >
           {route?.params?.chatHeaderTitle}
         </Text>
       </TouchableOpacity>
     ) : (
-      <Text
-        style={{
-          color: colors?.textColor,
-          fontSize: ms(20),
-          fontWeight: '600',
-          maxWidth: Platform.OS == 'android' ? '90%' : null,
-        }}
-        numberOfLines={1}
-        ellipsizeMode="tail">
-        {route?.params?.chatHeaderTitle}
-      </Text>
+      <View style={{flexDirection: 'row', flex: 1}}>
+        <Text
+          style={{
+            color: colors?.textColor,
+            fontSize: ms(20),
+            fontWeight: '600',
+            maxWidth: Platform.OS == 'android' ? '90%' : null,
+          }}
+          numberOfLines={1}
+          // ellipsizeMode="tail"
+        >
+          {route?.params?.chatHeaderTitle}
+        </Text>
+      </View>
     );
   };
   const getHeader = {
