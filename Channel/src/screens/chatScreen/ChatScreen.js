@@ -611,42 +611,6 @@ const ChatScreen = ({
                     </View>
                   </TouchableOpacity>
                 )}
-                {/* {showPlayer && (
-                  <View style={styles.playerContainer}>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        // justifyContent: 'center',
-                        height: ms(100),
-                        flex: 1,
-                        alignItems: 'center',
-                      }}>
-                      <WebView
-                        source={{
-                          html: `
-                            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
-                            <style>
-                              body, html { margin: 0; padding: 0; flex:1}
-                              audio { width: 100%;}
-                            </style>
-                            <audio controls>
-                            <source src="${audioDataUrl}" type="audio/mp4">
-                              </audio>
-                             `,
-                        }}
-                        style={{flex: 1}}
-                      />
-                    </View>
-                    <MaterialIcons
-                      name="cancel"
-                      size={ms(18)}
-                      color={'black'}
-                      onPress={() => {
-                        setShowPlayer(false);
-                      }}
-                    />
-                  </View>
-                )} */}
 
                 <FlatList
                   data={mentions}
