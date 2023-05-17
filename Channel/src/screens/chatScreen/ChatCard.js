@@ -22,6 +22,8 @@ import {RenderHTML} from 'react-native-render-html';
 import * as RootNavigation from '../../navigation/RootNavigation';
 import {tagsStyles} from './HtmlStyles';
 import WebView from 'react-native-webview';
+import AudioRecordingPlayer from '../../components/AudioRecorderPlayer';
+
 
 const AddRemoveJoinedMsg = React.memo(({senderName, content, orgState}) => {
   const {colors} = useTheme();
@@ -398,7 +400,7 @@ const ChatCard = ({
                           overflow: 'hidden',
                           justifyContent: 'center', // Align center horizontally
                         }}>
-                        <WebView
+                        {/* <WebView
                           source={{
                             html: `
                                   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
@@ -412,7 +414,8 @@ const ChatCard = ({
                                 `,
                           }}
                           style={{flex: 1}}
-                        />
+                        /> */}
+                        <AudioRecordingPlayer remoteUrl={item?.resourceUrl} />
                       </View>
                     ) : (
                       <View
