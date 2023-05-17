@@ -639,7 +639,7 @@ const ChatScreen = ({
                         flex: 1,
                         alignItems: 'center',
                       }}>
-                    <AudioRecordingPlayer remoteUrl={audioDataUrl} />
+                    <AudioRecordingPlayer remoteUrl={recordingUrl} />
                     </View>
                     <MaterialIcons
                       name="cancel"
