@@ -407,7 +407,7 @@ const ChatCard = ({
                                     audio { width: 100%;}
                                   </style>
                                   <audio controls>
-                                    <source src="${item?.resourceUrl}" type="audio/mp4">
+                                    <source src="${item?.resourceUrl}" type="audio/mp3">
                                   </audio>
                                 `,
                           }}

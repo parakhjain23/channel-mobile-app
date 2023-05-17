@@ -39,12 +39,7 @@ import {resetUnreadCountStart} from '../../redux/actions/channels/ChannelsAction
 import HTMLView from 'react-native-htmlview';
 import RenderHTML from 'react-native-render-html';
 import {tagsStyles} from './HtmlStyles';
-import VoiceRecording, {
-  onStartPlay,
-  onStartRecord,
-  onStopPlay,
-  onStopRecord,
-} from './VoiceRecording';
+import {onStartRecord, onStopRecord} from './VoiceRecording';
 import WebView from 'react-native-webview';
 import RNFS from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -122,16 +117,14 @@ const ChatScreen = ({
   useEffect(() => {
     const fetchAudioDataUrl = async () => {
       if (showPlayer) {
-        console.log('inside showplayer');
         try {
           const dirs = RNFetchBlob.fs.dirs;
           const path = Platform.select({
-            ios: `${dirs.CacheDir}/sound.m4a`,
-            android: `${dirs.CacheDir}/sound.mp4`,
+            ios: `file://${dirs.CacheDir}/sound.m4a`,
+            android: `file://${dirs.CacheDir}/sound.mp3`,
           });
-          const filePath = path; // Replace with your file path
-          const fileContent = await RNFS.readFile(filePath, 'base64');
-          const mimeType = 'audio/mp4'; // Adjust the MIME type based on the file format
+          const fileContent = await RNFS.readFile(path, 'base64');
+          const mimeType = 'audio/mp3'; // Adjust the MIME type based on the file format
           const dataUrl = `data:${mimeType};base64,${fileContent}`;
           setAudioDataUrl(dataUrl);
         } catch (error) {
@@ -647,7 +640,7 @@ const ChatScreen = ({
                                 audio { width: 100%;}
                               </style>
                               <audio controls>
-                              <source src="${audioDataUrl}" type="audio/mp4">
+                              <source src="${audioDataUrl}" type="audio/mp3">
                                 </audio>
                                `,
                         }}

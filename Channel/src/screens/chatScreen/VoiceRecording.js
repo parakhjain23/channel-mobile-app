@@ -1,77 +1,34 @@
-import {View, Text, PermissionsAndroid, Button} from 'react-native';
+import {View, Text, PermissionsAndroid, Button, Platform} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 
-const AudioRecorderPlay = new AudioRecorderPlayer();
-// const VoiceRecording = () => {
-//   const [recordingUrl, setrecordingUrl] = useState('');
-//   useEffect(() => {
-//     console.log("inside use Effect");
-//     requestPermission();
-//   }, []);
-//   const onStartRecord = async () => {
-//     const result = await AudioRecorderPlay.startRecorder();
-//     AudioRecorderPlay.addRecordBackListener(e => {
-//       console.log(e);
-//       console.log(e.currentPosition);
-//     });
-//     console.log(result, 'this is on start result');
-//   };
+export const AudioRecorderPlay = new AudioRecorderPlayer();
 
-//   async function onStopRecord() {
-//     const result = await AudioRecorderPlay.stopRecorder();
-//     AudioRecorderPlay.removeRecordBackListener();
-//     console.log(result, 'this is result on stop');
-//     setrecordingUrl(result);
-//   }
-
-//   const onStartPlay = async () => {
-//     const result = await AudioRecorderPlay.startPlayer();
-//     AudioRecorderPlay.addPlayBackListener(e => {
-//       console.log(e);
-//       console.log(e.currentPosition);
-//     });
-//   };
-// ƒ
-//   return (
-//     <View>
-//       <Button title="Start Recording" onPress={onStartRecord} />
-//       <Button title="Stop Recording" onPress={onStopRecord} />
-//       <Button title="Start play Recording" onPress={onStartPlay} />
-//       <Button title="Stop Play Recording" onPress={onStopPlay} />
-//       <Button title="Upload Sound" onPress={uploadSound} />
-//       <Text>VoiceRecording</Text>
-//     </View>
-//   );
-// };
-
-// export default VoiceRecording;
-// export const onStartRecord = async () => {
-//   const result = await AudioRecorderPlay.startRecorder();
-//   AudioRecorderPlay.addRecordBackListener(e => {
-//     console.log(e);
-//     console.log(e.currentPosition);
-//   });
-//   console.log(result, 'this is on start result');
-// };
-
-
-export const onStartRecord = async (setIsRecording) => {
+export const onStartRecord = async setIsRecording => {
   try {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.RECORD_AUDIO
-    );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      setIsRecording(true)
+    if (Platform.OS === 'android') {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        setIsRecording(true);
+        const result = await AudioRecorderPlay.startRecorder();
+        AudioRecorderPlay.addRecordBackListener(e => {
+          console.log(e);
+          console.log(e.currentPosition);
+        });
+        console.log(result, 'this is on start result');
+      } else {
+        console.log('Recording permission denied.');
+        // You can show an alert or take appropriate action if permission is not granted.
+      }
+    } else {
+      setIsRecording(true);
       const result = await AudioRecorderPlay.startRecorder();
       AudioRecorderPlay.addRecordBackListener(e => {
         console.log(e);
         console.log(e.currentPosition);
       });
-      console.log(result, 'this is on start result');
-    } else {
-      console.log('Recording permission denied.');
-      // You can show an alert or take appropriate action if permission is not granted.
     }
   } catch (error) {
     console.log('Error occurred while checking recording permission:', error);
@@ -81,7 +38,7 @@ export const onStartRecord = async (setIsRecording) => {
 export async function onStopRecord(setrecordingUrl, setvoiceAttachment) {
   const result = await AudioRecorderPlay.stopRecorder();
   AudioRecorderPlay.removeRecordBackListener();
-
+  console.log(result,'=-=-=');
   setrecordingUrl(result);
   setvoiceAttachment([
     {
