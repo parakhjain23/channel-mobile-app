@@ -13,6 +13,9 @@ import {
   useWindowDimensions,
   Platform,
   Image,
+  Modal,
+  TouchableWithoutFeedback,
+  StyleSheet,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -50,6 +53,8 @@ import {
 } from '../../redux/actions/channelActivities/inviteUserToChannelAction';
 import {ACTIVITIES} from '../../constants/Constants';
 import ScrollDownButton from '../../components/ScrollDownButton';
+import {ActionMessageCardMemo} from './ActionMessageCard';
+import OptionList from './OptionList';
 
 const ChatScreen = ({
   route,
@@ -76,6 +81,8 @@ const ChatScreen = ({
   const styles = makeStyles(colors);
   const [replyOnMessage, setreplyOnMessage] = useState(false);
   const [repliedMsgDetails, setrepliedMsgDetails] = useState('');
+  const [showActions, setShowActions] = useState(false);
+  const [currentSelectChatCard, setCurrentSelectedChatCard] = useState('');
   const [showOptions, setShowOptions] = useState(false);
   const [message, onChangeMessage] = useState('');
   const [attachment, setAttachment] = useState([]);
@@ -352,6 +359,8 @@ const ChatScreen = ({
           flatListRef={FlatListRef}
           channelType={channelType}
           index={index}
+          setShowActions={setShowActions}
+          setCurrentSelectedChatCard={setCurrentSelectedChatCard}
         />
       );
     },
@@ -531,6 +540,58 @@ const ChatScreen = ({
                 style={styles.attachmentLoading}
               />
             )}
+            {showActions && (
+              <Modal
+                animationType="fade"
+                transparent={true}
+                onRequestClose={() => setShowActions(false)}
+                style={{flex: 1}}>
+                <TouchableWithoutFeedback onPress={() => setShowActions(false)}>
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      alignContent: 'center',
+                      backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                    }}>
+                    <TouchableWithoutFeedback
+                      onPress={() => setShowActions(false)}>
+                      <View
+                        style={{
+                          flex: 1,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <ActionMessageCardMemo
+                          chat={currentSelectChatCard}
+                          userInfoState={userInfoState}
+                          orgState={orgState}
+                          deleteMessageAction={deleteMessageAction}
+                          chatState={chatState}
+                          setreplyOnMessage={setreplyOnMessage}
+                          setrepliedMsgDetails={setrepliedMsgDetails}
+                          searchUserProfileAction={searchUserProfileAction}
+                          flatListRef={FlatListRef}
+                          channelType={channelType}
+                          setShowActions={setShowActions}
+                          setCurrentSelectedChatCard={
+                            setCurrentSelectedChatCard
+                          }
+                        />
+                        <OptionList
+                          sentByMe={true}
+                          chat={currentSelectChatCard}
+                          setreplyOnMessage={setreplyOnMessage}
+                          setrepliedMsgDetails={setrepliedMsgDetails}
+                          setShowActions={setShowActions}
+                        />
+                      </View>
+                    </TouchableWithoutFeedback>
+                  </View>
+                </TouchableWithoutFeedback>
+              </Modal>
+            )}
             <View style={styles.bottomContainer}>
               <View
                 style={[
@@ -619,6 +680,7 @@ const ChatScreen = ({
                     keyboardShouldPersistTaps="always"
                   />
                 )}
+
                 {showPlayer && (
                   <View style={styles.playerContainer}>
                     <View
@@ -863,3 +925,18 @@ const mapDispatchToProps = dispatch => {
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);
+const styless = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+  modalContent: {
+    width: '80%',
+    backgroundColor: 'white',
+    borderRadius: 8,
+    padding: 20,
+    alignItems: 'center',
+  },
+});
