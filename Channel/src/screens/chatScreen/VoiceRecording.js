@@ -33,7 +33,7 @@ export const onStartRecord = async setIsRecording => {
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         setIsRecording(true);
-        const result = await AudioRecorderPlay.startRecorder();
+        const result = await AudioRecorderPlay.startRecorder(path,audioSet);
         AudioRecorderPlay.addRecordBackListener(e => {
           console.log(e);
           console.log(e.currentPosition);
@@ -72,15 +72,3 @@ export async function onStopRecord(setrecordingUrl, setvoiceAttachment) {
   ]);
 }
 
-export const onStartPlay = async () => {
-  const result = await AudioRecorderPlay.startPlayer();
-  AudioRecorderPlay.addPlayBackListener(e => {
-    // console.log(e);
-    // console.log(e.currentPosition);
-  });
-};
-
-export const onStopPlay = async () => {
-  const result = await AudioRecorderPlay.stopPlayer();
-  AudioRecorderPlay.removePlayBackListener();
-};
