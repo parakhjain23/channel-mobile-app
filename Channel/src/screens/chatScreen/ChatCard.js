@@ -306,7 +306,7 @@ const ChatCard = ({
                           }}
                         />
                       </TouchableOpacity>
-                    ) : item?.contentType?.includes('audio/mpeg') ? (
+                    ) : item?.contentType?.includes('audio') ? (
                       <View
                         key={index}
                         style={{
