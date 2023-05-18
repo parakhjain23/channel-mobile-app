@@ -55,6 +55,7 @@ import {ACTIVITIES} from '../../constants/Constants';
 import ScrollDownButton from '../../components/ScrollDownButton';
 import {ActionMessageCardMemo} from './ActionMessageCard';
 import OptionList from './OptionList';
+import AudioRecordingPlayer from '../../components/AudioRecorderPlayer';
 
 const ChatScreen = ({
   route,
@@ -693,21 +694,7 @@ const ChatScreen = ({
                         flex: 1,
                         alignItems: 'center',
                       }}>
-                      <WebView
-                        source={{
-                          html: `
-                              <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
-                              <style>
-                                body, html { margin: 0; padding: 0; flex:1; background-color: ${colors?.primaryColor};}
-                                audio { width: 100%;}
-                              </style>
-                              <audio controls>
-                              <source src="${audioDataUrl}" type="audio/mp3">
-                                </audio>
-                               `,
-                        }}
-                        style={{flex: 1}}
-                      />
+                    <AudioRecordingPlayer remoteUrl={recordingUrl} />
                     </View>
                     <MaterialIcons
                       name="cancel"

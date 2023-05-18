@@ -17,6 +17,8 @@ import com.airbnb.android.react.lottie.LottiePackage;
 import com.dooboolab.audiorecorderplayer.RNAudioRecorderPlayerPackage;
 import com.rnfs.RNFSPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
+import com.reactnativecommunity.slider.ReactSliderPackage;
+
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -32,7 +34,7 @@ public class MainApplication extends Application implements ReactApplication {
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
-          // packages.add(new MyReactNativePackage());
+          packages.add(new ReactSliderPackage());
           packages.add(new LottiePackage());
           return packages;
         }
