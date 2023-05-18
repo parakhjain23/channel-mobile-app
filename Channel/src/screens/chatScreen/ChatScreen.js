@@ -114,10 +114,7 @@ const ChatScreen = ({
   const accessToken = userInfoState?.accessToken;
   const currentOrgId = orgState?.currentOrgId;
   const emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
-  const path = Platform.select({
-    ios: `sound.m4a`,
-    android: `${RNFetchBlob.fs.dirs.CacheDir}/sound.mp3`,
-  });
+
   if (teamId == undefined) {
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
   }
@@ -125,6 +122,16 @@ const ChatScreen = ({
     teamIdAndUnreadCountMapping?.[teamId] > 0 ||
     teamIdAndBadgeCountMapping?.[teamId] > 0;
 
+    const path = Platform.select({
+      ios: `sound.m4a`,
+      android: `${RNFetchBlob.fs.dirs.CacheDir}/sound.mp3`,
+    
+      // Discussion: https://github.com/hyochan/react-native-audio-recorder-player/discussions/479
+      // ios: 'https://firebasestorage.googleapis.com/v0/b/cooni-ebee8.appspot.com/o/test-audio.mp3?alt=media&token=d05a2150-2e52-4a2e-9c8c-d906450be20b',
+      // ios: 'https://staging.media.ensembl.fr/original/uploads/26403543-c7d0-4d44-82c2-eb8364c614d0',
+      // ios: 'hello.m4a',
+      // android: `${this.dirs.CacheDir}/hello.mp3`,
+    });
   // useEffect(() => {
   //   const fetchAudioDataUrl = async () => {
   //     if (showPlayer) {
@@ -697,7 +704,7 @@ const ChatScreen = ({
                         flex: 1,
                         alignItems: 'center',
                       }}>
-                    <AudioRecordingPlayer remoteUrl={path} />
+                      <AudioRecordingPlayer remoteUrl={path} />
                     </View>
                     <MaterialIcons
                       name="cancel"
