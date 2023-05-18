@@ -5,12 +5,12 @@ import RNFetchBlob from 'rn-fetch-blob';
 
 export const uploadRecording = async (recordingUrl, accessToken) => {
   try {
-    const url = await RecordingUrl();
-    console.log('url-0-0-0-0-0-0-0-0', url);
+    // const url = await RecordingUrl();
+    // console.log('url-0-0-0-0-0-0-0-0', url);
     const Files = [
       {
         name: 'sound.mp3',
-        uri: url,
+        uri: recordingUrl,
         type: 'audio/mp3',
       },
     ];
