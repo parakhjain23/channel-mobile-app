@@ -102,8 +102,6 @@ const ChatScreen = ({
   const [recordingUrl, setrecordingUrl] = useState('');
   const [isRecording, setisRecording] = useState(false);
   const [showPlayer, setShowPlayer] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [audioDataUrl, setAudioDataUrl] = useState('');
   const [voiceAttachment, setvoiceAttachment] = useState('');
   const [Activities, setActivities] = useState(false);
   const [action, setaction] = useState(null);
@@ -121,27 +119,6 @@ const ChatScreen = ({
   const shouldResetUnreadCount =
     teamIdAndUnreadCountMapping?.[teamId] > 0 ||
     teamIdAndBadgeCountMapping?.[teamId] > 0;
-
-  useEffect(() => {
-    const fetchAudioDataUrl = async () => {
-      if (showPlayer) {
-        try {
-          const dirs = RNFetchBlob.fs.dirs;
-          const path = Platform.select({
-            ios: `file://${dirs.CacheDir}/sound.m4a`,
-            android: `file://${dirs.CacheDir}/sound.mp3`,
-          });
-          const fileContent = await RNFS.readFile(path, 'base64');
-          const mimeType = 'audio/mp3'; // Adjust the MIME type based on the file format
-          const dataUrl = `data:${mimeType};base64,${fileContent}`;
-          setAudioDataUrl(dataUrl);
-        } catch (error) {
-          console.error('Error fetching audio data:', error);
-        }
-      }
-    };
-    fetchAudioDataUrl();
-  }, [showPlayer]);
 
   useEffect(() => {
     if (repliedMsgDetails != '' && !showPlayer) {
@@ -694,7 +671,7 @@ const ChatScreen = ({
                         flex: 1,
                         alignItems: 'center',
                       }}>
-                    <AudioRecordingPlayer remoteUrl={recordingUrl} />
+                      <AudioRecordingPlayer remoteUrl={recordingUrl} />
                     </View>
                     <MaterialIcons
                       name="cancel"

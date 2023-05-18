@@ -21,9 +21,7 @@ import HTMLView from 'react-native-htmlview';
 import {RenderHTML} from 'react-native-render-html';
 import * as RootNavigation from '../../navigation/RootNavigation';
 import {tagsStyles} from './HtmlStyles';
-import WebView from 'react-native-webview';
 import AudioRecordingPlayer from '../../components/AudioRecorderPlayer';
-
 
 const AddRemoveJoinedMsg = React.memo(({senderName, content, orgState}) => {
   const {colors} = useTheme();
@@ -140,10 +138,6 @@ const ChatCard = ({
         <Icon name="reply" size={20} color={colors?.color} />
       </View>
     );
-  };
-
-  const copyToClipboard = text => {
-    Clipboard.setString(text);
   };
 
   const openLink = async url => {
@@ -274,8 +268,6 @@ const ChatCard = ({
                       imageUrls={[
                         {
                           url: selectedImage?.resourceUrl,
-                          // width: Dimensions.get('window')?.width - 20,
-                          // height: Dimensions.get('window')?.height,
                           freeHeight: true,
                           freeWidth: true,
                         },
@@ -306,7 +298,7 @@ const ChatCard = ({
                           }}
                         />
                       </TouchableOpacity>
-                    ) : item?.contentType?.includes('audio/mpeg') ? (
+                    ) : item?.contentType?.includes('audio') ? (
                       <View
                         key={index}
                         style={{
@@ -318,21 +310,6 @@ const ChatCard = ({
                           overflow: 'hidden',
                           justifyContent: 'center', // Align center horizontally
                         }}>
-                        {/* <WebView
-                          source={{
-                            html: `
-                                  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
-                                  <style>
-                                    body, html { margin: 0; padding: 0; flex: 1; display: flex; align-items: center;}
-                                    audio { width: 100%;}
-                                  </style>
-                                  <audio controls>
-                                    <source src="${item?.resourceUrl}" type="audio/mp3">
-                                  </audio>
-                                `,
-                          }}
-                          style={{flex: 1}}
-                        /> */}
                         <AudioRecordingPlayer remoteUrl={item?.resourceUrl} />
                       </View>
                     ) : (
@@ -407,12 +384,6 @@ const ChatCard = ({
                     justifyContent: 'space-between',
                     alignItems: 'flex-end',
                   }}>
-                  {/* <Text
-                    style={[
-                      // styles.messageText,
-                      // styles.text,
-                      {maxWidth: '90%', color: 'white'},
-                    ]}> */}
                   <View
                     style={{
                       flexDirection: 'row',
@@ -435,11 +406,9 @@ const ChatCard = ({
                         }}
                         contentWidth={width}
                         tagsStyles={tagsStyles(textColor, linkColor)}
-                        // renderers={renderers}
                       />
                     )}
                   </View>
-                  {/* </Text> */}
                   <View
                     style={{
                       justifyContent: 'flex-end',
@@ -518,18 +487,6 @@ const handleRepliedMessagePress = (
         animated: true,
         viewPosition: 0,
         viewOffset: 50,
-      });
-    }
-  } else {
-    const index = chatState?.data[chat.teamId]?.messages.findIndex(
-      item => item?._id === chat?._id,
-    );
-    if (index !== -1) {
-      flatListRef?.current?.scrollToIndex({
-        index,
-        animated: true,
-        viewPosition: 0,
-        viewOffset: ms(50),
       });
     }
   }

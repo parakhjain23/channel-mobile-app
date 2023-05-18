@@ -1,9 +1,27 @@
-import {View, Text, PermissionsAndroid, Button, Platform} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+import {PermissionsAndroid, Platform} from 'react-native';
+import AudioRecorderPlayer, {
+  AVEncoderAudioQualityIOSType,
+  AVEncodingOption,
+  AudioEncoderAndroidType,
+  AudioSourceAndroidType,
+  OutputFormatAndroidType,
+} from 'react-native-audio-recorder-player';
+import RNFetchBlob from 'rn-fetch-blob';
 
 export const AudioRecorderPlay = new AudioRecorderPlayer();
-
+const audioSet = {
+  AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
+  AudioSourceAndroid: AudioSourceAndroidType.MIC,
+  AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
+  AVNumberOfChannelsKeyIOS: 2,
+  AVFormatIDKeyIOS: AVEncodingOption.aac,
+  OutputFormatAndroid: OutputFormatAndroidType.AAC_ADTS,
+};
+const dirs = RNFetchBlob.fs.dirs;
+const path = Platform.select({
+  ios: `file://${dirs.CacheDir}/sound.m4a`,
+  android: `file://${dirs.CacheDir}/sound.mp3`,
+});
 export const onStartRecord = async setIsRecording => {
   try {
     if (Platform.OS === 'android') {
@@ -13,22 +31,12 @@ export const onStartRecord = async setIsRecording => {
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         setIsRecording(true);
         const result = await AudioRecorderPlay.startRecorder();
-        AudioRecorderPlay.addRecordBackListener(e => {
-          console.log(e);
-          console.log(e.currentPosition);
-        });
-        console.log(result, 'this is on start result');
       } else {
-        console.log('Recording permission denied.');
-        // You can show an alert or take appropriate action if permission is not granted.
+        console.warn('Recording permission denied.');
       }
     } else {
       setIsRecording(true);
-      const result = await AudioRecorderPlay.startRecorder();
-      AudioRecorderPlay.addRecordBackListener(e => {
-        console.log(e);
-        console.log(e.currentPosition);
-      });
+      const result = await AudioRecorderPlay.startRecorder(path, audioSet);
     }
   } catch (error) {
     console.log('Error occurred while checking recording permission:', error);
@@ -38,7 +46,6 @@ export const onStartRecord = async setIsRecording => {
 export async function onStopRecord(setrecordingUrl, setvoiceAttachment) {
   const result = await AudioRecorderPlay.stopRecorder();
   AudioRecorderPlay.removeRecordBackListener();
-  console.log(result,'=-=-=');
   setrecordingUrl(result);
   setvoiceAttachment([
     {
@@ -50,16 +57,3 @@ export async function onStopRecord(setrecordingUrl, setvoiceAttachment) {
     },
   ]);
 }
-
-export const onStartPlay = async () => {
-  const result = await AudioRecorderPlay.startPlayer();
-  AudioRecorderPlay.addPlayBackListener(e => {
-    // console.log(e);
-    // console.log(e.currentPosition);
-  });
-};
-
-export const onStopPlay = async () => {
-  const result = await AudioRecorderPlay.stopPlayer();
-  AudioRecorderPlay.removePlayBackListener();
-};
