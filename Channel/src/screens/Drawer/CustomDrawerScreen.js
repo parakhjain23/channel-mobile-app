@@ -3,6 +3,7 @@ import React, {useEffect} from 'react';
 import {
   FlatList,
   Image,
+  ScrollView,
   Text,
   TouchableOpacity,
   View,
@@ -18,7 +19,7 @@ import {
 import {switchOrgStart} from '../../redux/actions/org/changeCurrentOrg';
 import {removeCountOnOrgCard} from '../../redux/actions/org/UnreadCountOnOrgCardsAction';
 import * as RootNavigation from '../../navigation/RootNavigation';
-
+const TestData = [{name:'test1'},{name:'test1'},{name:'test1'},{name:'test1'},{name:'test1'},{name:'test1'},{name:'test1'},{name:'test1'},{name:'test1'},{name:'test1'},{name:'test1'},{name:'test1'},{name:'test1'},{name:'test1'},{name:'test1'},{name:'test1'}]
 const CustomeDrawerScreen = ({
   orgsState,
   userInfoState,
@@ -126,7 +127,8 @@ const CustomeDrawerScreen = ({
         paddingHorizontal: '3%',
         backgroundColor: colors.drawerBackgroundColor,
       }}>
-      <View style={{flex: 0.15, justifyContent: 'center'}}>
+      <ScrollView style={{flex:1}} >
+      <View style={{flex: 0.15, justifyContent: 'center',marginBottom:10}}>
         <TouchableOpacity
           onPress={async () => {
             RootNavigation.navigate('UserProfiles', {
@@ -165,7 +167,7 @@ const CustomeDrawerScreen = ({
           </View>
         </TouchableOpacity>
       </View>
-      <View
+     <View
         style={{
           flex: 0.65,
           borderTopColor: 'gray',
@@ -185,6 +187,7 @@ const CustomeDrawerScreen = ({
           </View>
         )}
       </View>
+      </ScrollView>
     </View>
   );
 };
