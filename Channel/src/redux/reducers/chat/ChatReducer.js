@@ -57,8 +57,7 @@ export function chatReducer(state = initialState, action) {
         }else{
          action.messages[i]["sameSender"]= true
         }
-        if(action.messages[i].attachment?.length > 0 && action.messages[i].attachment[0].contentType == 'audio/mpeg' && action.messages[i].attachment[0].transcription != undefined){
-          console.log("inside if condition");
+        if(action.messages[i].attachment?.length > 0 && action.messages[i].attachment[0].contentType?.includes('audio') && action.messages[i].attachment[0].transcription != undefined){
           action.messages[i].content = `Transcription :- ${action.messages[i].attachment[0].transcription}`
         }
       }
