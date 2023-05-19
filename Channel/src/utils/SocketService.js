@@ -57,7 +57,6 @@ const SocketService = socket => {
     }
   });
   socket.on('chat/message patched', data => {
-    console.log("this is data patched", data);
     if (data?.deleted) {
       store.dispatch(deleteMessageSuccess(data));
     }
@@ -65,7 +64,6 @@ const SocketService = socket => {
       var newData = data
       if(newData?.attachment[0]?.contentType == 'audio/mpeg'){
         newData.content = `Transcription :- ${data?.attachment[0]?.transcription}`
-        console.log(newData,"this is new Data");
       }
       store.dispatch(messageEditSuccess(newData))
     }

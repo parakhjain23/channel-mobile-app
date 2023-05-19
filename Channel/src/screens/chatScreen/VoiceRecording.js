@@ -25,11 +25,6 @@ export const onStartRecord = async setIsRecording => {
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         setIsRecording(true);
         const result = await AudioRecorderPlay.startRecorder(path,audioSet);
-        AudioRecorderPlay.addRecordBackListener(e => {
-          console.log(e);
-          console.log(e.currentPosition);
-        });
-        console.log(result, 'this is on start result');
       } else {
         console.log('Recording permission denied.');
         // You can show an alert or take appropriate action if permission is not granted.
@@ -37,10 +32,6 @@ export const onStartRecord = async setIsRecording => {
     } else {
       setIsRecording(true);
       const result = await AudioRecorderPlay.startRecorder(path,audioSet);
-      AudioRecorderPlay.addRecordBackListener(e => {
-        console.log(e);
-        console.log(e.currentPosition);
-      });
     }
   } catch (error) {
     console.log('Error occurred while checking recording permission:', error);
@@ -50,7 +41,6 @@ export const onStartRecord = async setIsRecording => {
 export async function onStopRecord(setrecordingUrl, setvoiceAttachment) {
   const result = await AudioRecorderPlay.stopRecorder();
   AudioRecorderPlay.removeRecordBackListener();
-  console.log(result,'=-=-=');
   setrecordingUrl(result);
   setvoiceAttachment([
     {

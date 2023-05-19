@@ -676,7 +676,7 @@ const ChatScreen = ({
                         flex: 1,
                         alignItems: 'center',
                       }}>
-                    <AudioRecordingPlayer remoteUrl={path} />
+                      <AudioRecordingPlayer remoteUrl={path} />
                     </View>
                     <MaterialIcons
                       name="cancel"
@@ -787,19 +787,19 @@ const ChatScreen = ({
                   </View>
                 )}
               </View>
-              <View style={{justifyContent: 'flex-end'}}>
+              {/* <View style={{justifyContent: 'flex-end',backgroundColor:'white'}}>
                 {message?.length > 0 || showPlayer || attachment?.length > 0 ? (
                   <MaterialIcons
                     name="send"
                     size={ms(25)}
-                    style={{color: colors.textColor, padding: ms(10)}}
+                    style={{color: 'colors.textColor', padding: ms(10)}}
                     onPress={onSendPress}
                   />
                 ) : !isRecording ? (
                   <MaterialIcons
                     name="mic"
                     size={ms(25)}
-                    style={{color: colors.textColor, padding: ms(10)}}
+                    style={{color: 'red', padding: ms(10)}}
                     onPress={() => {
                       onStartRecord(setisRecording);
                     }}
@@ -815,6 +815,44 @@ const ChatScreen = ({
                         setShowPlayer(true);
                     }}
                   />
+                )}
+              </View> */}
+              <View
+                style={{justifyContent: 'flex-end'}}>
+                {message?.length > 0 || showPlayer || attachment?.length > 0 ? (
+                  <TouchableOpacity onPress={onSendPress} style={{flex:1,justifyContent:'flex-end'}}>
+                    <MaterialIcons
+                      name="send"
+                      size={ms(25)}
+                      style={{color: colors.textColor, padding: ms(10)}}
+                    />
+                  </TouchableOpacity>
+                ) : !isRecording ? (
+                  <TouchableOpacity
+                    onPress={() => onStartRecord(setisRecording)}
+                    style={{flex:1,justifyContent:'flex-end'}}
+                    >
+                    <MaterialIcons
+                      name="mic"
+                      size={ms(25)}
+                      style={{color: colors.textColor, padding: ms(10)}}
+                    />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    onPress={() => {
+                      onStopRecord(setrecordingUrl, setvoiceAttachment);
+                      setisRecording(false);
+                      setShowPlayer(true);
+                    }}
+                    style={{flex:1,justifyContent:'flex-end'}}
+                    >
+                    <MaterialIcons
+                      name="mic-off"
+                      size={ms(25)}
+                      style={{color: colors.textColor, padding: ms(10)}}
+                    />
+                  </TouchableOpacity>
                 )}
               </View>
             </View>
