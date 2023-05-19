@@ -314,7 +314,7 @@ const SearchChannelCard = ({
     }
     setsearchValue('');
     navigation.navigate('Chat', {
-      chatHeaderTitle: Name,
+      chatHeaderTitle: item?._source?.displayName ? item?._source?.displayName : Name,
       teamId: teamId,
       reciverUserId: item?._source?.userId,
       channelType: item?._source?.type == 'U' ? 'DIRECT_MESSAGE' : 'CHANNEL',
