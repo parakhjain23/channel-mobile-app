@@ -125,27 +125,6 @@ const ChatScreen = ({
     teamIdAndUnreadCountMapping?.[teamId] > 0 ||
     teamIdAndBadgeCountMapping?.[teamId] > 0;
 
-  // useEffect(() => {
-  //   const fetchAudioDataUrl = async () => {
-  //     if (showPlayer) {
-  //       try {
-  //         const dirs = RNFetchBlob.fs.dirs;
-  //         const path = Platform.select({
-  //           ios: `file://${dirs.CacheDir}/sound.m4a`,
-  //           android: `file://${dirs.CacheDir}/sound.mp3`,
-  //         });
-  //         const fileContent = await RNFS.readFile(path, 'base64');
-  //         const mimeType = 'audio/mp3'; // Adjust the MIME type based on the file format
-  //         const dataUrl = `data:${mimeType};base64,${fileContent}`;
-  //         setAudioDataUrl(dataUrl);
-  //       } catch (error) {
-  //         console.error('Error fetching audio data:', error);
-  //       }
-  //     }
-  //   };
-  //   fetchAudioDataUrl();
-  // }, [showPlayer]);
-
   useEffect(() => {
     if (repliedMsgDetails != '' && !showPlayer) {
       textInputRef.current.focus();

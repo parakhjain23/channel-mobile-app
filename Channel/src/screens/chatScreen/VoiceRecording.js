@@ -1,5 +1,4 @@
-import {View, Text, PermissionsAndroid, Button, Platform} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {PermissionsAndroid, Platform} from 'react-native';
 import AudioRecorderPlayer, { AVEncoderAudioQualityIOSType, AVEncodingOption, AudioEncoderAndroidType, AudioSourceAndroidType, OutputFormatAndroidType } from 'react-native-audio-recorder-player';
 import RNFetchBlob from 'rn-fetch-blob';
 
@@ -12,15 +11,7 @@ const audioSet = {
   AVFormatIDKeyIOS: AVEncodingOption.aac,
   OutputFormatAndroid: OutputFormatAndroidType.AAC_ADTS,
 };
-// const path = Platform.select({
-//   ios: `file://${RNFetchBlob.fs.dirs.CacheDir}/sound.m4a`,
 
-//   // Discussion: https://github.com/hyochan/react-native-audio-recorder-player/discussions/479
-//   // ios: 'https://firebasestorage.googleapis.com/v0/b/cooni-ebee8.appspot.com/o/test-audio.mp3?alt=media&token=d05a2150-2e52-4a2e-9c8c-d906450be20b',
-//   // ios: 'https://staging.media.ensembl.fr/original/uploads/26403543-c7d0-4d44-82c2-eb8364c614d0',
-//   // ios: 'hello.m4a',
-//   // android: `${this.dirs.CacheDir}/hello.mp3`,
-// });
 const path = Platform.select({
   ios: `sound.m4a`,
   android: `${RNFetchBlob.fs.dirs.CacheDir}/sound.mp3`,
