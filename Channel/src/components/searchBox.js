@@ -13,17 +13,17 @@ const SearchBox = ({searchValue, changeText, textInputRef}) => {
       style={{
         backgroundColor: colors?.searchBoxBackgroundColor,
         borderWidth: 1,
-        borderColor: colors?.color,
+        borderColor: 'black',
         marginHorizontal: 1,
       }}
       textColor={colors?.textColor}
       underlineStyle={{backgroundColor: 'transparent'}}
       underlineColorAndroid="transparent"
-      // clearButtonMode="always"
+      // clearButtonMode="always"s
       placeholder="Search"
       placeholderTextColor={colors?.textColor}
       left={
-        <TextInput.Icon
+        <TextInput.Icon 
           icon="magnify"
           style={{justifyContent: 'center'}}
           iconColor={colors?.textColor}
