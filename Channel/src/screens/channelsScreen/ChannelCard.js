@@ -285,7 +285,6 @@ const SearchChannelCard = ({
   item,
   navigation,
   props,
-  setsearchValue,
   userInfoState,
   searchUserProfileAction,
   orgsState,
@@ -312,7 +311,6 @@ const SearchChannelCard = ({
         item?._source?.userId,
       );
     }
-    setsearchValue('');
     navigation.navigate('Chat', {
       chatHeaderTitle: item?._source?.displayName ? item?._source?.displayName : Name,
       teamId: teamId,

@@ -275,7 +275,6 @@ const ChannelsScreen = props => {
           item={item}
           navigation={navigation}
           props={props}
-          setsearchValue={setsearchValue}
         />
       );
     },
