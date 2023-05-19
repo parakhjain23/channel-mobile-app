@@ -20,7 +20,7 @@ const NoChannelsFound = ({modalizeRef, setsearchValue, props}) => {
           <Text
             style={[
               styles.centerText,
-              {fontSize: ms(18,.5), color: 'hsl(206,100%,40%)', margin: 5},
+              {fontSize: (20), color: 'hsl(206,100%,40%)', margin: 5},
             ]}>
             Explore All Channels
           </Text>
@@ -33,7 +33,7 @@ const NoChannelsFound = ({modalizeRef, setsearchValue, props}) => {
           <Text
             style={[
               styles.centerText,
-              {fontSize: ms(18,.5), color: 'hsl(206,100%,40%)', margin: 5},
+              {fontSize: (20), color: 'hsl(206,100%,40%)', margin: 5},
             ]}>
             Create New Channel
           </Text>

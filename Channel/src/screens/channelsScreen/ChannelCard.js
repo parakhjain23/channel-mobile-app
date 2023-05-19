@@ -443,6 +443,7 @@ const SearchChannelCard = ({
                       orgsState?.userIdAndDisplayNameMapping[
                         item?._source?.userId
                       ],
+                    setChatDetailsForTab: props?.setChatDetailsForTab,
                   });
                 }}
               />

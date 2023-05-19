@@ -66,6 +66,7 @@ import FirstTabChatScreen from './FirstTabChatScreen';
 
 const ChatScreen = ({
   chatDetailsForTab,
+  setChatDetailsForTab,
   deviceType,
   route,
   userInfoState,
@@ -363,6 +364,7 @@ const ChatScreen = ({
           index={index}
           setShowActions={setShowActions}
           setCurrentSelectedChatCard={setCurrentSelectedChatCard}
+          setChatDetailsForTab={setChatDetailsForTab}
         />
       );
     },

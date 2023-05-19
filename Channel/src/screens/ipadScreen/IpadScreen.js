@@ -32,11 +32,12 @@ const IpadScreen = () => {
           />
         </View>
         <View style={{flex: 2}}>
-          {chatDetailsForTab?.teamId!='demo' && <ChatHeaderForTab chatDetailsForTab={chatDetailsForTab} />}
+          {chatDetailsForTab?.teamId!='demo' && <ChatHeaderForTab chatDetailsForTab={chatDetailsForTab} setChatDetailsForTab={setChatDetailsForTab} />}
           <ChatScreen
             deviceType={DEVICE_TYPES[1]}
             headerTitle={'Channel'}
             chatDetailsForTab={chatDetailsForTab}
+            setChatDetailsForTab={setChatDetailsForTab}
           />
         </View>
       </View>

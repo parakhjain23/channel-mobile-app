@@ -8,6 +8,7 @@ import {useTheme} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const ChatHeaderForTab = props => {
+  console.log(props.setChatDetailsForTab,"=-=-=-=-=-=-");
   const {colors} = useTheme();
   const IconName =
     props?.chatDetailsForTab?.channelType === 'DIRECT_MESSAGE'
@@ -25,6 +26,7 @@ const ChatHeaderForTab = props => {
         borderBottomWidth: 1,
         borderTopColor: 'black',
         borderBottomColor: 'black',
+        backgroundColor: colors.primaryColor
       }}>
       <TouchableOpacity
         style={{
@@ -41,6 +43,7 @@ const ChatHeaderForTab = props => {
                   props?.chatDetailsForTab?.userId
                 ],
               userId: props?.chatDetailsForTab.userId,
+              setChatDetailsForTab: props?.setChatDetailsForTab
             }),
             await props?.searchUserProfileAction(
               props?.chatDetailsForTab?.userId,

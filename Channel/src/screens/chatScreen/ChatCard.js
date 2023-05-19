@@ -53,6 +53,7 @@ const ChatCard = ({
   index,
   setShowActions,
   setCurrentSelectedChatCard,
+  setChatDetailsForTab,
 }) => {
   const {colors, dark} = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
@@ -174,6 +175,7 @@ const ChatCard = ({
                   orgState?.userIdAndDisplayNameMapping[
                     node?.attribs?.['data-id']
                   ],
+                setChatDetailsForTab: setChatDetailsForTab,
               });
           }}>
           <Text style={{color: linkColor, textDecorationLine: 'underline'}}>
