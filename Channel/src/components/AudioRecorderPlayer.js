@@ -36,7 +36,6 @@ const AudioRecordingPlayer = ({
   const onStopPlay = async () => {
     try {
       await audioRecorderPlayer.stopPlayer();
-      console.log('Playing stopped');
       setIsPlaying(false);
     } catch (error) {
       console.error('Failed to stop playing:', error);
