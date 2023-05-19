@@ -25,12 +25,6 @@ export const FileUploadApi = async (Files, accessToken) => {
       const fileUri = await fetch(Files[index]?.uri);
       const imageBody = await fileUri.blob();
       const fileType = Files[index]?.type;
-      console.log(
-        fileUri,
-        imageBody,
-        fileType,
-        'inside file upload kjalkjdflkjafkljl;dskajf;lkj;o',
-      );
       await UploadDocumentApi(s3BucketUrl, fileType, imageBody);
       return fileNames[index];
     });
@@ -52,6 +46,6 @@ const UploadDocumentApi = async (s3BucketUrl, fileType, imageBody) => {
       body: imageBody,
     });
   } catch (error) {
-    console.log(error, 'error in uploadDocumentApi');
+    console.warn(error, 'error in uploadDocumentApi');
   }
 };

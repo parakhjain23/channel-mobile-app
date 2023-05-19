@@ -10,7 +10,6 @@ export const sendMessageApi = async (
   mentionsArr = [],
 ) => {
   try {
-    console.log('inside send message api', attachment);
     const regex = /(https?:\/\/[^\s]+)/g;
     message = message.replace(regex, '<a href="$1">$1</a>');
     const mentionRegex = /@(\w+)/g;
@@ -57,7 +56,6 @@ export const sendMessageApi = async (
       }),
     });
     const result = await response.json();
-    console.log(result, 'result from the api');
   } catch (error) {
     console.warn(error);
   }

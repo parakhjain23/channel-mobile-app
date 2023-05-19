@@ -92,7 +92,7 @@ const ContactDetailsPage = ({
           />
         </View>
       ) : (
-        <ScrollView>
+        <ScrollView contentContainerStyle={{justifyContent:'center',alignItems: 'center'}}>
           <View
             style={{
               marginTop: 20,

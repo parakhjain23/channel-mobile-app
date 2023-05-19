@@ -147,9 +147,9 @@ export const makeStyles = colors =>
       borderWidth: ms(1),
       borderRadius: ms(4),
       borderColor: '#b3b3b3',
-      paddingHorizontal: ms(5),
-      paddingVertical: mvs(4),
-      maxHeight: mvs(200),
+      paddingHorizontal: (5),
+      paddingVertical: (4),
+      maxHeight: (200),
     },
     attachIcon: {
       marginRight: ms(8),

@@ -5,8 +5,6 @@ import RNFetchBlob from 'rn-fetch-blob';
 
 export const uploadRecording = async (recordingUrl, accessToken) => {
   try {
-    // const url = await RecordingUrl();
-    // console.log('url-0-0-0-0-0-0-0-0', url);
     const Files = [
       {
         name: 'sound.mp3',
@@ -15,7 +13,6 @@ export const uploadRecording = async (recordingUrl, accessToken) => {
       },
     ];
     const FileNames = await FileUploadApi(Files, accessToken);
-    // console.log(FileNames, 'filename in voice picker');
     const attachment = FileNames?.map((file, index) => {
       return {
         title: file,
@@ -40,19 +37,6 @@ async function RecordingUrl() {
   const fileName = 'sound.mp3';
   const uri = `file://${cacheDirPath}/${fileName}`;
   if (Platform?.OS === 'ios') {
-    // RNFS.readFile(sourcePath, (err, data) => {
-    //   if (err) {
-    //     console.log('Error reading file:', err);
-    //   } else {
-    //     RNFS.writeFile(destinationPath, data, err => {
-    //       if (err) {
-    //         console.log('Error writing file:', err);
-    //       } else {
-    //         console.log('File transferred successfully!');
-    //       }
-    //     });
-    //   }
-    // });
     await RNFS.exists(destinationPath)
       .then(exists => {
         if (exists) {
@@ -60,40 +44,21 @@ async function RecordingUrl() {
             if (sourceExists) {
               RNFS.unlink(destinationPath)
                 .then(() => {
-                  console.log('File moved successfully!');
                 })
                 .catch(error => {
-                  console.log('Error deleting file: ', error);
                 });
             } else {
-              console.log('Source file does not exist');
             }
           });
         } else {
           RNFS.moveFile(sourcePath, destinationPath)
             .then(() => {
-              console.log('File moved successfully!');
-              // RNFS.readDir(sourcePath, (err, data) => {
-              //   if (err) {
-              //     console.log('Error reading file:', err);
-              //   } else {
-              //     RNFS.writeFile(destinationPath, data, err => {
-              //       if (err) {
-              //         console.log('Error writing file:', err);
-              //       } else {
-              //         console.log('File transferred successfully!');
-              //       }
-              //     });
-              //   }
-              // });
             })
             .catch(error => {
-              console.log('Error moving file: ', error);
             });
         }
       })
       .catch(error => {
-        console.log('Error checking file existence: ', error);
       });
     return uri;
   } else {

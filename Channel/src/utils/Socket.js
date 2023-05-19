@@ -6,7 +6,6 @@ let socket = io('wss://api.intospace.io', {
   reconnectionAttempts: 10,
 });
 export function createSocket(accessToken, orgId) {
-  // console.log('inside create socket')
   if (socket?.connected) {
     socket.disconnect();
     socket = io('wss://api.intospace.io', {
@@ -30,14 +29,7 @@ export function createSocket(accessToken, orgId) {
         // console.warn('ERROR', error);
       },
     );
-    // socket.on('connect', () => {
-    //   // console.warn('Connected');
-    // });
   }
-
-  // socket.on('disconnect', () => {
-  //   // console.warn('Disconnected');
-  // });
   return socket;
 }
 

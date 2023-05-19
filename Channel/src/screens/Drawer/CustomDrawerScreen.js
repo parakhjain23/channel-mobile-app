@@ -1,12 +1,6 @@
 import {useNavigation, useTheme} from '@react-navigation/native';
 import React, {useEffect} from 'react';
-import {
-  FlatList,
-  Image,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {FlatList, Image, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 import NoInternetComponent from '../../components/NoInternetComponent';
@@ -20,6 +14,7 @@ import {removeCountOnOrgCard} from '../../redux/actions/org/UnreadCountOnOrgCard
 import * as RootNavigation from '../../navigation/RootNavigation';
 
 const CustomeDrawerScreen = ({
+  deviceType,
   orgsState,
   userInfoState,
   getChannelsAction,
@@ -67,7 +62,11 @@ const CustomeDrawerScreen = ({
           count != undefined &&
             (await moveChannelToTopAction(Object.keys(unreadCountObj))) &&
             removeCountOnOrgCardAction(item?.id);
-          navigation.navigate('Channel', {orgId: item?.id, name: item?.name});
+          deviceType == 'Mobile' &&
+            navigation.navigate('Channel', {
+              orgId: item?.id,
+              name: item?.name,
+            });
         }}
         style={{
           borderWidth: 0.5,

@@ -87,14 +87,14 @@ export const makeStyles = colors =>
     },
     nameText: {
       fontWeight: 'bold',
-      fontSize: ms(14),
-      marginBottom: mvs(3),
+      fontSize: 14,
+      marginBottom: 3,
     },
     messageText: {
-      fontSize: ms(14),
+      fontSize: 14,
     },
     timeText: {
-      fontSize: ms(9),
+      fontSize: 10,
       marginLeft: ms(5),
       marginRight: ms(-3),
       marginBottom: ms(-4),

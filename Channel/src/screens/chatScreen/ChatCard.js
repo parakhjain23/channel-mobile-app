@@ -24,7 +24,6 @@ import {tagsStyles} from './HtmlStyles';
 import WebView from 'react-native-webview';
 import AudioRecordingPlayer from '../../components/AudioRecorderPlayer';
 
-
 const AddRemoveJoinedMsg = React.memo(({senderName, content, orgState}) => {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
@@ -311,28 +310,13 @@ const ChatCard = ({
                         key={index}
                         style={{
                           flexDirection: 'row',
-                          height: ms(50),
-                          width: s(250),
+                          height: 50,
+                          width: ms(250),
                           flex: 1,
                           alignItems: 'center',
                           overflow: 'hidden',
                           justifyContent: 'center', // Align center horizontally
                         }}>
-                        {/* <WebView
-                          source={{
-                            html: `
-                                  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
-                                  <style>
-                                    body, html { margin: 0; padding: 0; flex: 1; display: flex; align-items: center;}
-                                    audio { width: 100%;}
-                                  </style>
-                                  <audio controls>
-                                    <source src="${item?.resourceUrl}" type="audio/mp3">
-                                  </audio>
-                                `,
-                          }}
-                          style={{flex: 1}}
-                        /> */}
                         <AudioRecordingPlayer remoteUrl={item?.resourceUrl} />
                       </View>
                     ) : (
