@@ -122,8 +122,6 @@ const ChatScreen = ({
   const [recordingUrl, setrecordingUrl] = useState('');
   const [isRecording, setisRecording] = useState(false);
   const [showPlayer, setShowPlayer] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [audioDataUrl, setAudioDataUrl] = useState('');
   const [voiceAttachment, setvoiceAttachment] = useState('');
   const [Activities, setActivities] = useState(false);
   const [action, setaction] = useState(null);
@@ -172,14 +170,23 @@ const ChatScreen = ({
 
   useEffect(() => {
     if (
-      chatState?.data[teamId]?.messages == undefined ||
-      chatState?.data[teamId]?.messages == [] ||
-      (!chatState?.data[teamId]?.apiCalled && networkState?.isInternetConnected)
+      (!chatState?.data[teamId]?.messages || chatState?.data[teamId]?.messages.length === 0) &&
+      networkState?.isInternetConnected
     ) {
       fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
+    } else if (chatState?.data[teamId]?.messages?.length > 0 && networkState?.isInternetConnected) {
+      const timeoutId = setTimeout(() => {
+        fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
+      }, 1000);
+  
+      return () => {
+        clearTimeout(timeoutId); 
+      };
     }
+  
     setActiveChannelTeamIdAction(teamId);
   }, [networkState?.isInternetConnected, teamId, chatDetailsForTab]);
+  
 
   const optionsPosition = useRef(new Animated.Value(0)).current;
 
