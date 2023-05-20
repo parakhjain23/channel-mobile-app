@@ -74,7 +74,6 @@ export function channelsReducer(state = initialState, action) {
       };
 
     case Actions.FETCH_RECENT_CHANNELS_SUCCESS:
-      console.log(action?.recentChannels);
       var tempRecentChannels = [];
       var key = null;
       for (let i = 0; i < action?.recentChannels?.length; i++) {

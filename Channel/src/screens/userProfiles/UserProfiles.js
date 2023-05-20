@@ -43,7 +43,6 @@ const ContactDetailsPage = ({
     userId,
     searchedChannel,
   ) => {
-    console.log(teamId, channelType, userId, searchedChannel);
     setChatDetailsForTab({
       teamId: teamId,
       channelType: channelType,

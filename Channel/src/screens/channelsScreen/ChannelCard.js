@@ -94,7 +94,7 @@ const ChannelCard = ({
   }, [item?._id, teamIdAndUnreadCountMapping, highlightChannel]);
 
   const onPress = useCallback(() => {
-    // networkState?.isInternetConnected && resetChatsAction();
+    networkState?.isInternetConnected && resetChatsAction();
     if (deviceType === DEVICE_TYPES[1]) {
       handleListItemPress(item?._id, item?.type, userId, false);
     } else {

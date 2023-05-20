@@ -174,15 +174,7 @@ const ChatScreen = ({
       networkState?.isInternetConnected
     ) {
       fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
-    } else if (chatState?.data[teamId]?.messages?.length > 0 && networkState?.isInternetConnected) {
-      const timeoutId = setTimeout(() => {
-        fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
-      }, 1000);
-      return () => {
-        clearTimeout(timeoutId); 
-      };
     }
-  
     setActiveChannelTeamIdAction(teamId);
   }, [networkState?.isInternetConnected, teamId, chatDetailsForTab]);
   
