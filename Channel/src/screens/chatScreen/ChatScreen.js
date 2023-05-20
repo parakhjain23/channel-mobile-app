@@ -174,7 +174,7 @@ const ChatScreen = ({
       networkState?.isInternetConnected
     ) {
       fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
-    } else if (chatState?.data[teamId]?.messages?.length > 0 && networkState?.isInternetConnected) {
+    } else if (chatState?.data[teamId]?.messages?.length > 0) {
       const timeoutId = setTimeout(() => {
         fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
       }, 1000);
@@ -593,7 +593,7 @@ const ChatScreen = ({
                             }
                           />
                           <OptionList
-                            sentByMe={true}
+                            sentByMe={currentSelectChatCard?.senderId == userInfoState?.user?.id ? true : false}
                             chat={currentSelectChatCard}
                             setreplyOnMessage={setreplyOnMessage}
                             setrepliedMsgDetails={setrepliedMsgDetails}

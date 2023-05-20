@@ -43,7 +43,6 @@ const ContactDetailsPage = ({
     userId,
     searchedChannel,
   ) => {
-    console.log(teamId, channelType, userId, searchedChannel);
     setChatDetailsForTab({
       teamId: teamId,
       channelType: channelType,
@@ -179,7 +178,7 @@ const ContactDetailsPage = ({
                         channelsState?.teamIdAndTypeMapping[teamId],
                         UserId,
                         false,
-                      );
+                      ) &&
                   navigation.goBack();
                 }}>
                 <Text style={[styles.buttonText, styles.buttonTextWhite]}>
