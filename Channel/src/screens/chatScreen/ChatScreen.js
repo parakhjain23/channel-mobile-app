@@ -584,7 +584,7 @@ const ChatScreen = ({
                             }
                           />
                           <OptionList
-                            sentByMe={true}
+                            sentByMe={currentSelectChatCard?.senderId == userInfoState?.user?.id ? true : false}
                             chat={currentSelectChatCard}
                             setreplyOnMessage={setreplyOnMessage}
                             setrepliedMsgDetails={setrepliedMsgDetails}

@@ -21,7 +21,6 @@ import HTMLView from 'react-native-htmlview';
 import {RenderHTML} from 'react-native-render-html';
 import * as RootNavigation from '../../navigation/RootNavigation';
 import {tagsStyles} from './HtmlStyles';
-import WebView from 'react-native-webview';
 import AudioRecordingPlayer from '../../components/AudioRecorderPlayer';
 
 const AddRemoveJoinedMsg = React.memo(({senderName, content, orgState}) => {
