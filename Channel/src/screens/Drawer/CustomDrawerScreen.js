@@ -1,6 +1,5 @@
 import {useNavigation, useTheme} from '@react-navigation/native';
 import React, {useEffect} from 'react';
-<<<<<<< HEAD
 import {
   FlatList,
   Image,
@@ -9,9 +8,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-=======
-import {FlatList, Image, Text, TouchableOpacity, View} from 'react-native';
->>>>>>> 894f10a0ab0e24e20aefae069f6ad244cc85fde5
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 import NoInternetComponent from '../../components/NoInternetComponent';

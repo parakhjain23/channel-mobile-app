@@ -178,7 +178,6 @@ const ChatScreen = ({
       const timeoutId = setTimeout(() => {
         fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
       }, 1000);
-  
       return () => {
         clearTimeout(timeoutId); 
       };
@@ -705,12 +704,6 @@ const ChatScreen = ({
                           minHeight: 60,
                           // maxHeight: ms(200),
 
-<<<<<<< HEAD
-                        flex: 1,
-                        alignItems: 'center',
-                      }}>
-                      <AudioRecordingPlayer remoteUrl={path} />
-=======
                           flex: 1,
                           alignItems: 'center',
                         }}>
@@ -724,7 +717,6 @@ const ChatScreen = ({
                           setShowPlayer(false);
                         }}
                       />
->>>>>>> 894f10a0ab0e24e20aefae069f6ad244cc85fde5
                     </View>
                   )}
                   {!showPlayer && (
@@ -845,176 +837,6 @@ const ChatScreen = ({
                         onStartRecord(setisRecording);
                       }}
                     />
-<<<<<<< HEAD
-                  </View>
-                )}
-                {!showPlayer && (
-                  <View style={styles.inputContainer}>
-                    {isRecording ? (
-                      <View style={{flex: 1, minHeight: 40}}>
-                        <AnimatedLottieView
-                          source={require('../../assests/images/attachments/recordingWave.json')}
-                          loop
-                          autoPlay
-                        />
-                      </View>
-                    ) : (
-                      <>
-                        <View style={{justifyContent: 'center'}}>
-                          {showOptions && (
-                            <Animated.View
-                              style={[
-                                styles.optionsContainer,
-                                {transform: [{translateX: optionsPosition}]},
-                              ]}>
-                              <View style={{flexDirection: 'row'}}>
-                                <MaterialIcons
-                                  name="attach-file"
-                                  size={ms(20)}
-                                  style={styles.attachIcon}
-                                  onPress={() =>
-                                    pickDocument(
-                                      setAttachment,
-                                      userInfoState?.accessToken,
-                                      setAttachmentLoading,
-                                    )
-                                  }
-                                />
-                                <MaterialIcons
-                                  name="camera"
-                                  size={ms(20)}
-                                  style={styles.attachIcon}
-                                  onPress={() => {
-                                    launchCameraForPhoto(
-                                      userInfoState?.accessToken,
-                                      setAttachment,
-                                      setAttachmentLoading,
-                                    );
-                                  }}
-                                />
-                                <MaterialIcons
-                                  name="image"
-                                  size={ms(20)}
-                                  style={styles.attachIcon}
-                                  onPress={() => {
-                                    launchGallery(
-                                      userInfoState?.accessToken,
-                                      setAttachment,
-                                      setAttachmentLoading,
-                                    );
-                                  }}
-                                />
-                                <MaterialIcons
-                                  name="chevron-left"
-                                  size={ms(20)}
-                                  style={styles.attachIcon}
-                                  onPress={hideOptionsMethod}
-                                />
-                              </View>
-                            </Animated.View>
-                          )}
-                        </View>
-                        <View style={{justifyContent: 'center'}}>
-                          {!showOptions && (
-                            <MaterialIcons
-                              name="add"
-                              size={ms(20)}
-                              style={styles.attachIcon}
-                              onPress={showOptionsMethod}
-                            />
-                          )}
-                        </View>
-                        <TextInput
-                          ref={textInputRef}
-                          editable
-                          multiline
-                          onChangeText={handleInputChange}
-                          placeholder="Message"
-                          placeholderTextColor={colors.textColor}
-                          value={message}
-                          style={[
-                            replyOnMessage
-                              ? styles.inputWithReply
-                              : styles.inputWithoutReply,
-                            {color: colors.textColor},
-                          ]}
-                        />
-                      </>
-                    )}
-                    {showOptions &&
-                      message?.html?.trim()?.length == 1 &&
-                      hideOptionsMethod()}
-                  </View>
-                )}
-              </View>
-              {/* <View style={{justifyContent: 'flex-end',backgroundColor:'white'}}>
-                {message?.length > 0 || showPlayer || attachment?.length > 0 ? (
-                  <MaterialIcons
-                    name="send"
-                    size={ms(25)}
-                    style={{color: 'colors.textColor', padding: ms(10)}}
-                    onPress={onSendPress}
-                  />
-                ) : !isRecording ? (
-                  <MaterialIcons
-                    name="mic"
-                    size={ms(25)}
-                    style={{color: 'red', padding: ms(10)}}
-                    onPress={() => {
-                      onStartRecord(setisRecording);
-                    }}
-                  />
-                ) : (
-                  <MaterialIcons
-                    name="mic-off"
-                    size={ms(25)}
-                    style={{color: colors.textColor, padding: ms(10)}}
-                    onPress={() => {
-                      onStopRecord(setrecordingUrl, setvoiceAttachment),
-                        setisRecording(false),
-                        setShowPlayer(true);
-                    }}
-                  />
-                )}
-              </View> */}
-              <View
-                style={{justifyContent: 'flex-end'}}>
-                {message?.length > 0 || showPlayer || attachment?.length > 0 ? (
-                  <TouchableOpacity onPress={onSendPress} style={{flex:1,justifyContent:'flex-end'}}>
-                    <MaterialIcons
-                      name="send"
-                      size={ms(25)}
-                      style={{color: colors.textColor, padding: ms(10)}}
-                    />
-                  </TouchableOpacity>
-                ) : !isRecording ? (
-                  <TouchableOpacity
-                    onPress={() => onStartRecord(setisRecording)}
-                    style={{flex:1,justifyContent:'flex-end'}}
-                    >
-                    <MaterialIcons
-                      name="mic"
-                      size={ms(25)}
-                      style={{color: colors.textColor, padding: ms(10)}}
-                    />
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    onPress={() => {
-                      onStopRecord(setrecordingUrl, setvoiceAttachment);
-                      setisRecording(false);
-                      setShowPlayer(true);
-                    }}
-                    style={{flex:1,justifyContent:'flex-end'}}
-                    >
-                    <MaterialIcons
-                      name="mic-off"
-                      size={ms(25)}
-                      style={{color: colors.textColor, padding: ms(10)}}
-                    />
-                  </TouchableOpacity>
-                )}
-=======
                   ) : (
                     <MaterialIcons
                       name="mic-off"
@@ -1028,7 +850,6 @@ const ChatScreen = ({
                     />
                   )}
                 </View>
->>>>>>> 894f10a0ab0e24e20aefae069f6ad244cc85fde5
               </View>
             </View>
           </KeyboardAvoidingView>

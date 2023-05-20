@@ -51,10 +51,6 @@ async function RecordingUrl() {
         } else {
           RNFS.moveFile(sourcePath, destinationPath)
             .then(() => {
-<<<<<<< HEAD
-              console.log('File moved successfully!');
-=======
->>>>>>> 894f10a0ab0e24e20aefae069f6ad244cc85fde5
             })
             .catch(error => {
             });

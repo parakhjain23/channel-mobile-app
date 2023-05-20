@@ -1,8 +1,4 @@
 import Icon from 'react-native-vector-icons/FontAwesome';
-<<<<<<< HEAD
-import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Dimensions } from 'react-native';
-=======
 import React, {useState, useEffect} from 'react';
 import {
   View,
@@ -11,7 +7,6 @@ import {
   StyleSheet,
   Dimensions,
 } from 'react-native';
->>>>>>> 894f10a0ab0e24e20aefae069f6ad244cc85fde5
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import Slider from '@react-native-community/slider';
 

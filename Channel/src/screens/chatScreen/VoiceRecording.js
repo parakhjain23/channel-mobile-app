@@ -25,10 +25,7 @@ export const onStartRecord = async setIsRecording => {
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         setIsRecording(true);
         const result = await AudioRecorderPlay.startRecorder(path,audioSet);
-<<<<<<< HEAD
-=======
     
->>>>>>> 894f10a0ab0e24e20aefae069f6ad244cc85fde5
       } else {
       }
     } else {

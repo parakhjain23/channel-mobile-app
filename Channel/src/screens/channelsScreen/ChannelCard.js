@@ -358,16 +358,6 @@ const SearchChannelCard = ({
         item?._source?.userId,
       );
     }
-<<<<<<< HEAD
-    navigation.navigate('Chat', {
-      chatHeaderTitle: item?._source?.displayName ? item?._source?.displayName : Name,
-      teamId: teamId,
-      reciverUserId: item?._source?.userId,
-      channelType: item?._source?.type == 'U' ? 'DIRECT_MESSAGE' : 'CHANNEL',
-      userId: item?._source?.userId,
-      searchedChannel: true,
-    });
-=======
     setsearchValue('');
     if (deviceType === DEVICE_TYPES[1]) {
       handleListItemPress(
@@ -387,7 +377,6 @@ const SearchChannelCard = ({
         searchedChannel: true,
       });
     }
->>>>>>> 894f10a0ab0e24e20aefae069f6ad244cc85fde5
   }, [
     teamId,
     props?.channelsState?.userIdAndTeamIdMapping,
