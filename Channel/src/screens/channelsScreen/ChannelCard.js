@@ -1,5 +1,11 @@
 import {useTheme} from '@react-navigation/native';
-import React, {useCallback, useLayoutEffect, useMemo, useRef} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import {getChatsReset} from '../../redux/actions/chat/ChatActions';
 
 import {
@@ -18,6 +24,8 @@ import * as RootNavigation from '../../navigation/RootNavigation';
 import {GestureHandlerRootView, Swipeable} from 'react-native-gesture-handler';
 import {resetUnreadCountStart} from '../../redux/actions/channels/ChannelsAction';
 import {closeChannelStart} from '../../redux/actions/channels/CloseChannelActions';
+import {AppContext} from '../appProvider/AppProvider';
+import {DEVICE_TYPES} from '../../constants/Constants';
 
 const TouchableItem =
   Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
@@ -31,6 +39,22 @@ const ChannelCard = ({
   markAsUnreadAction,
   closeChannelAction,
 }) => {
+  const {deviceType} = useContext(AppContext);
+
+  const handleListItemPress = (
+    teamId,
+    channelType,
+    userId,
+    searchedChannel,
+  ) => {
+    props?.setChatDetailsForTab({
+      teamId: teamId,
+      channelType: channelType,
+      userId: userId,
+      searchedChannel: searchedChannel,
+    });
+  };
+
   const {colors} = useTheme();
   const userIdAndDisplayNameMapping =
     props.orgsState?.userIdAndDisplayNameMapping;
@@ -70,21 +94,25 @@ const ChannelCard = ({
   }, [item?._id, teamIdAndUnreadCountMapping, highlightChannel]);
 
   const onPress = useCallback(() => {
-    networkState?.isInternetConnected && resetChatsAction();
-    RootNavigation.navigate('Chat', {
-      chatHeaderTitle: Name,
-      teamId: item?._id,
-      channelType: item?.type,
-      userId,
-      searchedChannel: false,
-    });
+    // networkState?.isInternetConnected && resetChatsAction();
+    if (deviceType === DEVICE_TYPES[1]) {
+      handleListItemPress(item?._id, item?.type, userId, false);
+    } else {
+      RootNavigation.navigate('Chat', {
+        chatHeaderTitle: Name,
+        teamId: item?._id,
+        channelType: item?.type,
+        userId,
+        searchedChannel: false,
+      });
+    }
     props.setActiveChannelTeamIdAction(item?._id);
   }, [
     Name,
     currentOrgId,
     item?._id,
     item?.type,
-    resetChatsAction,
+    // resetChatsAction,
     props.setActiveChannelTeamIdAction,
     teamIdAndUnreadCountMapping,
     user?.id,
@@ -194,9 +222,9 @@ const ChannelCard = ({
           activeOpacity={0.8}>
           <View
             style={{
-              borderTopWidth: ms(0.7),
+              borderTopWidth: ms(0.4),
               borderTopColor: '#444444',
-              minHeight: mvs(60),
+              // minHeight: mvs(60),
               backgroundColor: colors.primaryColor,
               width: '100%',
               flexDirection: 'column',
@@ -207,7 +235,7 @@ const ChannelCard = ({
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                padding: ms(13),
+                padding: 20,
               }}>
               <View
                 style={{
@@ -219,7 +247,7 @@ const ChannelCard = ({
                 <Text>{'  '}</Text>
                 <Text
                   style={{
-                    fontSize: ms(16),
+                    fontSize: 16,
                     fontWeight: unread ? '700' : '400',
                     color: colors.textColor,
                   }}
@@ -230,20 +258,20 @@ const ChannelCard = ({
                 <View
                   style={{
                     backgroundColor: '#73e1ff',
-                    paddingHorizontal: ms(5),
-                    paddingVertical: mvs(2),
-                    borderRadius: ms(5),
+                    paddingHorizontal: 5,
+                    paddingVertical: 2,
+                    borderRadius: 5,
                     overflow: 'hidden',
                   }}>
                   <Text
                     style={{
                       color: 'black',
-                      fontSize: ms(11),
+                      fontSize: 14,
                       fontWeight: 'bold',
                       textAlign: 'center',
-                      minWidth: ms(15),
-                      height: ms(20),
-                      lineHeight: ms(20),
+                      minWidth: 15,
+                      height: 20,
+                      lineHeight: 20,
                       overflow: 'hidden',
                     }}>
                     {teamIdAndUnreadCountMapping?.[item?._id]}
@@ -289,7 +317,25 @@ const SearchChannelCard = ({
   searchUserProfileAction,
   orgsState,
 }) => {
+  const {deviceType} = useContext(AppContext);
   const {colors} = useTheme();
+
+  const handleListItemPress = (
+    teamId,
+    channelType,
+    userId,
+    searchedChannel,
+    Name,
+  ) => {
+    props?.setChatDetailsForTab({
+      teamId: teamId,
+      channelType: channelType,
+      userId: userId,
+      searchedChannel: searchedChannel,
+      channelName: Name,
+    });
+  };
+
   let Name = item?._source?.title;
   if (item?._source?.userId == userInfoState?.user?.id) {
     Name = item?._source?.title + ' (You)';
@@ -302,6 +348,7 @@ const SearchChannelCard = ({
     () => (item?._source?.type === 'U' ? 'user' : 'hashtag'),
     [item?._source?.type],
   );
+
   const onPress = useCallback(async () => {
     if (!teamId) {
       await props?.createDmChannelAction(
@@ -311,6 +358,7 @@ const SearchChannelCard = ({
         item?._source?.userId,
       );
     }
+<<<<<<< HEAD
     navigation.navigate('Chat', {
       chatHeaderTitle: item?._source?.displayName ? item?._source?.displayName : Name,
       teamId: teamId,
@@ -319,6 +367,27 @@ const SearchChannelCard = ({
       userId: item?._source?.userId,
       searchedChannel: true,
     });
+=======
+    setsearchValue('');
+    if (deviceType === DEVICE_TYPES[1]) {
+      handleListItemPress(
+        teamId,
+        item?._source?.type == 'U' ? 'DIRECT_MESSAGE' : 'PUBLIC',
+        item?._source?.userId,
+        true,
+        Name,
+      );
+    } else {
+      navigation.navigate('Chat', {
+        chatHeaderTitle: Name,
+        teamId: teamId,
+        reciverUserId: item?._source?.userId,
+        channelType: item?._source?.type == 'U' ? 'DIRECT_MESSAGE' : 'CHANNEL',
+        userId: item?._source?.userId,
+        searchedChannel: true,
+      });
+    }
+>>>>>>> 894f10a0ab0e24e20aefae069f6ad244cc85fde5
   }, [
     teamId,
     props?.channelsState?.userIdAndTeamIdMapping,
@@ -335,7 +404,7 @@ const SearchChannelCard = ({
         style={{
           borderTopWidth: ms(0.7),
           borderTopColor: '#444444',
-          minHeight: mvs(60),
+          minHeight: 60,
           borderRadius: ms(5),
           width: '100%',
           flexDirection: 'column',
@@ -358,7 +427,7 @@ const SearchChannelCard = ({
             <Text>{'  '}</Text>
             <Text
               style={{
-                fontSize: ms(16),
+                fontSize: 17,
                 fontWeight: '400',
                 color: colors.textColor,
                 textDecorationLine: isArchived ? 'line-through' : null,
@@ -384,6 +453,7 @@ const SearchChannelCard = ({
                       orgsState?.userIdAndDisplayNameMapping[
                         item?._source?.userId
                       ],
+                    setChatDetailsForTab: props?.setChatDetailsForTab,
                   });
                 }}
               />

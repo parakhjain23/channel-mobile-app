@@ -1,22 +1,38 @@
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {DrawerActions, useTheme} from '@react-navigation/native';
 import React from 'react';
-import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Dimensions,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {connect} from 'react-redux';
 import ChannelsScreen from '../screens/channelsScreen/ChannelsScreen';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CustomDrawerScreen from '../screens/drawer/CustomDrawerScreen';
+import IpadScreen from '../screens/ipadScreen/IpadScreen';
+import {DEVICE_TYPES} from '../constants/Constants';
 
 const Drawer = createDrawerNavigator();
-const DrawerNavigation = ({orgsState}) => {
+const DrawerNavigation = ({orgsState,appInfoState}) => {
   const {colors} = useTheme();
   var count = orgsState?.unreadCountForDrawerIcon;
+  let ScreenName, ScreenComponent;
+  const deviceType = appInfoState.deviceType
+  if (deviceType === DEVICE_TYPES[0]) {
+    [ScreenName, ScreenComponent] = ['Channel', ChannelsScreen];
+  } else {
+    [ScreenName, ScreenComponent] = ['Ipad', IpadScreen];
+  }
   return (
     <Drawer.Navigator
-      drawerContent={props => <CustomDrawerScreen {...props} />}>
+      drawerContent={props => <CustomDrawerScreen {...props} deviceType={deviceType}/>}>
       <Drawer.Screen
-        name="Channel"
-        component={ChannelsScreen}
+        name={ScreenName}
+        component={ScreenComponent}
         options={({route, navigation}) => ({
           headerTitle:
             orgsState.orgIdAndNameMapping != null
@@ -51,6 +67,7 @@ const DrawerNavigation = ({orgsState}) => {
 const mapStateToProps = state => ({
   userInfoState: state.userInfoReducer,
   orgsState: state.orgsReducer,
+  appInfoState : state.appInfoReducer
 });
 export default connect(mapStateToProps)(DrawerNavigation);
 const styles = StyleSheet.create({

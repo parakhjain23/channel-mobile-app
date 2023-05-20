@@ -46,6 +46,6 @@ const UploadDocumentApi = async (s3BucketUrl, fileType, imageBody) => {
       body: imageBody,
     });
   } catch (error) {
-    console.log(error, 'error in uploadDocumentApi');
+    console.warn(error, 'error in uploadDocumentApi');
   }
 };

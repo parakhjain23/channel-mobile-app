@@ -57,7 +57,11 @@ export function chatReducer(state = initialState, action) {
         }else{
          action.messages[i]["sameSender"]= true
         }
+<<<<<<< HEAD
         if(action.messages[i].attachment?.length > 0 && action.messages[i].attachment[0].contentType?.includes('audio') && action.messages[i].attachment[0].transcription != undefined){
+=======
+        if(action.messages[i].attachment?.length > 0 && action.messages[i].attachment[0].contentType == 'audio/mpeg' && action.messages[i].attachment[0].transcription != undefined){
+>>>>>>> 894f10a0ab0e24e20aefae069f6ad244cc85fde5
           action.messages[i].content = `Transcription :- ${action.messages[i].attachment[0].transcription}`
         }
       }

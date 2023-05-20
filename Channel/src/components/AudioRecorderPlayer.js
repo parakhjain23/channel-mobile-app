@@ -1,14 +1,23 @@
 import Icon from 'react-native-vector-icons/FontAwesome';
+<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Dimensions } from 'react-native';
+=======
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
+>>>>>>> 894f10a0ab0e24e20aefae069f6ad244cc85fde5
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import Slider from '@react-native-community/slider';
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
-const AudioRecordingPlayer = ({
-  remoteUrl
-}) => {
+const AudioRecordingPlayer = ({remoteUrl}) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentPositionSec, setCurrentPositionSec] = useState(0);
   const [currentDurationSec, setCurrentDurationSec] = useState(0);
@@ -20,11 +29,9 @@ const AudioRecordingPlayer = ({
 
   const onStartPlay = async () => {
     try {
-      const msg = await audioRecorderPlayer.startPlayer(
-        `${remoteUrl}`,
-      );
+      const msg = await audioRecorderPlayer.startPlayer(`${remoteUrl}`);
       setIsPlaying(true);
-      audioRecorderPlayer.addPlayBackListener(({ currentPosition, duration }) => {
+      audioRecorderPlayer.addPlayBackListener(({currentPosition, duration}) => {
         setCurrentPositionSec(currentPosition);
         setCurrentDurationSec(duration);
       });
@@ -51,9 +58,8 @@ const AudioRecordingPlayer = ({
       return (
         <View style={styles.buttonsContainer}>
           <TouchableOpacity
-            style={[styles.buttons, { marginRight: 10 }]}
-            onPress={onStopPlay}
-          >
+            style={[styles.buttons, {marginRight: 10}]}
+            onPress={onStopPlay}>
             <Icon name="stop-circle" size={28} color={'black'} />
           </TouchableOpacity>
         </View>
@@ -62,9 +68,8 @@ const AudioRecordingPlayer = ({
       return (
         <View style={styles.buttonsContainer}>
           <TouchableOpacity
-            style={[styles.buttons, { marginRight: 10 }]}
-            onPress={onStartPlay}
-          >
+            style={[styles.buttons, {marginRight: 10}]}
+            onPress={onStartPlay}>
             <Icon name="play-circle" size={28} color={'black'} />
           </TouchableOpacity>
         </View>
@@ -78,11 +83,10 @@ const AudioRecordingPlayer = ({
     const remainingSeconds = totalSeconds % 60;
     return `${padZero(minutes)}:${padZero(remainingSeconds)}`;
   };
-  
+
   const padZero = number => {
     return number.toString().padStart(2, '0');
   };
-  
 
   return (
     <View style={styles.container}>
@@ -117,7 +121,7 @@ const styles = StyleSheet.create({
     // height: 60,
     // marginHorizontal: 20,
     borderRadius: 10,
-    flex:1
+    flex: 1,
   },
   playerContainer: {
     flexDirection: 'row',
@@ -131,7 +135,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#000',
     marginLeft: 0,
-    marginRight:5
+    marginRight: 5,
   },
   buttonsContainer: {
     flexDirection: 'row',

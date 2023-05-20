@@ -74,6 +74,7 @@ export function channelsReducer(state = initialState, action) {
       };
 
     case Actions.FETCH_RECENT_CHANNELS_SUCCESS:
+      console.log(action?.recentChannels);
       var tempRecentChannels = [];
       var key = null;
       for (let i = 0; i < action?.recentChannels?.length; i++) {
@@ -85,41 +86,11 @@ export function channelsReducer(state = initialState, action) {
     case Actions.FETCH_CHANNELS_ERROR:
       return {...state, channels: [], isLoading: false};
 
-    // case Actions.MOVE_CHANNEL_TO_TOP:
-    //   var tempHighlightChannels = {};
-    //   if (state?.activeChannelTeamId != action.channelId) {
-    //     tempHighlightChannels[action.channelId] = true;
-    //   } else {
-    //     tempHighlightChannels[action.channelId] = false;
-    //   }
-    //   const channelToAddInRecentChannels = state?.channels.find(
-    //     obj => obj['_id'] === action?.channelId,
-    //   );
-    //   if (
-    //     channelToAddInRecentChannels &&
-    //     !state?.recentChannels.find(obj => obj['_id'] === action?.channelId)
-    //   ) {
-    //     state?.recentChannels.push(channelToAddInRecentChannels);
-    //   }
-    //   if (state?.recentChannels[0]?._id != action?.channelId) {
-    //     for (let i = 0; i < state?.recentChannels?.length; i++) {
-    //       if (state?.recentChannels[i]?._id == action?.channelId) {
-    //         state?.recentChannels?.unshift(state?.recentChannels[i]);
-    //         state?.recentChannels?.splice(i + 1, 1);
-    //         break;
-    //       }
-    //     }
-    //   }
-    //   return {
-    //     ...state,
-    //     recentChannels: state?.recentChannels,
-    //     highlightChannel: {...state.highlightChannel, ...tempHighlightChannels},
-    //   };
     case Actions.MOVE_CHANNEL_TO_TOP:
       var tempHighlightChannels = {};
       let teamIdAndUnreadCountMappingLocal = {};
       let teamIdAndBadgeCountMappingLocal = {}
-      const newRecentChannels = [...state?.recentChannels]; // create a new copy of recentChannels array
+      const newRecentChannels = [...state?.recentChannels]; 
       action?.channelId.forEach(id => {
         if (state?.activeChannelTeamId != id) {
           tempHighlightChannels[id] = true;

@@ -133,7 +133,6 @@ export const handleNotificationFromEvents = async (data,userIdAndDisplayNameMapp
   });
 };
 export const handleNotificationFirebase = async firebaseData => {
-  // console.log(firebaseData,'-=-=-=-=-=-=');
   var title = firebaseData?.notification?.title;
   var body = firebaseData?.notification?.body;
   if(firebaseData?.data?.orgId != store?.getState()?.orgsReducer?.currentOrgId){
@@ -147,7 +146,6 @@ export const handleNotificationFirebase = async firebaseData => {
     data: firebaseData?.data,
     android: {
       channelId: 'fcm_channel',
-      // smallIcon: '@mipmap/ic_launcher',
       largeIcon: require('../assests/images/appIcon/icon.png'),
       importance: AndroidImportance.HIGH,
       pressAction: {

@@ -8,7 +8,7 @@ import {
   Linking,
 } from 'react-native';
 import {connect} from 'react-redux';
-import {IMAGE_BASE_URL} from '../../constants/Constants';
+import {DEVICE_TYPES, IMAGE_BASE_URL} from '../../constants/Constants';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import {makeStyles} from './Styles';
 import {ScrollView} from 'react-native';
@@ -27,8 +27,9 @@ const ContactDetailsPage = ({
   signOutAction,
   orgsState,
   route,
+  appInfoState,
 }) => {
-  const {displayName, userId} = route?.params;
+  const {displayName, userId, setChatDetailsForTab} = route?.params;
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const teamId =
@@ -36,6 +37,20 @@ const ContactDetailsPage = ({
       userInfoState?.searchedUserProfile?.id
     ];
   const navigation = useNavigation();
+  const handleListItemPress = (
+    teamId,
+    channelType,
+    userId,
+    searchedChannel,
+  ) => {
+    console.log(teamId, channelType, userId, searchedChannel);
+    setChatDetailsForTab({
+      teamId: teamId,
+      channelType: channelType,
+      userId: userId,
+      searchedChannel: searchedChannel,
+    });
+  };
   useEffect(() => {
     if (userInfoState?.searchedUserProfile != null) {
       if (teamId == undefined) {
@@ -92,7 +107,11 @@ const ContactDetailsPage = ({
           />
         </View>
       ) : (
-        <ScrollView>
+        <ScrollView
+          contentContainerStyle={{
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
           <View
             style={{
               marginTop: 20,
@@ -147,12 +166,21 @@ const ContactDetailsPage = ({
               <TouchableOpacity
                 style={[styles.button, styles.messageButton]}
                 onPress={async () => {
-                  navigation.navigate('Chat', {
-                    chatHeaderTitle: DisplayName,
-                    teamId: teamId,
-                    channelType: channelsState?.teamIdAndTypeMapping[teamId],
-                    userId: UserId,
-                  });
+                  appInfoState.deviceType == DEVICE_TYPES[0]
+                    ? navigation.navigate('Chat', {
+                        chatHeaderTitle: DisplayName,
+                        teamId: teamId,
+                        channelType:
+                          channelsState?.teamIdAndTypeMapping[teamId],
+                        userId: UserId,
+                      })
+                    : handleListItemPress(
+                        teamId,
+                        channelsState?.teamIdAndTypeMapping[teamId],
+                        UserId,
+                        false,
+                      );
+                  navigation.goBack();
                 }}>
                 <Text style={[styles.buttonText, styles.buttonTextWhite]}>
                   Message {DisplayName}
@@ -181,6 +209,7 @@ const mapStateToPros = state => ({
   userInfoState: state.userInfoReducer,
   channelsState: state.channelsReducer,
   orgsState: state.orgsReducer,
+  appInfoState: state.appInfoReducer,
 });
 const mapDispatchToProps = dispatch => {
   return {

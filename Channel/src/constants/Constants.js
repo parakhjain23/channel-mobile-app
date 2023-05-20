@@ -16,3 +16,5 @@ export const ACTIVITIES = [
     desc: 'Remove user from this channel.',
   },
 ];
+
+export const DEVICE_TYPES = ['Mobile', 'Tablet'];

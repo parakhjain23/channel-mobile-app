@@ -1,4 +1,9 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -20,7 +25,7 @@ import SearchBox from '../../components/searchBox';
 import {useIsFocused, useNavigation, useTheme} from '@react-navigation/native';
 import {FAB, RadioButton, TextInput} from 'react-native-paper';
 import {Modalize} from 'react-native-modalize';
-import {CHANNEL_TYPE} from '../../constants/Constants';
+import {CHANNEL_TYPE, DEVICE_TYPES} from '../../constants/Constants';
 import {createNewChannelStart} from '../../redux/actions/channels/CreateNewChannelAction';
 import {getChannelsByQueryStart} from '../../redux/actions/channels/ChannelsByQueryAction';
 import {createNewDmChannelStart} from '../../redux/actions/channels/CreateNewDmChannelAction';
@@ -39,6 +44,7 @@ import NoInternetComponent from '../../components/NoInternetComponent';
 import {s, vs, ms, mvs} from 'react-native-size-matters';
 import {getAllUsersOfOrgStart} from '../../redux/actions/org/GetAllUsersOfOrg';
 import {getChatsReset} from '../../redux/actions/chat/ChatActions';
+import AppProvider, {AppContext} from '../appProvider/AppProvider';
 const CreateChannelModel = ({modalizeRef, props}) => {
   const {colors} = useTheme();
   const [title, setTitle] = useState('');
@@ -211,7 +217,6 @@ const ChannelsScreen = props => {
       useNativeDriver: true,
       listener: event => {
         const offsetY = event.nativeEvent.contentOffset.y;
-        // setIsScrolling(offsetY > 3);
         setIsScrolling(offsetY > height / 4);
       },
     },
@@ -282,133 +287,141 @@ const ChannelsScreen = props => {
   );
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: colors?.primaryColor}}>
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: colors.primaryColor,
-        }}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : null}
-          keyboardVerticalOffset={offset}
-          style={{flex: 1}}>
-          {props?.channelsState?.isLoading ? (
-            <ActivityIndicator size={'large'} color={colors?.textColor} />
-          ) : (
-            <View style={{flex: 1}}>
-              {searchValue != '' ? (
-                props?.channelsByQueryState?.channels?.length > 0 ? (
-                  <FlatList
-                    data={props?.channelsByQueryState?.channels}
-                    renderItem={renderItemSearchChannels}
+    <AppProvider>
+      <SafeAreaView style={{flex: 1, backgroundColor: colors?.primaryColor, borderRightWidth: props?.deviceType===DEVICE_TYPES[1] ? 1 : 0, borderRightColor: props?.deviceType==DEVICE_TYPES[1] ? colors?.color : colors?.primaryColor}}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: colors.primaryColor,
+          }}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : null}
+            keyboardVerticalOffset={offset}
+            style={{flex: 1}}>
+            {props?.channelsState?.isLoading ? (
+              <ActivityIndicator size={'large'} color={colors?.textColor} />
+            ) : (
+              <View style={{flex: 1}}>
+                {searchValue != '' ? (
+                  props?.channelsByQueryState?.channels?.length > 0 ? (
+                    <FlatList
+                      data={props?.channelsByQueryState?.channels}
+                      renderItem={renderItemSearchChannels}
+                      keyboardDismissMode="on-drag"
+                      keyboardShouldPersistTaps="always"
+                    />
+                  ) : (
+                    <NoChannelsFound
+                      modalizeRef={modalizeRef}
+                      setsearchValue={setsearchValue}
+                    />
+                  )
+                ) : props?.channelsState?.recentChannels?.length > 0 ||
+                  props?.channelsState?.channels?.length > 0 ? (
+                  <Animated.FlatList
+                    data={
+                      props?.channelsState?.recentChannels ||
+                      props?.channelsState?.channels
+                    }
+                    renderItem={renderItemChannels}
+                    onScroll={onScroll}
                     keyboardDismissMode="on-drag"
                     keyboardShouldPersistTaps="always"
                   />
                 ) : (
-                  <NoChannelsFound
-                    modalizeRef={modalizeRef}
-                    setsearchValue={setsearchValue}
-                  />
-                )
-              ) : props?.channelsState?.recentChannels?.length > 0 ||
-                props?.channelsState?.channels?.length > 0 ? (
-                <Animated.FlatList
-                  data={
-                    props?.channelsState?.recentChannels ||
-                    props?.channelsState?.channels
-                  }
-                  renderItem={renderItemChannels}
-                  onScroll={onScroll}
-                  keyboardDismissMode="on-drag"
-                  keyboardShouldPersistTaps="always"
-                />
-              ) : (
-                <View
-                  style={{
-                    flex: 1,
-                  }}>
-                  <ScrollView
+                  <View
                     style={{
-                      marginHorizontal: 20,
-                    }}
-                    contentContainerStyle={{justifyContent: 'center', flex: 1}}
-                    refreshControl={
-                      <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-                      />
-                    }>
-                    <NoInternetComponent />
-                  </ScrollView>
-                </View>
-              )}
-              {isScrolling && (
+                      flex: 1,
+                    }}>
+                    <ScrollView
+                      style={{
+                        marginHorizontal: 20,
+                      }}
+                      contentContainerStyle={{
+                        justifyContent: 'center',
+                        flex: 1,
+                      }}
+                      refreshControl={
+                        <RefreshControl
+                          refreshing={refreshing}
+                          onRefresh={onRefresh}
+                        />
+                      }>
+                      <NoInternetComponent />
+                    </ScrollView>
+                  </View>
+                )}
+                {isScrolling && (
+                  <View
+                    style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      width: '100%',
+                      zIndex: 1,
+                      opacity: isScrolling ? 1 : 0,
+                    }}>
+                    <SearchBox
+                      textInputRef={textInputRef}
+                      searchValue={searchValue}
+                      changeText={changeText}
+                      isSearchFocus={false}
+                    />
+                  </View>
+                )}
                 <View
                   style={{
                     position: 'absolute',
-                    bottom: 0,
-                    width: '100%',
-                    zIndex: 1,
-                    opacity: isScrolling ? 1 : 0,
+                    bottom: (80),
+                    right: ms(10),
+                    alignSelf: 'center',
                   }}>
-                  <SearchBox
-                    textInputRef={textInputRef}
-                    searchValue={searchValue}
-                    changeText={changeText}
-                    isSearchFocus={false}
+                  <FAB
+                    onPress={onOpen}
+                    color={'white'}
+                    animated={false}
+                    uppercase={false}
+                    icon={() => (
+                      <Icon name="add" size={22} color={'white'} />
+                    )}
+                    style={{
+                      backgroundColor: '#333333', // change the background color to light grey
+                      borderRadius: ms(50),
+                      alignSelf: 'center',
+                      padding: (2),
+                    }}
+                    labelStyle={{
+                      fontSize: (12, 0.5),
+                      textAlign: 'center',
+                      lineHeight: ms(14),
+                    }}
                   />
                 </View>
-              )}
-              <View
-                style={{
-                  position: 'absolute',
-                  bottom: s(70),
-                  right: s(10),
-                  alignSelf: 'center',
-                }}>
-                <FAB
-                  onPress={onOpen}
-                  color={'white'}
-                  animated={false}
-                  uppercase={false}
-                  icon={() => <Icon name="add" size={ms(20)} color={'white'} />}
-                  style={{
-                    backgroundColor: '#333333', // change the background color to light grey
-                    borderRadius: ms(50),
-                    alignSelf: 'center',
-                  }}
-                  labelStyle={{
-                    fontSize: ms(12, 0.5),
-                    textAlign: 'center',
-                    lineHeight: ms(14),
-                  }}
-                />
+                {!isScrolling && (
+                  <TouchableOpacity
+                    style={{
+                      position: 'absolute',
+                      bottom: (10),
+                      right: ms(10),
+                      backgroundColor: '#333333',
+                      borderRadius: ms(50),
+                      padding: 15,
+                    }}
+                    onPress={() => {
+                      setIsScrolling(true);
+                      setTimeout(() => {
+                        textInputRef?.current?.focus();
+                      }, 50);
+                    }}>
+                    <Icon name="search" size={28} color={'white'} />
+                  </TouchableOpacity>
+                )}
               </View>
-              {!isScrolling && (
-                <TouchableOpacity
-                  style={{
-                    position: 'absolute',
-                    bottom: s(10),
-                    right: s(10),
-                    backgroundColor: '#333333',
-                    borderRadius: ms(50),
-                    padding: ms(15),
-                  }}
-                  onPress={() => {
-                    setIsScrolling(true);
-                    setTimeout(() => {
-                      textInputRef?.current?.focus();
-                    }, 50);
-                  }}>
-                  <Icon name="search" size={ms(22)} color={'white'} />
-                </TouchableOpacity>
-              )}
-            </View>
-          )}
-        </KeyboardAvoidingView>
-        <CreateChannelModel modalizeRef={modalizeRef} props={props} />
-      </View>
-    </SafeAreaView>
+            )}
+          </KeyboardAvoidingView>
+          <CreateChannelModel modalizeRef={modalizeRef} props={props} />
+        </View>
+      </SafeAreaView>
+    </AppProvider>
   );
 };
 const mapStateToProps = state => ({

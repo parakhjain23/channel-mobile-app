@@ -42,27 +42,25 @@ async function RecordingUrl() {
             if (sourceExists) {
               RNFS.unlink(destinationPath)
                 .then(() => {
-                  console.log('File moved successfully!');
                 })
                 .catch(error => {
-                  console.log('Error deleting file: ', error);
                 });
             } else {
-              console.log('Source file does not exist');
             }
           });
         } else {
           RNFS.moveFile(sourcePath, destinationPath)
             .then(() => {
+<<<<<<< HEAD
               console.log('File moved successfully!');
+=======
+>>>>>>> 894f10a0ab0e24e20aefae069f6ad244cc85fde5
             })
             .catch(error => {
-              console.log('Error moving file: ', error);
             });
         }
       })
       .catch(error => {
-        console.log('Error checking file existence: ', error);
       });
     return uri;
   } else {
