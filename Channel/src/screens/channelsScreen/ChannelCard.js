@@ -122,7 +122,7 @@ const ChannelCard = ({
   ]);
   const renderRightActions = (progress, dragX) => {
     const scale = dragX.interpolate({
-      inputRange: [-70, 0],
+      inputRange: [-10, 0],
       outputRange: [1, 0],
       extrapolate: 'clamp',
     });

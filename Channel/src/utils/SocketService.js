@@ -1,9 +1,9 @@
 import {moveChannelToTop} from '../redux/actions/channels/ChannelsAction';
-import { closeChannelSuccess } from '../redux/actions/channels/CloseChannelActions';
+import {closeChannelSuccess} from '../redux/actions/channels/CloseChannelActions';
 import {createNewChannelSuccess} from '../redux/actions/channels/CreateNewChannelAction';
 import {getChannelByTeamIdStart} from '../redux/actions/channels/GetChannelByTeamId';
 import {addNewMessage} from '../redux/actions/chat/ChatActions';
-import { messageEditSuccess } from '../redux/actions/chat/ChatUpdateActions';
+import {messageEditSuccess} from '../redux/actions/chat/ChatUpdateActions';
 import {deleteMessageSuccess} from '../redux/actions/chat/DeleteChatAction';
 import {newUserJoinedAOrg} from '../redux/actions/org/GetAllUsersOfOrg';
 import {socketStatus} from '../redux/actions/socket/socketActions';
@@ -42,8 +42,18 @@ const SocketService = socket => {
     if (!('isActivity' in newData)) {
       newData.isActivity = false;
     }
-    store.dispatch(addNewMessage(newData,store?.getState()?.userInfoReducer?.user?.id));
-    store.dispatch(moveChannelToTop([newData?.teamId],newData?.senderId,store?.getState()?.userInfoReducer?.user?.id));
+    store.dispatch(
+      addNewMessage(newData, store?.getState()?.userInfoReducer?.user?.id),
+    );
+    newData?.content == 'closed this channel' && newData?.isActivity
+      ? null
+      : store.dispatch(
+          moveChannelToTop(
+            [newData?.teamId],
+            newData?.senderId,
+            store?.getState()?.userInfoReducer?.user?.id,
+          ),
+        );
     if (newData?.senderId != store?.getState()?.userInfoReducer?.user?.id) {
       PlayLocalSoundFile();
       if (
@@ -60,12 +70,12 @@ const SocketService = socket => {
     if (data?.deleted) {
       store.dispatch(deleteMessageSuccess(data));
     }
-    if(data?.isEdited || data?.attachment[0]?.transcription != undefined){
-      var newData = data
-      if(newData?.attachment[0]?.contentType == 'audio/mpeg'){
-        newData.content = `Transcription :- ${data?.attachment[0]?.transcription}`
+    if (data?.isEdited || data?.attachment[0]?.transcription != undefined) {
+      var newData = data;
+      if (newData?.attachment[0]?.contentType == 'audio/mpeg') {
+        newData.content = `Transcription :- ${data?.attachment[0]?.transcription}`;
       }
-      store.dispatch(messageEditSuccess(newData))
+      store.dispatch(messageEditSuccess(newData));
     }
   });
 
@@ -75,9 +85,12 @@ const SocketService = socket => {
     }
   });
   socket.on('chat/team created', data => {
-    if(data?.userIds?.includes(store?.getState()?.userInfoReducer?.user?.id)){
+    if (data?.userIds?.includes(store?.getState()?.userInfoReducer?.user?.id)) {
       store.dispatch(
-        createNewChannelSuccess(data, store.getState().userInfoReducer?.user?.id),
+        createNewChannelSuccess(
+          data,
+          store.getState().userInfoReducer?.user?.id,
+        ),
       );
       store.dispatch(moveChannelToTop([data?.teamId]));
     }
