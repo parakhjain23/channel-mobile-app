@@ -5,12 +5,6 @@ import { connect } from 'react-redux';
 
 export const AppContext = createContext();
 const AppProvider = ({children,appInfoState}) => {
-  // const {width, height} = Dimensions.get('window');
-  // const isTablet = width >= 600 && height >= 600;
-  // const isIPad = Platform.OS === 'ios' && Platform.isPad;
-  // const deviceTypeLocal = isTablet || isIPad ? DEVICE_TYPES[1] : DEVICE_TYPES[0];
-
-  // const [deviceType, setDeviceType] = useState(deviceTypeLocal)
   const deviceType = appInfoState?.deviceType
   return (
     <AppContext.Provider value={{deviceType}}>

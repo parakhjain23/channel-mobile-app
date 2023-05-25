@@ -4,7 +4,7 @@ export const tagsStyles = (textColor, linkColor) =>
   StyleSheet.create({
     body: {
       color: textColor,
-      fontSize: 15
+      fontSize: 16
     },
     a: {
       color: linkColor,

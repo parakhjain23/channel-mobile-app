@@ -1,4 +1,11 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   Image,
   Modal,
@@ -16,13 +23,15 @@ import {makeStyles} from './ChatCardStyles';
 import {ms, s} from 'react-native-size-matters';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import ImageViewer from 'react-native-image-zoom-viewer';
-import Clipboard from '@react-native-community/clipboard';
 import HTMLView from 'react-native-htmlview';
 import {RenderHTML} from 'react-native-render-html';
 import * as RootNavigation from '../../navigation/RootNavigation';
 import {tagsStyles} from './HtmlStyles';
-import WebView from 'react-native-webview';
 import AudioRecordingPlayer from '../../components/AudioRecorderPlayer';
+import {AppContext} from '../appProvider/AppProvider';
+import {DEVICE_TYPES} from '../../constants/Constants';
+import {connect} from 'react-redux';
+import {setActiveChannelTeamId} from '../../redux/actions/channels/SetActiveChannelId';
 
 const AddRemoveJoinedMsg = React.memo(({senderName, content, orgState}) => {
   const {colors} = useTheme();
@@ -54,7 +63,9 @@ const ChatCard = ({
   setShowActions,
   setCurrentSelectedChatCard,
   setChatDetailsForTab,
+  setActiveChannelTeamIdAction,
 }) => {
+  const {deviceType} = useContext(AppContext);
   const {colors, dark} = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const [optionsVisible, setOptionsVisible] = useState(false);
@@ -142,10 +153,6 @@ const ChatCard = ({
     );
   };
 
-  const copyToClipboard = text => {
-    Clipboard.setString(text);
-  };
-
   const openLink = async url => {
     if (await InAppBrowser.isAvailable()) {
       const result = InAppBrowser?.open(url);
@@ -154,14 +161,51 @@ const ChatCard = ({
     }
   };
 
-  const htmlStyles = {
+  const htmlStyles = color => ({
     div: {
-      color: textColor,
+      color: color,
     },
+  });
+
+  const handleListItemPress = (
+    teamId,
+    channelType,
+    userId,
+    searchedChannel,
+    Name,
+  ) => {
+    setChatDetailsForTab({
+      teamId: teamId,
+      channelType: channelType,
+      userId: userId,
+      searchedChannel: searchedChannel,
+      channelName: Name,
+    });
+  };
+  const onPress = (teamId, channelName) => {
+    // networkState?.isInternetConnected && resetChatsAction();
+    if (deviceType === DEVICE_TYPES[1]) {
+      handleListItemPress(
+        teamId,
+        'PERSONAL',
+        chat?.senderId,
+        false,
+        channelName,
+      );
+    } else {
+      RootNavigation.navigate('Chat', {
+        chatHeaderTitle: channelName,
+        teamId: teamId,
+        channelType: 'PERSONAL',
+        userId: chat?.senderId,
+        searchedChannel: false,
+      });
+    }
+    setActiveChannelTeamIdAction(teamId);
   };
   function renderNode(node, index, siblings, parent, defaultRenderer) {
     if (node.attribs?.class == 'mention') {
-      return (
+      return node?.attribs['data-username'] ? (
         <TouchableOpacity
           key={index}
           onPress={async () => {
@@ -178,8 +222,32 @@ const ChatCard = ({
                 setChatDetailsForTab: setChatDetailsForTab,
               });
           }}>
-          <Text style={{color: linkColor, textDecorationLine: 'underline'}}>
+          <Text
+            style={{
+              color: chatState?.data[chat.teamId]?.parentMessages[parentId]
+                ?.content
+                ? 'black'
+                : linkColor,
+              textDecorationLine: 'underline',
+            }}>
             @{node?.attribs?.['data-value']}
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          key={index}
+          onPress={() =>
+            onPress(node?.attribs?.['data-id'], node?.attribs?.['data-value'])
+          }>
+          <Text
+            style={{
+              color: chatState?.data[chat.teamId]?.parentMessages[parentId]
+                ?.content
+                ? 'black'
+                : linkColor,
+              textDecorationLine: 'underline',
+            }}>
+            #{node?.attribs?.['data-value']}
           </Text>
         </TouchableOpacity>
       );
@@ -240,14 +308,15 @@ const ChatCard = ({
                       <Text style={{color: 'black'}}>
                         <Icon name="attach-file" size={ms(14)} /> attachment
                       </Text>
-                    ) : chat?.mentions?.length > 0 ? (
+                    ) : chatState?.data[chat.teamId]?.parentMessages[parentId]
+                        ?.mentions?.length > 0 ? (
                       <HTMLView
                         value={`<div>${
                           chatState?.data[chat.teamId]?.parentMessages[parentId]
                             ?.content
                         }</div>`}
                         renderNode={renderNode}
-                        stylesheet={htmlStyles}
+                        stylesheet={htmlStyles('black')}
                       />
                     ) : (
                       <RenderHTML
@@ -405,11 +474,11 @@ const ChatCard = ({
                       maxWidth: '90%',
                       paddingRight: ms(10),
                     }}>
-                    {chat?.mentions?.length > 0 ? (
+                    {chat?.content.startsWith('<span class="mention"') ? (
                       <HTMLView
                         value={`<div>${chat?.content}</div>`}
                         renderNode={renderNode}
-                        stylesheet={htmlStyles}
+                        stylesheet={htmlStyles(textColor)}
                       />
                     ) : (
                       <RenderHTML
@@ -486,7 +555,16 @@ const ChatCard = ({
     );
   }
 };
-export const ChatCardMemo = React.memo(ChatCard);
+
+const mapDispatchToProps = dispatch => {
+  return {
+    setActiveChannelTeamIdAction: teamId =>
+      dispatch(setActiveChannelTeamId(teamId)),
+  };
+};
+export const ChatCardMemo = React.memo(
+  connect(null, mapDispatchToProps)(ChatCard),
+);
 
 const handleRepliedMessagePress = (
   repliedMessage,

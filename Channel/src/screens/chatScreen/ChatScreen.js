@@ -86,6 +86,7 @@ const ChatScreen = ({
   resetUnreadCountAction,
   addUsersToChannelAction,
   removeUserFromChannelAction,
+  props,
 }) => {
   var teamId, channelType;
   if (deviceType === DEVICE_TYPES[1]) {
@@ -170,7 +171,8 @@ const ChatScreen = ({
 
   useEffect(() => {
     if (
-      (!chatState?.data[teamId]?.messages || chatState?.data[teamId]?.messages.length === 0) &&
+      (!chatState?.data[teamId]?.messages ||
+        chatState?.data[teamId]?.messages.length === 0) &&
       networkState?.isInternetConnected
     ) {
       fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
@@ -178,15 +180,14 @@ const ChatScreen = ({
       const timeoutId = setTimeout(() => {
         fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
       }, 1000);
-  
+
       return () => {
-        clearTimeout(timeoutId); 
+        clearTimeout(timeoutId);
       };
     }
-  
+
     setActiveChannelTeamIdAction(teamId);
   }, [networkState?.isInternetConnected, teamId, chatDetailsForTab]);
-  
 
   const optionsPosition = useRef(new Animated.Value(0)).current;
 
@@ -361,6 +362,7 @@ const ChatScreen = ({
           chat={item}
           userInfoState={userInfoState}
           orgState={orgState}
+          networkState={networkState}
           deleteMessageAction={deleteMessageAction}
           chatState={chatState}
           setreplyOnMessage={setreplyOnMessage}
@@ -593,7 +595,12 @@ const ChatScreen = ({
                             }
                           />
                           <OptionList
-                            sentByMe={currentSelectChatCard?.senderId == userInfoState?.user?.id ? true : false}
+                            sentByMe={
+                              currentSelectChatCard?.senderId ==
+                              userInfoState?.user?.id
+                                ? true
+                                : false
+                            }
                             chat={currentSelectChatCard}
                             setreplyOnMessage={setreplyOnMessage}
                             setrepliedMsgDetails={setrepliedMsgDetails}
