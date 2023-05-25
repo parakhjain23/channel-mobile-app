@@ -65,7 +65,6 @@ export const makeStyles = colors =>
     },
     sentByMe: {
       alignSelf: 'flex-end',
-      marginRight: ms(10),
       borderColor: 'transparent',
     },
     received: {

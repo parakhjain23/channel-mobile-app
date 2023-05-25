@@ -40,36 +40,33 @@ const ProtectedNavigation = props => {
             route?.params?.userId,
             props?.userInfoState?.accessToken,
           );
-        }}
-        style={{flexDirection: 'row', flex: 1}}>
+        }}>
         <Text
           style={{
             color: colors?.textColor,
-            fontSize: (20),
+            fontSize: 20,
             fontWeight: '600',
-            maxWidth: Platform.OS == 'android' ? '90%' : null,
+            maxWidth: Platform.OS == 'android' ? '100%' : null,
           }}
-          numberOfLines={1}
-          // ellipsizeMode="tail"
-        >
+          numberOfLines={1}>
           {route?.params?.chatHeaderTitle}
         </Text>
       </TouchableOpacity>
     ) : (
-      <View style={{flexDirection: 'row', flex: 1}}>
-        <Text
-          style={{
-            color: colors?.textColor,
-            fontSize: (20),
-            fontWeight: '600',
-            maxWidth: Platform.OS == 'android' ? '90%' : null,
-          }}
-          numberOfLines={1}
-          // ellipsizeMode="tail"
-        >
-          {route?.params?.chatHeaderTitle}
-        </Text>
-      </View>
+      // <View style={{flexDirection: 'row', flex: 1}}>
+      <Text
+        style={{
+          color: colors?.textColor,
+          fontSize: 20,
+          fontWeight: '600',
+          maxWidth: Platform.OS == 'android' ? '90%' : null,
+        }}
+        numberOfLines={1}>
+        {route?.params?.chatHeaderTitle?.length > 50
+          ? route?.params?.chatHeaderTitle?.slice(0, 20) + '...'
+          : route?.params?.chatHeaderTitle}
+      </Text>
+      // </View>
     );
   };
   const getHeader = {
@@ -99,7 +96,7 @@ const ProtectedNavigation = props => {
         component={DrawerNavigation}
         options={{headerShown: false, ...getHeader}}
       />
-         <Stack.Screen
+      <Stack.Screen
         name="Ipad"
         component={IpadScreen}
         options={{headerShown: true, ...getHeader}}
@@ -168,8 +165,8 @@ const mapDispatchToProps = dispatch => {
   return {
     searchUserProfileAction: (userId, token) =>
       dispatch(fetchSearchedUserProfileStart(userId, token)),
-    setDeviceTypeAction: (deviceType) =>
-      dispatch({type: Actions.SET_DEVICE_TYPE,deviceType:deviceType}),
+    setDeviceTypeAction: deviceType =>
+      dispatch({type: Actions.SET_DEVICE_TYPE, deviceType: deviceType}),
   };
 };
 export default connect(

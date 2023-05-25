@@ -616,7 +616,7 @@ const ChatScreen = ({
                 <View
                   style={[
                     replyOnMessage && styles.inputWithReplyContainer,
-                    {width: '90%'},
+                    {width: '87%'},
                   ]}>
                   {attachment?.length > 0 &&
                     attachment?.map((item, index) => {
@@ -826,21 +826,30 @@ const ChatScreen = ({
                     </View>
                   )}
                 </View>
-                <View style={{justifyContent: 'flex-end'}}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    // flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'flex-end',
+                  }}>
                   {message?.length > 0 ||
                   showPlayer ||
                   attachment?.length > 0 ? (
                     <MaterialIcons
                       name="send"
-                      size={ms(25)}
-                      style={{color: colors.textColor, padding: ms(10)}}
+                      size={25}
+                      style={{
+                        color: colors.textColor,
+                        padding: 15,
+                      }}
                       onPress={onSendPress}
                     />
                   ) : !isRecording ? (
                     <MaterialIcons
                       name="mic"
-                      size={ms(25)}
-                      style={{color: colors.textColor, padding: ms(10)}}
+                      size={25}
+                      style={{color: colors.textColor, padding: 15}}
                       onPress={() => {
                         onStartRecord(setisRecording);
                       }}
@@ -849,7 +858,7 @@ const ChatScreen = ({
                     <MaterialIcons
                       name="mic-off"
                       size={25}
-                      style={{color: colors.textColor, padding: ms(10)}}
+                      style={{color: colors.textColor, padding: 15}}
                       onPress={() => {
                         onStopRecord(setrecordingUrl, setvoiceAttachment),
                           setisRecording(false),
