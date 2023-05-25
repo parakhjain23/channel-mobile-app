@@ -313,7 +313,6 @@ const SearchChannelCard = ({
   item,
   navigation,
   props,
-  setsearchValue,
   userInfoState,
   searchUserProfileAction,
   orgsState,
@@ -359,7 +358,6 @@ const SearchChannelCard = ({
         item?._source?.userId,
       );
     }
-    setsearchValue('');
     if (deviceType === DEVICE_TYPES[1]) {
       handleListItemPress(
         teamId,
