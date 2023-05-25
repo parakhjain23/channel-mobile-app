@@ -36,6 +36,7 @@ import {
 import NoChannelsFound from './NoChannelsFound';
 import {
   RenderChannels,
+  RenderGroupedChannels,
   RenderSearchChannels,
   RenderUsersToAdd,
 } from './ChannelCard';
@@ -221,11 +222,7 @@ const ChannelsScreen = props => {
       },
     },
   );
-  useEffect(() => {
-    if (isFocused) {
-      props?.resetActiveChannelTeamIdAction();
-    }
-  }, [isFocused]);
+
   useEffect(() => {
     if (searchValue != '') {
       props.getChannelsByQueryStartAction(
@@ -285,7 +282,11 @@ const ChannelsScreen = props => {
     },
     [props?.channelsByQueryState?.channels],
   );
-
+const renderGroupedChannels = useCallback(({item,index})=>{
+  return (
+      <RenderGroupedChannels item={item} navigation={navigation} props={props} />
+    )
+},[props?.channelsState?.groupedChannels])
   return (
     <AppProvider>
       <SafeAreaView style={{flex: 1, backgroundColor: colors?.primaryColor, borderRightWidth: props?.deviceType===DEVICE_TYPES[1] ? 1 : 0, borderRightColor: props?.deviceType==DEVICE_TYPES[1] ? colors?.color : colors?.primaryColor}}>
@@ -320,10 +321,10 @@ const ChannelsScreen = props => {
                   props?.channelsState?.channels?.length > 0 ? (
                   <Animated.FlatList
                     data={
-                      props?.channelsState?.recentChannels ||
-                      props?.channelsState?.channels
+                      props?.channelsState?.groupedChannels 
+                      // props?.channelsState?.channels
                     }
-                    renderItem={renderItemChannels}
+                    renderItem={renderGroupedChannels}
                     onScroll={onScroll}
                     keyboardDismissMode="on-drag"
                     keyboardShouldPersistTaps="always"

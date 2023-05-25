@@ -38,6 +38,7 @@ const ChannelCard = ({
   networkState,
   markAsUnreadAction,
   closeChannelAction,
+  channelsState
 }) => {
   const {deviceType} = useContext(AppContext);
 
@@ -54,19 +55,23 @@ const ChannelCard = ({
       searchedChannel: searchedChannel,
     });
   };
-
+// console.log(props?.channelsState?.teamIdAndUnreadCountMapping,"this is channel sate");
   const {colors} = useTheme();
+  // console.log(props?.channelsState?.teamIdAndBadgeCountMapping);
   const userIdAndDisplayNameMapping =
     props.orgsState?.userIdAndDisplayNameMapping;
   const userIdAndNameMapping = props.orgsState?.userIdAndNameMapping;
   const teamIdAndUnreadCountMapping =
-    props.channelsState?.teamIdAndUnreadCountMapping;
+    channelsState?.teamIdAndUnreadCountMapping;
+    item?._id == '63e33fa97884ad001141c80e' && console.log(teamIdAndUnreadCountMapping[item?._id],"unread count");
   const teamIdAndBadgeCountMapping =
-    props?.channelsState?.teamIdAndBadgeCountMapping;
+ channelsState?.teamIdAndBadgeCountMapping;
+    item?._id == '63e33fa97884ad001141c80e' && console.log(teamIdAndBadgeCountMapping[item?._id],"badge count");
   const highlightChannel = props.channelsState?.highlightChannel;
   const user = props.userInfoState?.user;
   const accessToken = props.userInfoState?.accessToken;
   const currentOrgId = props.orgsState?.currentOrgId;
+  // console.log(item,"-=-=-=-=this is item -=-=-=-=");
   const userId =
     item?.userIds[0] !== user?.id ? item?.userIds[0] : item?.userIds[1];
   const swipeableRef = useRef(null);
@@ -92,6 +97,9 @@ const ChannelCard = ({
     const isHighlighted = highlightChannel?.[item?._id];
     return unreadCount > 0 || isHighlighted;
   }, [item?._id, teamIdAndUnreadCountMapping, highlightChannel]);
+
+  // console.log(unread,"this is unread count");
+  // console.log(teamIdAndUnreadCountMapping[item?._id]);
 
   const onPress = useCallback(() => {
     networkState?.isInternetConnected && resetChatsAction();
@@ -491,10 +499,41 @@ const UsersToAddCard = ({item, setUserIds, userIds, setsearchedUser}) => {
     </TouchableOpacity>
   );
 };
+const GroupedCard = ({
+  item,
+  navigation,
+  props,
+  resetChatsAction,
+  networkState,
+  markAsUnreadAction,
+  closeChannelAction,
+}) => {
+  // console.log(item);
+  const keys = Object.keys(item)
+  console.log(keys[0]);
+  const {colors} = useTheme();
+  return (
+    <GestureHandlerRootView>
+    {
+      item?.[`${keys[0]}`]?.length > 0 &&  <View style={{flexDirection:'row',justifyContent:'center',flex:1,backgroundColor:colors.primaryColor , borderWidth:2 , borderColor:'black'}}>
+      <Text style={{fontSize:16}}>
+        {keys[0]}
+      </Text>
+    </View>
+    }
+    {
+        item?.[`${keys[0]}`]?.map((item,index)=>{
+        return <RenderChannels item={item} navigation={navigation} props={props} />
+      })
+    }
+    </GestureHandlerRootView>
+  );
+};
 const mapStateToProps = state => ({
   userInfoState: state.userInfoReducer,
   orgsState: state.orgsReducer,
   networkState: state.networkReducer,
+  channelsState: state.channelsReducer
 });
 const mapDispatchToProps = dispatch => {
   return {
@@ -525,6 +564,9 @@ const mapDispatchToProps = dispatch => {
 };
 export const RenderChannels = React.memo(
   connect(mapStateToProps, mapDispatchToProps)(ChannelCard),
+);
+export const RenderGroupedChannels = React.memo(
+  connect(mapStateToProps, mapDispatchToProps)(GroupedCard),
 );
 export const RenderSearchChannels = React.memo(
   connect(mapStateToProps, mapDispatchToProps)(SearchChannelCard),

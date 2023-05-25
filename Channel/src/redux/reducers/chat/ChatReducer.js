@@ -101,6 +101,7 @@ export function chatReducer(state = initialState, action) {
           },
         },
       };
+
     case Actions.FETCH_CHAT_RESET:
       return initialState;
 
@@ -185,8 +186,10 @@ export function chatReducer(state = initialState, action) {
       return {
         ...state,
       };
+    
     case Actions.UPDATE_CURRENT_ORG_ID:
       return initialState;
+    
     case Actions.ADD_LOCAL_MESSAGE:
       const {data} = action;
       let parentKey = data?.parentId;
@@ -227,6 +230,7 @@ export function chatReducer(state = initialState, action) {
             ? [...state?.randomIdsArr, data?.randomId]
             : [data?.randomId],
       };
+    
     case Actions.CHAT_EDIT_SUCCESS:
       for (let i = 0; i < state?.data[action.teamId]?.messages?.length; i++) {
         if (
