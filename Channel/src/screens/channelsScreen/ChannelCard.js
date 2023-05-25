@@ -222,7 +222,7 @@ const ChannelCard = ({
           activeOpacity={0.8}>
           <View
             style={{
-              borderTopWidth: 0.2,
+              borderTopWidth: 0.3,
               borderTopColor: '#B3B3B3',
               backgroundColor: colors.primaryColor,
               width: '100%',
