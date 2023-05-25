@@ -57,7 +57,7 @@ const ExploreChannels = props => {
           <Text>{'  '}</Text>
           <Text
             style={{
-              fontSize: ms(16, 0.5),
+              fontSize: ms(16),
               fontWeight: '400',
               color: colors?.textColor,
             }}>

@@ -92,7 +92,7 @@ export const makeStyles = colors =>
       padding: 15,
       borderRadius: ms(25),
       color: 'black',
-      fontSize: ms(19),
+      fontSize: 19,
       shadowColor: '#000',
       shadowOffset: {
         width: 0,
@@ -130,11 +130,11 @@ export const makeStyles = colors =>
     },
     nameText: {
       fontWeight: 'bold',
-      fontSize: ms(12),
-      marginBottom: mvs(4),
+      fontSize: 12,
+      marginBottom: 4,
     },
     messageText: {
-      fontSize: ms(14),
+      fontSize: 16,
     },
     timeText: {
       color: '#666',

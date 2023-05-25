@@ -1,9 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -130,7 +125,7 @@ const CreateChannelModel = ({modalizeRef, props}) => {
                   }}>
                   <Text
                     style={{
-                      fontSize: ms(16, 0.5),
+                      fontSize: 16,
                       fontWeight: '400',
                       color: colors.textColor,
                     }}>
@@ -288,7 +283,16 @@ const ChannelsScreen = props => {
 
   return (
     <AppProvider>
-      <SafeAreaView style={{flex: 1, backgroundColor: colors?.primaryColor, borderRightWidth: props?.deviceType===DEVICE_TYPES[1] ? 1 : 0, borderRightColor: props?.deviceType==DEVICE_TYPES[1] ? colors?.color : colors?.primaryColor}}>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor: colors?.primaryColor,
+          borderRightWidth: props?.deviceType === DEVICE_TYPES[1] ? 1 : 0,
+          borderRightColor:
+            props?.deviceType == DEVICE_TYPES[1]
+              ? colors?.color
+              : colors?.primaryColor,
+        }}>
         <View
           style={{
             flex: 1,
@@ -371,7 +375,7 @@ const ChannelsScreen = props => {
                 <View
                   style={{
                     position: 'absolute',
-                    bottom: (80),
+                    bottom: 80,
                     right: ms(10),
                     alignSelf: 'center',
                   }}>
@@ -380,17 +384,15 @@ const ChannelsScreen = props => {
                     color={'white'}
                     animated={false}
                     uppercase={false}
-                    icon={() => (
-                      <Icon name="add" size={22} color={'white'} />
-                    )}
+                    icon={() => <Icon name="add" size={22} color={'white'} />}
                     style={{
                       backgroundColor: '#333333', // change the background color to light grey
                       borderRadius: ms(50),
                       alignSelf: 'center',
-                      padding: (2),
+                      padding: 2,
                     }}
                     labelStyle={{
-                      fontSize: (12, 0.5),
+                      fontSize: 12,
                       textAlign: 'center',
                       lineHeight: ms(14),
                     }}
@@ -400,7 +402,7 @@ const ChannelsScreen = props => {
                   <TouchableOpacity
                     style={{
                       position: 'absolute',
-                      bottom: (10),
+                      bottom: 10,
                       right: ms(10),
                       backgroundColor: '#333333',
                       borderRadius: ms(50),

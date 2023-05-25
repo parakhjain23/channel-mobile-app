@@ -222,9 +222,8 @@ const ChannelCard = ({
           activeOpacity={0.8}>
           <View
             style={{
-              borderTopWidth: ms(0.4),
-              borderTopColor: '#444444',
-              // minHeight: mvs(60),
+              borderTopWidth: 0.2,
+              borderTopColor: '#B3B3B3',
               backgroundColor: colors.primaryColor,
               width: '100%',
               flexDirection: 'column',
@@ -272,7 +271,6 @@ const ChannelCard = ({
                       minWidth: 15,
                       height: 20,
                       lineHeight: 20,
-                      overflow: 'hidden',
                     }}>
                     {teamIdAndUnreadCountMapping?.[item?._id]}
                   </Text>
@@ -282,23 +280,10 @@ const ChannelCard = ({
                   <View
                     style={{
                       backgroundColor: 'red',
-                      paddingHorizontal: ms(5),
-                      paddingVertical: mvs(2),
-                      borderRadius: ms(5),
-                      overflow: 'hidden',
-                    }}>
-                    <Text
-                      style={{
-                        color: 'black',
-                        fontSize: ms(11),
-                        fontWeight: 'bold',
-                        textAlign: 'center',
-                        minWidth: ms(15),
-                        height: ms(20),
-                        lineHeight: ms(20),
-                        overflow: 'hidden',
-                      }}></Text>
-                  </View>
+                      borderRadius: 5,
+                      minWidth: 20,
+                      height: 20,
+                    }}></View>
                 )
               )}
             </View>
@@ -480,7 +465,7 @@ const UsersToAddCard = ({item, setUserIds, userIds, setsearchedUser}) => {
         <Icon name="user" color={colors.textColor} />
         <Text
           style={{
-            fontSize: ms(16, 0.5),
+            fontSize: 16,
             fontWeight: '400',
             color: colors.textColor,
           }}>

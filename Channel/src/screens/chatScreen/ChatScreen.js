@@ -312,10 +312,10 @@ const ChatScreen = ({
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                borderWidth: ms(0.7),
+                borderWidth: 0.7,
                 borderTopColor: 'grey',
-                margin: s(2),
-                padding: s(2),
+                margin: 2,
+                padding: 2,
               }}>
               <Image
                 source={require('../../assests/images/appIcon/icon48size.png')}

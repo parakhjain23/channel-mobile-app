@@ -7,7 +7,7 @@ export const makeStyles = colors =>
       color: colors.textColor,
     },
     optionsText: {
-      fontSize: ms(16),
+      fontSize: 16,
       color: 'black',
     },
     inputWithReply: {
@@ -91,7 +91,7 @@ export const makeStyles = colors =>
       marginBottom: 3,
     },
     messageText: {
-      fontSize: 14,
+      fontSize: 16,
     },
     timeText: {
       fontSize: 10,

@@ -53,7 +53,7 @@ export const makeStyles = colors =>
       backgroundColor: colors?.color,
     },
     buttonText: {
-      fontSize: 14,
+      fontSize: 16,
       color:colors?.primaryColor
     },
     buttonTextWhite: {
