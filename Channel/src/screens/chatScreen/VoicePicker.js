@@ -1,6 +1,5 @@
 import {Platform} from 'react-native';
 import {FileUploadApi} from '../../api/attachmentsApi/FileUploadApi';
-import RNFS from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob';
 
 export const uploadRecording = async (recordingUrl, accessToken) => {
@@ -27,41 +26,3 @@ export const uploadRecording = async (recordingUrl, accessToken) => {
     console.warn(error, 'error');
   }
 };
-async function RecordingUrl() {
-  const cacheDirPath = RNFetchBlob.fs.dirs.CacheDir;
-  // const sourcePath = 'file://' + cacheDirPath + '/sound.m4a';
-  // const destinationPath = 'file://' + cacheDirPath + '/sound.mp3';
-  const sourcePath = RNFS.CachesDirectoryPath + '/sound.m4a';
-  const destinationPath = RNFS.CachesDirectoryPath + '/sound.mp3';
-
-  const fileName = 'sound.mp3';
-  const uri = `file://${cacheDirPath}/${fileName}`;
-  if (Platform?.OS === 'ios') {
-    await RNFS.exists(destinationPath)
-      .then(exists => {
-        if (exists) {
-          RNFS.exists(sourcePath).then(sourceExists => {
-            if (sourceExists) {
-              RNFS.unlink(destinationPath)
-                .then(() => {
-                })
-                .catch(error => {
-                });
-            } else {
-            }
-          });
-        } else {
-          RNFS.moveFile(sourcePath, destinationPath)
-            .then(() => {
-            })
-            .catch(error => {
-            });
-        }
-      })
-      .catch(error => {
-      });
-    return uri;
-  } else {
-    return uri;
-  }
-}

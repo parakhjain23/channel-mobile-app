@@ -38,7 +38,7 @@ export const handleNotificationFromEvents = async (data,userIdAndDisplayNameMapp
     });
     data['content'] = resultStr
   }
-  if(data?.attachment.length > 0){
+  if(data?.attachment?.length > 0){
     if(data?.attachment[0]?.title?.includes('sound')){
       data['content'] = 'sent a Voice note'
     }else{

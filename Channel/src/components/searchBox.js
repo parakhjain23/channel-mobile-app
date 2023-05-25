@@ -13,7 +13,7 @@ const SearchBox = ({searchValue, changeText, textInputRef}) => {
       style={{
         backgroundColor: colors?.searchBoxBackgroundColor,
         borderWidth: 1,
-        borderColor: colors?.color,
+        borderColor: 'black',
         marginHorizontal: 1,
       }}
       textColor={colors?.textColor}

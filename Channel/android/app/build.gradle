@@ -282,7 +282,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-analytics'
     implementation project(':react-native-audio-recorder-player')
-    implementation project(':react-native-fs')
     implementation project(':rn-fetch-blob')  
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'

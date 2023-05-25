@@ -1,5 +1,4 @@
 import uuid from 'react-native-uuid';
-import RNFS from 'react-native-fs';
 export const FileUploadApi = async (Files, accessToken) => {
   const fileNames = Files?.map(item => {
     const folder = uuid.v4();
