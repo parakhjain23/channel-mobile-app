@@ -164,6 +164,7 @@ const ChatCard = ({
   const htmlStyles = color => ({
     div: {
       color: color,
+      fontSize: 16
     },
   });
 
@@ -474,7 +475,7 @@ const ChatCard = ({
                       maxWidth: '90%',
                       paddingRight: ms(10),
                     }}>
-                    {chat?.content?.startsWith('<span class="mention"') ? (
+                    {chat?.content?.includes('<span class="mention"') ? (
                       <HTMLView
                         value={`<div>${chat?.content}</div>`}
                         renderNode={renderNode}
