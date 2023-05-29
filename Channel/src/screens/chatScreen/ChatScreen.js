@@ -176,17 +176,16 @@ const ChatScreen = ({
       networkState?.isInternetConnected
     ) {
       fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
+      setActiveChannelTeamIdAction(teamId);
     } else if (chatState?.data[teamId]?.messages?.length > 0) {
       const timeoutId = setTimeout(() => {
         fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
-      }, 1000);
-
+        setActiveChannelTeamIdAction(teamId);
+      }, 1200);
       return () => {
         clearTimeout(timeoutId);
       };
     }
-
-    setActiveChannelTeamIdAction(teamId);
   }, [networkState?.isInternetConnected, teamId, chatDetailsForTab]);
 
   const optionsPosition = useRef(new Animated.Value(0)).current;

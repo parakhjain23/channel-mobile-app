@@ -32,45 +32,55 @@ export function chatReducer(state = initialState, action) {
     case Actions.FETCH_CHAT_SUCCESS:
       var tempParentMessages = {};
       var parentId = null;
-      let prevDate = null
+      let prevDate = null;
       // const todayDate = new Date().toDateString()
       for (let i = 0; i < action?.parentMessages?.length; i++) {
         parentId = action?.parentMessages[i]?._id;
         tempParentMessages[parentId] = action?.parentMessages[i];
       }
-      for(let i =0; i <action?.messages?.length ;i++){
+      for (let i = 0; i < action?.messages?.length; i++) {
         const date = new Date(action?.messages[i]?.updatedAt);
         const isSameDate = prevDate?.toDateString() === date.toDateString();
         let displayDate = date?.toDateString();
-        if (!isSameDate && i >0){
+        if (!isSameDate && i > 0) {
           const prevDateString = prevDate?.toDateString();
           displayDate = `${prevDateString}`;
-          action.messages[i]["isSameDate"]=false
-          action.messages[i]["timeToShow"]=displayDate
-        }else{
-          action.messages[i]["isSameDate"]=true
-          action.messages[i]["timeToShow"]=''
+          action.messages[i]['isSameDate'] = false;
+          action.messages[i]['timeToShow'] = displayDate;
+        } else {
+          action.messages[i]['isSameDate'] = true;
+          action.messages[i]['timeToShow'] = '';
         }
         prevDate = date;
-        if(action?.messages[i]?.senderId != action?.messages[i+1]?.senderId){
-          action.messages[i]["sameSender"]=false
-        }else{
-         action.messages[i]["sameSender"]= true
+        if (
+          action?.messages[i]?.senderId != action?.messages[i + 1]?.senderId
+        ) {
+          action.messages[i]['sameSender'] = false;
+        } else {
+          action.messages[i]['sameSender'] = true;
         }
-        if(action.messages[i].attachment?.length > 0 && action.messages[i].attachment[0].contentType == 'audio/mpeg' && action.messages[i].attachment[0].transcription != undefined){
-          action.messages[i].content = `Transcription :- ${action.messages[i].attachment[0].transcription}`
+        if (
+          action.messages[i].attachment?.length > 0 &&
+          action.messages[i].attachment[0].contentType == 'audio/mpeg' &&
+          action.messages[i].attachment[0].transcription != undefined
+        ) {
+          action.messages[
+            i
+          ].content = `Transcription :- ${action.messages[i].attachment[0].transcription}`;
         }
       }
-
       return {
         ...state,
         data: {
           ...state?.data,
           [action.teamId]: {
-            messages: [
-              ...state?.data[action?.teamId]?.messages,
-              ...action?.messages,
-            ],
+            messages:
+              action?.skip != undefined
+                ? [
+                    ...state?.data[action?.teamId]?.messages,
+                    ...action?.messages,
+                  ]
+                : [...action?.messages],
             globalMessagesToSend:
               state?.data[action?.teamId]?.globalMessagesToSend,
             parentMessages: {
@@ -199,9 +209,12 @@ export function chatReducer(state = initialState, action) {
           }
         }
       }
-      if(action?.message?.senderId != state?.data[action?.message?.teamId]?.messages[0]?.senderId){
+      if (
+        action?.message?.senderId !=
+        state?.data[action?.message?.teamId]?.messages[0]?.senderId
+      ) {
         data['sameSender'] = false;
-      }else{
+      } else {
         data['sameSender'] = true;
       }
       data['isSameDate'] = true;
@@ -229,16 +242,17 @@ export function chatReducer(state = initialState, action) {
       };
     case Actions.CHAT_EDIT_SUCCESS:
       for (let i = 0; i < state?.data[action.teamId]?.messages?.length; i++) {
-        if (
-          state?.data[action.teamId]?.messages[i]._id == action.msgIdToEdit
-        ) {
-          state.data[action.teamId].messages[i]=action?.newMessage
-          break ;
+        if (state?.data[action.teamId]?.messages[i]._id == action.msgIdToEdit) {
+          state.data[action.teamId].messages[i] = action?.newMessage;
+          break;
         }
       }
-      if(action?.newMessage?.senderId != state?.data[action?.newMessage?.teamId]?.messages[0]?.senderId){
+      if (
+        action?.newMessage?.senderId !=
+        state?.data[action?.newMessage?.teamId]?.messages[0]?.senderId
+      ) {
         action.newMessage['sameSender'] = false;
-      }else{
+      } else {
         action.newMessage['sameSender'] = true;
       }
       action.newMessage['isSameDate'] = true;

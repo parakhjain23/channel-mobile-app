@@ -7,7 +7,7 @@ import { moveChannelToTop } from '../channels/ChannelsAction';
 export function* getChats({teamId,token,skip}){
   try {
     var response = yield call(getMessagesOfTeamApi,teamId,token,skip) 
-    yield put(getChatsSuccess(response,teamId))
+    yield put(getChatsSuccess(response,teamId,skip))
   } catch (error) {
     console.warn(error);
   }
@@ -21,12 +21,13 @@ export function getChatsStart(teamId,token,skip){
     skip
   }
 }
-export function getChatsSuccess(data,teamId){
+export function getChatsSuccess(data,teamId, skip){
   return {
     type: Actions.FETCH_CHAT_SUCCESS,
     teamId: teamId,
     messages: data.messages,
-    parentMessages : data.parentMessages
+    parentMessages : data.parentMessages,
+    skip: skip
   }
 }
 export function getChatsReset(){
