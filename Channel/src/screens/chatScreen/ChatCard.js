@@ -474,7 +474,7 @@ const ChatCard = ({
                       maxWidth: '90%',
                       paddingRight: ms(10),
                     }}>
-                    {chat?.content?.startsWith('<span class="mention"') ? (
+                    {chat?.content?.includes('<span class="mention"') ? (
                       <HTMLView
                         value={`<div>${chat?.content}</div>`}
                         renderNode={renderNode}
