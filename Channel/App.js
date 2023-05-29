@@ -8,13 +8,11 @@ import Notifee from '@notifee/react-native';
 import NotificationSetup from './src/utils/NotificationSetup';
 import InternetConnection from './src/utils/InternetConnection';
 import SplashScreen from 'react-native-splash-screen';
-import RNUxcam from 'react-native-ux-cam';
 
 const App = () => {
   useEffect(() => {
     SplashScreen.hide();
     Request();
-    EnableUXCam();
   }, []);
 
   return (
@@ -35,18 +33,4 @@ async function Request() {
   });
 }
 
-async function EnableUXCam() {
-  try {
-    RNUxcam.optIntoSchematicRecordings(); // Add this line to enable iOS screen recordings
-    const configuration = {
-      userAppKey: 'jisbwnbf3x2d308',
-      enableAutomaticScreenNameTagging: false,
-      enableAdvancedGestureRecognition: true, // default is true
-      enableImprovedScreenCapture: true, // for improved screen capture on Android
-      // occlusions?: UXCamOcclusion[],
-    };
-    RNUxcam.startWithConfiguration(configuration);
-  } catch (error) {
-    console.log(error, 'error while enabling UXCam');
-  }
-}
+
