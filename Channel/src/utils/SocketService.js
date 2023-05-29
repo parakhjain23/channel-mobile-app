@@ -1,5 +1,5 @@
 import {moveChannelToTop} from '../redux/actions/channels/ChannelsAction';
-import {closeChannelSuccess} from '../redux/actions/channels/CloseChannelActions';
+import {channelPatchedEvent, closeChannelSuccess} from '../redux/actions/channels/CloseChannelActions';
 import {createNewChannelSuccess} from '../redux/actions/channels/CreateNewChannelAction';
 import {getChannelByTeamIdStart} from '../redux/actions/channels/GetChannelByTeamId';
 import {addNewMessage} from '../redux/actions/chat/ChatActions';
@@ -84,6 +84,7 @@ const SocketService = socket => {
       store.dispatch(closeChannelSuccess(data?._id));
     }
   });
+
   socket.on('chat/team created', data => {
     if (data?.userIds?.includes(store?.getState()?.userInfoReducer?.user?.id)) {
       store.dispatch(

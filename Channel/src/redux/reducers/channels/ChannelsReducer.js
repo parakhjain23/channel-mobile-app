@@ -244,6 +244,28 @@ export function channelsReducer(state = initialState, action) {
         }
       }
       return {...state}
+    
+    case Actions.ADD_USER_SUCCESS:
+      const {userIdToAdd,channelId}=action
+      var tempChannelIdAndDataMap = { ...state.channelIdAndDataMapping }
+      tempChannelIdAndDataMap[channelId].userIds?.push(userIdToAdd)
+      return {
+        ...state,
+        channelIdAndDataMapping:tempChannelIdAndDataMap
+      }
+
+    case Actions.REMOVE_USER_SUCCESS:
+        const {userIdToRemove,teamId}=action
+        var tempChannelIdAndDataMap = { ...state.channelIdAndDataMapping }
+        const index = tempChannelIdAndDataMap[teamId]?.userIds?.indexOf(userIdToRemove);
+        if (index !== -1) {
+          tempChannelIdAndDataMap[teamId]?.userIds.splice(index, 1);
+        }
+        return {
+          ...state,
+          channelIdAndDataMapping:tempChannelIdAndDataMap
+        }  
+      
     case Actions.SIGN_OUT:
       return initialState;
     default:
