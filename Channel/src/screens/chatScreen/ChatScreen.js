@@ -16,6 +16,7 @@ import {
   Modal,
   TouchableWithoutFeedback,
   StyleSheet,
+  RefreshControl,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -119,6 +120,8 @@ const ChatScreen = ({
   const [voiceAttachment, setvoiceAttachment] = useState('');
   const [Activities, setActivities] = useState(false);
   const [action, setaction] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
+
   const teamIdAndUnreadCountMapping =
     channelsState?.teamIdAndUnreadCountMapping;
   const teamIdAndBadgeCountMapping = channelsState?.teamIdAndBadgeCountMapping;
@@ -402,6 +405,13 @@ const ChatScreen = ({
       );
     }
   }
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1500);
+  };
   const htmlStyles = {
     div: {
       color: 'black',
@@ -538,6 +548,12 @@ const ChatScreen = ({
                       keyboardShouldPersistTaps="always"
                       onScroll={onScroll}
                       showsVerticalScrollIndicator={false}
+                      refreshControl={
+                        <RefreshControl
+                          refreshing={refreshing}
+                          onRefresh={handleRefresh}
+                        />
+                      }
                     />
                   </>
                 )}
