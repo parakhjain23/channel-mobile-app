@@ -41,10 +41,10 @@ export const makeStyles = colors =>
       marginBottom: mvs(4),
       borderWidth: s(0.3),
       maxHeight: ms(80),
-      borderLeftColor:'#b38b6d',
+      borderLeftColor: '#b38b6d',
       borderLeftWidth: ms(4),
       flexDirection: 'row',
-      overflow: 'hidden'
+      overflow: 'hidden',
     },
     option: {
       margin: ms(8),
@@ -81,7 +81,7 @@ export const makeStyles = colors =>
     textContainer: {
       padding: ms(6),
       // paddingHorizontal: 8,
-      // paddingVertical:3, 
+      // paddingVertical:3,
       // borderRadius: ms(8),
       // flexDirection: 'column',
       maxWidth: '90%',

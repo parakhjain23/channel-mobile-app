@@ -260,7 +260,7 @@ const ChatCard = ({
       <GestureHandlerRootView>
         {channelType == 'DIRECT_MESSAGE' && !sameSender && (
           <View style={[sentByMe ? styles.sentByMe : styles?.received]}>
-            <Text>{formatTime(chat?.createdAt)}</Text>
+            <Text style={{fontSize: 12}}>{formatTime(chat?.createdAt)}</Text>
           </View>
         )}
         <TouchableOpacity
