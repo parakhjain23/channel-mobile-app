@@ -31,13 +31,15 @@ export const onStartRecord = async setIsRecording => {
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         setIsRecording(true);
         const result = await AudioRecorderPlay.startRecorder(path, audioSet);
-        AudioRecorderPlay?.addRecordBackListener(() => null);
+        AudioRecorderPlay?.addRecordBackListener(e => null);
       } else {
       }
     } else {
       setIsRecording(true);
       const result = await AudioRecorderPlay.startRecorder(path, audioSet);
-      AudioRecorderPlay?.addRecordBackListener(() => null);
+      AudioRecorderPlay?.addRecordBackListener(e => {
+        // console.log(e.currentPosition);
+      });
     }
   } catch (error) {
     // console.log('Error occurred while checking recording permission:', error);
