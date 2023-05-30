@@ -171,34 +171,26 @@ const ActionMessageCard = ({
             },
           ]}>
           <View style={[styles.textContainer]}>
-            {channelType != 'DIRECT_MESSAGE' &&
-              SenderName != 'You' &&
-              !sameSender && (
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}>
-                  <Text style={[styles.nameText, styles.text]}>
-                    {SenderName}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.timeText,
-                      styles.text,
-                      {
-                        color: sentByMe
-                          ? '#cccccc'
-                          : dark
-                          ? '#cccccc'
-                          : 'black',
-                      },
-                    ]}>
-                    {time}
-                  </Text>
-                </View>
-              )}
+            {
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={[styles.nameText,{color: textColor}]}>{SenderName}</Text>
+                <Text
+                  style={[
+                    styles.timeText,
+                    styles.text,
+                    {
+                      color: sentByMe ? '#cccccc' : dark ? '#cccccc' : 'black',
+                    },
+                  ]}>
+                  {time}
+                </Text>
+              </View>
+            }
             {parentId != null && (
               <TouchableOpacity style={[styles.repliedContainer]}>
                 {chatState?.data[chat.teamId]?.parentMessages[parentId]
