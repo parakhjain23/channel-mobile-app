@@ -1,6 +1,4 @@
-import {Platform} from 'react-native';
 import {FileUploadApi} from '../../api/attachmentsApi/FileUploadApi';
-import RNFetchBlob from 'rn-fetch-blob';
 
 export const uploadRecording = async (recordingUrl, accessToken) => {
   try {

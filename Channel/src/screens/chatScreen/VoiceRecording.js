@@ -1,6 +1,11 @@
-import {View, Text, PermissionsAndroid, Button, Platform} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import AudioRecorderPlayer, { AVEncoderAudioQualityIOSType, AVEncodingOption, AudioEncoderAndroidType, AudioSourceAndroidType, OutputFormatAndroidType } from 'react-native-audio-recorder-player';
+import {PermissionsAndroid, Platform} from 'react-native';
+import AudioRecorderPlayer, {
+  AVEncoderAudioQualityIOSType,
+  AVEncodingOption,
+  AudioEncoderAndroidType,
+  AudioSourceAndroidType,
+  OutputFormatAndroidType,
+} from 'react-native-audio-recorder-player';
 import RNFetchBlob from 'rn-fetch-blob';
 
 export const AudioRecorderPlay = new AudioRecorderPlayer();
@@ -25,13 +30,12 @@ export const onStartRecord = async setIsRecording => {
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         setIsRecording(true);
-        const result = await AudioRecorderPlay.startRecorder(path,audioSet);
-    
+        const result = await AudioRecorderPlay.startRecorder(path, audioSet);
       } else {
       }
     } else {
       setIsRecording(true);
-      const result = await AudioRecorderPlay.startRecorder(path,audioSet);
+      const result = await AudioRecorderPlay.startRecorder(path, audioSet);
     }
   } catch (error) {
     // console.log('Error occurred while checking recording permission:', error);
@@ -52,4 +56,3 @@ export async function onStopRecord(setrecordingUrl, setvoiceAttachment) {
     },
   ]);
 }
-
