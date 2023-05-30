@@ -43,7 +43,8 @@ const ProtectedNavigation = props => {
           );
         }}
         style={{
-          paddingHorizontal: PLATFORM == 'android' ? null : 50,
+          // backgroundColor: 'red',
+          paddingHorizontal: PLATFORM == 'android' ? null : 20,
           paddingRight: PLATFORM == 'android' ? 70 : null,
         }}>
         <Text
@@ -66,7 +67,7 @@ const ProtectedNavigation = props => {
           });
         }}
         style={{
-          paddingHorizontal: PLATFORM == 'android' ? null : 50,
+          paddingHorizontal: PLATFORM == 'android' ? null : 10,
           paddingRight: PLATFORM == 'android' ? 50 : null,
         }}>
         <Text

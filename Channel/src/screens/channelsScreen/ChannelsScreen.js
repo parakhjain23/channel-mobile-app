@@ -205,7 +205,9 @@ const ChannelsScreen = props => {
   useEffect(() => {
     props.networkState?.isInternetConnected && props.fetchChatResetAction();
   }, []);
-
+  useEffect(() => {
+    console.log('inside useeffect');
+  });
   const onScroll = Animated.event(
     [{nativeEvent: {contentOffset: {y: scrollY}}}],
     {
