@@ -30,7 +30,7 @@ const ProtectedNavigation = props => {
   }, []);
 
   const CustomHeaderTitle = ({route}) => {
-    return route?.params?.channelType === 'DIRECT_MESSAGE' ? (          
+    return route?.params?.channelType === 'DIRECT_MESSAGE' ? (
       <TouchableOpacity
         onPress={async () => {
           RootNavigation.navigate('UserProfiles', {
@@ -41,7 +41,8 @@ const ProtectedNavigation = props => {
             route?.params?.userId,
             props?.userInfoState?.accessToken,
           );
-        }}>
+        }}
+        style={{flex: 1}}>
         <Text
           style={{
             color: colors?.textColor,
@@ -55,25 +56,27 @@ const ProtectedNavigation = props => {
       </TouchableOpacity>
     ) : (
       // <View style={{flexDirection: 'row', flex: 1}}>
-     <TouchableOpacity onPress={()=>{
-      RootNavigation.navigate('ChannelDetails',{
-        channelName:route.params.chatHeaderTitle,
-        teamId:route?.params?.teamId
-      })
-     }}>
-       <Text
-        style={{
-          color: colors?.textColor,
-          fontSize: 20,
-          fontWeight: '600',
-          maxWidth: Platform.OS == 'android' ? '100%' : null,
+      <TouchableOpacity
+        onPress={() => {
+          RootNavigation.navigate('ChannelDetails', {
+            channelName: route.params.chatHeaderTitle,
+            teamId: route?.params?.teamId,
+          });
         }}
-        numberOfLines={1}>
-        {route?.params?.chatHeaderTitle?.length > 50
-          ? route?.params?.chatHeaderTitle?.slice(0, 20) + '...'
-          : route?.params?.chatHeaderTitle}
-      </Text>
-     </TouchableOpacity>
+        style={{flex: 1}}>
+        <Text
+          style={{
+            color: colors?.textColor,
+            fontSize: 20,
+            fontWeight: '600',
+            maxWidth: Platform.OS == 'android' ? '100%' : null,
+          }}
+          numberOfLines={1}>
+          {route?.params?.chatHeaderTitle?.length > 50
+            ? route?.params?.chatHeaderTitle?.slice(0, 20) + '...'
+            : route?.params?.chatHeaderTitle}
+        </Text>
+      </TouchableOpacity>
       // </View>
     );
   };
@@ -83,6 +86,8 @@ const ProtectedNavigation = props => {
       color: colors.textColor,
       backgroundColor: colors.headerColor,
     },
+    // statusBarColor: 'transparent',
+    // statusBarTranslucent: true,
   };
   return props?.orgsState?.currentOrgId == null ? (
     <Stack.Navigator>
@@ -159,7 +164,7 @@ const ProtectedNavigation = props => {
           ...getHeader,
         })}
       />
-     <Stack.Screen
+      <Stack.Screen
         name="ChannelDetails"
         component={ChannelDetailsScreen}
         options={({route}) => ({
