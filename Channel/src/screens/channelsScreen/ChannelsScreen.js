@@ -218,6 +218,7 @@ const ChannelsScreen = props => {
   );
   useEffect(() => {
     if (isFocused) {
+      searchValue?.length > 0 && textInputRef?.current?.focus();
       props?.resetActiveChannelTeamIdAction();
     }
   }, [isFocused]);
