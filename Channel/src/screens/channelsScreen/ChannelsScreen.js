@@ -331,6 +331,12 @@ const ChannelsScreen = props => {
                     onScroll={onScroll}
                     keyboardDismissMode="on-drag"
                     keyboardShouldPersistTaps="always"
+                    refreshControl={
+                      <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                      />
+                    }
                   />
                 ) : (
                   <View

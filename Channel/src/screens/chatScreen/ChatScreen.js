@@ -527,6 +527,7 @@ const ChatScreen = ({
                       keyboardDismissMode="on-drag"
                       keyboardShouldPersistTaps="always"
                       onScroll={onScroll}
+                      showsVerticalScrollIndicator={false}
                     />
                   </>
                 )}
