@@ -28,7 +28,7 @@ const ProtectedNavigation = props => {
   useEffect(() => {
     props?.setDeviceTypeAction(deviceType);
   }, []);
-
+  const PLATFORM = Platform.OS == 'android' ? 'android' : 'ios';
   const CustomHeaderTitle = ({route}) => {
     return route?.params?.channelType === 'DIRECT_MESSAGE' ? (
       <TouchableOpacity
@@ -41,13 +41,17 @@ const ProtectedNavigation = props => {
             route?.params?.userId,
             props?.userInfoState?.accessToken,
           );
+        }}
+        style={{
+          paddingHorizontal: PLATFORM == 'android' ? null : 50,
+          paddingRight: PLATFORM == 'android' ? 70 : null,
         }}>
         <Text
           style={{
             color: colors?.textColor,
             fontSize: 20,
             fontWeight: '600',
-            maxWidth: Platform.OS == 'android' ? '100%' : null,
+            maxWidth: PLATFORM == 'android' ? '100%' : null,
           }}
           numberOfLines={1}>
           {route?.params?.chatHeaderTitle}
@@ -60,6 +64,10 @@ const ProtectedNavigation = props => {
             channelName: route.params.chatHeaderTitle,
             teamId: route?.params?.teamId,
           });
+        }}
+        style={{
+          paddingHorizontal: PLATFORM == 'android' ? null : 50,
+          paddingRight: PLATFORM == 'android' ? 50 : null,
         }}>
         <Text
           style={{
