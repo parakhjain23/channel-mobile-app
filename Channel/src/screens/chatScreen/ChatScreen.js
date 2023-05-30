@@ -210,7 +210,6 @@ const ChatScreen = ({
       setShowOptions(false);
     }, 130);
   };
-  //  const [activities, setActivities] = useState([]);
 
   const handleInputChange = useCallback(
     text => {

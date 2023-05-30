@@ -32,6 +32,7 @@ import {AppContext} from '../appProvider/AppProvider';
 import {DEVICE_TYPES} from '../../constants/Constants';
 import {connect} from 'react-redux';
 import {setActiveChannelTeamId} from '../../redux/actions/channels/SetActiveChannelId';
+import { formatTime } from '../../utils/FormatTime';
 
 const AddRemoveJoinedMsg = React.memo(({senderName, content, orgState}) => {
   const {colors} = useTheme();
@@ -114,8 +115,6 @@ const ChatCard = ({
     setCurrentSelectedChatCard(chat);
   };
   var parentId = chat?.parentId;
-  const date = useMemo(() => new Date(chat?.updatedAt), [chat?.updatedAt]);
-  const time = useMemo(() => date.getHours() + ':' + date.getMinutes(), [date]);
   const sentByMe = chat?.senderId == userInfoState?.user?.id ? true : false;
   const containerBackgroundColor = useMemo(() => {
     if (sentByMe) {
@@ -282,9 +281,24 @@ const ChatCard = ({
                 {channelType != 'DIRECT_MESSAGE' &&
                   SenderName != 'You' &&
                   !sameSender && (
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <Text style={[styles.nameText, styles.text]}>
+                    <View style={{flexDirection: 'row', marginTop:0,justifyContent:'space-between'}}>
+                      <Text style={[styles.nameText, styles.text,{fontSize:16,fontWeight:'500'}]}>
                         {SenderName}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.timeText,
+                          styles.text,
+                          {
+                            color: sentByMe
+                              ? '#cccccc'
+                              : dark
+                              ? '#cccccc'
+                              : 'black',
+                            marginLeft:10,
+                          },
+                        ]}>
+                        {formatTime(chat?.createdAt)}
                       </Text>
                     </View>
                   )}
@@ -472,8 +486,8 @@ const ChatCard = ({
                   <View
                     style={{
                       flexDirection: 'row',
-                      maxWidth: '90%',
-                      paddingRight: ms(10),
+                      // maxWidth: '90%',
+                      // paddingRight: ms(10),
                     }}>
                     {chat?.content?.includes('<span class="mention"') ? (
                       <HTMLView
@@ -500,7 +514,7 @@ const ChatCard = ({
                     style={{
                       justifyContent: 'flex-end',
                     }}>
-                    {chat?.randomId != null ? (
+                    {chat?.randomId != null && (
                       <View
                         style={{
                           flexDirection: 'column',
@@ -509,22 +523,24 @@ const ChatCard = ({
                         }}>
                         <Icon name="access-time" color={'white'} />
                       </View>
-                    ) : (
-                      <Text
-                        style={[
-                          styles.timeText,
-                          styles.text,
-                          {
-                            color: sentByMe
-                              ? '#cccccc'
-                              : dark
-                              ? '#cccccc'
-                              : 'black',
-                          },
-                        ]}>
-                        {time}
-                      </Text>
-                    )}
+                    ) 
+                    // : (
+                    //   <Text
+                    //     style={[
+                    //       styles.timeText,
+                    //       styles.text,
+                    //       {
+                    //         color: sentByMe
+                    //           ? '#cccccc'
+                    //           : dark
+                    //           ? '#cccccc'
+                    //           : 'black',
+                    //       },
+                    //     ]}>
+                    //     {time}
+                    //   </Text>
+                    // )
+                    }
                   </View>
                 </View>
               </View>

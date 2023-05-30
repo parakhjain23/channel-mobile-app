@@ -79,7 +79,9 @@ export const makeStyles = colors =>
       marginHorizontal: ms(4),
     },
     textContainer: {
-      padding: ms(8),
+      // padding: ms(8),
+      paddingHorizontal: 8,
+      paddingVertical:3, 
       // borderRadius: ms(8),
       flexDirection: 'column',
       maxWidth: '90%',
@@ -94,8 +96,8 @@ export const makeStyles = colors =>
     },
     timeText: {
       fontSize: 10,
-      marginLeft: ms(5),
-      marginRight: ms(-3),
-      marginBottom: ms(-4),
+      // marginLeft: ms(5),
+      // marginRight: ms(-3),
+      // marginBottom: ms(-4),
     },
   });
