@@ -16,6 +16,7 @@ import SelectWorkSpaceScreen from '../screens/selectWorkSpaceScreen/SelectWorkSp
 import IpadScreen from '../screens/ipadScreen/IpadScreen';
 import {DEVICE_TYPES} from '../constants/Constants';
 import * as Actions from '../redux/Enums';
+import ChannelDetailsScreen from '../screens/channelDetails/ChannelDetails';
 
 const ProtectedNavigation = props => {
   const Stack = createNativeStackNavigator();
@@ -29,7 +30,7 @@ const ProtectedNavigation = props => {
   }, []);
 
   const CustomHeaderTitle = ({route}) => {
-    return route?.params?.channelType === 'DIRECT_MESSAGE' ? (
+    return route?.params?.channelType === 'DIRECT_MESSAGE' ? (          
       <TouchableOpacity
         onPress={async () => {
           RootNavigation.navigate('UserProfiles', {
@@ -54,18 +55,25 @@ const ProtectedNavigation = props => {
       </TouchableOpacity>
     ) : (
       // <View style={{flexDirection: 'row', flex: 1}}>
-      <Text
+     <TouchableOpacity onPress={()=>{
+      RootNavigation.navigate('ChannelDetails',{
+        channelName:route.params.chatHeaderTitle,
+        teamId:route?.params?.teamId
+      })
+     }}>
+       <Text
         style={{
           color: colors?.textColor,
           fontSize: 20,
           fontWeight: '600',
-          maxWidth: Platform.OS == 'android' ? '90%' : null,
+          maxWidth: Platform.OS == 'android' ? '100%' : null,
         }}
         numberOfLines={1}>
         {route?.params?.chatHeaderTitle?.length > 50
           ? route?.params?.chatHeaderTitle?.slice(0, 20) + '...'
           : route?.params?.chatHeaderTitle}
       </Text>
+     </TouchableOpacity>
       // </View>
     );
   };
@@ -147,6 +155,15 @@ const ProtectedNavigation = props => {
         component={ContactDetailsPage}
         options={({route}) => ({
           headerTitle: route?.params?.displayName + ' Profile',
+          headerShown: true,
+          ...getHeader,
+        })}
+      />
+     <Stack.Screen
+        name="ChannelDetails"
+        component={ChannelDetailsScreen}
+        options={({route}) => ({
+          headerTitle: route?.params?.channelName,
           headerShown: true,
           ...getHeader,
         })}

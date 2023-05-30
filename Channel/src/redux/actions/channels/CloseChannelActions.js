@@ -24,3 +24,18 @@ export function* closeChannel({name,teamId,channelType,accessToken}) {
       teamId: teamId,
     };
   }
+
+  export function addUserSuccess(data) {
+    return {
+      type: Actions.ADD_USER_SUCCESS,
+      channelId: data?.teamId,
+      userIdToAdd:data?.userId
+    };
+  }
+  export function removeUserSuccess(data) {
+    return {
+      type: Actions.REMOVE_USER_SUCCESS,
+      teamId: data?.teamId,
+      userIdToRemove:data?.userId
+    };
+  }

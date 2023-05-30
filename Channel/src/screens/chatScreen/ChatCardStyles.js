@@ -79,9 +79,11 @@ export const makeStyles = colors =>
       marginHorizontal: ms(4),
     },
     textContainer: {
-      padding: ms(8),
+      // padding: ms(8),
+      paddingHorizontal: 8,
+      paddingVertical:3, 
       // borderRadius: ms(8),
-      flexDirection: 'column',
+      // flexDirection: 'column',
       maxWidth: '90%',
     },
     nameText: {
@@ -93,9 +95,9 @@ export const makeStyles = colors =>
       fontSize: 16,
     },
     timeText: {
-      fontSize: 10,
-      marginLeft: ms(5),
-      marginRight: ms(-3),
-      marginBottom: ms(-4),
+      fontSize: 11,
+      // marginLeft: ms(5),
+      // marginRight: ms(-3),
+      // marginBottom: ms(-4),
     },
   });

@@ -30,6 +30,7 @@ export function chatReducer(state = initialState, action) {
       };
 
     case Actions.FETCH_CHAT_SUCCESS:
+      console.log(action?.messages[0],action?.messages[1]);
       var tempParentMessages = {};
       var parentId = null;
       let prevDate = null;
@@ -40,6 +41,10 @@ export function chatReducer(state = initialState, action) {
       }
       for (let i = 0; i < action?.messages?.length; i++) {
         const date = new Date(action?.messages[i]?.updatedAt);
+        const currentCreatedAt = new Date(action?.messages[i]?.createdAt)
+        const prevCreatedAt = new Date(action?.messages[i+1]?.createdAt)
+        const timeDiff = Math.abs(prevCreatedAt-currentCreatedAt);
+        const minutesDiff = Math.floor(timeDiff / (1000 * 60));
         const isSameDate = prevDate?.toDateString() === date.toDateString();
         let displayDate = date?.toDateString();
         if (!isSameDate && i > 0) {
@@ -52,12 +57,12 @@ export function chatReducer(state = initialState, action) {
           action.messages[i]['timeToShow'] = '';
         }
         prevDate = date;
-        if (
-          action?.messages[i]?.senderId != action?.messages[i + 1]?.senderId
-        ) {
-          action.messages[i]['sameSender'] = false;
-        } else {
-          action.messages[i]['sameSender'] = true;
+        if(action?.messages[i]?.senderId != action?.messages[i+1]?.senderId){
+          action.messages[i]["sameSender"]=false
+        }else if(minutesDiff > 5){
+         action.messages[i]["sameSender"]= false
+        }else{
+          action.messages[i]["sameSender"]= true
         }
         if (
           action.messages[i].attachment?.length > 0 &&

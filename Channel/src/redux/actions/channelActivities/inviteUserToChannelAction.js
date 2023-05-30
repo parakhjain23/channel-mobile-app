@@ -1,6 +1,7 @@
-import { call } from 'redux-saga/effects';
+import { call, put } from 'redux-saga/effects';
 import * as Actions from '../../Enums';
 import { addUsersToChannelApi, removeUserFromChannelApi } from '../../../api/channelsApi/AddUsersToChannel';
+import { addUserSuccess, removeUserSuccess } from '../channels/CloseChannelActions';
 
 export function* addUserToChannel({userIds,teamId,orgId,accessToken}) {
     try {
@@ -8,6 +9,7 @@ export function* addUserToChannel({userIds,teamId,orgId,accessToken}) {
         addUsersToChannelApi,
         userIds,teamId,orgId,accessToken
       );
+      yield put(addUserSuccess(response[0]))
     } catch (error) {
       console.warn(error);
     }
@@ -25,6 +27,7 @@ export function* addUserToChannel({userIds,teamId,orgId,accessToken}) {
         removeUserFromChannelApi,
         userIds,teamId,orgId,accessToken
       );
+      yield put(removeUserSuccess(response[0]))
     } catch (error) {
       console.warn(error);
     }

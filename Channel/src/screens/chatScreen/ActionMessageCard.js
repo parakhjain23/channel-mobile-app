@@ -22,6 +22,7 @@ import {RenderHTML} from 'react-native-render-html';
 import * as RootNavigation from '../../navigation/RootNavigation';
 import {tagsStyles} from './HtmlStyles';
 import WebView from 'react-native-webview';
+import { formatTime } from '../../utils/FormatTime';
 
 const AddRemoveJoinedMsg = React.memo(({senderName, content, orgState}) => {
   const {colors} = useTheme();
@@ -91,8 +92,7 @@ const ActionMessageCard = ({
   }, []);
 
   var parentId = chat?.parentId;
-  const date = useMemo(() => new Date(chat?.updatedAt), [chat?.updatedAt]);
-  const time = useMemo(() => date.getHours() + ':' + date.getMinutes(), [date]);
+  const time = formatTime(chat?.createdAt)
   const sentByMe = chat?.senderId == userInfoState?.user?.id ? true : false;
   const containerBackgroundColor = useMemo(() => {
     if (sentByMe) {
@@ -173,9 +173,23 @@ const ActionMessageCard = ({
             {channelType != 'DIRECT_MESSAGE' &&
               SenderName != 'You' &&
               !sameSender && (
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View style={{flexDirection: 'row', alignItems: 'center',justifyContent:'space-between'}}>
                   <Text style={[styles.nameText, styles.text]}>
                     {SenderName}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.timeText,
+                      styles.text,
+                      {
+                        color: sentByMe
+                          ? '#cccccc'
+                          : dark
+                          ? '#cccccc'
+                          : 'black',
+                      },
+                    ]}>
+                    {time}
                   </Text>
                 </View>
               )}
@@ -341,17 +355,9 @@ const ActionMessageCard = ({
                 justifyContent: 'space-between',
                 alignItems: 'flex-end',
               }}>
-              {/* <Text
-                    style={[
-                      // styles.messageText,
-                      // styles.text,
-                      {maxWidth: '90%', color: 'white'},
-                    ]}> */}
               <View
                 style={{
                   flexDirection: 'row',
-                  maxWidth: '90%',
-                  paddingRight: ms(10),
                 }}>
                 {chat?.mentions?.length > 0 ? (
                   <HTMLView
@@ -378,7 +384,7 @@ const ActionMessageCard = ({
                 style={{
                   justifyContent: 'flex-end',
                 }}>
-                {chat?.randomId != null ? (
+                {chat?.randomId != null && (
                   <View
                     style={{
                       flexDirection: 'column',
@@ -387,22 +393,8 @@ const ActionMessageCard = ({
                     }}>
                     <Icon name="access-time" color={'white'} />
                   </View>
-                ) : (
-                  <Text
-                    style={[
-                      styles.timeText,
-                      styles.text,
-                      {
-                        color: sentByMe
-                          ? '#cccccc'
-                          : dark
-                          ? '#cccccc'
-                          : 'black',
-                      },
-                    ]}>
-                    {time}
-                  </Text>
-                )}
+                )
+                }
               </View>
             </View>
           </View>
