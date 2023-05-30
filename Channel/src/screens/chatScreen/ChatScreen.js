@@ -138,6 +138,16 @@ const ChatScreen = ({
     teamIdAndBadgeCountMapping?.[teamId] > 0;
 
   useEffect(() => {
+    // Code to run when the component is mounted
+
+    return () => {
+      onStopRecord(setrecordingUrl, setvoiceAttachment),
+        setisRecording(false),
+        setShowPlayer(true);
+      setvoiceAttachment('');
+    };
+  }, []);
+  useEffect(() => {
     if (repliedMsgDetails != '' && !showPlayer) {
       textInputRef.current.focus();
     }
