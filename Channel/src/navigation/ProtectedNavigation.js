@@ -41,8 +41,7 @@ const ProtectedNavigation = props => {
             route?.params?.userId,
             props?.userInfoState?.accessToken,
           );
-        }}
-        style={{flex: 1}}>
+        }}>
         <Text
           style={{
             color: colors?.textColor,
@@ -55,15 +54,13 @@ const ProtectedNavigation = props => {
         </Text>
       </TouchableOpacity>
     ) : (
-      // <View style={{flexDirection: 'row', flex: 1}}>
       <TouchableOpacity
         onPress={() => {
           RootNavigation.navigate('ChannelDetails', {
             channelName: route.params.chatHeaderTitle,
             teamId: route?.params?.teamId,
           });
-        }}
-        style={{flex: 1}}>
+        }}>
         <Text
           style={{
             color: colors?.textColor,
@@ -77,7 +74,6 @@ const ProtectedNavigation = props => {
             : route?.params?.chatHeaderTitle}
         </Text>
       </TouchableOpacity>
-      // </View>
     );
   };
   const getHeader = {
