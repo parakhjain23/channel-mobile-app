@@ -30,7 +30,7 @@ import {tagsStyles} from './HtmlStyles';
 import AudioRecordingPlayer from '../../components/AudioRecorderPlayer';
 import {AppContext} from '../appProvider/AppProvider';
 import {DEVICE_TYPES} from '../../constants/Constants';
-import {connect} from 'react-redux';
+import {connect, useSelector} from 'react-redux';
 import {setActiveChannelTeamId} from '../../redux/actions/channels/SetActiveChannelId';
 import { formatTime } from '../../utils/FormatTime';
 
@@ -49,11 +49,11 @@ const AddRemoveJoinedMsg = React.memo(({senderName, content, orgState}) => {
     </View>
   );
 });
+
 const ChatCard = ({
   chat,
   userInfoState,
   orgState,
-  deleteMessageAction,
   chatState,
   setreplyOnMessage,
   setrepliedMsgDetails,
@@ -66,7 +66,7 @@ const ChatCard = ({
   setChatDetailsForTab,
   setActiveChannelTeamIdAction,
 }) => {
-  const {deviceType} = useContext(AppContext);
+  const deviceType = useSelector(state => state.appInfoReducer.deviceType);
   const {colors, dark} = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const [optionsVisible, setOptionsVisible] = useState(false);

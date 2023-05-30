@@ -6,8 +6,6 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-import {getChatsReset} from '../../redux/actions/chat/ChatActions';
-
 import {
   Text,
   TouchableOpacity,
@@ -19,7 +17,6 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 import {fetchSearchedUserProfileStart} from '../../redux/actions/user/searchUserProfileActions';
-import {s, ms, mvs} from 'react-native-size-matters';
 import * as RootNavigation from '../../navigation/RootNavigation';
 import {GestureHandlerRootView, Swipeable} from 'react-native-gesture-handler';
 import {resetUnreadCountStart} from '../../redux/actions/channels/ChannelsAction';
@@ -34,8 +31,6 @@ const ChannelCard = ({
   item,
   navigation,
   props,
-  resetChatsAction,
-  networkState,
   markAsUnreadAction,
   closeChannelAction,
 }) => {
@@ -94,7 +89,7 @@ const ChannelCard = ({
   }, [item?._id, teamIdAndUnreadCountMapping, highlightChannel]);
 
   const onPress = useCallback(() => {
-    networkState?.isInternetConnected && resetChatsAction();
+    // networkState?.isInternetConnected && resetChatsAction();
     if (deviceType === DEVICE_TYPES[1]) {
       handleListItemPress(item?._id, item?.type, userId, false);
     } else {
@@ -106,19 +101,16 @@ const ChannelCard = ({
         searchedChannel: false,
       });
     }
-    props.setActiveChannelTeamIdAction(item?._id);
   }, [
     Name,
     currentOrgId,
     item?._id,
     item?.type,
-    // resetChatsAction,
-    props.setActiveChannelTeamIdAction,
     teamIdAndUnreadCountMapping,
     user?.id,
     userId,
     accessToken,
-    networkState,
+    // networkState,
   ]);
   const renderRightActions = (progress, dragX) => {
     const scale = dragX.interpolate({
@@ -375,10 +367,10 @@ const SearchChannelCard = ({
     <TouchableItem onPress={onPress} activeOpacity={0.8}>
       <View
         style={{
-          borderTopWidth: ms(0.7),
+          borderTopWidth: 0.7,
           borderTopColor: '#444444',
           minHeight: 60,
-          borderRadius: ms(5),
+          borderRadius: 5,
           width: '100%',
           flexDirection: 'column',
           justifyContent: 'center',
@@ -388,7 +380,7 @@ const SearchChannelCard = ({
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: ms(13),
+            padding: 13,
           }}>
           <View
             style={{
@@ -412,7 +404,7 @@ const SearchChannelCard = ({
             <View
               style={{
                 position: 'absolute',
-                right: ms(20),
+                right: 20,
               }}>
               <Button
                 title="Profile"
@@ -443,11 +435,11 @@ const UsersToAddCard = ({item, setUserIds, userIds, setsearchedUser}) => {
   return (
     <TouchableOpacity
       style={{
-        borderWidth: ms(0.4),
+        borderWidth: 0.4,
         borderColor: 'gray',
-        borderRadius: s(3),
-        minHeight: s(45),
-        margin: s(1),
+        borderRadius: 3,
+        minHeight: 45,
+        margin: 1,
         flexDirection: 'column',
         justifyContent: 'center',
       }}
@@ -460,7 +452,7 @@ const UsersToAddCard = ({item, setUserIds, userIds, setsearchedUser}) => {
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'flex-start',
-          padding: ms(13),
+          padding: 13,
         }}>
         <Icon name="user" color={colors.textColor} />
         <Text
@@ -479,13 +471,11 @@ const UsersToAddCard = ({item, setUserIds, userIds, setsearchedUser}) => {
 const mapStateToProps = state => ({
   userInfoState: state.userInfoReducer,
   orgsState: state.orgsReducer,
-  networkState: state.networkReducer,
 });
 const mapDispatchToProps = dispatch => {
   return {
     searchUserProfileAction: (userId, token) =>
       dispatch(fetchSearchedUserProfileStart(userId, token)),
-    resetChatsAction: () => dispatch(getChatsReset()),
     markAsUnreadAction: (
       orgId,
       userId,
