@@ -110,9 +110,9 @@ const ChatCard = ({
   }, [chatState?.data[chat?.teamId]?.messages]);
 
   const onLongPress = () => {
+    setCurrentSelectedChatCard(chat);
     setShowActions(true);
     setOptionsVisible(!optionsVisible);
-    setCurrentSelectedChatCard(chat);
   };
   var parentId = chat?.parentId;
   const sentByMe = chat?.senderId == userInfoState?.user?.id ? true : false;
