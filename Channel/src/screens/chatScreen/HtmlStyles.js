@@ -4,7 +4,11 @@ export const tagsStyles = (textColor, linkColor) =>
   StyleSheet.create({
     body: {
       color: textColor,
-      fontSize: 16
+      fontSize: 16,
+    //   textAlign: 'center',
+    // display: 'flex',
+    // alignItems: 'center',
+    // justifyContent: 'center',
     },
     a: {
       color: linkColor,

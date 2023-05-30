@@ -22,7 +22,8 @@ import {RenderHTML} from 'react-native-render-html';
 import * as RootNavigation from '../../navigation/RootNavigation';
 import {tagsStyles} from './HtmlStyles';
 import WebView from 'react-native-webview';
-import { formatTime } from '../../utils/FormatTime';
+import {formatTime} from '../../utils/FormatTime';
+import AudioRecordingPlayer from '../../components/AudioRecorderPlayer';
 
 const AddRemoveJoinedMsg = React.memo(({senderName, content, orgState}) => {
   const {colors} = useTheme();
@@ -92,7 +93,7 @@ const ActionMessageCard = ({
   }, []);
 
   var parentId = chat?.parentId;
-  const time = formatTime(chat?.createdAt)
+  const time = formatTime(chat?.createdAt);
   const sentByMe = chat?.senderId == userInfoState?.user?.id ? true : false;
   const containerBackgroundColor = useMemo(() => {
     if (sentByMe) {
@@ -173,7 +174,12 @@ const ActionMessageCard = ({
             {channelType != 'DIRECT_MESSAGE' &&
               SenderName != 'You' &&
               !sameSender && (
-                <View style={{flexDirection: 'row', alignItems: 'center',justifyContent:'space-between'}}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}>
                   <Text style={[styles.nameText, styles.text]}>
                     {SenderName}
                   </Text>
@@ -261,33 +267,19 @@ const ActionMessageCard = ({
                       }}
                     />
                   </TouchableOpacity>
-                ) : item?.contentType?.includes('audio/mpeg') ? (
+                ) : item?.contentType?.includes('audio') ? (
                   <View
                     key={index}
                     style={{
                       flexDirection: 'row',
-                      height: ms(50),
-                      width: s(250),
-                      flex: 1,
-                      alignItems: 'center',
-                      overflow: 'hidden',
-                      justifyContent: 'center', // Align center horizontally
+                      height: 50,
+                      // width: ms(250),
+                      // flex: 1,
+                      // alignItems: 'center',
+                      // overflow: 'hidden',
+                      // justifyContent: 'center', // Align center horizontally
                     }}>
-                    <WebView
-                      source={{
-                        html: `
-                                  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
-                                  <style>
-                                    body, html { margin: 0; padding: 0; flex: 1; display: flex; align-items: center;}
-                                    audio { width: 100%;}
-                                  </style>
-                                  <audio controls>
-                                    <source src="${item?.resourceUrl}" type="audio/mp3">
-                                  </audio>
-                                `,
-                      }}
-                      style={{flex: 1}}
-                    />
+                    <AudioRecordingPlayer remoteUrl={item?.resourceUrl} />
                   </View>
                 ) : (
                   <View
@@ -393,8 +385,7 @@ const ActionMessageCard = ({
                     }}>
                     <Icon name="access-time" color={'white'} />
                   </View>
-                )
-                }
+                )}
               </View>
             </View>
           </View>

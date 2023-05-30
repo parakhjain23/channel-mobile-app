@@ -566,6 +566,7 @@ const ChatScreen = ({
                         alignItems: 'center',
                         alignContent: 'center',
                         backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                        maxHeight:500
                       }}>
                       <TouchableWithoutFeedback
                         onPress={() => setShowActions(false)}>

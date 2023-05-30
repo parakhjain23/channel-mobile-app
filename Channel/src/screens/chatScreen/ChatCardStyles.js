@@ -79,17 +79,17 @@ export const makeStyles = colors =>
       marginHorizontal: ms(4),
     },
     textContainer: {
-      // padding: ms(8),
-      paddingHorizontal: 8,
-      paddingVertical:3, 
+      padding: ms(6),
+      // paddingHorizontal: 8,
+      // paddingVertical:3, 
       // borderRadius: ms(8),
       // flexDirection: 'column',
       maxWidth: '90%',
     },
     nameText: {
-      fontWeight: 'bold',
-      fontSize: 14,
-      marginBottom: 3,
+      fontWeight: '600',
+      fontSize: 16,
+      marginBottom: 2,
     },
     messageText: {
       fontSize: 16,

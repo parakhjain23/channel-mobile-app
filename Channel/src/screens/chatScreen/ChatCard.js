@@ -32,7 +32,7 @@ import {AppContext} from '../appProvider/AppProvider';
 import {DEVICE_TYPES} from '../../constants/Constants';
 import {connect, useSelector} from 'react-redux';
 import {setActiveChannelTeamId} from '../../redux/actions/channels/SetActiveChannelId';
-import { formatTime } from '../../utils/FormatTime';
+import {formatTime} from '../../utils/FormatTime';
 
 const AddRemoveJoinedMsg = React.memo(({senderName, content, orgState}) => {
   const {colors} = useTheme();
@@ -163,7 +163,7 @@ const ChatCard = ({
   const htmlStyles = color => ({
     div: {
       color: color,
-      fontSize: 16
+      fontSize: 16,
     },
   });
 
@@ -281,8 +281,18 @@ const ChatCard = ({
                 {channelType != 'DIRECT_MESSAGE' &&
                   SenderName != 'You' &&
                   !sameSender && (
-                    <View style={{flexDirection: 'row',justifyContent:'space-between'}}>
-                      <Text style={[styles.nameText, styles.text,{fontSize:16,fontWeight:'500'}]}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}>
+                      <Text
+                        style={[
+                          styles.nameText,
+                          styles.text,
+                          {marginRight: 5},
+                        ]}>
                         {SenderName}
                       </Text>
                       <Text
@@ -295,7 +305,6 @@ const ChatCard = ({
                               : dark
                               ? '#cccccc'
                               : 'black',
-
                           },
                         ]}>
                         {formatTime(chat?.createdAt)}
@@ -381,12 +390,12 @@ const ChatCard = ({
                             : handleImagePress(index)
                         }
                         onLongPress={onLongPress}
-                        style={{marginVertical: ms(5), alignItems: 'center'}}>
+                        style={{marginVertical: 5, alignItems: 'center'}}>
                         <Image
                           source={{uri: item?.resourceUrl}}
                           style={{
-                            height: ms(150),
-                            width: ms(150),
+                            height: 150,
+                            width: 150,
                             opacity: optionsVisible ? 0.6 : 1,
                           }}
                         />
@@ -397,7 +406,7 @@ const ChatCard = ({
                         style={{
                           flexDirection: 'row',
                           height: 50,
-                          width: ms(250),
+                          // width: ms(250),
                           flex: 1,
                           alignItems: 'center',
                           overflow: 'hidden',
@@ -477,15 +486,11 @@ const ChatCard = ({
                     justifyContent: 'space-between',
                     alignItems: 'flex-end',
                   }}>
-                  {/* <Text
-                    style={[
-                      // styles.messageText,
-                      // styles.text,
-                      {maxWidth: '90%', color: 'white'},
-                    ]}> */}
                   <View
                     style={{
                       flexDirection: 'row',
+                      alignContent:'center',
+                      alignItems:'center',
                       // maxWidth: '90%',
                       // paddingRight: ms(10),
                     }}>
@@ -523,24 +528,7 @@ const ChatCard = ({
                         }}>
                         <Icon name="access-time" color={'white'} />
                       </View>
-                    ) 
-                    // : (
-                    //   <Text
-                    //     style={[
-                    //       styles.timeText,
-                    //       styles.text,
-                    //       {
-                    //         color: sentByMe
-                    //           ? '#cccccc'
-                    //           : dark
-                    //           ? '#cccccc'
-                    //           : 'black',
-                    //       },
-                    //     ]}>
-                    //     {time}
-                    //   </Text>
-                    // )
-                    }
+                    )}
                   </View>
                 </View>
               </View>

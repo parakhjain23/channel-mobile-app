@@ -30,7 +30,6 @@ export function chatReducer(state = initialState, action) {
       };
 
     case Actions.FETCH_CHAT_SUCCESS:
-      console.log(action?.messages[0],action?.messages[1]);
       var tempParentMessages = {};
       var parentId = null;
       let prevDate = null;
@@ -66,7 +65,7 @@ export function chatReducer(state = initialState, action) {
         }
         if (
           action.messages[i].attachment?.length > 0 &&
-          action.messages[i].attachment[0].contentType == 'audio/mpeg' &&
+          action.messages[i].attachment[0].contentType?.includes('audio') &&
           action.messages[i].attachment[0].transcription != undefined
         ) {
           action.messages[
