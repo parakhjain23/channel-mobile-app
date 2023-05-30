@@ -566,7 +566,6 @@ const ChatScreen = ({
                         alignItems: 'center',
                         alignContent: 'center',
                         backgroundColor: 'rgba(0, 0, 0, 0.9)',
-                        maxHeight:500
                       }}>
                       <TouchableWithoutFeedback
                         onPress={() => setShowActions(false)}>
@@ -575,6 +574,7 @@ const ChatScreen = ({
                             flex: 1,
                             justifyContent: 'center',
                             alignItems: 'center',
+                            maxHeight: height-300
                           }}>
                           <ActionMessageCardMemo
                             chat={currentSelectChatCard}
