@@ -13,4 +13,4 @@ if (__DEV__) {
   AppRegistry.registerComponent(appName, () => AppSentry);
 }
 
-// AsyncStorage.clear()
+// AsyncStorage.clear();

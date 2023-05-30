@@ -19,18 +19,6 @@ const StoreAppWrapper = () => {
     }
   }, [userInfoState?.accessToken, orgsState?.currentOrgId]);
 
-  useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener(state => {
-      if (state?.isConnected) {
-        dispatch(networkStatus(true));
-      } else {
-        dispatch(networkStatus(false));
-      }
-    });
-    return () => {
-      unsubscribe();
-    };
-  }, []);
   return showSplashScreen ? (
     <SplashScreenComponent setShowSplashScreen={setShowSplashScreen} />
   ) : (

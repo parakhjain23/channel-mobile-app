@@ -25,6 +25,7 @@ const ProtectedNavigation = props => {
   const isTablet = width >= 600 && height >= 600;
   const isIPad = Platform.OS === 'ios' && Platform.isPad;
   const deviceType = isTablet || isIPad ? DEVICE_TYPES[1] : DEVICE_TYPES[0];
+  const PLATFORM = Platform.OS == 'android' ? 'android' : 'ios';
   useEffect(() => {
     props?.setDeviceTypeAction(deviceType);
   }, []);
@@ -41,6 +42,11 @@ const ProtectedNavigation = props => {
             route?.params?.userId,
             props?.userInfoState?.accessToken,
           );
+        }}
+        style={{
+          backgroundColor: 'red',
+          paddingHorizontal: PLATFORM == 'android' ? null : 50,
+          paddingRight: PLATFORM == 'android' ? 70 : null,
         }}>
         <Text
           style={{
@@ -60,6 +66,10 @@ const ProtectedNavigation = props => {
             channelName: route.params.chatHeaderTitle,
             teamId: route?.params?.teamId,
           });
+        }}
+        style={{
+          paddingHorizontal: PLATFORM == 'android' ? null : 50,
+          paddingRight: PLATFORM == 'android' ? 50 : null,
         }}>
         <Text
           style={{
