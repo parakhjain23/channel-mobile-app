@@ -20,6 +20,11 @@ export const makeStyles = colors =>
       marginBottom: 10,
       marginTop: 10,
     },
+    buttonBorder: {
+      borderWidth: 1,
+      padding: 5,
+      borderRadius: 5,
+    },
     memberContainer: {
       flexDirection: 'row',
       minHeight: 30,

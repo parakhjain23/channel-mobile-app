@@ -89,38 +89,36 @@ const CustomeDrawerScreen = ({
             justifyContent: 'space-between',
             padding: 8,
           }}>
-          <ScrollView>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image
-                source={
-                  item?.iconKey
-                    ? {uri: `${IMAGE_BASE_URL}${item.iconKey}`}
-                    : require('../../assests/images/appIcon/icon72size.png')
-                }
-                style={{height: 40, width: 40, marginRight: 10}}
-              />
-              <Text style={{color: colors.textColor}}>{item?.name}</Text>
-            </View>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              {count != undefined && (
-                <View
-                  style={{
-                    backgroundColor: 'red',
-                    borderRadius: 50,
-                    height: 20,
-                    minWidth: 20,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginRight: 10,
-                  }}>
-                  <Text style={{color: colors.textColor, fontSize: 12}}>
-                    {count}
-                  </Text>
-                </View>
-              )}
-              <Icon name="chevron-right" color={colors.textColor} />
-            </View>
-          </ScrollView>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Image
+              source={
+                item?.iconKey
+                  ? {uri: `${IMAGE_BASE_URL}${item.iconKey}`}
+                  : require('../../assests/images/appIcon/icon72size.png')
+              }
+              style={{height: 40, width: 40, marginRight: 10}}
+            />
+            <Text style={{color: colors.textColor}}>{item?.name}</Text>
+          </View>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            {count != undefined && (
+              <View
+                style={{
+                  backgroundColor: 'red',
+                  borderRadius: 50,
+                  height: 20,
+                  minWidth: 20,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginRight: 10,
+                }}>
+                <Text style={{color: colors.textColor, fontSize: 12}}>
+                  {count}
+                </Text>
+              </View>
+            )}
+            <Icon name="chevron-right" color={colors.textColor} />
+          </View>
         </View>
       </TouchableOpacity>
     );
