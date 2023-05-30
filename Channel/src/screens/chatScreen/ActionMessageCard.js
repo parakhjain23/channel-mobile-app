@@ -25,32 +25,12 @@ import WebView from 'react-native-webview';
 import {formatTime} from '../../utils/FormatTime';
 import AudioRecordingPlayer from '../../components/AudioRecorderPlayer';
 
-const AddRemoveJoinedMsg = React.memo(({senderName, content, orgState}) => {
-  const {colors} = useTheme();
-  const styles = makeStyles(colors);
-  const regex = /\{\{(\w+)\}\}/g;
-  const result = content.replace(regex, (match, userId) => {
-    return orgState?.userIdAndNameMapping[userId] || match; // return the name if it exists, or the original match if not
-  });
-  return (
-    <View style={[styles.actionText]}>
-      <Text style={styles.text}>
-        {senderName} {result}
-      </Text>
-    </View>
-  );
-});
 const ActionMessageCard = ({
   chat,
   userInfoState,
   orgState,
-  deleteMessageAction,
   chatState,
-  setreplyOnMessage,
-  setrepliedMsgDetails,
   searchUserProfileAction,
-  flatListRef,
-  channelType,
   index,
   setShowActions,
   setCurrentSelectedChatCard,
@@ -178,7 +158,13 @@ const ActionMessageCard = ({
                   alignItems: 'center',
                   justifyContent: 'space-between',
                 }}>
-                <Text style={[styles.nameText,{color: textColor}]}>{SenderName}</Text>
+                <Text
+                  style={[
+                    styles.nameText,
+                    {color: textColor, marginRight: 10},
+                  ]}>
+                  {SenderName}
+                </Text>
                 <Text
                   style={[
                     styles.timeText,
@@ -233,8 +219,6 @@ const ActionMessageCard = ({
                   imageUrls={[
                     {
                       url: selectedImage?.resourceUrl,
-                      // width: Dimensions.get('window')?.width - 20,
-                      // height: Dimensions.get('window')?.height,
                       freeHeight: true,
                       freeWidth: true,
                     },
@@ -265,11 +249,6 @@ const ActionMessageCard = ({
                     style={{
                       flexDirection: 'row',
                       height: 50,
-                      // width: ms(250),
-                      // flex: 1,
-                      // alignItems: 'center',
-                      // overflow: 'hidden',
-                      // justifyContent: 'center', // Align center horizontally
                     }}>
                     <AudioRecordingPlayer remoteUrl={item?.resourceUrl} />
                   </View>
@@ -363,7 +342,6 @@ const ActionMessageCard = ({
                   />
                 )}
               </View>
-              {/* </Text> */}
               <View
                 style={{
                   justifyContent: 'flex-end',
@@ -382,63 +360,8 @@ const ActionMessageCard = ({
             </View>
           </View>
         </View>
-        {!isSameDate && (
-          <View>
-            <Text
-              style={{
-                color: '#808080',
-                textAlign: 'center',
-                marginTop: ms(15),
-                marginBottom: ms(3),
-              }}>
-              {chat?.timeToShow}
-            </Text>
-          </View>
-        )}
-        {optionsVisible && <OptionsList sentByMe={sentByMe} />}
       </TouchableOpacity>
-    );
-  } else {
-    return (
-      <AddRemoveJoinedMsg
-        senderName={SenderName}
-        content={chat?.content}
-        orgState={orgState}
-      />
     );
   }
 };
 export const ActionMessageCardMemo = React.memo(ActionMessageCard);
-
-const handleRepliedMessagePress = (
-  repliedMessage,
-  chatState,
-  chat,
-  flatListRef,
-) => {
-  if (repliedMessage) {
-    const index = chatState?.data[chat.teamId]?.messages.findIndex(
-      item => item._id === repliedMessage._id,
-    );
-    if (index !== -1) {
-      flatListRef?.current?.scrollToIndex({
-        index,
-        animated: true,
-        viewPosition: 0,
-        viewOffset: 50,
-      });
-    }
-  } else {
-    const index = chatState?.data[chat.teamId]?.messages.findIndex(
-      item => item?._id === chat?._id,
-    );
-    if (index !== -1) {
-      flatListRef?.current?.scrollToIndex({
-        index,
-        animated: true,
-        viewPosition: 0,
-        viewOffset: ms(50),
-      });
-    }
-  }
-};

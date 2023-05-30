@@ -296,7 +296,6 @@ const SearchChannelCard = ({
 }) => {
   const {deviceType} = useContext(AppContext);
   const {colors} = useTheme();
-
   const handleListItemPress = (
     teamId,
     channelType,
@@ -317,7 +316,10 @@ const SearchChannelCard = ({
   if (item?._source?.userId == userInfoState?.user?.id) {
     Name = item?._source?.title + ' (You)';
   }
-  const isArchived = item?._source?.isArchived;
+  const isArchived =
+    item?._source?.type == 'T'
+      ? item?._source?.isArchived
+      : !item?._source?.isEnabled;
   const teamId = item?._id?.includes('_')
     ? props?.channelsState?.userIdAndTeamIdMapping[item?._source?.userId]
     : item?._id;

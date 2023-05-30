@@ -1,6 +1,6 @@
 import {useNavigation, useTheme} from '@react-navigation/native';
 import React, {useEffect} from 'react';
-import {FlatList, Image, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, Image, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 import NoInternetComponent from '../../components/NoInternetComponent';
@@ -82,7 +82,8 @@ const CustomeDrawerScreen = ({
             justifyContent: 'space-between',
             padding: 8,
           }}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+         <ScrollView>
+         <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Image
               source={
                 item?.iconKey
@@ -112,6 +113,7 @@ const CustomeDrawerScreen = ({
             )}
             <Icon name="chevron-right" color={colors.textColor} />
           </View>
+         </ScrollView>
         </View>
       </TouchableOpacity>
     );

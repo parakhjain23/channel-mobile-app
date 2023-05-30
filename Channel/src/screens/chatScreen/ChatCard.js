@@ -258,6 +258,11 @@ const ChatCard = ({
   if (!isActivity) {
     return (
       <GestureHandlerRootView>
+        {channelType == 'DIRECT_MESSAGE' && !sameSender && (
+          <View style={[sentByMe ? styles.sentByMe : styles?.received]}>
+            <Text>{formatTime(chat?.createdAt)}</Text>
+          </View>
+        )}
         <TouchableOpacity
           activeOpacity={0.6}
           onLongPress={onLongPress}
@@ -273,7 +278,11 @@ const ChatCard = ({
                 sentByMe ? styles.sentByMe : styles.received,
                 {
                   backgroundColor: containerBackgroundColor,
-                  marginTop: sameSender ? ms(0) : ms(10),
+                  marginTop: sameSender
+                    ? ms(0)
+                    : channelType == 'DIRECT_MESSAGE'
+                    ? ms(0)
+                    : ms(10),
                   marginBottom: index == 0 ? 10 : 3,
                 },
               ]}>
@@ -290,8 +299,7 @@ const ChatCard = ({
                       <Text
                         style={[
                           styles.nameText,
-                          styles.text,
-                          {marginRight: 5},
+                          {marginRight: 5, color: textColor},
                         ]}>
                         {SenderName}
                       </Text>
@@ -489,8 +497,8 @@ const ChatCard = ({
                   <View
                     style={{
                       flexDirection: 'row',
-                      alignContent:'center',
-                      alignItems:'center',
+                      alignContent: 'center',
+                      alignItems: 'center',
                       // maxWidth: '90%',
                       // paddingRight: ms(10),
                     }}>

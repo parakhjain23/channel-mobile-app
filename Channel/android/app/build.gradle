@@ -141,8 +141,13 @@ android {
         applicationId "walkover.space.chat"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
+<<<<<<< Updated upstream
         versionCode 216
         versionName "2.1.6"
+=======
+        versionCode 214
+        versionName "2.1.4"
+>>>>>>> Stashed changes
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
         if (isNewArchitectureEnabled()) {

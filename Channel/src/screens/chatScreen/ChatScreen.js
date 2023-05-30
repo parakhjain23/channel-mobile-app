@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import uuid from 'react-native-uuid';
 import {
   FlatList,
@@ -170,9 +164,8 @@ const ChatScreen = ({
 
   useEffect(() => {
     if (
-      (!chatState?.data[teamId]?.messages ||
-        chatState?.data[teamId]?.messages.length === 0) &&
-      networkState?.isInternetConnected
+      !chatState?.data[teamId]?.messages ||
+      chatState?.data[teamId]?.messages.length === 0
     ) {
       fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
       setActiveChannelTeamIdAction(teamId);
@@ -574,7 +567,7 @@ const ChatScreen = ({
                             flex: 1,
                             justifyContent: 'center',
                             alignItems: 'center',
-                            maxHeight: height-300
+                            maxHeight: height - 300,
                           }}>
                           <ActionMessageCardMemo
                             chat={currentSelectChatCard}
