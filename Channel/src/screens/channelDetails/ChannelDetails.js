@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import {connect} from 'react-redux';
 import SearchBox from '../../components/searchBox';
 import {getChannelsByQueryStart} from '../../redux/actions/channels/ChannelsByQueryAction';
@@ -10,7 +10,6 @@ import {
 } from '../../redux/actions/channelActivities/inviteUserToChannelAction';
 import {useTheme} from '@react-navigation/native';
 import {makeStyles} from './Styles';
-import {Button} from 'react-native-paper';
 
 const ChannelDetailsScreen = ({
   route,
@@ -26,6 +25,8 @@ const ChannelDetailsScreen = ({
   const {teamId} = route?.params;
   const {colors} = useTheme();
   const styles = makeStyles(colors);
+  const RED_COLOR = '#FF2E2E';
+  const GREEN_COLOR = '#00A300';
 
   const changeText = value => {
     setsearchValue(value);
@@ -49,12 +50,7 @@ const ChannelDetailsScreen = ({
             {channelsState?.channelIdAndDataMapping[teamId]?.userIds.includes(
               item?._source?.userId,
             ) ? (
-              <Button
-                // title="REMOVE"
-                theme={{colors: {primary: 'red', outline: 'red'}}}
-                mode="outlined"
-                compact={true}
-                // textColor="red"
+              <TouchableOpacity
                 onPress={() => {
                   removeUserFromChannelAction(
                     [item?._source?.userId],
@@ -62,13 +58,17 @@ const ChannelDetailsScreen = ({
                     orgsState?.currentOrgId,
                     userInfoState?.accessToken,
                   );
-                }}>
-                REMOVE
-              </Button>
+                }}
+                style={[
+                  styles.buttonBorder,
+                  {borderColor: RED_COLOR, backgroundColor: RED_COLOR},
+                ]}>
+                <Text style={{color: '#ffffff', fontWeight: '500'}}>
+                  REMOVE
+                </Text>
+              </TouchableOpacity>
             ) : (
-              <Button
-                theme={{colors: {primary: 'green', outline: 'green'}}}
-                mode="outlined"
+              <TouchableOpacity
                 onPress={() => {
                   addUsersToChannelAction(
                     [item?._source?.userId],
@@ -76,9 +76,13 @@ const ChannelDetailsScreen = ({
                     orgsState?.currentOrgId,
                     userInfoState?.accessToken,
                   );
-                }}>
-                ADD
-              </Button>
+                }}
+                style={[
+                  styles.buttonBorder,
+                  {borderColor: GREEN_COLOR, backgroundColor: GREEN_COLOR},
+                ]}>
+                <Text style={{color: '#ffffff', fontWeight: '500'}}>ADD</Text>
+              </TouchableOpacity>
             )}
           </View>
         )
@@ -93,10 +97,7 @@ const ChannelDetailsScreen = ({
         <Text style={styles.memberText}>
           {orgsState?.userIdAndNameMapping[item]}
         </Text>
-        <Button
-          theme={{colors: {primary: 'red', outline: 'red'}}}
-          mode="outlined"
-          compact={true}
+        <TouchableOpacity
           onPress={() => {
             removeUserFromChannelAction(
               [item],
@@ -104,9 +105,13 @@ const ChannelDetailsScreen = ({
               orgsState?.currentOrgId,
               userInfoState?.accessToken,
             );
-          }}>
-          REMOVE
-        </Button>
+          }}
+          style={[
+            styles.buttonBorder,
+            {borderColor: RED_COLOR, backgroundColor: RED_COLOR},
+          ]}>
+          <Text style={{color: '#ffffff', fontWeight: '500'}}>REMOVE</Text>
+        </TouchableOpacity>
       </View>
     );
   };
