@@ -281,7 +281,7 @@ const ChatCard = ({
                 {channelType != 'DIRECT_MESSAGE' &&
                   SenderName != 'You' &&
                   !sameSender && (
-                    <View style={{flexDirection: 'row', marginTop:0,justifyContent:'space-between'}}>
+                    <View style={{flexDirection: 'row',justifyContent:'space-between'}}>
                       <Text style={[styles.nameText, styles.text,{fontSize:16,fontWeight:'500'}]}>
                         {SenderName}
                       </Text>
@@ -295,7 +295,7 @@ const ChatCard = ({
                               : dark
                               ? '#cccccc'
                               : 'black',
-                            marginLeft:10,
+
                           },
                         ]}>
                         {formatTime(chat?.createdAt)}

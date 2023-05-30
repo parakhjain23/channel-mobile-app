@@ -83,7 +83,7 @@ export const makeStyles = colors =>
       paddingHorizontal: 8,
       paddingVertical:3, 
       // borderRadius: ms(8),
-      flexDirection: 'column',
+      // flexDirection: 'column',
       maxWidth: '90%',
     },
     nameText: {
@@ -95,7 +95,7 @@ export const makeStyles = colors =>
       fontSize: 16,
     },
     timeText: {
-      fontSize: 10,
+      fontSize: 11,
       // marginLeft: ms(5),
       // marginRight: ms(-3),
       // marginBottom: ms(-4),
