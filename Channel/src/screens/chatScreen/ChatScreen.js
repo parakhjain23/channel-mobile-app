@@ -35,9 +35,9 @@ import {fetchSearchedUserProfileStart} from '../../redux/actions/user/searchUser
 import {pickDocument} from './DocumentPicker';
 import {launchCameraForPhoto, launchGallery} from './ImagePicker';
 import {makeStyles} from './Styles';
-import {useTheme} from '@react-navigation/native';
+import {useNavigationState, useTheme} from '@react-navigation/native';
 import AnimatedLottieView from 'lottie-react-native';
-import {s, ms, mvs} from 'react-native-size-matters';
+import {ms} from 'react-native-size-matters';
 import {setLocalMsgStart} from '../../redux/actions/chat/LocalMessageActions';
 import {resetUnreadCountStart} from '../../redux/actions/channels/ChannelsAction';
 import HTMLView from 'react-native-htmlview';
@@ -122,6 +122,7 @@ const ChatScreen = ({
   const [action, setaction] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const optionsPosition = useRef(new Animated.Value(0)).current;
+  const navigationState = useNavigationState(state => state);
 
   const teamIdAndUnreadCountMapping =
     channelsState?.teamIdAndUnreadCountMapping;
@@ -145,14 +146,11 @@ const ChatScreen = ({
   }
 
   useEffect(() => {
-    const cleanup = () => {
+    return () => {
       onStopRecord(setrecordingUrl, setvoiceAttachment);
       setisRecording(false);
-      setShowPlayer(false);
-      setvoiceAttachment('');
     };
-    return cleanup;
-  }, []);
+  }, [navigationState]);
 
   useEffect(() => {
     if (repliedMsgDetails != '' && !showPlayer) {
