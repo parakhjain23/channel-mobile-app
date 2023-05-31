@@ -90,9 +90,7 @@ const ChatScreen = ({
     var {teamId, reciverUserId, channelType, searchedChannel} = route.params;
   }
   if (teamId == undefined) {
-    console.log(reciverUserId, 'inside undefined');
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
-    console.log(teamId, 'this is team id');
   }
   if (teamId == 'demo') {
     return <FirstTabChatScreen />;

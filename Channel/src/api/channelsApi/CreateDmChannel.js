@@ -1,6 +1,11 @@
-import { Alert } from "react-native";
+import {Alert} from 'react-native';
 
-export const createDmChannel = async (token,orgId,channelName,reciverUserId) => {
+export const createDmChannel = async (
+  token,
+  orgId,
+  channelName,
+  reciverUserId,
+) => {
   try {
     var response = await fetch('https://api.intospace.io/chat/team', {
       method: 'POST',
@@ -10,15 +15,15 @@ export const createDmChannel = async (token,orgId,channelName,reciverUserId) => 
       },
       body: JSON.stringify({
         requestId: '123456781',
-        type: "DIRECT_MESSAGE",
+        type: 'DIRECT_MESSAGE',
         orgId: orgId,
-        userId: reciverUserId
+        userId: reciverUserId,
       }),
     });
     var result = await response.json();
-    if(result?.name=='GeneralError' || result?.name=='Conflict'){
+    if (result?.name == 'GeneralError' || result?.name == 'Conflict') {
     }
-    return result
+    return result;
   } catch (error) {
     console.warn(error);
   }

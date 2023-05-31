@@ -264,13 +264,14 @@ const SearchChannelCard = ({
   const teamId = item?._id?.includes('_')
     ? props?.channelsState?.userIdAndTeamIdMapping[item?._source?.userId]
     : item?._id;
+
   const iconName = useMemo(
     () => (item?._source?.type === 'U' ? 'user' : 'hashtag'),
     [item?._source?.type],
   );
 
   const onPress = useCallback(async () => {
-    if (!teamId) {
+    if (teamId == undefined) {
       await props?.createDmChannelAction(
         props?.userInfoState?.accessToken,
         props?.orgsState?.currentOrgId,

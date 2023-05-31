@@ -143,14 +143,15 @@ export function channelsReducer(state = initialState, action) {
       var userIdAndTeamIdMapping = {};
       var teamIdAndNameMapping = {};
       var teamIdAndTypeMapping = {};
+      var teamIdKey;
       if (action?.channel?.type == 'DIRECT_MESSAGE') {
         key =
           action?.channel.userIds[0] != action?.userId
             ? action?.channel?.userIds[0]
             : action?.channel.userIds[1];
-        teamId = action?.channel?._id;
-        userIdAndTeamIdMapping[key] = teamId;
-        teamIdAndTypeMapping[teamId] = action?.channel?.type;
+        teamIdKey = action?.channel?._id;
+        userIdAndTeamIdMapping[key] = teamIdKey;
+        teamIdAndTypeMapping[teamIdKey] = action?.channel?.type;
       } else if (
         action?.channel.type == 'PUBLIC' ||
         action?.channel?.type == 'DEFAULT' ||

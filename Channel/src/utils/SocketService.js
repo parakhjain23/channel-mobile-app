@@ -89,7 +89,6 @@ const SocketService = socket => {
   });
 
   socket.on('chat/team created', data => {
-    console.log('chat team created', data);
     if (data?.userIds?.includes(store?.getState()?.userInfoReducer?.user?.id)) {
       store.dispatch(
         createNewChannelSuccess(

@@ -16,8 +16,8 @@ export const sendMessageApi = async (
     // Replace mentions with HTML tags
     function mentionHTML(userId, match, username) {
       const base64UserId = base64.encode(userId);
-      if(username == 'channel'){
-       return  `<span class=\"mention\" data-index=\"0\" data-denotation-char=\"@\" data-id=\"@all\" data-username=\"channel\" data-value=\"channel\" data-identifier=\"@all\">﻿<span contenteditable=\"false\"><span class=\"ql-mention-denotation-char\">@</span>channel</span>﻿</span>`
+      if (username == 'channel') {
+        return `<span class=\"mention\" data-index=\"0\" data-denotation-char=\"@\" data-id=\"@all\" data-username=\"channel\" data-value=\"channel\" data-identifier=\"@all\">﻿<span contenteditable=\"false\"><span class=\"ql-mention-denotation-char\">@</span>channel</span>﻿</span>`;
       }
       return `<span class=\"mention\" data-index=\"2\" data-denotation-char=\"@\" data-id=\"${userId}\" data-username=\"${username}\" data-value=\"${username}\"><span contenteditable=\"false\">[${match}](MENTION-${base64UserId})</span></span>`;
     }
