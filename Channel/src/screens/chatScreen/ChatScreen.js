@@ -80,7 +80,6 @@ const ChatScreen = ({
   resetUnreadCountAction,
   addUsersToChannelAction,
   removeUserFromChannelAction,
-  props,
 }) => {
   var teamId, channelType;
   if (deviceType === DEVICE_TYPES[1]) {
@@ -88,6 +87,10 @@ const ChatScreen = ({
     channelType = chatDetailsForTab?.channelType;
   } else {
     var {teamId, reciverUserId, channelType, searchedChannel} = route.params;
+  }
+
+  if (teamId == undefined) {
+    teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
   }
 
   if (teamId == 'demo') {
@@ -140,10 +143,6 @@ const ChatScreen = ({
     ios: `sound.m4a`,
     android: `${RNFetchBlob.fs.dirs.CacheDir}/sound.mp3`,
   });
-
-  if (teamId == undefined) {
-    teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
-  }
 
   useEffect(() => {
     return () => {
