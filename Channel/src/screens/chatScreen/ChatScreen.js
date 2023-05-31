@@ -121,6 +121,7 @@ const ChatScreen = ({
   const [Activities, setActivities] = useState(false);
   const [action, setaction] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
+  const optionsPosition = useRef(new Animated.Value(0)).current;
 
   const teamIdAndUnreadCountMapping =
     channelsState?.teamIdAndUnreadCountMapping;
@@ -129,27 +130,28 @@ const ChatScreen = ({
   const accessToken = userInfoState?.accessToken;
   const currentOrgId = orgState?.currentOrgId;
   const emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
+  const shouldResetUnreadCount =
+    teamIdAndUnreadCountMapping?.[teamId] > 0 ||
+    teamIdAndBadgeCountMapping?.[teamId] > 0;
+  const skip = chatState?.data[teamId]?.messages?.length ?? 0;
 
   const path = Platform.select({
     ios: `sound.m4a`,
     android: `${RNFetchBlob.fs.dirs.CacheDir}/sound.mp3`,
   });
+
   if (teamId == undefined) {
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
   }
-  const shouldResetUnreadCount =
-    teamIdAndUnreadCountMapping?.[teamId] > 0 ||
-    teamIdAndBadgeCountMapping?.[teamId] > 0;
 
   useEffect(() => {
-    // Code to run when the component is mounted
-
-    return () => {
-      onStopRecord(setrecordingUrl, setvoiceAttachment),
-        setisRecording(false),
-        setShowPlayer(true);
+    const cleanup = () => {
+      onStopRecord(setrecordingUrl, setvoiceAttachment);
+      setisRecording(false);
+      setShowPlayer(false);
       setvoiceAttachment('');
     };
+    return cleanup;
   }, []);
 
   useEffect(() => {
@@ -158,14 +160,9 @@ const ChatScreen = ({
     }
   }, [repliedMsgDetails]);
 
-  const skip =
-    chatState?.data[teamId]?.messages?.length != undefined
-      ? chatState?.data[teamId]?.messages?.length
-      : 0;
-
   useEffect(() => {
     searchedChannel && textInputRef?.current?.focus();
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       if (shouldResetUnreadCount) {
         resetUnreadCountAction(
           currentOrgId,
@@ -177,27 +174,24 @@ const ChatScreen = ({
         );
       }
     }, 1000);
+    return () => clearTimeout(timeoutId);
   }, [teamId]);
 
   useEffect(() => {
+    const fetchData = () => {
+      fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
+      setActiveChannelTeamIdAction(teamId);
+    };
     if (
       !chatState?.data[teamId]?.messages ||
       chatState?.data[teamId]?.messages.length === 0
     ) {
-      fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
-      setActiveChannelTeamIdAction(teamId);
+      fetchData();
     } else if (chatState?.data[teamId]?.messages?.length > 0) {
-      const timeoutId = setTimeout(() => {
-        fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
-        setActiveChannelTeamIdAction(teamId);
-      }, 1200);
-      return () => {
-        clearTimeout(timeoutId);
-      };
+      const timeoutId = setTimeout(fetchData, 1200);
+      return () => clearTimeout(timeoutId);
     }
   }, [networkState?.isInternetConnected, teamId, chatDetailsForTab]);
-
-  const optionsPosition = useRef(new Animated.Value(0)).current;
 
   const showOptionsMethod = () => {
     setShowOptions(true);
@@ -226,7 +220,7 @@ const ChatScreen = ({
       const currentWord = words[words.length - 1];
       if (currentWord.startsWith('@')) {
         getChannelsByQueryStartAction(
-          currentWord.replace('@', ''),
+          currentWord.slice(1),
           userInfoState?.user?.id,
           orgState?.currentOrgId,
         );
@@ -234,8 +228,7 @@ const ChatScreen = ({
       } else if (
         words[0].startsWith('/') &&
         words.length === 1 &&
-        channelType != 'DIRECT_MESSAGE' &&
-        channelType != 'PERSONAL'
+        !['DIRECT_MESSAGE', 'PERSONAL'].includes(channelType)
       ) {
         setActivities(true);
         setMentions([]);
@@ -253,61 +246,73 @@ const ChatScreen = ({
   );
 
   const handleMentionSelect = mention => {
-    mention?._source?.userId != undefined
-      ? setMentionsArr(prevUserIds => [
-          ...prevUserIds,
-          mention?._source?.userId,
-        ])
-      : setMentionsArr(prevUserIds => [...prevUserIds, '@all']),
-      onChangeMessage(prevmessage =>
-        prevmessage.replace(
-          new RegExp(`@\\w*\\s?$`),
-          `@${mention?._source?.displayName} `,
-        ),
-      );
+    const userId = mention?._source?.userId;
+    const displayName = mention?._source?.displayName;
+
+    setMentionsArr(prevUserIds => [
+      ...prevUserIds,
+      userId !== undefined ? userId : '@all',
+    ]);
+    onChangeMessage(prevMessage => {
+      const regex = new RegExp(`@\\w*\\s?$`);
+      const replacement = `@${displayName} `;
+      return prevMessage.replace(regex, replacement);
+    });
     setMentions([]);
   };
 
   const handleActionSelect = action => {
     setaction(action);
-    onChangeMessage(prevmessage =>
-      prevmessage.replace(new RegExp(`/\\w*\\s?$`), `/${action} `),
-    );
+    onChangeMessage(prevMessage => {
+      const regex = new RegExp(`/\\w*\\s?$`);
+      const replacement = `/${action} `;
+      return prevMessage.replace(regex, replacement);
+    });
     setActivities(false);
   };
 
   const scrollToBottom = () => {
     FlatListRef?.current?.scrollToOffset({animating: true, offset: 0});
   };
+
   const renderMention = useMemo(
     () =>
-      ({item, index}) =>
-        item?._source?.type == 'U' && (
+      ({item, index}) => {
+        if (item?._source?.type !== 'U') {
+          return null;
+        }
+        const handlePress = () => handleMentionSelect(item);
+        return (
           <TouchableOpacity
-            onPress={() => handleMentionSelect(item)}
-            key={index}>
+            onPress={handlePress}
+            key={index}
+            style={{borderRadius: 6, margin: 1, padding: 2}}>
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                borderWidth: ms(0.7),
-                borderTopColor: 'grey',
-                margin: s(2),
-                padding: s(2),
+                borderWidth: 0.8,
+                borderColor: 'grey',
+                borderRadius: 6,
+                padding: 6,
+                backgroundColor: colors?.primaryColor,
               }}>
               <MaterialIcons
                 name="account-circle"
                 size={20}
-                color={colors.textColor}
+                color={colors.sentByMeCardColor}
+                style={{marginRight: 8}}
               />
-              <Text style={{fontSize: 16, margin: 4, color: colors.textColor}}>
+              <Text style={{fontSize: 16, color: colors?.textColor}}>
                 {item?._source?.displayName}
               </Text>
             </View>
           </TouchableOpacity>
-        ),
+        );
+      },
     [handleMentionSelect],
   );
+
   const renderActions = useMemo(
     () =>
       ({item, index}) =>
@@ -321,12 +326,13 @@ const ChatScreen = ({
                 alignItems: 'center',
                 borderWidth: 0.7,
                 borderTopColor: 'grey',
+                borderRadius: 10,
                 margin: 2,
                 padding: 2,
               }}>
               <Image
                 source={require('../../assests/images/appIcon/icon48size.png')}
-                style={{height: 30, width: 30}}
+                style={{height: 30, width: 30, marginRight: 4}}
               />
               <View>
                 <Text
@@ -347,16 +353,18 @@ const ChatScreen = ({
         ),
     [handleActionSelect],
   );
+
   const onScroll = Animated.event(
     [{nativeEvent: {contentOffset: {y: scrollY}}}],
     {
       useNativeDriver: true,
-      listener: event => {
-        const offsetY = event.nativeEvent.contentOffset.y;
+      listener: ({nativeEvent}) => {
+        const offsetY = nativeEvent.contentOffset.y;
         setIsScrolling(offsetY >= 0.7 * screenHeight);
       },
     },
   );
+
   const memoizedData = useMemo(
     () => chatState?.data[teamId]?.messages || [],
     [chatState?.data[teamId]?.messages],
@@ -384,31 +392,27 @@ const ChatScreen = ({
         />
       );
     },
-    [
-      chatState,
-      userInfoState,
-      orgState,
-      deleteMessageAction,
-      setreplyOnMessage,
-      setrepliedMsgDetails,
-    ],
+    [chatState, userInfoState, orgState, deleteMessageAction],
   );
 
   const onEndReached = useCallback(() => {
     fetchChatsOfTeamAction(teamId, userInfoState?.accessToken, skip);
-  }, [teamId, userInfoState, skip, fetchChatsOfTeamAction]);
+  }, [teamId, userInfoState?.accessToken, skip, fetchChatsOfTeamAction]);
 
   function renderNode(node, index, siblings, parent, defaultRenderer) {
-    if (node.attribs?.class == 'mention') {
+    const attribs = node?.attribs;
+    if (attribs?.class === 'mention') {
+      const dataValue = attribs['data-value'];
       return (
         <Text
           key={index}
           style={{color: 'black', textDecorationLine: 'underline'}}>
-          @{node?.attribs?.['data-value']}
+          @{dataValue}
         </Text>
       );
     }
   }
+
   const handleRefresh = () => {
     setRefreshing(true);
     fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
@@ -416,37 +420,41 @@ const ChatScreen = ({
       setRefreshing(false);
     }, 1500);
   };
+
   const htmlStyles = {
     div: {
       color: 'black',
     },
   };
 
-  const onSendPress = async () => {
-    let response;
-    const localMessage = message;
+  const onSendWithAction = () => {
     onChangeMessage('');
-    if (action == 'Invite') {
+    const hasMentions = mentionsArr?.length > 0;
+    if (action == ACTIVITIES[0]?.name && hasMentions) {
       addUsersToChannelAction(
         mentionsArr,
         teamId,
         orgState?.currentOrgId,
         userInfoState?.accessToken,
       );
-      setaction('');
-      setMentions([]);
-      setMentionsArr([]);
-    } else if (action == 'Remove') {
+    } else if (action == ACTIVITIES[1]?.name && hasMentions) {
       removeUserFromChannelAction(
         mentionsArr,
         teamId,
         orgState?.currentOrgId,
         userInfoState?.accessToken,
       );
-      setaction('');
-      setMentions([]);
-      setMentionsArr([]);
-    } else {
+    }
+    setaction('');
+    setMentions([]);
+    setMentionsArr([]);
+  };
+
+  const onSendPress = async () => {
+    const localMessage = message;
+    onChangeMessage('');
+
+    if (localMessage?.trim() !== '') {
       const randomId = uuid.v4();
       const messageContent = {
         randomId: randomId,
@@ -466,13 +474,12 @@ const ChatScreen = ({
       };
       setlocalMsgAction(messageContent);
 
-      if (
-        networkState?.isInternetConnected &&
-        (localMessage?.trim() !== '' || attachment?.length > 0 || showPlayer)
-      ) {
+      if (networkState?.isInternetConnected) {
+        let response;
         if (showPlayer) {
           response = await uploadRecording(recordingUrl, accessToken);
         }
+
         sendMessageAction(
           localMessage,
           teamId,
@@ -482,15 +489,8 @@ const ChatScreen = ({
           repliedMsgDetails?._id || null,
           attachment?.length > 0 ? attachment : response || [],
           mentionsArr,
-        ),
-          attachment?.length > 0 && setAttachment([]),
-          showOptions && hideOptionsMethod(),
-          mentionsArr?.length > 0 && setMentionsArr(''),
-          mentions?.length > 0 && setMentions([]),
-          replyOnMessage && setreplyOnMessage(false),
-          repliedMsgDetails && setrepliedMsgDetails(null);
-        showPlayer && setShowPlayer(false);
-      } else if (localMessage?.trim() !== '') {
+        );
+      } else {
         setGlobalMessageToSendAction({
           content: localMessage,
           teamId: teamId,
@@ -501,17 +501,19 @@ const ChatScreen = ({
           parentId: repliedMsgDetails?.id || null,
           updatedAt: date,
           mentionsArr: mentionsArr,
-        }),
-          attachment?.length > 0 && setAttachment([]),
-          showOptions && hideOptionsMethod(),
-          mentionsArr?.length > 0 && setMentionsArr(''),
-          mentions?.length > 0 && setMentions([]),
-          replyOnMessage && setreplyOnMessage(false),
-          repliedMsgDetails && setrepliedMsgDetails(null);
-        showPlayer && setShowPlayer(false);
+        });
       }
     }
+
+    attachment?.length > 0 && setAttachment([]),
+      showOptions && hideOptionsMethod(),
+      mentionsArr?.length > 0 && setMentionsArr(''),
+      mentions?.length > 0 && setMentions([]),
+      replyOnMessage && setreplyOnMessage(false),
+      repliedMsgDetails && setrepliedMsgDetails(null);
+    showPlayer && setShowPlayer(false);
   };
+
   return (
     <AppProvider>
       <SafeAreaView style={styles.safeAreaView}>
@@ -671,7 +673,9 @@ const ChatScreen = ({
                         setrepliedMsgDetails(null);
                       }}>
                       <View style={styles.replyMessageInInput}>
-                        {repliedMsgDetails?.mentions?.length > 0 ? (
+                        {repliedMsgDetails?.content?.includes(
+                          '<span class="mention"',
+                        ) ? (
                           <HTMLView
                             value={`<div>${repliedMsgDetails?.content}</div>`}
                             renderNode={renderNode}
@@ -858,15 +862,17 @@ const ChatScreen = ({
                   {message?.length > 0 ||
                   showPlayer ||
                   attachment?.length > 0 ? (
-                    <MaterialIcons
-                      name="send"
-                      size={25}
-                      style={{
-                        color: colors.textColor,
-                        padding: 15,
-                      }}
-                      onPress={onSendPress}
-                    />
+                    <TouchableOpacity
+                      onPress={!action ? onSendPress : onSendWithAction}>
+                      <MaterialIcons
+                        name="send"
+                        size={25}
+                        style={{
+                          color: colors.textColor,
+                          padding: 15,
+                        }}
+                      />
+                    </TouchableOpacity>
                   ) : !isRecording ? (
                     <MaterialIcons
                       name="mic"

@@ -4,7 +4,7 @@ import {s, vs, ms, mvs} from 'react-native-size-matters';
 export const makeStyles = colors =>
   StyleSheet.create({
     text: {
-      color: colors.sentByMeColor,
+      color: colors.color,
     },
     optionsText: {
       fontSize: 16,

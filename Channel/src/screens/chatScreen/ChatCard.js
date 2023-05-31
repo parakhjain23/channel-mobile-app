@@ -260,7 +260,9 @@ const ChatCard = ({
       <GestureHandlerRootView>
         {channelType == 'DIRECT_MESSAGE' && !sameSender && (
           <View style={[sentByMe ? styles.sentByMe : styles?.received]}>
-            <Text style={{fontSize: 12}}>{formatTime(chat?.createdAt)}</Text>
+            <Text style={{fontSize: 12, color: colors?.color}}>
+              {formatTime(chat?.createdAt)}
+            </Text>
           </View>
         )}
         <TouchableOpacity
@@ -340,8 +342,9 @@ const ChatCard = ({
                       <Text style={{color: 'black'}}>
                         <Icon name="attach-file" size={ms(14)} /> attachment
                       </Text>
-                    ) : chatState?.data[chat.teamId]?.parentMessages[parentId]
-                        ?.mentions?.length > 0 ? (
+                    ) : chatState?.data[chat.teamId]?.parentMessages[
+                        parentId
+                      ]?.content?.includes('<span class="mention"') > 0 ? (
                       <HTMLView
                         value={`<div>${
                           chatState?.data[chat.teamId]?.parentMessages[parentId]
@@ -376,8 +379,6 @@ const ChatCard = ({
                       imageUrls={[
                         {
                           url: selectedImage?.resourceUrl,
-                          // width: Dimensions.get('window')?.width - 20,
-                          // height: Dimensions.get('window')?.height,
                           freeHeight: true,
                           freeWidth: true,
                         },
