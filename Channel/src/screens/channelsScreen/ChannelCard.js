@@ -23,6 +23,7 @@ import {resetUnreadCountStart} from '../../redux/actions/channels/ChannelsAction
 import {closeChannelStart} from '../../redux/actions/channels/CloseChannelActions';
 import {AppContext} from '../appProvider/AppProvider';
 import {DEVICE_TYPES} from '../../constants/Constants';
+import {RightSwipeAction} from './components/RightActionsForChatCard';
 
 const TouchableItem =
   Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
@@ -88,7 +89,6 @@ const ChannelCard = ({
   }, [item?._id, teamIdAndUnreadCountMapping, highlightChannel]);
 
   const onPress = useCallback(() => {
-    // networkState?.isInternetConnected && resetChatsAction();
     if (deviceType === DEVICE_TYPES[1]) {
       handleListItemPress(item?._id, item?.type, userId, false);
     } else {
@@ -111,88 +111,30 @@ const ChannelCard = ({
     accessToken,
     // networkState,
   ]);
-  const renderRightActions = (progress, dragX) => {
-    const scale = dragX.interpolate({
-      inputRange: [-10, 0],
-      outputRange: [1, 0],
-      extrapolate: 'clamp',
-    });
-    return item?.type != 'PUBLIC' &&
-      (props?.channelsState?.teamIdAndUnreadCountMapping[item?._id] > 0 ||
-        props?.channelsState?.teamIdAndBadgeCountMapping[item?._id] >
-          0) ? null : (
-      <Animated.View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-          // paddingVertical: 10,
-          // paddingHorizontal: 15,
-          transform: [{scale}],
-        }}>
-        {item?.type != 'DIRECT_MESSAGE' &&
-          item?.type != 'DEFAULT' &&
-          item?.type != 'PERSONAL' && (
-            <TouchableOpacity
-              style={{
-                backgroundColor: '#f44336',
-                justifyContent: 'center',
-                paddingHorizontal: 15,
-                height: '100%',
-              }}
-              onPress={() => {
-                closeChannelAction(
-                  Name,
-                  item?._id,
-                  item?.type,
-                  props?.userInfoState?.accessToken,
-                ),
-                  swipeableRef?.current?.close();
-              }}>
-              <Text
-                style={{
-                  color: 'white',
-                  fontWeight: 'bold',
-                  fontSize: 14,
-                  textAlign: 'center',
-                }}>
-                Close{'\n'}Channel
-              </Text>
-            </TouchableOpacity>
-          )}
-        {props?.channelsState?.teamIdAndBadgeCountMapping[item?._id] == 0 && (
-          <TouchableOpacity
-            style={{
-              backgroundColor: '#ff9800',
-              justifyContent: 'center',
-              paddingHorizontal: 15,
-              height: '100%',
-            }}
-            onPress={() => {
-              markAsUnreadAction(
-                item?.orgId,
-                props?.userInfoState?.user?.id,
-                item?._id,
-                props?.userInfoState?.accessToken,
-                1,
-                0,
-              ),
-                swipeableRef?.current?.close();
-            }}>
-            <Text
-              style={{
-                color: 'white',
-                fontWeight: 'bold',
-                fontSize: 14,
-                textAlign: 'center',
-              }}>
-              Mark as{'\n'}Unread
-            </Text>
-          </TouchableOpacity>
-        )}
-      </Animated.View>
-    );
-  };
+  const renderRightActions = useCallback(
+    (progress, dragX) => {
+      const scale = dragX.interpolate({
+        inputRange: [-10, 0],
+        outputRange: [1, 0],
+        extrapolate: 'clamp',
+      });
+      return item?.type !== 'PUBLIC' &&
+        (props?.channelsState?.teamIdAndUnreadCountMapping[item?._id] > 0 ||
+          props?.channelsState?.teamIdAndBadgeCountMapping[item?._id] >
+            0) ? null : (
+        <RightSwipeAction
+          scale={scale}
+          swipeableRef={swipeableRef}
+          props={props}
+          markAsUnreadAction={markAsUnreadAction}
+          closeChannelAction={closeChannelAction}
+          item={item}
+          Name={Name}
+        />
+      );
+    },
+    [props, item, swipeableRef, markAsUnreadAction, closeChannelAction, Name],
+  );
 
   useLayoutEffect(() => {
     navigation.setOptions({

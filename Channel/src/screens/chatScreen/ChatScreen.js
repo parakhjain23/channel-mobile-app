@@ -89,7 +89,11 @@ const ChatScreen = ({
   } else {
     var {teamId, reciverUserId, channelType, searchedChannel} = route.params;
   }
-
+  if (teamId == undefined) {
+    console.log(reciverUserId, 'inside undefined');
+    teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
+    console.log(teamId, 'this is team id');
+  }
   if (teamId == 'demo') {
     return <FirstTabChatScreen />;
   }
@@ -133,9 +137,7 @@ const ChatScreen = ({
     ios: `sound.m4a`,
     android: `${RNFetchBlob.fs.dirs.CacheDir}/sound.mp3`,
   });
-  if (teamId == undefined) {
-    teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
-  }
+
   const shouldResetUnreadCount =
     teamIdAndUnreadCountMapping?.[teamId] > 0 ||
     teamIdAndBadgeCountMapping?.[teamId] > 0;
