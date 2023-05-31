@@ -525,12 +525,9 @@ const ChatScreen = ({
                 {teamId == undefined ||
                 chatState?.data[teamId]?.isloading == true ? (
                   <View style={styles.loadingContainer}>
-                    <AnimatedLottieView
-                      source={require('../../assests/images/attachments/loading.json')}
-                      loop
-                      autoPlay
-                      style={styles.animatedLottieView}
-                    />
+                    <Text style={{color: colors?.color, textAlign: 'center'}}>
+                      Loading...
+                    </Text>
                   </View>
                 ) : (
                   <>
