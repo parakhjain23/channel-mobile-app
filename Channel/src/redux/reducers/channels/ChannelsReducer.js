@@ -10,7 +10,7 @@ const initialState = {
   teamIdAndNameMapping: {},
   teamIdAndTypeMapping: {},
   teamIdAndUnreadCountMapping: {},
-  teamIdAndBadgeCountMapping:{}
+  teamIdAndBadgeCountMapping: {},
 };
 
 export function channelsReducer(state = initialState, action) {
@@ -28,7 +28,7 @@ export function channelsReducer(state = initialState, action) {
       return {...state, isLoading: true};
 
     case Actions.FETCH_CHANNELS_SUCCESS:
-      var {channels, userId,userName} = action;
+      var {channels, userId, userName} = action;
       var userIdAndTeamIdMapping = {};
       var teamIdAndNameMapping = {};
       var teamIdAndTypeMapping = {};
@@ -43,8 +43,8 @@ export function channelsReducer(state = initialState, action) {
           userIdAndTeamIdMapping[dmUserId] = _id;
         } else {
           if (type === 'PERSONAL') {
-            userIdAndTeamIdMapping[userIds[0]]=_id
-            channel.name = userName +" (You)"
+            userIdAndTeamIdMapping[userIds[0]] = _id;
+            channel.name = userName + ' (You)';
           }
           teamIdAndNameMapping[_id] = channel?.name;
         }
@@ -62,15 +62,15 @@ export function channelsReducer(state = initialState, action) {
       };
     case Actions.FETCH_CHANNEL_DETAILS_SUCCESS:
       let teamIdAndUnreadCountMapping = {};
-      let teamIdAndBadgeCountMapping = {}
+      let teamIdAndBadgeCountMapping = {};
       action?.payload?.map(team => {
         teamIdAndUnreadCountMapping[team?.teamId] = team?.unreadCount;
-        teamIdAndBadgeCountMapping[team?.teamId]=team?.badgeCount
+        teamIdAndBadgeCountMapping[team?.teamId] = team?.badgeCount;
       });
       return {
         ...state,
         teamIdAndUnreadCountMapping: teamIdAndUnreadCountMapping,
-        teamIdAndBadgeCountMapping: teamIdAndBadgeCountMapping
+        teamIdAndBadgeCountMapping: teamIdAndBadgeCountMapping,
       };
 
     case Actions.FETCH_RECENT_CHANNELS_SUCCESS:
@@ -88,16 +88,17 @@ export function channelsReducer(state = initialState, action) {
     case Actions.MOVE_CHANNEL_TO_TOP:
       var tempHighlightChannels = {};
       let teamIdAndUnreadCountMappingLocal = {};
-      let teamIdAndBadgeCountMappingLocal = {}
-      const newRecentChannels = [...state?.recentChannels]; 
+      let teamIdAndBadgeCountMappingLocal = {};
+      var newRecentChannels = state?.recentChannels;
       action?.channelId.forEach(id => {
         if (state?.activeChannelTeamId != id) {
           tempHighlightChannels[id] = true;
           if (action?.senderId != action?.userId) {
             teamIdAndUnreadCountMappingLocal[id] =
-              state?.teamIdAndUnreadCountMapping[id] !=undefined ? state?.teamIdAndUnreadCountMapping[id] + 1: 1;
-            teamIdAndBadgeCountMappingLocal[id]=
-              0
+              state?.teamIdAndUnreadCountMapping[id] != undefined
+                ? state?.teamIdAndUnreadCountMapping[id] + 1
+                : 1;
+            teamIdAndBadgeCountMappingLocal[id] = 0;
           }
         } else {
           tempHighlightChannels[id] = false;
@@ -132,10 +133,10 @@ export function channelsReducer(state = initialState, action) {
           ...state?.teamIdAndUnreadCountMapping,
           ...teamIdAndUnreadCountMappingLocal,
         },
-        teamIdAndBadgeCountMapping:{
+        teamIdAndBadgeCountMapping: {
           ...state?.teamIdAndBadgeCountMapping,
-          ...teamIdAndBadgeCountMappingLocal
-        }
+          ...teamIdAndBadgeCountMappingLocal,
+        },
       };
 
     case Actions.CREATE_NEW_CHANNEL_SUCCESS:
@@ -193,10 +194,10 @@ export function channelsReducer(state = initialState, action) {
           ...state?.teamIdAndUnreadCountMapping,
           [action?.teamId]: action?.response?.unreadCount,
         },
-        teamIdAndBadgeCountMapping:{
+        teamIdAndBadgeCountMapping: {
           ...state?.teamIdAndBadgeCountMapping,
-          [action?.teamId]: action?.response?.badgeCount
-        }
+          [action?.teamId]: action?.response?.badgeCount,
+        },
       };
 
     case Actions.RESET_ACTIVE_CHANNEL_TEAMID:
@@ -237,35 +238,36 @@ export function channelsReducer(state = initialState, action) {
         },
       };
     case Actions.CLOSE_CHANNEL_SUCCESS:
-      for(let i =0 ; i < state?.recentChannels?.length ; i++){
-        if(action?.teamId == state?.recentChannels[i]?._id){
-          state?.recentChannels?.splice(i,1)
-          break; 
+      for (let i = 0; i < state?.recentChannels?.length; i++) {
+        if (action?.teamId == state?.recentChannels[i]?._id) {
+          state?.recentChannels?.splice(i, 1);
+          break;
         }
       }
-      return {...state}
-    
+      return {...state};
+
     case Actions.ADD_USER_SUCCESS:
-      const {userIdToAdd,channelId}=action
-      var tempChannelIdAndDataMap = { ...state.channelIdAndDataMapping }
-      tempChannelIdAndDataMap[channelId].userIds?.push(userIdToAdd)
+      const {userIdToAdd, channelId} = action;
+      var tempChannelIdAndDataMap = {...state.channelIdAndDataMapping};
+      tempChannelIdAndDataMap[channelId].userIds?.push(userIdToAdd);
       return {
         ...state,
-        channelIdAndDataMapping:tempChannelIdAndDataMap
-      }
+        channelIdAndDataMapping: tempChannelIdAndDataMap,
+      };
 
     case Actions.REMOVE_USER_SUCCESS:
-        const {userIdToRemove,teamId}=action
-        var tempChannelIdAndDataMap = { ...state.channelIdAndDataMapping }
-        const index = tempChannelIdAndDataMap[teamId]?.userIds?.indexOf(userIdToRemove);
-        if (index !== -1) {
-          tempChannelIdAndDataMap[teamId]?.userIds.splice(index, 1);
-        }
-        return {
-          ...state,
-          channelIdAndDataMapping:tempChannelIdAndDataMap
-        }  
-      
+      const {userIdToRemove, teamId} = action;
+      var tempChannelIdAndDataMap = {...state.channelIdAndDataMapping};
+      const index =
+        tempChannelIdAndDataMap[teamId]?.userIds?.indexOf(userIdToRemove);
+      if (index !== -1) {
+        tempChannelIdAndDataMap[teamId]?.userIds.splice(index, 1);
+      }
+      return {
+        ...state,
+        channelIdAndDataMapping: tempChannelIdAndDataMap,
+      };
+
     case Actions.SIGN_OUT:
       return initialState;
     default:

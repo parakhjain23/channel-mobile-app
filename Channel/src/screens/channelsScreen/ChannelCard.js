@@ -74,7 +74,6 @@ const ChannelCard = ({
         ? userIdAndNameMapping[userId]
         : 'Loading...'
       : item?.name;
-
   const iconName =
     item?.type === 'DIRECT_MESSAGE'
       ? 'user'
