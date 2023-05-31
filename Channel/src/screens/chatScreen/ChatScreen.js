@@ -129,6 +129,7 @@ const ChatScreen = ({
   const accessToken = userInfoState?.accessToken;
   const currentOrgId = orgState?.currentOrgId;
   const emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
+
   const path = Platform.select({
     ios: `sound.m4a`,
     android: `${RNFetchBlob.fs.dirs.CacheDir}/sound.mp3`,
@@ -150,15 +151,18 @@ const ChatScreen = ({
       setvoiceAttachment('');
     };
   }, []);
+
   useEffect(() => {
     if (repliedMsgDetails != '' && !showPlayer) {
       textInputRef.current.focus();
     }
   }, [repliedMsgDetails]);
+
   const skip =
     chatState?.data[teamId]?.messages?.length != undefined
       ? chatState?.data[teamId]?.messages?.length
       : 0;
+
   useEffect(() => {
     searchedChannel && textInputRef?.current?.focus();
     setTimeout(() => {
