@@ -28,8 +28,6 @@ import {deleteMessageStart} from '../../redux/actions/chat/DeleteChatAction';
 import {ChatCardMemo} from './ChatCard';
 import {getChannelsByQueryStart} from '../../redux/actions/channels/ChannelsByQueryAction';
 import {fetchSearchedUserProfileStart} from '../../redux/actions/user/searchUserProfileActions';
-import {pickDocument} from './DocumentPicker';
-import {launchCameraForPhoto, launchGallery} from './ImagePicker';
 import {makeStyles} from './Styles';
 import {useNavigationState, useTheme} from '@react-navigation/native';
 import AnimatedLottieView from 'lottie-react-native';
@@ -49,12 +47,13 @@ import {
 import {ACTIVITIES, DEVICE_TYPES} from '../../constants/Constants';
 import ScrollDownButton from '../../components/ScrollDownButton';
 import AudioRecordingPlayer from '../../components/AudioRecorderPlayer';
-import AppProvider, {AppContext} from '../appProvider/AppProvider';
+import AppProvider from '../appProvider/AppProvider';
 import FirstTabChatScreen from './FirstTabChatScreen';
 import ActivityList from './components/ActivityList';
 import MentionList from './components/MentionList';
 import ActionModal from './components/ActionModal';
 import {Button} from 'react-native-paper';
+import AttachmentOptions from './components/AttachmentOptions';
 
 const ChatScreen = ({
   chatDetailsForTab,
@@ -122,7 +121,6 @@ const ChatScreen = ({
   const [Activities, setActivities] = useState(false);
   const [action, setaction] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
-  const optionsPosition = useRef(new Animated.Value(0)).current;
   const navigationState = useNavigationState(state => state);
   const isMountedRef = useRef(true);
 
@@ -190,26 +188,6 @@ const ChatScreen = ({
       return () => clearTimeout(timeoutId);
     }
   }, [networkState?.isInternetConnected, teamId, chatDetailsForTab]);
-
-  const showOptionsMethod = () => {
-    setShowOptions(true);
-    Animated.timing(optionsPosition, {
-      toValue: 0,
-      duration: 250,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const hideOptionsMethod = () => {
-    Animated.timing(optionsPosition, {
-      toValue: -200,
-      duration: 250,
-      useNativeDriver: true,
-    }).start();
-    setTimeout(() => {
-      setShowOptions(false);
-    }, 130);
-  };
 
   const handleInputChange = useCallback(
     text => {
@@ -487,21 +465,6 @@ const ChatScreen = ({
                 />
               )}
 
-              <MentionList
-                data={mentions}
-                setMentionsArr={setMentionsArr}
-                onChangeMessage={onChangeMessage}
-                setMentions={setMentions}
-              />
-
-              {Activities && (
-                <ActivityList
-                  setaction={setaction}
-                  onChangeMessage={onChangeMessage}
-                  setActivities={setActivities}
-                />
-              )}
-
               <View style={styles.bottomContainer}>
                 <View
                   style={[
@@ -581,20 +544,20 @@ const ChatScreen = ({
                     </TouchableOpacity>
                   )}
 
-                  {/* <MentionList
+                  <MentionList
                     data={mentions}
                     setMentionsArr={setMentionsArr}
                     onChangeMessage={onChangeMessage}
                     setMentions={setMentions}
-                  /> */}
+                  />
 
-                  {/* {Activities && (
+                  {Activities && (
                     <ActivityList
                       setaction={setaction}
                       onChangeMessage={onChangeMessage}
                       setActivities={setActivities}
                     />
-                  )} */}
+                  )}
 
                   {showPlayer && (
                     <View style={styles.playerContainer}>
@@ -655,70 +618,11 @@ const ChatScreen = ({
                         </View>
                       ) : (
                         <>
-                          <View style={{justifyContent: 'center'}}>
-                            {showOptions && (
-                              <Animated.View
-                                style={[
-                                  styles.optionsContainer,
-                                  {transform: [{translateX: optionsPosition}]},
-                                ]}>
-                                <View style={{flexDirection: 'row'}}>
-                                  <MaterialIcons
-                                    name="attach-file"
-                                    size={ms(20)}
-                                    style={styles.attachIcon}
-                                    onPress={() =>
-                                      pickDocument(
-                                        setAttachment,
-                                        userInfoState?.accessToken,
-                                        setAttachmentLoading,
-                                      )
-                                    }
-                                  />
-                                  <MaterialIcons
-                                    name="camera"
-                                    size={ms(20)}
-                                    style={styles.attachIcon}
-                                    onPress={() => {
-                                      launchCameraForPhoto(
-                                        userInfoState?.accessToken,
-                                        setAttachment,
-                                        setAttachmentLoading,
-                                      );
-                                    }}
-                                  />
-                                  <MaterialIcons
-                                    name="image"
-                                    size={ms(20)}
-                                    style={styles.attachIcon}
-                                    onPress={() => {
-                                      launchGallery(
-                                        userInfoState?.accessToken,
-                                        setAttachment,
-                                        setAttachmentLoading,
-                                      );
-                                    }}
-                                  />
-                                  <MaterialIcons
-                                    name="chevron-left"
-                                    size={ms(20)}
-                                    style={styles.attachIcon}
-                                    onPress={hideOptionsMethod}
-                                  />
-                                </View>
-                              </Animated.View>
-                            )}
-                          </View>
-                          <View style={{justifyContent: 'center'}}>
-                            {!showOptions && (
-                              <MaterialIcons
-                                name="add"
-                                size={ms(20)}
-                                style={styles.attachIcon}
-                                onPress={showOptionsMethod}
-                              />
-                            )}
-                          </View>
+                          <AttachmentOptions
+                            accessToken={accessToken}
+                            setAttachment={setAttachment}
+                            setAttachmentLoading={setAttachmentLoading}
+                          />
                           <TextInput
                             ref={textInputRef}
                             editable
