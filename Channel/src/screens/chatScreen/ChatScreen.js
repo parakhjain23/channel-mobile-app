@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import uuid from 'react-native-uuid';
 import {
-  FlatList,
   KeyboardAvoidingView,
   Text,
   TextInput,
@@ -12,9 +11,6 @@ import {
   SafeAreaView,
   useWindowDimensions,
   Platform,
-  Image,
-  Modal,
-  TouchableWithoutFeedback,
   StyleSheet,
   RefreshControl,
 } from 'react-native';
@@ -52,11 +48,13 @@ import {
 } from '../../redux/actions/channelActivities/inviteUserToChannelAction';
 import {ACTIVITIES, DEVICE_TYPES} from '../../constants/Constants';
 import ScrollDownButton from '../../components/ScrollDownButton';
-import {ActionMessageCardMemo} from './ActionMessageCard';
-import OptionList from './OptionList';
 import AudioRecordingPlayer from '../../components/AudioRecorderPlayer';
 import AppProvider, {AppContext} from '../appProvider/AppProvider';
 import FirstTabChatScreen from './FirstTabChatScreen';
+import ActivityList from './components/ActivityList';
+import MentionList from './components/MentionList';
+import ActionModal from './components/ActionModal';
+import {Button} from 'react-native-paper';
 
 const ChatScreen = ({
   chatDetailsForTab,
@@ -245,114 +243,9 @@ const ChatScreen = ({
     ],
   );
 
-  const handleMentionSelect = mention => {
-    const userId = mention?._source?.userId;
-    const displayName = mention?._source?.displayName;
-
-    setMentionsArr(prevUserIds => [
-      ...prevUserIds,
-      userId !== undefined ? userId : '@all',
-    ]);
-    onChangeMessage(prevMessage => {
-      const regex = new RegExp(`@\\w*\\s?$`);
-      const replacement = `@${displayName} `;
-      return prevMessage.replace(regex, replacement);
-    });
-    setMentions([]);
-  };
-
-  const handleActionSelect = action => {
-    setaction(action);
-    onChangeMessage(prevMessage => {
-      const regex = new RegExp(`/\\w*\\s?$`);
-      const replacement = `/${action} `;
-      return prevMessage.replace(regex, replacement);
-    });
-    setActivities(false);
-  };
-
   const scrollToBottom = () => {
     FlatListRef?.current?.scrollToOffset({animating: true, offset: 0});
   };
-
-  const renderMention = useMemo(
-    () =>
-      ({item, index}) => {
-        if (item?._source?.type !== 'U') {
-          return null;
-        }
-        const handlePress = () => handleMentionSelect(item);
-        return (
-          <TouchableOpacity
-            onPress={handlePress}
-            key={index}
-            style={{borderRadius: 6, margin: 1, padding: 2}}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                borderWidth: 0.8,
-                borderColor: 'grey',
-                borderRadius: 6,
-                padding: 6,
-                backgroundColor: colors?.primaryColor,
-              }}>
-              <MaterialIcons
-                name="account-circle"
-                size={20}
-                color={colors.sentByMeCardColor}
-                style={{marginRight: 8}}
-              />
-              <Text style={{fontSize: 16, color: colors?.textColor}}>
-                {item?._source?.displayName}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        );
-      },
-    [handleMentionSelect],
-  );
-
-  const renderActions = useMemo(
-    () =>
-      ({item, index}) =>
-        (
-          <TouchableOpacity
-            onPress={() => handleActionSelect(item?.name)}
-            key={index}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                borderWidth: 0.7,
-                borderTopColor: 'grey',
-                borderRadius: 10,
-                margin: 2,
-                padding: 2,
-              }}>
-              <Image
-                source={require('../../assests/images/appIcon/icon48size.png')}
-                style={{height: 30, width: 30, marginRight: 4}}
-              />
-              <View>
-                <Text
-                  style={{fontSize: 16, margin: 4, color: colors.textColor}}>
-                  {item?.name}
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 13,
-                    marginLeft: 4,
-                    color: colors.textColor,
-                  }}>
-                  {item?.desc}
-                </Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        ),
-    [handleActionSelect],
-  );
 
   const onScroll = Animated.event(
     [{nativeEvent: {contentOffset: {y: scrollY}}}],
@@ -454,7 +347,7 @@ const ChatScreen = ({
     const localMessage = message;
     onChangeMessage('');
 
-    if (localMessage?.trim() !== '' || showPlayer) {
+    if (localMessage?.trim() !== '' || showPlayer || attachment?.length > 0) {
       const randomId = uuid.v4();
       const messageContent = {
         randomId: randomId,
@@ -566,6 +459,7 @@ const ChatScreen = ({
                   isNewMessage={false}
                 />
               </View>
+
               {attachmentLoading && (
                 <AnimatedLottieView
                   source={require('../../assests/images/attachments/uploading.json')}
@@ -574,70 +468,45 @@ const ChatScreen = ({
                   style={styles.attachmentLoading}
                 />
               )}
+
               {showActions && (
-                <Modal
-                  animationType="fade"
-                  transparent={true}
-                  onRequestClose={() => setShowActions(false)}
-                  style={{flex: 1}}>
-                  <TouchableWithoutFeedback
-                    onPress={() => setShowActions(false)}>
-                    <View
-                      style={{
-                        flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        alignContent: 'center',
-                        backgroundColor: 'rgba(0, 0, 0, 0.9)',
-                      }}>
-                      <TouchableWithoutFeedback
-                        onPress={() => setShowActions(false)}>
-                        <View
-                          style={{
-                            flex: 1,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            maxHeight: height - 300,
-                          }}>
-                          <ActionMessageCardMemo
-                            chat={currentSelectChatCard}
-                            userInfoState={userInfoState}
-                            orgState={orgState}
-                            deleteMessageAction={deleteMessageAction}
-                            chatState={chatState}
-                            setreplyOnMessage={setreplyOnMessage}
-                            setrepliedMsgDetails={setrepliedMsgDetails}
-                            searchUserProfileAction={searchUserProfileAction}
-                            flatListRef={FlatListRef}
-                            channelType={channelType}
-                            setShowActions={setShowActions}
-                            setCurrentSelectedChatCard={
-                              setCurrentSelectedChatCard
-                            }
-                          />
-                          <OptionList
-                            sentByMe={
-                              currentSelectChatCard?.senderId ==
-                              userInfoState?.user?.id
-                                ? true
-                                : false
-                            }
-                            chat={currentSelectChatCard}
-                            setreplyOnMessage={setreplyOnMessage}
-                            setrepliedMsgDetails={setrepliedMsgDetails}
-                            setShowActions={setShowActions}
-                          />
-                        </View>
-                      </TouchableWithoutFeedback>
-                    </View>
-                  </TouchableWithoutFeedback>
-                </Modal>
+                <ActionModal
+                  setShowActions={setShowActions}
+                  chat={currentSelectChatCard}
+                  userInfoState={userInfoState}
+                  orgState={orgState}
+                  deleteMessageAction={deleteMessageAction}
+                  chatState={chatState}
+                  setreplyOnMessage={setreplyOnMessage}
+                  setrepliedMsgDetails={setrepliedMsgDetails}
+                  searchUserProfileAction={searchUserProfileAction}
+                  flatListRef={FlatListRef}
+                  channelType={channelType}
+                  setCurrentSelectedChatCard={setCurrentSelectedChatCard}
+                  currentSelectChatCard={currentSelectChatCard}
+                />
               )}
+
+              <MentionList
+                data={mentions}
+                setMentionsArr={setMentionsArr}
+                onChangeMessage={onChangeMessage}
+                setMentions={setMentions}
+              />
+
+              {Activities && (
+                <ActivityList
+                  setaction={setaction}
+                  onChangeMessage={onChangeMessage}
+                  setActivities={setActivities}
+                />
+              )}
+
               <View style={styles.bottomContainer}>
                 <View
                   style={[
                     replyOnMessage && styles.inputWithReplyContainer,
-                    {width: '87%'},
+                    {width: isRecording ? '100%' : '87%'},
                   ]}>
                   {attachment?.length > 0 &&
                     attachment?.map((item, index) => {
@@ -662,6 +531,7 @@ const ChatScreen = ({
                         </TouchableOpacity>
                       );
                     })}
+
                   {replyOnMessage && (
                     <TouchableOpacity
                       activeOpacity={0.9}
@@ -711,20 +581,20 @@ const ChatScreen = ({
                     </TouchableOpacity>
                   )}
 
-                  <FlatList
+                  {/* <MentionList
                     data={mentions}
-                    renderItem={renderMention}
-                    style={styles.mentionsList}
-                    keyboardShouldPersistTaps="always"
-                  />
-                  {Activities && (
-                    <FlatList
-                      data={ACTIVITIES}
-                      renderItem={renderActions}
-                      style={styles.mentionsList}
-                      keyboardShouldPersistTaps="always"
+                    setMentionsArr={setMentionsArr}
+                    onChangeMessage={onChangeMessage}
+                    setMentions={setMentions}
+                  /> */}
+
+                  {/* {Activities && (
+                    <ActivityList
+                      setaction={setaction}
+                      onChangeMessage={onChangeMessage}
+                      setActivities={setActivities}
                     />
-                  )}
+                  )} */}
 
                   {showPlayer && (
                     <View style={styles.playerContainer}>
@@ -750,15 +620,38 @@ const ChatScreen = ({
                       />
                     </View>
                   )}
+
                   {!showPlayer && (
                     <View style={styles.inputContainer}>
                       {isRecording ? (
-                        <View style={{flex: 1, minHeight: 40}}>
-                          <AnimatedLottieView
-                            source={require('../../assests/images/attachments/recordingWave.json')}
-                            loop
-                            autoPlay
-                          />
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                          }}>
+                          <View style={{flex: 1, alignItems: 'center'}}>
+                            <AnimatedLottieView
+                              source={require('../../assests/images/attachments/recording.json')}
+                              loop
+                              autoPlay
+                              style={{width: 100, height: 100}}
+                            />
+                          </View>
+                          <Button
+                            mode="contained"
+                            icon="microphone-off"
+                            buttonColor="#756EF6"
+                            onPress={() => {
+                              onStopRecord(
+                                setrecordingUrl,
+                                setvoiceAttachment,
+                                isMountedRef,
+                              ),
+                                setisRecording(false),
+                                setShowPlayer(true);
+                            }}>
+                            STOP
+                          </Button>
                         </View>
                       ) : (
                         <>
@@ -870,30 +763,17 @@ const ChatScreen = ({
                         }}
                       />
                     </TouchableOpacity>
-                  ) : !isRecording ? (
-                    <MaterialIcons
-                      name="mic"
-                      size={25}
-                      style={{color: colors.textColor, padding: 15}}
-                      onPress={() => {
-                        onStartRecord(setisRecording);
-                      }}
-                    />
                   ) : (
-                    <MaterialIcons
-                      name="mic-off"
-                      size={25}
-                      style={{color: colors.textColor, padding: 15}}
-                      onPress={() => {
-                        onStopRecord(
-                          setrecordingUrl,
-                          setvoiceAttachment,
-                          isMountedRef,
-                        ),
-                          setisRecording(false),
-                          setShowPlayer(true);
-                      }}
-                    />
+                    !isRecording && (
+                      <MaterialIcons
+                        name="mic"
+                        size={25}
+                        style={{color: colors.textColor, padding: 15}}
+                        onPress={() => {
+                          onStartRecord(setisRecording);
+                        }}
+                      />
+                    )
                   )}
                 </View>
               </View>

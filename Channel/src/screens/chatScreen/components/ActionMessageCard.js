@@ -12,18 +12,18 @@ import {GestureHandlerRootView, Swipeable} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Linking} from 'react-native';
 import {useTheme} from '@react-navigation/native';
-import {makeStyles} from './ChatCardStyles';
+import {makeStyles} from '../ChatCardStyles';
 import {ms, s} from 'react-native-size-matters';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import Clipboard from '@react-native-community/clipboard';
 import HTMLView from 'react-native-htmlview';
 import {RenderHTML} from 'react-native-render-html';
-import * as RootNavigation from '../../navigation/RootNavigation';
-import {tagsStyles} from './HtmlStyles';
+import * as RootNavigation from '../../../navigation/RootNavigation';
+import {tagsStyles} from '../HtmlStyles';
 import WebView from 'react-native-webview';
-import {formatTime} from '../../utils/FormatTime';
-import AudioRecordingPlayer from '../../components/AudioRecorderPlayer';
+import {formatTime} from '../../../utils/FormatTime';
+import AudioRecordingPlayer from '../../../components/AudioRecorderPlayer';
 
 const ActionMessageCard = ({
   chat,
@@ -273,7 +273,7 @@ const ActionMessageCard = ({
                         }}>
                         {item?.contentType?.includes('pdf') && (
                           <Image
-                            source={require('../../assests/images/attachments/pdfLogo.png')}
+                            source={require('../../../assests/images/attachments/pdfLogo.png')}
                             style={{
                               width: ms(40),
                               height: ms(40),
@@ -283,7 +283,7 @@ const ActionMessageCard = ({
                         )}
                         {item?.contentType?.includes('doc') && (
                           <Image
-                            source={require('../../assests/images/attachments/docLogo.png')}
+                            source={require('../../../assests/images/attachments/docLogo.png')}
                             style={{
                               width: ms(40),
                               height: ms(40),

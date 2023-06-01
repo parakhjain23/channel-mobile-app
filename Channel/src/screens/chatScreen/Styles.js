@@ -104,7 +104,7 @@ export const makeStyles = colors =>
       elevation: 17,
     },
     bottomContainer: {
-      marginBottom: 10,
+      // marginBottom: 10,
       marginLeft: 0,
       flexDirection: 'row',
     },

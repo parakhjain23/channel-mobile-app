@@ -3,11 +3,12 @@ import {Text, TouchableOpacity, Vibration, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {ms, s} from 'react-native-size-matters';
 import {useTheme} from '@react-navigation/native';
-import {makeStyles} from './ChatCardStyles';
+import {makeStyles} from '../ChatCardStyles';
 import Clipboard from '@react-native-community/clipboard';
 import {connect} from 'react-redux';
-import {deleteMessageStart} from '../../redux/actions/chat/DeleteChatAction';
-const OptionList = ({
+import {deleteMessageStart} from '../../../redux/actions/chat/DeleteChatAction';
+
+const ActionList = ({
   sentByMe,
   chat,
   setreplyOnMessage,
@@ -122,4 +123,4 @@ const mapDispatchToProps = dispatch => {
       dispatch(deleteMessageStart(accessToken, msgId)),
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(OptionList);
+export default connect(mapStateToProps, mapDispatchToProps)(ActionList);
