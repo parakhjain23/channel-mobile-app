@@ -74,7 +74,7 @@ export const makeStyles = colors =>
       borderRadius: 5,
       marginBottom: 4,
     },
-    mentionsList: {maxHeight: 140},
+    mentionsList: {maxHeight: 250},
     option: {
       margin: 8,
       backgroundColor: 'yellow',
