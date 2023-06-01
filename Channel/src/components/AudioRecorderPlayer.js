@@ -37,8 +37,8 @@ const AudioRecordingPlayer = ({remoteUrl}) => {
 
   const onStopPlay = async () => {
     try {
-      await audioRecorderPlayer.stopPlayer();
       setIsPlaying(false);
+      await audioRecorderPlayer.stopPlayer();
     } catch (error) {
       console.error('Failed to stop playing:', error);
     }

@@ -126,6 +126,7 @@ const ChatScreen = ({
   const [refreshing, setRefreshing] = useState(false);
   const optionsPosition = useRef(new Animated.Value(0)).current;
   const navigationState = useNavigationState(state => state);
+  const isMountedRef = useRef(true);
 
   const teamIdAndUnreadCountMapping =
     channelsState?.teamIdAndUnreadCountMapping;
@@ -146,7 +147,9 @@ const ChatScreen = ({
 
   useEffect(() => {
     return () => {
-      onStopRecord(setrecordingUrl, setvoiceAttachment);
+      // Set the mounted state to false when the component is unmounted
+      isMountedRef.current = false;
+      onStopRecord(setrecordingUrl, setvoiceAttachment, isMountedRef);
       setisRecording(false);
     };
   }, [navigationState]);
@@ -451,7 +454,7 @@ const ChatScreen = ({
     const localMessage = message;
     onChangeMessage('');
 
-    if (localMessage?.trim() !== '') {
+    if (localMessage?.trim() !== '' || showPlayer) {
       const randomId = uuid.v4();
       const messageContent = {
         randomId: randomId,
@@ -471,7 +474,7 @@ const ChatScreen = ({
       };
       setlocalMsgAction(messageContent);
 
-      if (networkState?.isInternetConnected) {
+      if (networkState?.isInternetConnected || showPlayer) {
         let response;
         if (showPlayer) {
           response = await uploadRecording(recordingUrl, accessToken);
@@ -881,7 +884,11 @@ const ChatScreen = ({
                       size={25}
                       style={{color: colors.textColor, padding: 15}}
                       onPress={() => {
-                        onStopRecord(setrecordingUrl, setvoiceAttachment),
+                        onStopRecord(
+                          setrecordingUrl,
+                          setvoiceAttachment,
+                          isMountedRef,
+                        ),
                           setisRecording(false),
                           setShowPlayer(true);
                       }}
