@@ -476,7 +476,6 @@ const ChatScreen = ({
         if (showPlayer) {
           response = await uploadRecording(recordingUrl, accessToken);
         }
-
         sendMessageAction(
           localMessage,
           teamId,

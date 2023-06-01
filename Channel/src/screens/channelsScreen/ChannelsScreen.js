@@ -1,16 +1,9 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
-  Alert,
-  FlatList,
-  Text,
-  TouchableOpacity,
   View,
-  Button,
-  ScrollView,
   Animated,
   KeyboardAvoidingView,
-  RefreshControl,
   Dimensions,
   SafeAreaView,
 } from 'react-native';
@@ -18,9 +11,7 @@ import {connect} from 'react-redux';
 import {getChannelsStart} from '../../redux/actions/channels/ChannelsAction';
 import SearchBox from '../../components/searchBox';
 import {useIsFocused, useNavigation, useTheme} from '@react-navigation/native';
-import {FAB, RadioButton, TextInput} from 'react-native-paper';
-import {Modalize} from 'react-native-modalize';
-import {CHANNEL_TYPE, DEVICE_TYPES} from '../../constants/Constants';
+import {DEVICE_TYPES} from '../../constants/Constants';
 import {createNewChannelStart} from '../../redux/actions/channels/CreateNewChannelAction';
 import {getChannelsByQueryStart} from '../../redux/actions/channels/ChannelsByQueryAction';
 import {createNewDmChannelStart} from '../../redux/actions/channels/CreateNewDmChannelAction';
@@ -29,17 +20,10 @@ import {
   setActiveChannelTeamId,
 } from '../../redux/actions/channels/SetActiveChannelId';
 import NoChannelsFound from './components/NoChannelsFound';
-import {
-  RenderChannels,
-  RenderSearchChannels,
-  RenderUsersToAdd,
-} from './ChannelCard';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import NoInternetComponent from '../../components/NoInternetComponent';
-import {s, vs, ms, mvs} from 'react-native-size-matters';
 import {getAllUsersOfOrgStart} from '../../redux/actions/org/GetAllUsersOfOrg';
 import {getChatsReset} from '../../redux/actions/chat/ChatActions';
-import AppProvider, {AppContext} from '../appProvider/AppProvider';
+import AppProvider from '../appProvider/AppProvider';
 import SearchChannelList from './components/SearchChannelList';
 import RecentChannelsList from './components/RecentChannelsList';
 import {AddFabButton, SearchFabButton} from './components/AddAndSearchFab';
