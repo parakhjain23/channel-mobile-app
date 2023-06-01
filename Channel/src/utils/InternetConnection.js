@@ -22,7 +22,7 @@ const InternetConnection = ({
     };
   }, []);
   useEffect(() => {
-    if (networkState?.isInternetConnected && socketState?.isSocketConnected) {
+    if (socketState?.isSocketConnected) {
       Object.keys(chatState?.data)?.map(async teamId => {
         while (chatState?.data[teamId]?.globalMessagesToSend?.length) {
           await sendGlobalMessageApi(

@@ -60,7 +60,6 @@ export async function onStopRecord(
     AudioRecorderPlay.removeRecordBackListener();
 
     if (!result?.includes('Already stopped')) {
-      console.log(result);
       setrecordingUrl(result);
       setvoiceAttachment([
         {
