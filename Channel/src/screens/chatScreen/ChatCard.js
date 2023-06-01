@@ -415,7 +415,9 @@ const ChatCard = ({
                         style={{
                           flexDirection: 'row',
                           height: 50,
-                          // width: ms(250),
+                          width: item?.resourceUrl?.startsWith('file://')
+                            ? ms(280)
+                            : null,
                           flex: 1,
                           alignItems: 'center',
                           overflow: 'hidden',

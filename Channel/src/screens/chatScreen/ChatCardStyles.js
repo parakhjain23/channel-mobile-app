@@ -80,10 +80,6 @@ export const makeStyles = colors =>
     },
     textContainer: {
       padding: ms(6),
-      // paddingHorizontal: 8,
-      // paddingVertical:3,
-      // borderRadius: ms(8),
-      // flexDirection: 'column',
       maxWidth: '90%',
     },
     nameText: {

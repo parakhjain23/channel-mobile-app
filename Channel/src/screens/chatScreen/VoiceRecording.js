@@ -31,7 +31,9 @@ export const onStartRecord = async setIsRecording => {
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         setIsRecording(true);
         const result = await AudioRecorderPlay.startRecorder(path, audioSet);
-        AudioRecorderPlay?.addRecordBackListener(e => null);
+        AudioRecorderPlay?.addRecordBackListener(e => {
+          // console.log(e.currentPosition);
+        });
       } else {
       }
     } else {
@@ -46,17 +48,29 @@ export const onStartRecord = async setIsRecording => {
   }
 };
 
-export async function onStopRecord(setrecordingUrl, setvoiceAttachment) {
+export async function onStopRecord(
+  setrecordingUrl,
+  setvoiceAttachment,
+  isMountedRef,
+) {
   const result = await AudioRecorderPlay.stopRecorder();
-  AudioRecorderPlay.removeRecordBackListener();
-  setrecordingUrl(result);
-  setvoiceAttachment([
-    {
-      title: 'recording',
-      key: '123',
-      resourceUrl: result,
-      contentType: 'audio/mpeg',
-      encoding: '',
-    },
-  ]);
+
+  // Check if the component is still mounted before updating the state
+  if (isMountedRef.current) {
+    AudioRecorderPlay.removeRecordBackListener();
+
+    if (!result?.includes('Already stopped')) {
+      console.log(result);
+      setrecordingUrl(result);
+      setvoiceAttachment([
+        {
+          title: 'recording',
+          key: '123',
+          resourceUrl: result,
+          contentType: 'audio/mpeg',
+          encoding: '',
+        },
+      ]);
+    }
+  }
 }
