@@ -105,11 +105,12 @@ const ActionMessageCard = ({
     }
   };
 
-  const htmlStyles = {
+  const htmlStyles = color => ({
     div: {
-      color: textColor,
+      color: color,
+      fontSize: 16,
     },
-  };
+  });
   function renderNode(node, index, siblings, parent, defaultRenderer) {
     if (node.attribs?.class == 'mention') {
       return (
@@ -128,7 +129,15 @@ const ActionMessageCard = ({
                   ],
               });
           }}>
-          <Text style={{color: linkColor, textDecorationLine: 'underline'}}>
+          <Text
+            style={{
+              color: chatState?.data[chat.teamId]?.parentMessages[parentId]
+                ?.content
+                ? 'black'
+                : linkColor,
+              textDecorationLine: 'underline',
+              fontSize: 16,
+            }}>
             @{node?.attribs?.['data-value']}
           </Text>
         </TouchableOpacity>
@@ -150,7 +159,7 @@ const ActionMessageCard = ({
               marginBottom: index == 0 ? 10 : 3,
             },
           ]}>
-          <View style={[styles.textContainer]}>
+          <View style={[styles.textContainer, {padding: 10}]}>
             {
               <View
                 style={{
@@ -161,7 +170,7 @@ const ActionMessageCard = ({
                 <Text
                   style={[
                     styles.nameText,
-                    {color: textColor, marginRight: 10},
+                    {color: textColor, marginRight: 10, fontSize: 18},
                   ]}>
                   {SenderName}
                 </Text>
@@ -171,6 +180,7 @@ const ActionMessageCard = ({
                     styles.text,
                     {
                       color: sentByMe ? '#cccccc' : dark ? '#cccccc' : 'black',
+                      fontSize: 13,
                     },
                   ]}>
                   {time}
@@ -184,14 +194,16 @@ const ActionMessageCard = ({
                   <Text style={{color: 'black'}}>
                     <Icon name="attach-file" size={ms(14)} /> attachment
                   </Text>
-                ) : chat?.mentions?.length > 0 ? (
+                ) : chatState?.data[chat.teamId]?.parentMessages[
+                    parentId
+                  ]?.content?.includes('<span class="mention"') > 0 ? (
                   <HTMLView
                     value={`<div>${
                       chatState?.data[chat.teamId]?.parentMessages[parentId]
                         ?.content
                     }</div>`}
                     renderNode={renderNode}
-                    stylesheet={htmlStyles}
+                    stylesheet={htmlStyles('black')}
                   />
                 ) : (
                   <RenderHTML
@@ -322,11 +334,11 @@ const ActionMessageCard = ({
                 style={{
                   flexDirection: 'row',
                 }}>
-                {chat?.mentions?.length > 0 ? (
+                {chat?.content?.includes('<span class="mention"') ? (
                   <HTMLView
                     value={`<div>${chat?.content}</div>`}
                     renderNode={renderNode}
-                    stylesheet={htmlStyles}
+                    stylesheet={htmlStyles(textColor)}
                   />
                 ) : (
                   <RenderHTML
