@@ -91,8 +91,9 @@ const ProtectedNavigation = props => {
       color: colors.textColor,
       backgroundColor: colors.headerColor,
     },
-    // statusBarColor: 'transparent',
-    // statusBarTranslucent: true,
+    statusBarColor: 'transparent',
+    statusBarTranslucent: true,
+    statusBarStyle: colors?.primaryColor == '#ffffff' ? 'dark' : 'light',
   };
   return props?.orgsState?.currentOrgId == null ? (
     <Stack.Navigator>
