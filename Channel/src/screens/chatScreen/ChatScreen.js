@@ -350,16 +350,16 @@ const ChatScreen = ({
         if (showPlayer) {
           response = await uploadRecording(recordingUrl, accessToken);
         }
-        sendMessageAction(
-          localMessage,
-          teamId,
-          orgState?.currentOrgId,
-          userInfoState?.user?.id,
-          userInfoState?.accessToken,
-          repliedMsgDetails?._id || null,
-          attachment?.length > 0 ? attachment : response || [],
-          mentionsArr,
-        );
+        // sendMessageAction(
+        //   localMessage,
+        //   teamId,
+        //   orgState?.currentOrgId,
+        //   userInfoState?.user?.id,
+        //   userInfoState?.accessToken,
+        //   repliedMsgDetails?._id || null,
+        //   attachment?.length > 0 ? attachment : response || [],
+        //   mentionsArr,
+        // );
       } else {
         setGlobalMessageToSendAction({
           content: localMessage,

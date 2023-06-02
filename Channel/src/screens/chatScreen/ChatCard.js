@@ -408,7 +408,6 @@ const ChatCard = ({
                           style={{
                             height: 150,
                             width: 150,
-                            opacity: optionsVisible ? 0.6 : 1,
                           }}
                         />
                       </TouchableOpacity>
@@ -455,9 +454,9 @@ const ChatCard = ({
                               <Image
                                 source={require('../../assests/images/attachments/pdfLogo.png')}
                                 style={{
-                                  width: ms(40),
-                                  height: ms(40),
-                                  marginRight: ms(5),
+                                  width: 40,
+                                  height: 40,
+                                  marginRight: 15,
                                 }}
                               />
                             )}
@@ -465,27 +464,21 @@ const ChatCard = ({
                               <Image
                                 source={require('../../assests/images/attachments/docLogo.png')}
                                 style={{
-                                  width: ms(40),
-                                  height: ms(40),
-                                  marginRight: ms(5),
+                                  width: 40,
+                                  height: 40,
+                                  marginRight: 15,
                                 }}
                               />
                             )}
 
                             <View>
                               <Text style={{color: 'black'}}>
-                                {item?.title?.slice(0, 10) + '...'}
+                                {item?.title?.slice(0, 15) + '...'}
                               </Text>
                               <Text style={{color: 'black'}}>
-                                {'...' + item?.contentType?.slice(-10)}
+                                {'...' + item?.contentType?.slice(-15)}
                               </Text>
                             </View>
-                            <Icon
-                              name="save"
-                              size={ms(20)}
-                              style={{margin: ms(2)}}
-                              color={'black'}
-                            />
                           </View>
                         </TouchableOpacity>
                       </View>
@@ -495,8 +488,7 @@ const ChatCard = ({
                 <View
                   style={{
                     flexDirection: 'row',
-                    // justifyContent: 'space-between',
-                    // alignItems: 'flex-end',
+                    justifyContent: 'space-between',
                   }}>
                   {chat?.content?.includes('<span class="mention"') ? (
                     <HTMLView

@@ -196,7 +196,7 @@ const ActionMessageCard = ({
                   </Text>
                 ) : chatState?.data[chat.teamId]?.parentMessages[
                     parentId
-                  ]?.content?.includes('<span class="mention"') > 0 ? (
+                  ]?.content?.includes('<span class="mention"') ? (
                   <HTMLView
                     value={`<div>${
                       chatState?.data[chat.teamId]?.parentMessages[parentId]
@@ -217,7 +217,6 @@ const ActionMessageCard = ({
                     }}
                     contentWidth={width}
                     tagsStyles={{body: {color: 'black'}}}
-                    // renderers={renderers}
                   />
                 )}
               </TouchableOpacity>
@@ -245,7 +244,7 @@ const ActionMessageCard = ({
                 return item?.contentType?.includes('image') ? (
                   <TouchableOpacity
                     key={index}
-                    style={{marginVertical: ms(5), alignItems: 'center'}}>
+                    style={{marginVertical: 5, alignItems: 'center'}}>
                     <Image
                       source={{uri: item?.resourceUrl}}
                       style={{
@@ -261,6 +260,7 @@ const ActionMessageCard = ({
                     style={{
                       flexDirection: 'row',
                       height: 50,
+                      width: ms(280),
                     }}>
                     <AudioRecordingPlayer remoteUrl={item?.resourceUrl} />
                   </View>
@@ -328,48 +328,43 @@ const ActionMessageCard = ({
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                alignItems: 'flex-end',
               }}>
+              {chat?.content?.includes('<span class="mention"') ? (
+                <HTMLView
+                  value={`<div>${chat?.content}</div>`}
+                  renderNode={renderNode}
+                  stylesheet={htmlStyles(textColor)}
+                />
+              ) : (
+                <RenderHTML
+                  source={{
+                    html: chat?.content?.replace(
+                      emailRegex,
+                      '<a href="mailTo:$&">$&</a>',
+                    ),
+                  }}
+                  contentWidth={width}
+                  tagsStyles={tagsStyles(textColor, linkColor)}
+                />
+              )}
               <View
                 style={{
                   flexDirection: 'row',
-                }}>
-                {chat?.content?.includes('<span class="mention"') ? (
-                  <HTMLView
-                    value={`<div>${chat?.content}</div>`}
-                    renderNode={renderNode}
-                    stylesheet={htmlStyles(textColor)}
-                  />
-                ) : (
-                  <RenderHTML
-                    source={{
-                      html: chat?.content?.replace(
-                        emailRegex,
-                        '<a href="mailTo:$&">$&</a>',
-                      ),
-                    }}
-                    contentWidth={width}
-                    tagsStyles={tagsStyles(textColor, linkColor)}
-                    // renderers={renderers}
-                  />
-                )}
-              </View>
-              <View
-                style={{
-                  justifyContent: 'flex-end',
+                  alignItems: 'flex-end',
                 }}>
                 {chat?.randomId != null && (
                   <View
                     style={{
                       flexDirection: 'column',
                       alignItems: 'flex-end',
-                      width: ms(20),
+                      width: 20,
                     }}>
                     <Icon name="access-time" color={'white'} />
                   </View>
                 )}
               </View>
             </View>
+            {/* </View> */}
           </View>
         </View>
       </TouchableOpacity>
