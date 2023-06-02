@@ -66,7 +66,7 @@ export function chatReducer(state = initialState, action) {
         }
         if (
           action.messages[i].attachment?.length > 0 &&
-          action.messages[i].attachment[0].contentType == 'audio/mpeg' &&
+          action.messages[i].attachment[0].contentType?.includes('audio') &&
           action.messages[i].attachment[0].transcription != undefined
         ) {
           action.messages[

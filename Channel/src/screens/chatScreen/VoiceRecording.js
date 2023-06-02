@@ -10,12 +10,12 @@ import RNFetchBlob from 'rn-fetch-blob';
 
 export const AudioRecorderPlay = new AudioRecorderPlayer();
 const audioSet = {
-  AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
+  // AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
   AudioSourceAndroid: AudioSourceAndroidType.MIC,
   AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
   AVNumberOfChannelsKeyIOS: 2,
   AVFormatIDKeyIOS: AVEncodingOption.aac,
-  OutputFormatAndroid: OutputFormatAndroidType.AAC_ADTS,
+  // OutputFormatAndroid: OutputFormatAndroidType.AAC_ADTS,
 };
 
 const path = Platform.select({
