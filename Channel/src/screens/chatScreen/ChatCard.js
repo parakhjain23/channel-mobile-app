@@ -319,18 +319,7 @@ const ChatCard = ({
                         ]}>
                         {SenderName}
                       </Text>
-                      <Text
-                        style={[
-                          styles.timeText,
-                          styles.text,
-                          {
-                            color: sentByMe
-                              ? '#cccccc'
-                              : dark
-                              ? '#cccccc'
-                              : 'black',
-                          },
-                        ]}>
+                      <Text style={[styles.timeText, styles.text]}>
                         {formatTime(chat?.createdAt)}
                       </Text>
                     </View>
@@ -358,7 +347,7 @@ const ChatCard = ({
                       </Text>
                     ) : chatState?.data[chat.teamId]?.parentMessages[
                         parentId
-                      ]?.content?.includes('<span class="mention"') > 0 ? (
+                      ]?.content?.includes('<span class="mention"') ? (
                       <HTMLView
                         value={`<div>${
                           chatState?.data[chat.teamId]?.parentMessages[parentId]
@@ -429,9 +418,7 @@ const ChatCard = ({
                         style={{
                           flexDirection: 'row',
                           height: 50,
-                          width: item?.resourceUrl?.startsWith('file://')
-                            ? ms(280)
-                            : null,
+                          width: ms(280),
                           flex: 1,
                           alignItems: 'center',
                           overflow: 'hidden',
@@ -508,41 +495,31 @@ const ChatCard = ({
                 <View
                   style={{
                     flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-end',
+                    // justifyContent: 'space-between',
+                    // alignItems: 'flex-end',
                   }}>
+                  {chat?.content?.includes('<span class="mention"') ? (
+                    <HTMLView
+                      value={`<div>${chat?.content}</div>`}
+                      renderNode={renderNode}
+                      stylesheet={htmlStyles(textColor)}
+                    />
+                  ) : (
+                    <RenderHTML
+                      source={{
+                        html: chat?.content?.replace(
+                          emailRegex,
+                          '<a href="mailTo:$&">$&</a>',
+                        ),
+                      }}
+                      contentWidth={width}
+                      tagsStyles={tagsStyles(textColor, linkColor)}
+                    />
+                  )}
                   <View
                     style={{
                       flexDirection: 'row',
-                      alignContent: 'center',
-                      alignItems: 'center',
-                      // maxWidth: '90%',
-                      // paddingRight: ms(10),
-                    }}>
-                    {chat?.content?.includes('<span class="mention"') ? (
-                      <HTMLView
-                        value={`<div>${chat?.content}</div>`}
-                        renderNode={renderNode}
-                        stylesheet={htmlStyles(textColor)}
-                      />
-                    ) : (
-                      <RenderHTML
-                        source={{
-                          html: chat?.content?.replace(
-                            emailRegex,
-                            '<a href="mailTo:$&">$&</a>',
-                          ),
-                        }}
-                        contentWidth={width}
-                        tagsStyles={tagsStyles(textColor, linkColor)}
-                        // renderers={renderers}
-                      />
-                    )}
-                  </View>
-                  {/* </Text> */}
-                  <View
-                    style={{
-                      justifyContent: 'flex-end',
+                      alignItems: 'flex-end',
                     }}>
                     {chat?.randomId != null && (
                       <View

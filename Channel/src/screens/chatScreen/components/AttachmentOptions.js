@@ -11,8 +11,9 @@ const AttachmentOptions = ({
   accessToken,
   setAttachment,
   setAttachmentLoading,
+  showOptions,
+  setShowOptions,
 }) => {
-  const [showOptions, setShowOptions] = useState(false);
   const {colors} = useTheme();
   const styles = makeStyles(colors);
 
