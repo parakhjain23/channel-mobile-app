@@ -1,18 +1,11 @@
 import Icon from 'react-native-vector-icons/FontAwesome';
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  Dimensions,
-} from 'react-native';
+import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import Slider from '@react-native-community/slider';
 
-const audioRecorderPlayer = new AudioRecorderPlayer();
-
 const AudioRecordingPlayer = ({remoteUrl}) => {
+  const audioRecorderPlayer = new AudioRecorderPlayer();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentPositionSec, setCurrentPositionSec] = useState(0);
   const [currentDurationSec, setCurrentDurationSec] = useState(0);
@@ -45,6 +38,7 @@ const AudioRecordingPlayer = ({remoteUrl}) => {
   };
 
   const handleSeek = value => {
+    console.log(value, 'in handle seek');
     audioRecorderPlayer.seekToPlayer(value);
   };
 

@@ -580,10 +580,14 @@ PODS:
     - RNSound/Core (= 0.11.2)
   - RNSound/Core (0.11.2):
     - React-Core
+  - RNUxcam (5.4.6):
+    - React-Core
+    - UXCam (~> 3.6.2)
   - Sentry/HybridSDK (8.4.0):
     - SentryPrivate (= 8.4.0)
   - SentryPrivate (8.4.0)
   - SocketRocket (0.6.0)
+  - UXCam (3.6.2)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -673,6 +677,7 @@ DEPENDENCIES:
   - RNScreens (from `../node_modules/react-native-screens`)
   - "RNSentry (from `../node_modules/@sentry/react-native/RNSentry.podspec`)"
   - RNSound (from `../node_modules/react-native-sound`)
+  - RNUxcam (from `../node_modules/react-native-ux-cam`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -711,6 +716,7 @@ SPEC REPOS:
     - Sentry
     - SentryPrivate
     - SocketRocket
+    - UXCam
     - YogaKit
 
 EXTERNAL SOURCES:
@@ -826,6 +832,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/@sentry/react-native/RNSentry.podspec"
   RNSound:
     :path: "../node_modules/react-native-sound"
+  RNUxcam:
+    :path: "../node_modules/react-native-ux-cam"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -917,9 +925,11 @@ SPEC CHECKSUMS:
   RNScreens: ea4cd3a853063cda19a4e3c28d2e52180c80f4eb
   RNSentry: 68d5b2339fc7cd864e8076279345cc90174fa583
   RNSound: 6c156f925295bdc83e8e422e7d8b38d33bc71852
+  RNUxcam: df392875da9e92b43b1c646487d1d38f8868d7d5
   Sentry: 16d46dd5ca10e7f4469a2611805a3de123188add
   SentryPrivate: 2bb4f8d9ff558b25ac70b66c1dedc58a7c43630b
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
+  UXCam: edc2ec82e0cdd0635b0ddd4ec3e28761b57099aa
   Yoga: 99652481fcd320aefa4a7ef90095b95acd181952
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 

@@ -488,7 +488,7 @@ const ChatCard = ({
                 <View
                   style={{
                     flexDirection: 'row',
-                    justifyContent: 'space-between',
+                    justifyContent: 'space-around',
                   }}>
                   {chat?.content?.includes('<span class="mention"') ? (
                     <HTMLView
@@ -510,13 +510,12 @@ const ChatCard = ({
                   )}
                   <View
                     style={{
-                      flexDirection: 'row',
-                      alignItems: 'flex-end',
+                      // flexDirection: 'row',
+                      alignSelf: 'flex-end',
                     }}>
                     {chat?.randomId != null && (
                       <View
                         style={{
-                          flexDirection: 'column',
                           alignItems: 'flex-end',
                           width: ms(20),
                         }}>
