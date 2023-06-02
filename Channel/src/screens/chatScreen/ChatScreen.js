@@ -376,7 +376,7 @@ const ChatScreen = ({
     }
 
     attachment?.length > 0 && setAttachment([]),
-      showOptions && hideOptionsMethod(),
+      showOptions && setShowOptions(false),
       mentionsArr?.length > 0 && setMentionsArr(''),
       mentions?.length > 0 && setMentions([]),
       replyOnMessage && setreplyOnMessage(false),
