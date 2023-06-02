@@ -621,6 +621,8 @@ const ChatScreen = ({
                             accessToken={accessToken}
                             setAttachment={setAttachment}
                             setAttachmentLoading={setAttachmentLoading}
+                            showOptions={showOptions}
+                            setShowOptions={setShowOptions}
                           />
                           <TextInput
                             ref={textInputRef}
@@ -640,8 +642,8 @@ const ChatScreen = ({
                         </>
                       )}
                       {showOptions &&
-                        message?.html?.trim()?.length == 1 &&
-                        hideOptionsMethod()}
+                        message?.length == 1 &&
+                        setShowOptions(false)}
                     </View>
                   )}
                 </View>
