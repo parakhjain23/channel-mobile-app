@@ -210,6 +210,7 @@ export function chatReducer(state = initialState, action) {
       };
     case Actions.UPDATE_CURRENT_ORG_ID:
       return initialState;
+
     case Actions.ADD_LOCAL_MESSAGE:
       const {data} = action;
       let parentKey = data?.parentId;

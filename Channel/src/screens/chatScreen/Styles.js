@@ -2,7 +2,10 @@ import {StyleSheet} from 'react-native';
 import {s, vs, ms, mvs} from 'react-native-size-matters';
 export const makeStyles = colors =>
   StyleSheet.create({
-    safeAreaView: {flex: 1, backgroundColor: colors.primaryColor},
+    safeAreaView: {
+      flex: 1,
+      backgroundColor: colors?.primaryColor,
+    },
     mainContainer: {
       flex: 1,
       backgroundColor: colors.primaryColor,
@@ -59,7 +62,9 @@ export const makeStyles = colors =>
     playerContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      marginTop: 10,
+      marginTop: 0,
+      // borderWidth: 0.7,
+      // borderColor: colors?.color,
       // borderRadius: ms(5),
       // paddingTop: ms(15),
       backgroundColor: colors?.primaryColor,
@@ -104,13 +109,12 @@ export const makeStyles = colors =>
       elevation: 17,
     },
     bottomContainer: {
-      // marginBottom: 10,
-      marginLeft: 0,
+      marginBottom: 5,
       flexDirection: 'row',
     },
     sentByMe: {
       alignSelf: 'flex-end',
-      marginRight: ms(10),
+      marginRight: 10,
     },
     received: {
       alignSelf: 'flex-start',
@@ -138,29 +142,29 @@ export const makeStyles = colors =>
     },
     timeText: {
       color: '#666',
-      marginRight: ms(3),
-      marginBottom: mvs(4),
+      marginRight: 3,
+      marginBottom: 4,
     },
     inputContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      borderWidth: ms(1),
-      borderRadius: ms(4),
+      borderWidth: 1,
+      borderRadius: 4,
       borderColor: '#b3b3b3',
       paddingHorizontal: 5,
       paddingVertical: 4,
       maxHeight: 200,
     },
     attachIcon: {
-      marginRight: ms(8),
+      marginRight: 8,
       color: 'black',
       backgroundColor: '#cccccc',
-      padding: ms(8),
-      borderRadius: ms(25),
+      padding: 8,
+      borderRadius: 25,
     },
     optionsContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginLeft: ms(10),
+      marginLeft: 10,
     },
   });
