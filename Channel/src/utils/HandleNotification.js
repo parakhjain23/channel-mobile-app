@@ -2,19 +2,23 @@ import Notifee, {AndroidImportance} from '@notifee/react-native';
 import {store} from '../redux/Store';
 import cheerio, {text} from 'cheerio';
 
-export const handleNotificationFromEvents = async (data,userIdAndDisplayNameMapping) => {
-  data['openChannel']=`${data?.openChannel}`
+export const handleNotificationFromEvents = async (
+  data,
+  userIdAndDisplayNameMapping,
+) => {
+  data['openChannel'] = `${data?.openChannel}`;
   data['sameSender'] = `${data?.sameSender}`;
   data['isSameDate'] = `${data?.isSameDate}`;
-  data['isActivity']=data?.isActivity != undefined ? `${data?.isActivity}` :'false'
+  data['isActivity'] =
+    data?.isActivity != undefined ? `${data?.isActivity}` : 'false';
   data['mentions'] = `${data?.mentions}`;
   data['showInMainConversation'] = `${data?.showInMainConversation}`;
   data['isLink'] = `${data?.isLink}`;
   data['parentId'] == null
     ? delete data['parentId']
     : (data['parentId'] = `${data?.parentId}`);
-  if(data?.mentions?.length > 0){
-    var resultStr=''
+  if (data?.mentions?.length > 0) {
+    var resultStr = '';
     const $ = cheerio.load(`<div>${data?.content}</div>`);
     $('span[contenteditable="false"]').remove();
     $('*')
@@ -34,18 +38,21 @@ export const handleNotificationFromEvents = async (data,userIdAndDisplayNameMapp
       });
     resultStr = resultStr.trim();
     resultStr = resultStr.replace(/@{1,2}(\w+)/g, (match, p1) => {
-      return userIdAndDisplayNameMapping[p1] ? `@${userIdAndDisplayNameMapping[p1]}` : match;
+      return userIdAndDisplayNameMapping[p1]
+        ? `@${userIdAndDisplayNameMapping[p1]}`
+        : match;
     });
-    data['content'] = resultStr
+    data['content'] = resultStr;
   }
-  if(data?.attachment?.length > 0){
-    if(data?.attachment[0]?.title?.includes('sound')){
-      data['content'] = 'sent a Voice note'
-    }else{
-      data['content'] = 'Shared an Attachment'
+  if (data?.attachment?.length > 0) {
+    if (data?.attachment[0]?.title?.includes('sound')) {
+      data['content'] = 'sent a Voice note';
+    } else {
+      data['content'] = 'Shared an Attachment';
     }
   }
-  data['attachment']=data?.attachment != undefined ? JSON.stringify(data?.attachment):`[]`
+  data['attachment'] =
+    data?.attachment != undefined ? JSON.stringify(data?.attachment) : `[]`;
   var channelType =
     store.getState().channelsReducer?.teamIdAndTypeMapping[data?.teamId];
   var title;
@@ -53,31 +60,37 @@ export const handleNotificationFromEvents = async (data,userIdAndDisplayNameMapp
   var activityContent;
   if (channelType == 'DIRECT_MESSAGE') {
     title = store.getState().orgsReducer?.userIdAndNameMapping[data?.senderId];
-    if(data['isActivity']=='true'){
+    if (data['isActivity'] == 'true') {
       const regex = /\{\{(\w+)\}\}/g;
-       activityContent  = data?.content?.replace(regex, (match, userId) => {
-        return store?.getState()?.orgsReducer?.userIdAndNameMapping[userId] || match; // return the name if it exists, or the original match if not 
-          })  
-      body = activityContent    
-    }else{
+      activityContent = data?.content?.replace(regex, (match, userId) => {
+        return (
+          store?.getState()?.orgsReducer?.userIdAndNameMapping[userId] || match
+        ); // return the name if it exists, or the original match if not
+      });
+      body = activityContent;
+    } else {
       body = data?.content;
     }
-  } else{
+  } else {
     title =
       store.getState().channelsReducer?.teamIdAndNameMapping[data?.teamId];
-      if(data['isActivity']=='true'){
-        const regex = /\{\{(\w+)\}\}/g;
-       activityContent  = data?.content?.replace(regex, (match, userId) => {
-        return store?.getState()?.orgsReducer?.userIdAndNameMapping[userId] || match; // return the name if it exists, or the original match if not 
-          })  
-        body =  store.getState().orgsReducer?.userIdAndNameMapping[data.senderId] +
-        ' : ' + activityContent
-        }else{
-          body =
-          store.getState().orgsReducer?.userIdAndNameMapping[data.senderId] +
-          ' : ' +
-          data?.content;
-        }
+    if (data['isActivity'] == 'true') {
+      const regex = /\{\{(\w+)\}\}/g;
+      activityContent = data?.content?.replace(regex, (match, userId) => {
+        return (
+          store?.getState()?.orgsReducer?.userIdAndNameMapping[userId] || match
+        ); // return the name if it exists, or the original match if not
+      });
+      body =
+        store.getState().orgsReducer?.userIdAndNameMapping[data.senderId] +
+        ' : ' +
+        activityContent;
+    } else {
+      body =
+        store.getState().orgsReducer?.userIdAndNameMapping[data.senderId] +
+        ' : ' +
+        data?.content;
+    }
   }
   await Notifee.displayNotification({
     title: title,
@@ -128,16 +141,25 @@ export const handleNotificationFromEvents = async (data,userIdAndDisplayNameMapp
           },
         },
       ],
-      categoryId: 'channel'
+      categoryId: 'channel',
     },
   });
 };
 export const handleNotificationFirebase = async firebaseData => {
   var title = firebaseData?.notification?.title;
   var body = firebaseData?.notification?.body;
-  if(firebaseData?.data?.orgId != store?.getState()?.orgsReducer?.currentOrgId){
-    title = `New Message in ${store?.getState()?.orgsReducer?.orgIdAndNameMapping[firebaseData?.data?.orgId]}`
-    body = firebaseData?.notification?.title+" : "+ firebaseData?.notification?.body
+  if (
+    firebaseData?.data?.orgId != store?.getState()?.orgsReducer?.currentOrgId
+  ) {
+    title = `New Message in ${
+      store?.getState()?.orgsReducer?.orgIdAndNameMapping[
+        firebaseData?.data?.orgId
+      ]
+    }`;
+    body =
+      firebaseData?.notification?.title +
+      ' : ' +
+      firebaseData?.notification?.body;
   }
   await Notifee.displayNotification({
     title: title,
@@ -171,7 +193,7 @@ export const handleNotificationFirebase = async firebaseData => {
     ios: {
       attachments: [
         {
-          url: 'https://control.msg91.com/app/assets/images/logo.png',
+          url: 'https://s3.ap-south-1.amazonaws.com/walkover.things-of-brand.assets/2b4c042bbe9ec62b13f698f163434389',
           identifier: 'mark_as_read',
           title: 'Mark as Read',
           options: {
@@ -179,7 +201,7 @@ export const handleNotificationFirebase = async firebaseData => {
           },
         },
         {
-          url: 'https://control.msg91.com/app/assets/images/logo.png',
+          url: 'https://s3.ap-south-1.amazonaws.com/walkover.things-of-brand.assets/2b4c042bbe9ec62b13f698f163434389',
           identifier: 'reply',
           title: 'Reply',
           options: {

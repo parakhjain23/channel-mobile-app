@@ -1,8 +1,8 @@
-import { ADD_LOCAL_MESSAGE } from "../../Enums";
+import {ADD_LOCAL_MESSAGE} from '../../Enums';
 
-export function setLocalMsgStart(data){
-    return{
-        type: ADD_LOCAL_MESSAGE,
-        data
-    }
+export function setLocalMsgStart(data) {
+  return {
+    type: ADD_LOCAL_MESSAGE,
+    data,
+  };
 }

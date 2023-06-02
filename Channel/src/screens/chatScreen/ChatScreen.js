@@ -77,6 +77,7 @@ const ChatScreen = ({
   resetUnreadCountAction,
   addUsersToChannelAction,
   removeUserFromChannelAction,
+  socketState,
 }) => {
   var teamId, channelType;
   if (deviceType === DEVICE_TYPES[1]) {
@@ -350,7 +351,6 @@ const ChatScreen = ({
         if (showPlayer) {
           response = await uploadRecording(recordingUrl, accessToken);
         }
-
         sendMessageAction(
           localMessage,
           teamId,
@@ -695,6 +695,7 @@ const mapStateToProps = state => ({
   chatState: state.chatReducer,
   channelsState: state.channelsReducer,
   channelsByQueryState: state.channelsByQueryReducer,
+  socketState: state.socketReducer,
 });
 const mapDispatchToProps = dispatch => {
   return {

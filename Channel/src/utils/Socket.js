@@ -11,7 +11,7 @@ export function createSocket(accessToken, orgId) {
     socket = io('wss://api.intospace.io', {
       forceNew: true,
       transports: ['websocket', 'polling'],
-      reconnectionAttempts: 10,
+      reconnectionAttempts: 20,
     });
   }
   if (accessToken != undefined) {
