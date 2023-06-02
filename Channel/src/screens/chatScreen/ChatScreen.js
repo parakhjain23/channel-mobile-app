@@ -94,6 +94,21 @@ const ChatScreen = ({
   if (teamId == 'demo') {
     return <FirstTabChatScreen />;
   }
+  useEffect(() => {
+    const fetchData = () => {
+      fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
+      setActiveChannelTeamIdAction(teamId);
+    };
+    if (
+      !chatState?.data[teamId]?.messages ||
+      chatState?.data[teamId]?.messages.length === 0
+    ) {
+      fetchData();
+    } else if (chatState?.data[teamId]?.messages?.length > 0) {
+      const timeoutId = setTimeout(fetchData, 1000);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [networkState?.isInternetConnected, teamId, chatDetailsForTab]);
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const [replyOnMessage, setreplyOnMessage] = useState(false);
@@ -173,22 +188,6 @@ const ChatScreen = ({
     }, 1000);
     return () => clearTimeout(timeoutId);
   }, [teamId]);
-
-  useEffect(() => {
-    const fetchData = () => {
-      fetchChatsOfTeamAction(teamId, userInfoState?.accessToken);
-      setActiveChannelTeamIdAction(teamId);
-    };
-    if (
-      !chatState?.data[teamId]?.messages ||
-      chatState?.data[teamId]?.messages.length === 0
-    ) {
-      fetchData();
-    } else if (chatState?.data[teamId]?.messages?.length > 0) {
-      const timeoutId = setTimeout(fetchData, 1200);
-      return () => clearTimeout(timeoutId);
-    }
-  }, [networkState?.isInternetConnected, teamId, chatDetailsForTab]);
 
   const handleInputChange = useCallback(
     text => {

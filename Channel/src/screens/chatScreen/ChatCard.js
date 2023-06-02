@@ -265,6 +265,17 @@ const ChatCard = ({
             </Text>
           </View>
         )}
+        {(channelType == 'PUBLIC' ||
+          channelType == 'PRIVATE' ||
+          channelType == 'DEFAULT') &&
+          !sameSender &&
+          SenderName == 'You' && (
+            <View style={[sentByMe ? styles.sentByMe : styles?.received]}>
+              <Text style={{fontSize: 12, color: colors?.color}}>
+                {formatTime(chat?.createdAt)}
+              </Text>
+            </View>
+          )}
         <TouchableOpacity
           activeOpacity={0.6}
           onLongPress={onLongPress}
@@ -283,6 +294,8 @@ const ChatCard = ({
                   marginTop: sameSender
                     ? ms(0)
                     : channelType == 'DIRECT_MESSAGE'
+                    ? ms(0)
+                    : SenderName == 'You'
                     ? ms(0)
                     : ms(10),
                   marginBottom: index == 0 ? 10 : 3,
