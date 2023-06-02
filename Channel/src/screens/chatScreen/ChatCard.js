@@ -427,6 +427,7 @@ const ChatCard = ({
                       </View>
                     ) : (
                       <View
+                        key={index}
                         style={[
                           styles.repliedContainer,
                           {
@@ -435,8 +436,7 @@ const ChatCard = ({
                             borderRadius: ms(5),
                             padding: ms(10),
                           },
-                        ]}
-                        key={index}>
+                        ]}>
                         <TouchableOpacity
                           onPress={() =>
                             !optionsVisible
