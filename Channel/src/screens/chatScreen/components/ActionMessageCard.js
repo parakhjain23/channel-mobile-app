@@ -114,33 +114,18 @@ const ActionMessageCard = ({
   function renderNode(node, index, siblings, parent, defaultRenderer) {
     if (node.attribs?.class == 'mention') {
       return (
-        <TouchableOpacity
+        <Text
           key={index}
-          onPress={async () => {
-            node?.attribs?.['data-id'] != '@all' &&
-              (await searchUserProfileAction(
-                node?.attribs?.['data-id'],
-                userInfoState?.accessToken,
-              )) &&
-              RootNavigation.navigate('UserProfiles', {
-                displayName:
-                  orgState?.userIdAndDisplayNameMapping[
-                    node?.attribs?.['data-id']
-                  ],
-              });
+          style={{
+            color: chatState?.data[chat.teamId]?.parentMessages[parentId]
+              ?.content
+              ? 'black'
+              : linkColor,
+            textDecorationLine: 'underline',
+            fontSize: 16,
           }}>
-          <Text
-            style={{
-              color: chatState?.data[chat.teamId]?.parentMessages[parentId]
-                ?.content
-                ? 'black'
-                : linkColor,
-              textDecorationLine: 'underline',
-              fontSize: 16,
-            }}>
-            @{node?.attribs?.['data-value']}
-          </Text>
-        </TouchableOpacity>
+          @{node?.attribs?.['data-value']}
+        </Text>
       );
     }
   }
@@ -242,7 +227,7 @@ const ActionMessageCard = ({
             {attachment?.length > 0 &&
               attachment?.map((item, index) => {
                 return item?.contentType?.includes('image') ? (
-                  <TouchableOpacity
+                  <View
                     key={index}
                     style={{marginVertical: 5, alignItems: 'center'}}>
                     <Image
@@ -250,10 +235,9 @@ const ActionMessageCard = ({
                       style={{
                         height: ms(150),
                         width: ms(150),
-                        opacity: optionsVisible ? 0.6 : 1,
                       }}
                     />
-                  </TouchableOpacity>
+                  </View>
                 ) : item?.contentType?.includes('audio') ? (
                   <View
                     key={index}
@@ -266,6 +250,7 @@ const ActionMessageCard = ({
                   </View>
                 ) : (
                   <View
+                    key={index}
                     style={[
                       styles.repliedContainer,
                       {
@@ -274,52 +259,42 @@ const ActionMessageCard = ({
                         borderRadius: ms(5),
                         padding: ms(10),
                       },
-                    ]}
-                    key={index}>
-                    <TouchableOpacity>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                        }}>
-                        {item?.contentType?.includes('pdf') && (
-                          <Image
-                            source={require('../../../assests/images/attachments/pdfLogo.png')}
-                            style={{
-                              width: ms(40),
-                              height: ms(40),
-                              marginRight: ms(5),
-                            }}
-                          />
-                        )}
-                        {item?.contentType?.includes('doc') && (
-                          <Image
-                            source={require('../../../assests/images/attachments/docLogo.png')}
-                            style={{
-                              width: ms(40),
-                              height: ms(40),
-                              marginRight: ms(5),
-                            }}
-                          />
-                        )}
-
-                        <View>
-                          <Text style={{color: 'black'}}>
-                            {item?.title?.slice(0, 10) + '...'}
-                          </Text>
-                          <Text style={{color: 'black'}}>
-                            {'...' + item?.contentType?.slice(-10)}
-                          </Text>
-                        </View>
-                        <Icon
-                          name="save"
-                          size={ms(20)}
-                          style={{margin: ms(2)}}
-                          color={'black'}
+                    ]}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                      }}>
+                      {item?.contentType?.includes('pdf') && (
+                        <Image
+                          source={require('../../../assests/images/attachments/pdfLogo.png')}
+                          style={{
+                            width: 40,
+                            height: 40,
+                            marginRight: 15,
+                          }}
                         />
+                      )}
+                      {item?.contentType?.includes('doc') && (
+                        <Image
+                          source={require('../../../assests/images/attachments/docLogo.png')}
+                          style={{
+                            width: 40,
+                            height: 40,
+                            marginRight: 15,
+                          }}
+                        />
+                      )}
+                      <View>
+                        <Text style={{color: 'black'}}>
+                          {item?.title?.slice(0, 15) + '...'}
+                        </Text>
+                        <Text style={{color: 'black'}}>
+                          {'...' + item?.contentType?.slice(-15)}
+                        </Text>
                       </View>
-                    </TouchableOpacity>
+                    </View>
                   </View>
                 );
               })}
