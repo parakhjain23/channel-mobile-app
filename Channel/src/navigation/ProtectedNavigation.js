@@ -8,7 +8,7 @@ import ExploreChannels from '../screens/channelsScreen/ExploreChannels';
 import ContactDetailsPage from '../screens/userProfiles/UserProfiles';
 import {useTheme} from '@react-navigation/native';
 import {TouchableOpacity, Text, Platform, View, Dimensions} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Feather';
 import * as RootNavigation from '../navigation/RootNavigation';
 import {fetchSearchedUserProfileStart} from '../redux/actions/user/searchUserProfileActions';
 import {ms} from 'react-native-size-matters';
@@ -130,24 +130,27 @@ const ProtectedNavigation = props => {
           headerShown: true,
           headerBackVisible: false,
           headerLeft: () => (
-            <TouchableOpacity
-              style={{
-                flexDirection: 'column',
-                // flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                paddingVertical: ms(15),
-                paddingRight: Platform.OS === 'ios' ? ms(50) : ms(30),
-                marginLeft: -15,
-              }}
-              onPressIn={() => RootNavigation.goBack()}>
-              <Icon
-                name="arrow-left"
-                size={ms(16)}
-                color={colors.textColor}
-                style={{paddingLeft: ms(10)}}
-              />
-            </TouchableOpacity>
+            <View style={{}}>
+              <TouchableOpacity
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  paddingVertical: 8,
+                  backgroundColor: 'red',
+                  paddingRight: Platform.OS === 'ios' ? ms(50) : ms(30),
+                  marginLeft: -20,
+                }}
+                onPressIn={() => RootNavigation.goBack()}>
+                <Icon
+                  name="chevron-left"
+                  size={32}
+                  color={colors.textColor}
+                  style={{
+                    paddingLeft: 4,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
           ),
           ...getHeader,
         })}
