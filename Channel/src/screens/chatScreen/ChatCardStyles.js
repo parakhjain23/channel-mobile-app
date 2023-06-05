@@ -56,12 +56,8 @@ export const makeStyles = colors =>
       marginBottom: mvs(10),
     },
     container: {
-      // borderWidth: ms(1),
-      borderRadius: ms(5),
-      flexDirection: 'row',
-      alignItems: 'flex-end',
-      // marginBottom: mvs(3),
-      // maxWidth: '90%',
+      borderRadius: 6,
+      maxWidth: '90%',
     },
     sentByMe: {
       alignSelf: 'flex-end',
@@ -79,8 +75,8 @@ export const makeStyles = colors =>
       marginHorizontal: ms(4),
     },
     textContainer: {
-      padding: ms(6),
-      maxWidth: '90%',
+      padding: 6,
+      // maxWidth: '90%',
     },
     nameText: {
       fontWeight: '600',
@@ -92,8 +88,5 @@ export const makeStyles = colors =>
     },
     timeText: {
       fontSize: 11,
-      // marginLeft: ms(5),
-      // marginRight: ms(-3),
-      // marginBottom: ms(-4),
     },
   });
