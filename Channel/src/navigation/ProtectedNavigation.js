@@ -136,7 +136,6 @@ const ProtectedNavigation = props => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   paddingVertical: 8,
-                  backgroundColor: 'red',
                   paddingRight: Platform.OS === 'ios' ? ms(50) : ms(30),
                   marginLeft: -20,
                 }}
