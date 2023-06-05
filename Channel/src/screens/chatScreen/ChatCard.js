@@ -293,10 +293,11 @@ const ChatCard = ({
           {SenderName != 'You' && channelType != 'DIRECT_MESSAGE' && (
             <TouchableOpacity
               onPress={async () => {
-                (await searchUserProfileAction(
-                  chat?.senderId,
-                  userInfoState?.accessToken,
-                )) &&
+                chat?.senderId != '0' &&
+                  (await searchUserProfileAction(
+                    chat?.senderId,
+                    userInfoState?.accessToken,
+                  )) &&
                   RootNavigation.navigate('UserProfiles', {
                     displayName:
                       orgState?.userIdAndDisplayNameMapping[chat?.senderId],
