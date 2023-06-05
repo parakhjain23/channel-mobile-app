@@ -250,7 +250,7 @@ export function channelsReducer(state = initialState, action) {
     case Actions.ADD_USER_SUCCESS:
       const {userIdToAdd, channelId} = action;
       var tempChannelIdAndDataMap = {...state.channelIdAndDataMapping};
-      tempChannelIdAndDataMap[channelId].userIds?.push(userIdToAdd);
+      tempChannelIdAndDataMap[channelId]?.userIds?.push(userIdToAdd);
       return {
         ...state,
         channelIdAndDataMapping: tempChannelIdAndDataMap,
