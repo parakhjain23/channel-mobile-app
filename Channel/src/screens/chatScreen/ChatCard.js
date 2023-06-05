@@ -291,28 +291,41 @@ const ChatCard = ({
             marginBottom: index == 0 ? 10 : 3,
           }}>
           {SenderName != 'You' && channelType != 'DIRECT_MESSAGE' && (
-            <View
-              style={{
-                justifyContent: 'flex-start',
-                marginRight: 5,
-                marginTop: 3,
+            <TouchableOpacity
+              onPress={async () => {
+                (await searchUserProfileAction(
+                  chat?.senderId,
+                  userInfoState?.accessToken,
+                )) &&
+                  RootNavigation.navigate('UserProfiles', {
+                    displayName:
+                      orgState?.userIdAndDisplayNameMapping[chat?.senderId],
+                    setChatDetailsForTab: setChatDetailsForTab,
+                  });
               }}>
-              {!sameSender ? (
-                <FastImage
-                  source={{
-                    uri: orgState?.userIdAndImageUrlMapping[chat?.senderId],
-                    priority: FastImage.priority.normal,
-                  }}
-                  style={{
-                    width: 35,
-                    height: 35,
-                    borderRadius: 50,
-                  }}
-                />
-              ) : (
-                <View style={{width: 35}}></View>
-              )}
-            </View>
+              <View
+                style={{
+                  justifyContent: 'flex-start',
+                  marginRight: 5,
+                  marginTop: 3,
+                }}>
+                {!sameSender ? (
+                  <FastImage
+                    source={{
+                      uri: orgState?.userIdAndImageUrlMapping[chat?.senderId],
+                      priority: FastImage.priority.normal,
+                    }}
+                    style={{
+                      width: 35,
+                      height: 35,
+                      borderRadius: 50,
+                    }}
+                  />
+                ) : (
+                  <View style={{width: 35}}></View>
+                )}
+              </View>
+            </TouchableOpacity>
           )}
           <TouchableOpacity
             activeOpacity={0.6}
