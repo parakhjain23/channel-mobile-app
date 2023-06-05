@@ -253,7 +253,10 @@ const SearchChannelCard = ({
     });
   };
 
-  let Name = item?._source?.title;
+  let Name =
+    item?._source?.type == 'U'
+      ? item?._source?.displayName
+      : item?._source?.title;
   if (item?._source?.userId == userInfoState?.user?.id) {
     Name = item?._source?.title + ' (You)';
   }
