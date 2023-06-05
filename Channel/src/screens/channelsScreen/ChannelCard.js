@@ -24,6 +24,7 @@ import {closeChannelStart} from '../../redux/actions/channels/CloseChannelAction
 import {AppContext} from '../appProvider/AppProvider';
 import {DEVICE_TYPES} from '../../constants/Constants';
 import {RightSwipeAction} from './components/RightActionsForChatCard';
+import FastImage from 'react-native-fast-image';
 
 const TouchableItem =
   Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
@@ -267,7 +268,7 @@ const SearchChannelCard = ({
   const teamId = item?._id?.includes('_')
     ? props?.channelsState?.userIdAndTeamIdMapping[item?._source?.userId]
     : item?._id;
-
+  console.log(item);
   const iconName = useMemo(
     () => (item?._source?.type === 'U' ? 'user' : 'hashtag'),
     [item?._source?.type],
@@ -335,7 +336,24 @@ const SearchChannelCard = ({
               alignItems: 'center',
               maxWidth: item?._source?.type == 'U' ? '80%' : '95%',
             }}>
-            <Icon name={iconName} color={colors.textColor} />
+            {item._source.type != 'T' ? (
+              <FastImage
+                source={{
+                  uri: orgsState?.userIdAndImageUrlMapping[
+                    item?._source?.userId
+                  ]
+                    ? orgsState?.userIdAndImageUrlMapping[item?._source?.userId]
+                    : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVe0cFaZ9e5Hm9X-tdWRLSvoZqg2bjemBABA&usqp=CAU',
+                }}
+                style={{
+                  height: 45,
+                  width: 45,
+                  borderRadius: 50,
+                }}
+              />
+            ) : (
+              <Icon name={iconName} color={colors.textColor} />
+            )}
             <Text>{'  '}</Text>
             <Text
               style={{

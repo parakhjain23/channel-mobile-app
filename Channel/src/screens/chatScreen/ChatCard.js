@@ -313,7 +313,9 @@ const ChatCard = ({
                 {!sameSender ? (
                   <FastImage
                     source={{
-                      uri: orgState?.userIdAndImageUrlMapping[chat?.senderId],
+                      uri: orgState?.userIdAndImageUrlMapping[chat?.senderId]
+                        ? orgState?.userIdAndImageUrlMapping[chat?.senderId]
+                        : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVe0cFaZ9e5Hm9X-tdWRLSvoZqg2bjemBABA&usqp=CAU',
                       priority: FastImage.priority.normal,
                     }}
                     style={{
