@@ -33,6 +33,7 @@ import {DEVICE_TYPES} from '../../constants/Constants';
 import {connect, useSelector} from 'react-redux';
 import {setActiveChannelTeamId} from '../../redux/actions/channels/SetActiveChannelId';
 import {formatTime} from '../../utils/FormatTime';
+import FastImage from 'react-native-fast-image';
 
 const AddRemoveJoinedMsg = React.memo(({senderName, content, orgState}) => {
   const {colors} = useTheme();
@@ -277,257 +278,274 @@ const ChatCard = ({
               </Text>
             </View>
           )}
-        <TouchableOpacity
-          activeOpacity={0.6}
-          onLongPress={onLongPress}
-          style={{flex: 1}}>
-          <Swipeable
-            ref={swipeableRef}
-            leftThreshold={40}
-            renderLeftActions={LeftSwipeActions}
-            onSwipeableWillOpen={swipeFromLeftOpen}>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: sameSender
+              ? ms(0)
+              : channelType == 'DIRECT_MESSAGE'
+              ? ms(0)
+              : SenderName == 'You'
+              ? ms(0)
+              : ms(10),
+            marginBottom: index == 0 ? 10 : 3,
+          }}>
+          {SenderName != 'You' && channelType != 'DIRECT_MESSAGE' && (
             <View
-              style={[
-                styles.container,
-                sentByMe ? styles.sentByMe : styles.received,
-                {
-                  backgroundColor: containerBackgroundColor,
-                  marginTop: sameSender
-                    ? ms(0)
-                    : channelType == 'DIRECT_MESSAGE'
-                    ? ms(0)
-                    : SenderName == 'You'
-                    ? ms(0)
-                    : ms(10),
-                  marginBottom: index == 0 ? 10 : 3,
-                },
-              ]}>
-              <View style={[styles.textContainer]}>
-                {channelType != 'DIRECT_MESSAGE' &&
-                  SenderName != 'You' &&
-                  !sameSender && (
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                      }}>
-                      <Text
-                        style={[
-                          styles.nameText,
-                          {marginRight: 5, color: textColor},
-                        ]}>
-                        {SenderName}
-                      </Text>
-                      <Text style={[styles.timeText, styles.text]}>
-                        {formatTime(chat?.createdAt)}
-                      </Text>
-                    </View>
-                  )}
-                {parentId != null && (
-                  <TouchableOpacity
-                    style={[styles.repliedContainer]}
-                    onPress={() => {
-                      !optionsVisible
-                        ? handleRepliedMessagePress(
+              style={{
+                justifyContent: 'flex-start',
+                marginRight: 5,
+                marginTop: 3,
+              }}>
+              {!sameSender ? (
+                <FastImage
+                  source={{
+                    uri: orgState?.userIdAndImageUrlMapping[chat?.senderId],
+                    priority: FastImage.priority.normal,
+                  }}
+                  style={{
+                    width: 35,
+                    height: 35,
+                    borderRadius: 50,
+                  }}
+                />
+              ) : (
+                <View style={{width: 35}}></View>
+              )}
+            </View>
+          )}
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onLongPress={onLongPress}
+            style={{flex: 1}}>
+            <Swipeable
+              ref={swipeableRef}
+              leftThreshold={40}
+              renderLeftActions={LeftSwipeActions}
+              onSwipeableWillOpen={swipeFromLeftOpen}>
+              <View
+                style={[
+                  styles.container,
+                  sentByMe ? styles.sentByMe : styles.received,
+                  {
+                    backgroundColor: containerBackgroundColor,
+                  },
+                ]}>
+                <View style={[styles.textContainer]}>
+                  {channelType != 'DIRECT_MESSAGE' &&
+                    SenderName != 'You' &&
+                    !sameSender && (
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                        }}>
+                        <Text
+                          style={[
+                            styles.nameText,
+                            {marginRight: 5, color: textColor},
+                          ]}>
+                          {SenderName}
+                        </Text>
+                        <Text style={[styles.timeText, styles.text]}>
+                          {formatTime(chat?.createdAt)}
+                        </Text>
+                      </View>
+                    )}
+                  {parentId != null && (
+                    <TouchableOpacity
+                      style={[styles.repliedContainer]}
+                      onPress={() => {
+                        !optionsVisible
+                          ? handleRepliedMessagePress(
+                              chatState?.data[chat.teamId]?.parentMessages[
+                                parentId
+                              ],
+                              chatState,
+                              chat,
+                              flatListRef,
+                            )
+                          : onLongPress();
+                      }}
+                      onLongPress={onLongPress}>
+                      {chatState?.data[chat.teamId]?.parentMessages[parentId]
+                        ?.attachment?.length > 0 ? (
+                        <Text style={{color: 'black'}}>
+                          <Icon name="attach-file" size={ms(14)} /> attachment
+                        </Text>
+                      ) : chatState?.data[chat.teamId]?.parentMessages[
+                          parentId
+                        ]?.content?.includes('<span class="mention"') ? (
+                        <HTMLView
+                          value={`<div>${
                             chatState?.data[chat.teamId]?.parentMessages[
                               parentId
-                            ],
-                            chatState,
-                            chat,
-                            flatListRef,
-                          )
-                        : onLongPress();
-                    }}
-                    onLongPress={onLongPress}>
-                    {chatState?.data[chat.teamId]?.parentMessages[parentId]
-                      ?.attachment?.length > 0 ? (
-                      <Text style={{color: 'black'}}>
-                        <Icon name="attach-file" size={ms(14)} /> attachment
-                      </Text>
-                    ) : chatState?.data[chat.teamId]?.parentMessages[
-                        parentId
-                      ]?.content?.includes('<span class="mention"') ? (
+                            ]?.content
+                          }</div>`}
+                          renderNode={renderNode}
+                          stylesheet={htmlStyles('black')}
+                        />
+                      ) : (
+                        <RenderHTML
+                          source={{
+                            html: chatState?.data[chat.teamId]?.parentMessages[
+                              parentId
+                            ]?.content?.replace(
+                              emailRegex,
+                              '<a href="mailTo:$&">$&</a>',
+                            ),
+                          }}
+                          contentWidth={width}
+                          tagsStyles={{body: {color: 'black'}}}
+                          // renderers={renderers}
+                        />
+                      )}
+                    </TouchableOpacity>
+                  )}
+                  <View style={{maxWidth: '80%'}}>
+                    <Modal
+                      visible={selectedImage !== null}
+                      transparent={true}
+                      onRequestClose={handleModalClose}>
+                      <ImageViewer
+                        imageUrls={[
+                          {
+                            url: selectedImage?.resourceUrl,
+                            freeHeight: true,
+                            freeWidth: true,
+                          },
+                        ]}
+                        enableSwipeDown={true}
+                        onSwipeDown={handleModalClose}
+                      />
+                    </Modal>
+                  </View>
+                  {attachment?.length > 0 &&
+                    attachment?.map((item, index) => {
+                      return item?.contentType?.includes('image') ? (
+                        <TouchableOpacity
+                          key={index}
+                          onPress={() =>
+                            optionsVisible
+                              ? onLongPress()
+                              : handleImagePress(index)
+                          }
+                          onLongPress={onLongPress}
+                          style={{marginVertical: 5, alignItems: 'center'}}>
+                          <Image
+                            source={{uri: item?.resourceUrl}}
+                            style={{
+                              height: 150,
+                              width: 150,
+                            }}
+                          />
+                        </TouchableOpacity>
+                      ) : item?.contentType?.includes('audio') ? (
+                        <View
+                          key={index}
+                          style={{
+                            flexDirection: 'row',
+                            height: 50,
+                            width: ms(280),
+                            flex: 1,
+                            alignItems: 'center',
+                            overflow: 'hidden',
+                            justifyContent: 'center', // Align center horizontally
+                          }}>
+                          <AudioRecordingPlayer remoteUrl={item?.resourceUrl} />
+                        </View>
+                      ) : (
+                        <View
+                          key={index}
+                          style={[
+                            styles.repliedContainer,
+                            {
+                              borderWidth: ms(0.5),
+                              borderColor: 'gray',
+                              borderRadius: ms(5),
+                              padding: ms(10),
+                            },
+                          ]}>
+                          <TouchableOpacity
+                            onPress={() =>
+                              !optionsVisible
+                                ? openLink(item?.resourceUrl)
+                                : onLongPress()
+                            }
+                            onLongPress={onLongPress}>
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                              }}>
+                              {item?.contentType?.includes('pdf') && (
+                                <Image
+                                  source={require('../../assests/images/attachments/pdfLogo.png')}
+                                  style={{
+                                    width: 40,
+                                    height: 40,
+                                    marginRight: 15,
+                                  }}
+                                />
+                              )}
+                              {item?.contentType?.includes('doc') && (
+                                <Image
+                                  source={require('../../assests/images/attachments/docLogo.png')}
+                                  style={{
+                                    width: 40,
+                                    height: 40,
+                                    marginRight: 15,
+                                  }}
+                                />
+                              )}
+
+                              <View>
+                                <Text style={{color: 'black'}}>
+                                  {item?.title?.slice(0, 15) + '...'}
+                                </Text>
+                                <Text style={{color: 'black'}}>
+                                  {'...' + item?.contentType?.slice(-15)}
+                                </Text>
+                              </View>
+                            </View>
+                          </TouchableOpacity>
+                        </View>
+                      );
+                    })}
+
+                  <View
+                    style={{
+                      // flexDirection: 'row',
+                      justifyContent: 'space-around',
+                      // backgroundColor: 'red',
+                      flex: 1,
+                    }}>
+                    {chat?.content?.includes('<span class="mention"') ? (
                       <HTMLView
-                        value={`<div>${
-                          chatState?.data[chat.teamId]?.parentMessages[parentId]
-                            ?.content
-                        }</div>`}
+                        value={`<div>${chat?.content}</div>`}
                         renderNode={renderNode}
-                        stylesheet={htmlStyles('black')}
+                        stylesheet={htmlStyles(textColor)}
                       />
                     ) : (
                       <RenderHTML
                         source={{
-                          html: chatState?.data[chat.teamId]?.parentMessages[
-                            parentId
-                          ]?.content?.replace(
+                          html: chat?.content?.replace(
                             emailRegex,
                             '<a href="mailTo:$&">$&</a>',
                           ),
                         }}
                         contentWidth={width}
-                        tagsStyles={{body: {color: 'black'}}}
-                        // renderers={renderers}
+                        tagsStyles={tagsStyles(textColor, linkColor)}
                       />
-                    )}
-                  </TouchableOpacity>
-                )}
-                <View style={{maxWidth: '80%'}}>
-                  <Modal
-                    visible={selectedImage !== null}
-                    transparent={true}
-                    onRequestClose={handleModalClose}>
-                    <ImageViewer
-                      imageUrls={[
-                        {
-                          url: selectedImage?.resourceUrl,
-                          freeHeight: true,
-                          freeWidth: true,
-                        },
-                      ]}
-                      enableSwipeDown={true}
-                      onSwipeDown={handleModalClose}
-                    />
-                  </Modal>
-                </View>
-                {attachment?.length > 0 &&
-                  attachment?.map((item, index) => {
-                    return item?.contentType?.includes('image') ? (
-                      <TouchableOpacity
-                        key={index}
-                        onPress={() =>
-                          optionsVisible
-                            ? onLongPress()
-                            : handleImagePress(index)
-                        }
-                        onLongPress={onLongPress}
-                        style={{marginVertical: 5, alignItems: 'center'}}>
-                        <Image
-                          source={{uri: item?.resourceUrl}}
-                          style={{
-                            height: 150,
-                            width: 150,
-                          }}
-                        />
-                      </TouchableOpacity>
-                    ) : item?.contentType?.includes('audio') ? (
-                      <View
-                        key={index}
-                        style={{
-                          flexDirection: 'row',
-                          height: 50,
-                          width: ms(280),
-                          flex: 1,
-                          alignItems: 'center',
-                          overflow: 'hidden',
-                          justifyContent: 'center', // Align center horizontally
-                        }}>
-                        <AudioRecordingPlayer remoteUrl={item?.resourceUrl} />
-                      </View>
-                    ) : (
-                      <View
-                        key={index}
-                        style={[
-                          styles.repliedContainer,
-                          {
-                            borderWidth: ms(0.5),
-                            borderColor: 'gray',
-                            borderRadius: ms(5),
-                            padding: ms(10),
-                          },
-                        ]}>
-                        <TouchableOpacity
-                          onPress={() =>
-                            !optionsVisible
-                              ? openLink(item?.resourceUrl)
-                              : onLongPress()
-                          }
-                          onLongPress={onLongPress}>
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              alignItems: 'center',
-                              justifyContent: 'space-between',
-                            }}>
-                            {item?.contentType?.includes('pdf') && (
-                              <Image
-                                source={require('../../assests/images/attachments/pdfLogo.png')}
-                                style={{
-                                  width: 40,
-                                  height: 40,
-                                  marginRight: 15,
-                                }}
-                              />
-                            )}
-                            {item?.contentType?.includes('doc') && (
-                              <Image
-                                source={require('../../assests/images/attachments/docLogo.png')}
-                                style={{
-                                  width: 40,
-                                  height: 40,
-                                  marginRight: 15,
-                                }}
-                              />
-                            )}
-
-                            <View>
-                              <Text style={{color: 'black'}}>
-                                {item?.title?.slice(0, 15) + '...'}
-                              </Text>
-                              <Text style={{color: 'black'}}>
-                                {'...' + item?.contentType?.slice(-15)}
-                              </Text>
-                            </View>
-                          </View>
-                        </TouchableOpacity>
-                      </View>
-                    );
-                  })}
-
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-around',
-                  }}>
-                  {chat?.content?.includes('<span class="mention"') ? (
-                    <HTMLView
-                      value={`<div>${chat?.content}</div>`}
-                      renderNode={renderNode}
-                      stylesheet={htmlStyles(textColor)}
-                    />
-                  ) : (
-                    <RenderHTML
-                      source={{
-                        html: chat?.content?.replace(
-                          emailRegex,
-                          '<a href="mailTo:$&">$&</a>',
-                        ),
-                      }}
-                      contentWidth={width}
-                      tagsStyles={tagsStyles(textColor, linkColor)}
-                    />
-                  )}
-                  <View
-                    style={{
-                      // flexDirection: 'row',
-                      alignSelf: 'flex-end',
-                    }}>
-                    {chat?.randomId != null && (
-                      <View
-                        style={{
-                          alignItems: 'flex-end',
-                          width: ms(20),
-                        }}>
-                        <Icon name="access-time" color={'white'} />
-                      </View>
                     )}
                   </View>
                 </View>
               </View>
-            </View>
-          </Swipeable>
-        </TouchableOpacity>
+            </Swipeable>
+          </TouchableOpacity>
+        </View>
         {!isSameDate && (
           <View>
             <Text

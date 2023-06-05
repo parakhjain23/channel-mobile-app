@@ -15,7 +15,6 @@ const initialState = {
 
 export function orgsReducer(state = initialState, action) {
   switch (action.type) {
-
     case Actions.SELECT_INITIAL_ORG_ID:
       return {...state, currentOrgId: action.orgId};
 
@@ -37,21 +36,26 @@ export function orgsReducer(state = initialState, action) {
         orgs: action.payload,
         isLoading: false,
         orgIdAndNameMapping: orgIdAndNameObj,
-        noOrgsFound:false
+        noOrgsFound: false,
       };
 
     case Actions.GET_ALL_USERS_SUCCESS:
       var idAndNameMap = {};
       var idAndDisplayNameMap = {};
+      var idAndImageUrlMap = {};
+      console.log(action?.allUser[0]);
       action?.allUser?.map(item => {
         idAndNameMap[item?.id] = `${item?.firstName + ' ' + item?.lastName}`;
         idAndDisplayNameMap[item?.id] = `${item?.displayName}`;
+        idAndImageUrlMap[item?.id] = item?.avatar;
       });
+      console.log(idAndImageUrlMap, '-==-=-=');
       idAndDisplayNameMap['all'] = 'channel';
       return {
         ...state,
         userIdAndNameMapping: idAndNameMap,
         userIdAndDisplayNameMapping: idAndDisplayNameMap,
+        userIdAndImageUrlMapping: idAndImageUrlMap,
       };
 
     case Actions.NEW_USER_JOINED_ORG:

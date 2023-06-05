@@ -59,6 +59,8 @@ export function chatReducer(state = initialState, action) {
           action?.messages[i]?.senderId != action?.messages[i + 1]?.senderId
         ) {
           action.messages[i]['sameSender'] = false;
+        } else if (action?.messages[i + 1]?.isActivity) {
+          action.messages[i]['sameSender'] = false;
         } else if (minutesDiff > 5) {
           action.messages[i]['sameSender'] = false;
         } else {
