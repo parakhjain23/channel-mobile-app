@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#D3D3D3',
     position: 'absolute',
     bottom: 0,
-    right: 5,
+    right: 0,
     ...Platform.select({
       android: {
         elevation: 4,

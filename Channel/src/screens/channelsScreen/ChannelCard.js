@@ -345,8 +345,8 @@ const SearchChannelCard = ({
                     : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVe0cFaZ9e5Hm9X-tdWRLSvoZqg2bjemBABA&usqp=CAU',
                 }}
                 style={{
-                  height: 45,
-                  width: 45,
+                  height: 36,
+                  width: 36,
                   borderRadius: 50,
                 }}
               />
