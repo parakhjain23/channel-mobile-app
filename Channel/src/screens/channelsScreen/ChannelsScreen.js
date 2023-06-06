@@ -76,7 +76,7 @@ const ChannelsScreen = props => {
   const onOpen = () => {
     modalizeRef.current?.open();
   };
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await props.getChannelsAction(
       props?.userInfoState?.accessToken,
@@ -90,10 +90,8 @@ const ChannelsScreen = props => {
       props?.userInfoState?.accessToken,
       props?.orgsState?.currentOrgId,
     );
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
-  }, []);
+    setRefreshing(false);
+  }, [props?.orgsState?.currentOrgId]);
 
   return (
     <AppProvider>
