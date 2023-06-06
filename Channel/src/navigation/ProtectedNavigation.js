@@ -31,7 +31,6 @@ const ProtectedNavigation = props => {
   }, []);
   const PLATFORM = Platform.OS == 'android' ? 'android' : 'ios';
   const CustomHeaderTitle = ({route}) => {
-    console.log(route, '=-=-=');
     return route?.params?.channelType === 'DIRECT_MESSAGE' ? (
       <TouchableOpacity
         onPress={async () => {
