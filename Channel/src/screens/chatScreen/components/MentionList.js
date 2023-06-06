@@ -5,8 +5,15 @@ import {useTheme} from '@react-navigation/native';
 import {makeStyles} from '../Styles';
 import {TouchableOpacity} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FastImage from 'react-native-fast-image';
 
-const MentionList = ({data, setMentionsArr, onChangeMessage, setMentions}) => {
+const MentionList = ({
+  data,
+  setMentionsArr,
+  onChangeMessage,
+  setMentions,
+  orgsState,
+}) => {
   const {colors} = useTheme();
   const styles = makeStyles(colors);
 
@@ -29,7 +36,10 @@ const MentionList = ({data, setMentionsArr, onChangeMessage, setMentions}) => {
   const renderMention = useMemo(
     () =>
       ({item, index}) => {
-        if (item?._source?.type !== 'U') {
+        if (
+          item?._source?.type !== 'U' ||
+          item?._source?.status?.toLowerCase() === 'invited'
+        ) {
           return null;
         }
         const handlePress = () => handleMentionSelect(item);
@@ -37,7 +47,7 @@ const MentionList = ({data, setMentionsArr, onChangeMessage, setMentions}) => {
           <TouchableOpacity
             onPress={handlePress}
             key={index}
-            style={{borderRadius: 6, margin: 1, padding: 2}}>
+            style={{borderRadius: 6, padding: 1}}>
             <View
               style={{
                 flexDirection: 'row',
@@ -48,12 +58,29 @@ const MentionList = ({data, setMentionsArr, onChangeMessage, setMentions}) => {
                 padding: 6,
                 backgroundColor: colors?.primaryColor,
               }}>
-              <MaterialIcons
-                name="account-circle"
-                size={20}
-                color={colors.sentByMeCardColor}
-                style={{marginRight: 8}}
-              />
+              {orgsState?.userIdAndImageUrlMapping[item?._source?.userId] ? (
+                <FastImage
+                  source={{
+                    uri: orgsState?.userIdAndImageUrlMapping[
+                      item?._source?.userId
+                    ],
+                  }}
+                  style={{
+                    height: 20,
+                    width: 20,
+                    borderRadius: 50,
+                    marginRight: 8,
+                  }}
+                />
+              ) : (
+                <MaterialIcons
+                  name="account-circle"
+                  size={20}
+                  color={colors.sentByMeCardColor}
+                  style={{marginRight: 8}}
+                />
+              )}
+
               <Text style={{fontSize: 16, color: colors?.textColor}}>
                 {item?._source?.displayName}
               </Text>

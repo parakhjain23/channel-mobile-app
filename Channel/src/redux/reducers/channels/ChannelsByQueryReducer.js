@@ -2,7 +2,7 @@ import * as Actions from '../../Enums';
 
 const initialState = {
   channels: [],
-  mentionChannels:[],
+  mentionChannels: [],
   isLoading: false,
 };
 
@@ -12,7 +12,18 @@ export function channelsByQueryReducer(state = initialState, action) {
       return {...state, isLoading: true};
 
     case Actions.FETCH_CHANNELS_BY_QUERY_SUCCESS:
-      return {...state, channels: action.channels,mentionChannels:[{_source:{displayName:'channel',type:'U'}},...action.channels], isLoading: false};
+      return {
+        ...state,
+        channels: action.channels,
+        mentionChannels:
+          action.channels?.length > 0
+            ? [
+                {_source: {displayName: 'channel', type: 'U'}},
+                ...action.channels,
+              ]
+            : [],
+        isLoading: false,
+      };
 
     case Actions.FETCH_CHANNELS_BY_QUERY_ERROR:
       return {...state, channels: [], isLoading: false};

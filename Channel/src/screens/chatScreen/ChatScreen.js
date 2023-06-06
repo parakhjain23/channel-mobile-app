@@ -189,6 +189,14 @@ const ChatScreen = ({
     return () => clearTimeout(timeoutId);
   }, [teamId]);
 
+  useEffect(() => {
+    if (channelsByQueryState?.mentionChannels) {
+      setMentions(channelsByQueryState?.mentionChannels);
+    } else {
+      setMentions([]);
+    }
+  }, [channelsByQueryState?.mentionChannels]);
+
   const handleInputChange = useCallback(
     text => {
       onChangeMessage(text);
@@ -200,7 +208,6 @@ const ChatScreen = ({
           userInfoState?.user?.id,
           orgState?.currentOrgId,
         );
-        setMentions(channelsByQueryState?.mentionChannels);
       } else if (
         words[0].startsWith('/') &&
         words.length === 1 &&
@@ -548,6 +555,7 @@ const ChatScreen = ({
                     setMentionsArr={setMentionsArr}
                     onChangeMessage={onChangeMessage}
                     setMentions={setMentions}
+                    orgsState={orgState}
                   />
 
                   {Activities && (
