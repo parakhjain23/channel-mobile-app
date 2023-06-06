@@ -634,7 +634,7 @@ const ChatScreen = ({
                             flexDirection: 'row',
                             alignItems: 'center',
                           }}>
-                          <View style={{justifyContent: 'flex-end'}}>
+                          <View style={{alignSelf: 'flex-end'}}>
                             <AttachmentOptions
                               accessToken={accessToken}
                               setAttachment={setAttachment}
