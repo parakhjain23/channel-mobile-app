@@ -113,12 +113,18 @@ const ProtectedNavigation = props => {
       <Stack.Screen
         name="Org"
         component={DrawerNavigation}
-        options={{headerShown: false, ...getHeader}}
+        options={{
+          headerShown: false,
+          ...getHeader,
+        }}
       />
       <Stack.Screen
         name="Ipad"
         component={IpadScreen}
-        options={{headerShown: true, ...getHeader}}
+        options={{
+          headerShown: true,
+          ...getHeader,
+        }}
       />
       <Stack.Screen
         name="Chat"
@@ -128,24 +134,22 @@ const ProtectedNavigation = props => {
             return <CustomHeaderTitle route={route} />;
           },
           headerShown: true,
-          headerBackVisible: false,
           headerLeft: () => (
             <TouchableOpacity
               style={{
                 flexDirection: 'column',
-                // flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
-                paddingVertical: ms(15),
+                paddingVertical: 10,
                 paddingRight: Platform.OS === 'ios' ? ms(50) : ms(30),
-                marginLeft: -15,
+                marginLeft: -18,
               }}
               onPressIn={() => RootNavigation.goBack()}>
               <Icon
-                name="arrow-left"
-                size={ms(16)}
+                name="chevron-left"
+                size={18}
                 color={colors.textColor}
-                style={{paddingLeft: ms(10)}}
+                style={{paddingLeft: 10}}
               />
             </TouchableOpacity>
           ),
@@ -167,6 +171,7 @@ const ProtectedNavigation = props => {
         options={({route}) => ({
           headerTitle: route?.params?.displayName + ' Profile',
           headerShown: true,
+
           ...getHeader,
         })}
       />

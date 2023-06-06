@@ -17,11 +17,11 @@ import IpadScreen from '../screens/ipadScreen/IpadScreen';
 import {DEVICE_TYPES} from '../constants/Constants';
 
 const Drawer = createDrawerNavigator();
-const DrawerNavigation = ({orgsState,appInfoState}) => {
+const DrawerNavigation = ({orgsState, appInfoState}) => {
   const {colors} = useTheme();
   var count = orgsState?.unreadCountForDrawerIcon;
   let ScreenName, ScreenComponent;
-  const deviceType = appInfoState.deviceType
+  const deviceType = appInfoState.deviceType;
   if (deviceType === DEVICE_TYPES[0]) {
     [ScreenName, ScreenComponent] = ['Channel', ChannelsScreen];
   } else {
@@ -29,7 +29,9 @@ const DrawerNavigation = ({orgsState,appInfoState}) => {
   }
   return (
     <Drawer.Navigator
-      drawerContent={props => <CustomDrawerScreen {...props} deviceType={deviceType}/>}>
+      drawerContent={props => (
+        <CustomDrawerScreen {...props} deviceType={deviceType} />
+      )}>
       <Drawer.Screen
         name={ScreenName}
         component={ScreenComponent}
@@ -67,7 +69,7 @@ const DrawerNavigation = ({orgsState,appInfoState}) => {
 const mapStateToProps = state => ({
   userInfoState: state.userInfoReducer,
   orgsState: state.orgsReducer,
-  appInfoState : state.appInfoReducer
+  appInfoState: state.appInfoReducer,
 });
 export default connect(mapStateToProps)(DrawerNavigation);
 const styles = StyleSheet.create({
