@@ -480,7 +480,7 @@ const ChatScreen = ({
                 <View
                   style={[
                     replyOnMessage && styles.inputWithReplyContainer,
-                    {width: isRecording ? '100%' : '87%'},
+                    {width: isRecording ? '100%' : '87%', alignSelf: 'center'},
                   ]}>
                   {attachment?.length > 0 &&
                     attachment?.map((item, index) => {
@@ -580,8 +580,6 @@ const ChatScreen = ({
                           flexDirection: 'row',
                           justifyContent: 'center',
                           minHeight: 60,
-                          // maxHeight: ms(200),
-
                           flex: 1,
                           alignItems: 'center',
                         }}>
@@ -631,14 +629,20 @@ const ChatScreen = ({
                           </Button>
                         </View>
                       ) : (
-                        <>
-                          <AttachmentOptions
-                            accessToken={accessToken}
-                            setAttachment={setAttachment}
-                            setAttachmentLoading={setAttachmentLoading}
-                            showOptions={showOptions}
-                            setShowOptions={setShowOptions}
-                          />
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                          }}>
+                          <View style={{justifyContent: 'flex-end'}}>
+                            <AttachmentOptions
+                              accessToken={accessToken}
+                              setAttachment={setAttachment}
+                              setAttachmentLoading={setAttachmentLoading}
+                              showOptions={showOptions}
+                              setShowOptions={setShowOptions}
+                            />
+                          </View>
                           <TextInput
                             ref={textInputRef}
                             editable
@@ -654,7 +658,7 @@ const ChatScreen = ({
                               {color: colors.textColor},
                             ]}
                           />
-                        </>
+                        </View>
                       )}
                       {showOptions &&
                         message?.length == 1 &&
@@ -664,35 +668,51 @@ const ChatScreen = ({
                 </View>
                 <View
                   style={{
-                    flexDirection: 'row',
-                    // flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'flex-end',
+                    justifyContent: 'flex-end',
                   }}>
                   {message?.length > 0 ||
                   showPlayer ||
                   attachment?.length > 0 ? (
                     <TouchableOpacity
-                      onPress={!action ? onSendPress : onSendWithAction}>
+                      onPress={!action ? onSendPress : onSendWithAction}
+                      style={{
+                        backgroundColor: colors?.sentByMeCardColor,
+                        borderRadius: 50,
+                        marginLeft: 3,
+                        backgroundColor: '#43B14B',
+                      }}
+                      activeOpacity={0.9}>
                       <MaterialIcons
                         name="send"
-                        size={25}
+                        size={23}
                         style={{
-                          color: colors.textColor,
-                          padding: 15,
+                          color: colors.sentByMeTextColor,
+                          padding: 11,
                         }}
                       />
                     </TouchableOpacity>
                   ) : (
                     !isRecording && (
-                      <MaterialIcons
-                        name="mic"
-                        size={25}
-                        style={{color: colors.textColor, padding: 15}}
+                      <TouchableOpacity
                         onPress={() => {
                           onStartRecord(setisRecording);
                         }}
-                      />
+                        style={{
+                          backgroundColor: colors?.sentByMeCardColor,
+                          borderRadius: 50,
+                          marginLeft: 3,
+                          backgroundColor: '#43B14B',
+                        }}
+                        activeOpacity={0.9}>
+                        <MaterialIcons
+                          name="mic"
+                          size={25}
+                          style={{
+                            color: colors.sentByMeTextColor,
+                            padding: 10,
+                          }}
+                        />
+                      </TouchableOpacity>
                     )
                   )}
                 </View>

@@ -111,6 +111,7 @@ export const makeStyles = colors =>
     bottomContainer: {
       marginBottom: 5,
       flexDirection: 'row',
+      justifyContent: 'space-between',
     },
     sentByMe: {
       alignSelf: 'flex-end',
