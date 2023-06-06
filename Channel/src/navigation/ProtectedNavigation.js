@@ -17,6 +17,7 @@ import IpadScreen from '../screens/ipadScreen/IpadScreen';
 import {DEVICE_TYPES} from '../constants/Constants';
 import * as Actions from '../redux/Enums';
 import ChannelDetailsScreen from '../screens/channelDetails/ChannelDetails';
+import FastImage from 'react-native-fast-image';
 
 const ProtectedNavigation = props => {
   const Stack = createNativeStackNavigator();
@@ -30,6 +31,7 @@ const ProtectedNavigation = props => {
   }, []);
   const PLATFORM = Platform.OS == 'android' ? 'android' : 'ios';
   const CustomHeaderTitle = ({route}) => {
+    console.log(route, '=-=-=');
     return route?.params?.channelType === 'DIRECT_MESSAGE' ? (
       <TouchableOpacity
         onPress={async () => {
@@ -44,13 +46,28 @@ const ProtectedNavigation = props => {
         }}
         style={{
           // backgroundColor: 'red',
+          flexDirection: 'row',
+          alignItems: 'center',
           paddingHorizontal: PLATFORM == 'android' ? null : 20,
           paddingRight: PLATFORM == 'android' ? 70 : null,
         }}>
+        <FastImage
+          source={{
+            uri: props?.orgsState?.userIdAndImageUrlMapping[
+              route?.params?.userId
+            ],
+          }}
+          style={{
+            height: 30,
+            width: 30,
+            borderRadius: 50,
+            marginRight: 8,
+          }}
+        />
         <Text
           style={{
             color: colors?.textColor,
-            fontSize: 20,
+            fontSize: 12,
             fontWeight: '600',
             maxWidth: PLATFORM == 'android' ? '100%' : null,
           }}

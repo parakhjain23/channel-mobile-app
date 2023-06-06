@@ -119,6 +119,7 @@ const ChatScreen = ({
   const [message, onChangeMessage] = useState('');
   const [attachment, setAttachment] = useState([]);
   const [attachmentLoading, setAttachmentLoading] = useState(false);
+  const [showMention, setshowMention] = useState(false);
   const [mentionsArr, setMentionsArr] = useState([]);
   const [isScrolling, setIsScrolling] = useState(false);
   const [mentions, setMentions] = useState([]);
@@ -198,16 +199,18 @@ const ChatScreen = ({
   }, [channelsByQueryState?.mentionChannels]);
 
   const handleInputChange = useCallback(
-    text => {
+    async text => {
       onChangeMessage(text);
       const words = text.split(' ');
       const currentWord = words[words.length - 1];
       if (currentWord.startsWith('@')) {
-        getChannelsByQueryStartAction(
+        await getChannelsByQueryStartAction(
           currentWord.slice(1),
           userInfoState?.user?.id,
           orgState?.currentOrgId,
         );
+        // setMentions(channelsByQueryState?.mentionChannels);
+        setshowMention(true);
       } else if (
         words[0].startsWith('/') &&
         words.length === 1 &&
@@ -215,9 +218,11 @@ const ChatScreen = ({
       ) {
         setActivities(true);
         setMentions([]);
+        setshowMention(false);
       } else {
         setMentions([]);
         setActivities(false);
+        setshowMention(false);
       }
     },
     [
@@ -550,13 +555,15 @@ const ChatScreen = ({
                     </TouchableOpacity>
                   )}
 
-                  <MentionList
-                    data={mentions}
-                    setMentionsArr={setMentionsArr}
-                    onChangeMessage={onChangeMessage}
-                    setMentions={setMentions}
-                    orgsState={orgState}
-                  />
+                  {showMention && (
+                    <MentionList
+                      data={mentions}
+                      setMentionsArr={setMentionsArr}
+                      onChangeMessage={onChangeMessage}
+                      setMentions={setMentions}
+                      orgsState={orgState}
+                    />
+                  )}
 
                   {Activities && (
                     <ActivityList
