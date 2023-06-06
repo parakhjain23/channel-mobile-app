@@ -66,7 +66,7 @@ const ProtectedNavigation = props => {
         <Text
           style={{
             color: colors?.textColor,
-            fontSize: 12,
+            fontSize: 18,
             fontWeight: '600',
             maxWidth: PLATFORM == 'android' ? '100%' : null,
           }}
