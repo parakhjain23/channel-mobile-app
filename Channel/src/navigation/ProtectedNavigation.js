@@ -150,6 +150,7 @@ const ProtectedNavigation = props => {
             return <CustomHeaderTitle route={route} />;
           },
           headerShown: true,
+          headerBackVisible: false,
           headerLeft: () => (
             <TouchableOpacity
               style={{
