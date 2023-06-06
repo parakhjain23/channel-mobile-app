@@ -268,7 +268,6 @@ const SearchChannelCard = ({
   const teamId = item?._id?.includes('_')
     ? props?.channelsState?.userIdAndTeamIdMapping[item?._source?.userId]
     : item?._id;
-  console.log(item);
   const iconName = useMemo(
     () => (item?._source?.type === 'U' ? 'user' : 'hashtag'),
     [item?._source?.type],

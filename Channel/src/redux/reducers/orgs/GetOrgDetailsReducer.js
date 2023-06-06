@@ -43,13 +43,11 @@ export function orgsReducer(state = initialState, action) {
       var idAndNameMap = {};
       var idAndDisplayNameMap = {};
       var idAndImageUrlMap = {};
-      console.log(action?.allUser[0]);
       action?.allUser?.map(item => {
         idAndNameMap[item?.id] = `${item?.firstName + ' ' + item?.lastName}`;
         idAndDisplayNameMap[item?.id] = `${item?.displayName}`;
         idAndImageUrlMap[item?.id] = item?.avatar;
       });
-      console.log(idAndImageUrlMap, '-==-=-=');
       idAndDisplayNameMap['all'] = 'channel';
       return {
         ...state,
