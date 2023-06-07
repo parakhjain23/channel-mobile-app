@@ -250,6 +250,7 @@ const ChatCard = ({
                 ? 'black'
                 : linkColor,
               textDecorationLine: 'underline',
+              fontSize: 16,
             }}>
             #{node?.attribs?.['data-value']}
           </Text>
