@@ -582,13 +582,21 @@ const ChatCard = ({
                     {chat?.content?.length > 500 &&
                       (showMore ? (
                         <Text
-                          style={{color: linkColor}}
+                          style={{
+                            color: linkColor,
+                            textDecorationLine: 'underline',
+                            marginTop: 5,
+                          }}
                           onPress={() => setShoreMore(!showMore)}>
                           Shore Less
                         </Text>
                       ) : (
                         <Text
-                          style={{color: linkColor}}
+                          style={{
+                            color: linkColor,
+                            textDecorationLine: 'underline',
+                            marginTop: 5,
+                          }}
                           onPress={() => setShoreMore(!showMore)}>
                           Show More
                         </Text>
