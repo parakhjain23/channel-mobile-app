@@ -74,6 +74,8 @@ const ChatCard = ({
   const [selectedImage, setSelectedImage] = useState(null);
   const swipeableRef = useRef(null);
   const {width} = useWindowDimensions();
+  const [showMore, setShoreMore] = useState(false);
+
   const sameSender =
     typeof chat?.sameSender === 'string'
       ? chat.sameSender === 'true'
@@ -560,15 +562,36 @@ const ChatCard = ({
                     ) : (
                       <RenderHTML
                         source={{
-                          html: chat?.content?.replace(
-                            emailRegex,
-                            '<a href="mailTo:$&">$&</a>',
-                          ),
+                          html: !showMore
+                            ? chat?.content
+                                ?.slice(0, 400)
+                                .replace(
+                                  emailRegex,
+                                  '<a href="mailTo:$&">$&</a>',
+                                )
+                            : chat?.content?.replace(
+                                emailRegex,
+                                '<a href="mailTo:$&">$&</a>',
+                              ),
                         }}
                         contentWidth={width}
                         tagsStyles={tagsStyles(textColor, linkColor)}
                       />
                     )}
+                    {chat?.content?.length > 500 &&
+                      (showMore ? (
+                        <Text
+                          style={{color: linkColor}}
+                          onPress={() => setShoreMore(!showMore)}>
+                          Shore Less
+                        </Text>
+                      ) : (
+                        <Text
+                          style={{color: linkColor}}
+                          onPress={() => setShoreMore(!showMore)}>
+                          Show More
+                        </Text>
+                      ))}
                   </View>
                 </View>
               </View>
