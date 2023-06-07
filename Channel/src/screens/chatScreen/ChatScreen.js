@@ -54,6 +54,7 @@ import MentionList from './components/MentionList';
 import ActionModal from './components/ActionModal';
 import {Button} from 'react-native-paper';
 import AttachmentOptions from './components/AttachmentOptions';
+import {listStyles} from './components/AttachmentStyles';
 
 const ChatScreen = ({
   chatDetailsForTab,
@@ -111,6 +112,7 @@ const ChatScreen = ({
   }, [networkState?.isInternetConnected, teamId, chatDetailsForTab]);
   const {colors} = useTheme();
   const styles = makeStyles(colors);
+  const listStyle = listStyles(colors);
   const [replyOnMessage, setreplyOnMessage] = useState(false);
   const [repliedMsgDetails, setrepliedMsgDetails] = useState('');
   const [showActions, setShowActions] = useState(false);
@@ -140,6 +142,7 @@ const ChatScreen = ({
   const [refreshing, setRefreshing] = useState(false);
   const navigationState = useNavigationState(state => state);
   const isMountedRef = useRef(true);
+  const optionsPosition = useRef(new Animated.Value(0)).current;
 
   const teamIdAndUnreadCountMapping =
     channelsState?.teamIdAndUnreadCountMapping;
@@ -308,6 +311,26 @@ const ChatScreen = ({
     div: {
       color: 'black',
     },
+  };
+
+  const showOptionsMethod = () => {
+    setShowOptions(true);
+    Animated.timing(optionsPosition, {
+      toValue: 0,
+      duration: 250,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const hideOptionsMethod = () => {
+    Animated.timing(optionsPosition, {
+      toValue: -200,
+      duration: 250,
+      useNativeDriver: true,
+    }).start();
+    setTimeout(() => {
+      setShowOptions(false);
+    }, 130);
   };
 
   const onSendWithAction = () => {
@@ -596,6 +619,17 @@ const ChatScreen = ({
                     </View>
                   )}
 
+                  {showOptions && (
+                    <AttachmentOptions
+                      accessToken={accessToken}
+                      setAttachment={setAttachment}
+                      setAttachmentLoading={setAttachmentLoading}
+                      showOptions={showOptions}
+                      setShowOptions={setShowOptions}
+                      optionsPosition={optionsPosition}
+                    />
+                  )}
+
                   {!showPlayer && (
                     <View style={styles.inputContainer}>
                       {isRecording ? (
@@ -635,13 +669,21 @@ const ChatScreen = ({
                             alignItems: 'center',
                           }}>
                           <View style={{alignSelf: 'flex-end'}}>
-                            <AttachmentOptions
-                              accessToken={accessToken}
-                              setAttachment={setAttachment}
-                              setAttachmentLoading={setAttachmentLoading}
-                              showOptions={showOptions}
-                              setShowOptions={setShowOptions}
-                            />
+                            {!showOptions ? (
+                              <MaterialIcons
+                                name="add"
+                                size={20}
+                                style={listStyle.attachIcon}
+                                onPress={showOptionsMethod}
+                              />
+                            ) : (
+                              <MaterialIcons
+                                name="chevron-left"
+                                size={20}
+                                style={listStyle.attachIcon}
+                                onPress={hideOptionsMethod}
+                              />
+                            )}
                           </View>
                           <TextInput
                             ref={textInputRef}
