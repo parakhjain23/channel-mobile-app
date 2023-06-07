@@ -45,7 +45,7 @@ const ProtectedNavigation = props => {
         }}
         style={{
           // backgroundColor: 'red',
-          flexDirection: 'row',
+          // flexDirection: 'row',
           alignItems: 'center',
           paddingHorizontal: PLATFORM == 'android' ? null : 20,
           paddingRight: PLATFORM == 'android' ? 70 : null,
@@ -106,11 +106,45 @@ const ProtectedNavigation = props => {
     headerStyle: {
       color: colors.textColor,
       backgroundColor: colors.headerColor,
+      height: 80,
     },
     statusBarColor: 'transparent',
     statusBarTranslucent: true,
     statusBarStyle: colors?.primaryColor == '#ffffff' ? 'dark' : 'light',
   };
+  const CustomHeader = props => {
+    const handleGoBack = () => {
+      RootNavigation?.goBack();
+    };
+
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          minHeight: 80,
+          backgroundColor: 'red',
+          // alignItems: 'flex-end',
+          // paddingHorizontal: 10,
+        }}>
+        <TouchableOpacity
+          onPress={handleGoBack}
+          style={{
+            justifyContent: 'center',
+            paddingRight: 50,
+            backgroundColor: 'black',
+          }}>
+          <View>
+            <Icon name="chevron-left" size={18} color="white" />
+          </View>
+        </TouchableOpacity>
+
+        <View style={{flex: 1, justifyContent: 'flex-end'}}>
+          <CustomHeaderTitle route={props?.route} />
+        </View>
+      </View>
+    );
+  };
+
   return props?.orgsState?.currentOrgId == null ? (
     <Stack.Navigator>
       <Stack.Screen
@@ -146,31 +180,32 @@ const ProtectedNavigation = props => {
         name="Chat"
         component={ChatScreen}
         options={({route}) => ({
-          headerTitle: () => {
-            return <CustomHeaderTitle route={route} />;
-          },
-          headerShown: true,
-          headerBackVisible: false,
-          headerLeft: () => (
-            <TouchableOpacity
-              style={{
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                paddingVertical: 10,
-                paddingRight: Platform.OS === 'ios' ? ms(50) : ms(30),
-                marginLeft: -18,
-              }}
-              onPressIn={() => RootNavigation.goBack()}>
-              <Icon
-                name="chevron-left"
-                size={18}
-                color={colors.textColor}
-                style={{paddingLeft: 10}}
-              />
-            </TouchableOpacity>
-          ),
-          ...getHeader,
+          header: props => <CustomHeader {...props} />,
+          //   headerTitle: () => {
+          //     return <CustomHeaderTitle route={route} />;
+          //   },
+          //   headerShown: true,
+          //   headerBackVisible: false,
+          //   // headerLeft: () => (
+          //   //   <TouchableOpacity
+          //   //     style={{
+          //   //       flexDirection: 'column',
+          //   //       justifyContent: 'center',
+          //   //       alignItems: 'center',
+          //   //       paddingVertical: 10,
+          //   //       paddingRight: Platform.OS === 'ios' ? ms(50) : ms(30),
+          //   //       marginLeft: -18,
+          //   //     }}
+          //   //     onPressIn={() => RootNavigation.goBack()}>
+          //   //     <Icon
+          //   //       name="chevron-left"
+          //   //       size={18}
+          //   //       color={colors.textColor}
+          //   //       style={{paddingLeft: 10}}
+          //   //     />
+          //   //   </TouchableOpacity>
+          //   // ),
+          //   // ...getHeader,
         })}
       />
       <Stack.Screen
@@ -188,7 +223,6 @@ const ProtectedNavigation = props => {
         options={({route}) => ({
           headerTitle: route?.params?.displayName + ' Profile',
           headerShown: true,
-
           ...getHeader,
         })}
       />
