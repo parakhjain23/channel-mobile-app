@@ -49,7 +49,7 @@ const AttachmentOptions = ({
           }}
           iconName="attach-file"
           iconSize={20}
-          tileText="Attach Pdf, docs from Your Device"
+          tileText="Browse files from your device"
           listStyles={listStyle}
         />
         <AttachmentTile
@@ -62,9 +62,9 @@ const AttachmentOptions = ({
             modalizeRef?.current?.close();
             // setShowOptions(false);
           }}
-          iconName="camera"
+          iconName="camera-alt"
           iconSize={20}
-          tileText="Upload from Camera"
+          tileText="Snap with camera"
           listStyles={listStyle}
         />
         <AttachmentTile
@@ -75,7 +75,7 @@ const AttachmentOptions = ({
           }}
           iconName="image"
           iconSize={20}
-          tileText="Open Gallery"
+          tileText="Pick from gallery"
           listStyles={listStyle}
         />
       </View>
