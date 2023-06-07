@@ -13,6 +13,7 @@ import {
   Platform,
   StyleSheet,
   RefreshControl,
+  Keyboard,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -55,6 +56,7 @@ import ActionModal from './components/ActionModal';
 import {Button} from 'react-native-paper';
 import AttachmentOptions from './components/AttachmentOptions';
 import {listStyles} from './components/AttachmentStyles';
+import AttachmentOptionsModal from './components/AttachmentOptionsModal';
 
 const ChatScreen = ({
   chatDetailsForTab,
@@ -142,7 +144,7 @@ const ChatScreen = ({
   const [refreshing, setRefreshing] = useState(false);
   const navigationState = useNavigationState(state => state);
   const isMountedRef = useRef(true);
-  const optionsPosition = useRef(new Animated.Value(0)).current;
+  const modalizeRef = useRef(null);
 
   const teamIdAndUnreadCountMapping =
     channelsState?.teamIdAndUnreadCountMapping;
@@ -313,26 +315,6 @@ const ChatScreen = ({
     },
   };
 
-  const showOptionsMethod = () => {
-    setShowOptions(true);
-    Animated.timing(optionsPosition, {
-      toValue: 0,
-      duration: 250,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const hideOptionsMethod = () => {
-    Animated.timing(optionsPosition, {
-      toValue: -200,
-      duration: 250,
-      useNativeDriver: true,
-    }).start();
-    setTimeout(() => {
-      setShowOptions(false);
-    }, 130);
-  };
-
   const onSendWithAction = () => {
     onChangeMessage('');
     const hasMentions = mentionsArr?.length > 0;
@@ -419,6 +401,12 @@ const ChatScreen = ({
     showPlayer && setShowPlayer(false);
   };
 
+  const AttachmentObject = {
+    modalizeRef,
+    accessToken,
+    setAttachment,
+    setAttachmentLoading,
+  };
   return (
     <AppProvider>
       <SafeAreaView style={styles.safeAreaView}>
@@ -619,17 +607,6 @@ const ChatScreen = ({
                     </View>
                   )}
 
-                  {showOptions && (
-                    <AttachmentOptions
-                      accessToken={accessToken}
-                      setAttachment={setAttachment}
-                      setAttachmentLoading={setAttachmentLoading}
-                      showOptions={showOptions}
-                      setShowOptions={setShowOptions}
-                      optionsPosition={optionsPosition}
-                    />
-                  )}
-
                   {!showPlayer && (
                     <View style={styles.inputContainer}>
                       {isRecording ? (
@@ -669,21 +646,34 @@ const ChatScreen = ({
                             alignItems: 'center',
                           }}>
                           <View style={{alignSelf: 'flex-end'}}>
-                            {!showOptions ? (
+                            <MaterialIcons
+                              name="add"
+                              size={20}
+                              style={listStyle.attachIcon}
+                              onPress={() => {
+                                Keyboard.dismiss();
+                                modalizeRef?.current?.open();
+                              }}
+                            />
+                            {/* {!showOptions ? (
                               <MaterialIcons
                                 name="add"
                                 size={20}
                                 style={listStyle.attachIcon}
-                                onPress={showOptionsMethod}
+                                onPress={() => {
+                                  modalizeRef?.current?.open();
+                                }}
                               />
                             ) : (
                               <MaterialIcons
                                 name="chevron-left"
                                 size={20}
                                 style={listStyle.attachIcon}
-                                onPress={hideOptionsMethod}
+                                onPress={() => {
+                                  modalizeRef?.current?.close();
+                                }}
                               />
-                            )}
+                            )} */}
                           </View>
                           <TextInput
                             ref={textInputRef}
@@ -761,6 +751,7 @@ const ChatScreen = ({
               </View>
             </View>
           </KeyboardAvoidingView>
+          <AttachmentOptionsModal AttachmentObject={AttachmentObject} />
         </View>
       </SafeAreaView>
     </AppProvider>

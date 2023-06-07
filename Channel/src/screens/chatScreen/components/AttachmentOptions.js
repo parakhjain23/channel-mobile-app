@@ -24,65 +24,61 @@ const AttachmentTile = ({
         size={iconSize}
         style={listStyles.attachIcon}
       />
-      <Text>{tileText}</Text>
+      <Text style={listStyles?.text}>{tileText}</Text>
     </TouchableOpacity>
   );
 };
 
 const AttachmentOptions = ({
-  accessToken,
-  setAttachment,
-  setAttachmentLoading,
-  setShowOptions,
-  optionsPosition,
+  AttachmentObject,
+  // setShowOptions,
 }) => {
+  const {modalizeRef, accessToken, setAttachment, setAttachmentLoading} =
+    AttachmentObject;
   const {colors} = useTheme();
   const listStyle = listStyles(colors);
 
   return (
     <View style={{justifyContent: 'center'}}>
-      <Animated.View
-        style={[
-          listStyles.optionsContainer,
-          {transform: [{translateX: optionsPosition}]},
-        ]}>
-        <View style={{borderRadius: 20}}>
-          <AttachmentTile
-            onPress={() => {
-              pickDocument(setAttachment, accessToken, setAttachmentLoading);
-              setShowOptions(false);
-            }}
-            iconName="attach-file"
-            iconSize={20}
-            tileText="Attach Pdf, docs from Your Device"
-            listStyles={listStyle}
-          />
-          <AttachmentTile
-            onPress={() => {
-              launchCameraForPhoto(
-                accessToken,
-                setAttachment,
-                setAttachmentLoading,
-              );
-              setShowOptions(false);
-            }}
-            iconName="camera"
-            iconSize={20}
-            tileText="Upload from Camera"
-            listStyles={listStyle}
-          />
-          <AttachmentTile
-            onPress={() => {
-              launchGallery(accessToken, setAttachment, setAttachmentLoading);
-              setShowOptions(false);
-            }}
-            iconName="image"
-            iconSize={20}
-            tileText="Open Gallery"
-            listStyles={listStyle}
-          />
-        </View>
-      </Animated.View>
+      <View style={{borderRadius: 20}}>
+        <AttachmentTile
+          onPress={() => {
+            pickDocument(setAttachment, accessToken, setAttachmentLoading);
+            modalizeRef?.current?.close();
+            // setShowOptions(false);
+          }}
+          iconName="attach-file"
+          iconSize={20}
+          tileText="Attach Pdf, docs from Your Device"
+          listStyles={listStyle}
+        />
+        <AttachmentTile
+          onPress={() => {
+            launchCameraForPhoto(
+              accessToken,
+              setAttachment,
+              setAttachmentLoading,
+            );
+            modalizeRef?.current?.close();
+            // setShowOptions(false);
+          }}
+          iconName="camera"
+          iconSize={20}
+          tileText="Upload from Camera"
+          listStyles={listStyle}
+        />
+        <AttachmentTile
+          onPress={() => {
+            launchGallery(accessToken, setAttachment, setAttachmentLoading);
+            modalizeRef?.current?.close();
+            // setShowOptions(false);
+          }}
+          iconName="image"
+          iconSize={20}
+          tileText="Open Gallery"
+          listStyles={listStyle}
+        />
+      </View>
     </View>
   );
 };

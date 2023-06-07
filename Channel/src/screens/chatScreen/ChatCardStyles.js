@@ -75,7 +75,7 @@ export const makeStyles = colors =>
       marginHorizontal: ms(4),
     },
     textContainer: {
-      padding: ms(6),
+      padding: 6,
       // maxWidth: '90%',
     },
     nameText: {
