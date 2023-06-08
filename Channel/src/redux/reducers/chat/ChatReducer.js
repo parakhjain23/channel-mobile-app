@@ -71,9 +71,8 @@ export function chatReducer(state = initialState, action) {
           action.messages[i].attachment[0].contentType?.includes('audio') &&
           action.messages[i].attachment[0].transcription != undefined
         ) {
-          action.messages[
-            i
-          ].content = `Transcription :- ${action.messages[i].attachment[0].transcription}`;
+          action.messages[i].content =
+            action.messages[i].attachment[0].transcription;
         }
       }
       return {
