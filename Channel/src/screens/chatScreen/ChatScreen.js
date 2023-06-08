@@ -435,19 +435,19 @@ const ChatScreen = ({
   };
   return (
     <AppProvider>
-      {!isScrolling && (
-        <Header
-          chatHeaderTitle={chatHeaderTitle}
-          userId={reciverUserId}
-          channelType={channelType}
-          searchUserProfileAction={searchUserProfileAction}
-          accessToken={accessToken}
-          teamId={teamId}
-          orgState={orgState}
-          channelsState={channelsState}
-        />
-      )}
       <GestureHandlerRootView style={{flex: 1}}>
+        {!isScrolling && (
+          <Header
+            chatHeaderTitle={chatHeaderTitle}
+            userId={reciverUserId}
+            channelType={channelType}
+            searchUserProfileAction={searchUserProfileAction}
+            accessToken={accessToken}
+            teamId={teamId}
+            orgState={orgState}
+            channelsState={channelsState}
+          />
+        )}
         <SafeAreaView style={styles.safeAreaView}>
           <View style={styles.mainContainer}>
             <KeyboardAvoidingView
@@ -781,8 +781,8 @@ const ChatScreen = ({
             </KeyboardAvoidingView>
           </View>
         </SafeAreaView>
+        <AttachmentOptionsModal AttachmentObject={AttachmentObject} />
       </GestureHandlerRootView>
-      <AttachmentOptionsModal AttachmentObject={AttachmentObject} />
     </AppProvider>
   );
 };
