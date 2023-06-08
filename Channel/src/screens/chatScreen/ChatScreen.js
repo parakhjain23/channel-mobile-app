@@ -13,6 +13,7 @@ import {
   Platform,
   StyleSheet,
   RefreshControl,
+  Keyboard,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -55,6 +56,8 @@ import ActionModal from './components/ActionModal';
 import {Button} from 'react-native-paper';
 import AttachmentOptions from './components/AttachmentOptions';
 import Header from '../../components/Header';
+import {listStyles} from './components/AttachmentStyles';
+import AttachmentOptionsModal from './components/AttachmentOptionsModal';
 
 const ChatScreen = ({
   chatDetailsForTab,
@@ -113,6 +116,7 @@ const ChatScreen = ({
   }, [networkState?.isInternetConnected, teamId, chatDetailsForTab]);
   const {colors} = useTheme();
   const styles = makeStyles(colors);
+  const listStyle = listStyles(colors);
   const [replyOnMessage, setreplyOnMessage] = useState(false);
   const [repliedMsgDetails, setrepliedMsgDetails] = useState('');
   const [showActions, setShowActions] = useState(false);
@@ -142,6 +146,7 @@ const ChatScreen = ({
   const [refreshing, setRefreshing] = useState(false);
   const navigationState = useNavigationState(state => state);
   const isMountedRef = useRef(true);
+  const modalizeRef = useRef(null);
 
   const teamIdAndUnreadCountMapping =
     channelsState?.teamIdAndUnreadCountMapping;
@@ -398,6 +403,12 @@ const ChatScreen = ({
     showPlayer && setShowPlayer(false);
   };
 
+  const AttachmentObject = {
+    modalizeRef,
+    accessToken,
+    setAttachment,
+    setAttachmentLoading,
+  };
   return (
     <AppProvider>
       {!isScrolling && (
@@ -601,7 +612,7 @@ const ChatScreen = ({
                       </View>
                       <MaterialIcons
                         name="cancel"
-                        size={ms(18)}
+                        size={18}
                         color={colors?.textColor}
                         onPress={() => {
                           setShowPlayer(false);
@@ -648,13 +659,18 @@ const ChatScreen = ({
                             flexDirection: 'row',
                             alignItems: 'center',
                           }}>
-                          <View style={{alignSelf: 'flex-end'}}>
-                            <AttachmentOptions
-                              accessToken={accessToken}
-                              setAttachment={setAttachment}
-                              setAttachmentLoading={setAttachmentLoading}
-                              showOptions={showOptions}
-                              setShowOptions={setShowOptions}
+                          <View
+                            style={{
+                              alignSelf: 'flex-end',
+                            }}>
+                            <MaterialIcons
+                              name="add"
+                              size={20}
+                              style={listStyle.attachIcon}
+                              onPress={() => {
+                                Keyboard.dismiss();
+                                modalizeRef?.current?.open();
+                              }}
                             />
                           </View>
                           <TextInput
@@ -691,14 +707,13 @@ const ChatScreen = ({
                       onPress={!action ? onSendPress : onSendWithAction}
                       style={{
                         backgroundColor: colors?.sentByMeCardColor,
-                        borderRadius: 50,
+                        borderRadius: 7,
                         marginLeft: 3,
-                        backgroundColor: '#43B14B',
                       }}
                       activeOpacity={0.9}>
                       <MaterialIcons
                         name="send"
-                        size={23}
+                        size={24}
                         style={{
                           color: colors.sentByMeTextColor,
                           padding: 11,
@@ -712,18 +727,17 @@ const ChatScreen = ({
                           onStartRecord(setisRecording);
                         }}
                         style={{
-                          backgroundColor: colors?.sentByMeCardColor,
-                          borderRadius: 50,
+                          borderRadius: 7,
                           marginLeft: 3,
-                          backgroundColor: '#43B14B',
+                          backgroundColor: colors?.sentByMeCardColor,
                         }}
                         activeOpacity={0.9}>
                         <MaterialIcons
                           name="mic"
-                          size={25}
+                          size={24}
                           style={{
                             color: colors.sentByMeTextColor,
-                            padding: 10,
+                            padding: 11,
                           }}
                         />
                       </TouchableOpacity>
@@ -733,6 +747,7 @@ const ChatScreen = ({
               </View>
             </View>
           </KeyboardAvoidingView>
+          <AttachmentOptionsModal AttachmentObject={AttachmentObject} />
         </View>
       </SafeAreaView>
     </AppProvider>

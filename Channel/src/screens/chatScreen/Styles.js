@@ -156,16 +156,4 @@ export const makeStyles = colors =>
       paddingVertical: 4,
       maxHeight: 200,
     },
-    attachIcon: {
-      marginRight: 8,
-      color: 'black',
-      backgroundColor: '#cccccc',
-      padding: 8,
-      borderRadius: 25,
-    },
-    optionsContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginLeft: 10,
-    },
   });
