@@ -24,8 +24,8 @@ const Header = ({
 
   const HeaderTitle = ({chatHeaderTitle}) => {
     return (
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Text style={{color: colors?.color, fontSize: 12, margin: 5}}>
+      <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
+        <Text style={{color: colors?.color, fontSize: 12}}>
           {chatHeaderTitle}
         </Text>
         <Entypo name="chevron-small-right" color={colors?.color} size={10} />
@@ -45,7 +45,7 @@ const Header = ({
         });
   };
 
-  const UserImageComponent = ({userId}) => {
+  const UserImageComponent = ({userId, width = 40, height = 40}) => {
     return (
       <FastImage
         source={{
@@ -55,8 +55,8 @@ const Header = ({
           priority: FastImage.priority.normal,
         }}
         style={{
-          width: 40,
-          height: 40,
+          width: width,
+          height: height,
           borderRadius: 50,
         }}
       />
@@ -64,16 +64,93 @@ const Header = ({
   };
 
   const ChannelImageComponent = () => {
-    const userImages = channelsState?.channelIdAndDataMapping[teamId]?.userIds
-      ?.slice(0, 5)
-      ?.map(
-        (userId, index) =>
-          orgState?.userIdAndImageUrlMapping[userId] && (
-            <UserImageComponent userId={userId} key={index} />
-          ),
-      );
+    const userImagesArray =
+      channelsState?.channelIdAndDataMapping[teamId]?.userIds;
+    let userImages = [];
+    for (let i = 0; userImages?.length != 5; i++) {
+      if (i > userImagesArray.length) {
+        break;
+      }
+      const UserImage = orgState?.userIdAndImageUrlMapping[userImagesArray[i]];
+      if (UserImage) {
+        userImages?.push(userImagesArray[i]);
+      }
+    }
+    //   ?.map(
+    //     (userId, index) =>
+    //       orgState?.userIdAndImageUrlMapping[userId] && (
+    //         <UserImageComponent userId={userId} key={index} />
+    //       ),
+    //   );
 
-    return <View style={{flexDirection: 'row'}}>{userImages}</View>;
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}>
+        <View>
+          <View
+            style={{
+              alignItems: 'flex-end',
+              marginBottom: 3,
+            }}>
+            {userImages[3] != null && (
+              <UserImageComponent
+                userId={userImages[3]}
+                width={18}
+                height={18}
+              />
+            )}
+          </View>
+          <View style={{marginBottom: -10}}>
+            {userImages[1] != null && (
+              <UserImageComponent
+                userId={userImages[1]}
+                width={30}
+                height={30}
+              />
+            )}
+          </View>
+        </View>
+        <View style={{marginHorizontal: 4}}>
+          {userImages[0] != null && (
+            <UserImageComponent userId={userImages[0]} width={45} height={45} />
+          )}
+        </View>
+        <View>
+          <View style={{marginTop: -10}}>
+            {userImages[2] != null && (
+              <UserImageComponent
+                userId={userImages[2]}
+                width={30}
+                height={30}
+              />
+            )}
+          </View>
+          <View
+            style={{
+              alignItems: 'flex-start',
+              marginTop: 3,
+            }}>
+            {userImages[4] != null && (
+              <UserImageComponent
+                userId={userImages[4]}
+                width={18}
+                height={18}
+              />
+            )}
+          </View>
+        </View>
+        {userImagesArray?.length - userImages?.length > 0 && (
+          <View>
+            <Text style={{color: colors?.color, fontSize: 12}}>
+              +{userImagesArray?.length - userImages?.length}
+            </Text>
+          </View>
+        )}
+      </View>
+    );
   };
 
   return (
@@ -85,6 +162,8 @@ const Header = ({
           alignContent: 'center',
           minHeight: 50,
           backgroundColor: colors?.headerColor,
+          borderBottomColor: 'gray',
+          borderBottomWidth: 0.5,
         }}>
         <TouchableOpacity
           onPress={handleGoBack}
@@ -96,7 +175,7 @@ const Header = ({
             left: 0,
             zIndex: 1,
           }}>
-          <Icon name="chevron-left" size={18} color="white" />
+          <Icon name="chevron-left" size={18} color={colors?.color} />
         </TouchableOpacity>
 
         <TouchableOpacity
