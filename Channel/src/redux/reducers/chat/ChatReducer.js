@@ -71,9 +71,8 @@ export function chatReducer(state = initialState, action) {
           action.messages[i].attachment[0].contentType?.includes('audio') &&
           action.messages[i].attachment[0].transcription != undefined
         ) {
-          action.messages[
-            i
-          ].content = `Transcription :- ${action.messages[i].attachment[0].transcription}`;
+          action.messages[i].content =
+            action.messages[i].attachment[0].transcription;
         }
       }
       return {
@@ -275,6 +274,20 @@ export function chatReducer(state = initialState, action) {
       return {
         ...state,
       };
+
+    case Actions.ADD_DRAFT_MESSAGE:
+      console.log(action);
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          [action.teamId]: {
+            ...state.data[action.teamId],
+            draftMessage: action.message,
+          },
+        },
+      };
+
     default:
       return state;
   }

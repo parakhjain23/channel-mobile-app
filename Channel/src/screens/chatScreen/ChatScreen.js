@@ -30,7 +30,11 @@ import {ChatCardMemo} from './ChatCard';
 import {getChannelsByQueryStart} from '../../redux/actions/channels/ChannelsByQueryAction';
 import {fetchSearchedUserProfileStart} from '../../redux/actions/user/searchUserProfileActions';
 import {makeStyles} from './Styles';
-import {useNavigationState, useTheme} from '@react-navigation/native';
+import {
+  useNavigation,
+  useNavigationState,
+  useTheme,
+} from '@react-navigation/native';
 import AnimatedLottieView from 'lottie-react-native';
 import {ms} from 'react-native-size-matters';
 import {setLocalMsgStart} from '../../redux/actions/chat/LocalMessageActions';
@@ -58,6 +62,7 @@ import AttachmentOptions from './components/AttachmentOptions';
 import Header from '../../components/Header';
 import {listStyles} from './components/AttachmentStyles';
 import AttachmentOptionsModal from './components/AttachmentOptionsModal';
+import {addDraftMessage} from '../../redux/actions/chat/DraftMessageAction';
 
 const ChatScreen = ({
   chatDetailsForTab,
@@ -81,7 +86,7 @@ const ChatScreen = ({
   resetUnreadCountAction,
   addUsersToChannelAction,
   removeUserFromChannelAction,
-  socketState,
+  draftMessageAction,
 }) => {
   var teamId, channelType;
   if (deviceType === DEVICE_TYPES[1]) {
@@ -122,7 +127,9 @@ const ChatScreen = ({
   const [showActions, setShowActions] = useState(false);
   const [currentSelectChatCard, setCurrentSelectedChatCard] = useState('');
   const [showOptions, setShowOptions] = useState(false);
-  const [message, onChangeMessage] = useState('');
+  const [message, onChangeMessage] = useState(
+    chatState?.data[teamId]?.draftMessage || '',
+  );
   const [attachment, setAttachment] = useState([]);
   const [attachmentLoading, setAttachmentLoading] = useState(false);
   const [showMention, setshowMention] = useState(false);
@@ -147,7 +154,7 @@ const ChatScreen = ({
   const navigationState = useNavigationState(state => state);
   const isMountedRef = useRef(true);
   const modalizeRef = useRef(null);
-
+  const navigation = useNavigation();
   const teamIdAndUnreadCountMapping =
     channelsState?.teamIdAndUnreadCountMapping;
   const teamIdAndBadgeCountMapping = channelsState?.teamIdAndBadgeCountMapping;
@@ -164,7 +171,23 @@ const ChatScreen = ({
     ios: `sound.m4a`,
     android: `${RNFetchBlob.fs.dirs.CacheDir}/sound.mp3`,
   });
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', e => {
+      e.preventDefault();
+      if (message.length > 0) {
+        draftMessageAction(
+          message,
+          teamId,
+          userInfoState?.accessToken,
+          orgState?.currentOrgId,
+          userInfoState?.user?.id,
+        );
+      }
+      navigation.dispatch(e.data.action); // Allow the screen to be removed
+    });
 
+    return () => unsubscribe();
+  }, [navigation, message]);
   useEffect(() => {
     return () => {
       // Set the mounted state to false when the component is unmounted
@@ -764,6 +787,8 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => {
   return {
+    draftMessageAction: (message, teamId, accessToken, orgId, userId) =>
+      dispatch(addDraftMessage(message, teamId, accessToken, orgId, userId)),
     fetchChatsOfTeamAction: (teamId, token, skip) =>
       dispatch(getChatsStart(teamId, token, skip)),
     sendMessageAction: (

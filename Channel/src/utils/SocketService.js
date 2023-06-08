@@ -76,7 +76,7 @@ const SocketService = socket => {
     if (data?.isEdited || data?.attachment[0]?.transcription != undefined) {
       var newData = data;
       if (newData?.attachment[0]?.contentType?.includes('audio')) {
-        newData.content = `Transcription :- ${data?.attachment[0]?.transcription}`;
+        newData.content = data?.attachment[0]?.transcription;
       }
       store.dispatch(messageEditSuccess(newData));
     }
