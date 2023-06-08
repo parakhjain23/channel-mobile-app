@@ -26,81 +26,12 @@ const ProtectedNavigation = props => {
   const isTablet = width >= 600 && height >= 600;
   const isIPad = Platform.OS === 'ios' && Platform.isPad;
   const deviceType = isTablet || isIPad ? DEVICE_TYPES[1] : DEVICE_TYPES[0];
+
   useEffect(() => {
     props?.setDeviceTypeAction(deviceType);
   }, []);
   const PLATFORM = Platform.OS == 'android' ? 'android' : 'ios';
-  const CustomHeaderTitle = ({route}) => {
-    return route?.params?.channelType === 'DIRECT_MESSAGE' ? (
-      <TouchableOpacity
-        onPress={async () => {
-          RootNavigation.navigate('UserProfiles', {
-            displayName: route?.params?.chatHeaderTitle,
-            userId: route?.params?.userId,
-          });
-          await props?.searchUserProfileAction(
-            route?.params?.userId,
-            props?.userInfoState?.accessToken,
-          );
-        }}
-        style={{
-          // backgroundColor: 'red',
-          // flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: PLATFORM == 'android' ? null : 20,
-          paddingRight: PLATFORM == 'android' ? 70 : null,
-        }}>
-        <FastImage
-          source={{
-            uri: props?.orgsState?.userIdAndImageUrlMapping[
-              route?.params?.userId
-            ],
-          }}
-          style={{
-            height: 30,
-            width: 30,
-            borderRadius: 50,
-            marginRight: 8,
-          }}
-        />
-        <Text
-          style={{
-            color: colors?.textColor,
-            fontSize: 18,
-            fontWeight: '600',
-            maxWidth: PLATFORM == 'android' ? '100%' : null,
-          }}
-          numberOfLines={1}>
-          {route?.params?.chatHeaderTitle}
-        </Text>
-      </TouchableOpacity>
-    ) : (
-      <TouchableOpacity
-        onPress={() => {
-          RootNavigation.navigate('ChannelDetails', {
-            channelName: route.params.chatHeaderTitle,
-            teamId: route?.params?.teamId,
-          });
-        }}
-        style={{
-          paddingHorizontal: PLATFORM == 'android' ? null : 10,
-          paddingRight: PLATFORM == 'android' ? 50 : null,
-        }}>
-        <Text
-          style={{
-            color: colors?.textColor,
-            fontSize: 20,
-            fontWeight: '600',
-            maxWidth: Platform.OS == 'android' ? '100%' : null,
-          }}
-          numberOfLines={1}>
-          {route?.params?.chatHeaderTitle?.length > 50
-            ? route?.params?.chatHeaderTitle?.slice(0, 20) + '...'
-            : route?.params?.chatHeaderTitle}
-        </Text>
-      </TouchableOpacity>
-    );
-  };
+
   const getHeader = {
     headerTintColor: colors.textColor,
     headerStyle: {
@@ -111,38 +42,6 @@ const ProtectedNavigation = props => {
     statusBarColor: 'transparent',
     statusBarTranslucent: true,
     statusBarStyle: colors?.primaryColor == '#ffffff' ? 'dark' : 'light',
-  };
-  const CustomHeader = props => {
-    const handleGoBack = () => {
-      RootNavigation?.goBack();
-    };
-
-    return (
-      <View
-        style={{
-          flexDirection: 'row',
-          minHeight: 80,
-          backgroundColor: 'red',
-          // alignItems: 'flex-end',
-          // paddingHorizontal: 10,
-        }}>
-        <TouchableOpacity
-          onPress={handleGoBack}
-          style={{
-            justifyContent: 'center',
-            paddingRight: 50,
-            backgroundColor: 'black',
-          }}>
-          <View>
-            <Icon name="chevron-left" size={18} color="white" />
-          </View>
-        </TouchableOpacity>
-
-        <View style={{flex: 1, justifyContent: 'flex-end'}}>
-          <CustomHeaderTitle route={props?.route} />
-        </View>
-      </View>
-    );
   };
 
   return props?.orgsState?.currentOrgId == null ? (
@@ -180,32 +79,8 @@ const ProtectedNavigation = props => {
         name="Chat"
         component={ChatScreen}
         options={({route}) => ({
-          header: props => <CustomHeader {...props} />,
-          //   headerTitle: () => {
-          //     return <CustomHeaderTitle route={route} />;
-          //   },
-          //   headerShown: true,
-          //   headerBackVisible: false,
-          //   // headerLeft: () => (
-          //   //   <TouchableOpacity
-          //   //     style={{
-          //   //       flexDirection: 'column',
-          //   //       justifyContent: 'center',
-          //   //       alignItems: 'center',
-          //   //       paddingVertical: 10,
-          //   //       paddingRight: Platform.OS === 'ios' ? ms(50) : ms(30),
-          //   //       marginLeft: -18,
-          //   //     }}
-          //   //     onPressIn={() => RootNavigation.goBack()}>
-          //   //     <Icon
-          //   //       name="chevron-left"
-          //   //       size={18}
-          //   //       color={colors.textColor}
-          //   //       style={{paddingLeft: 10}}
-          //   //     />
-          //   //   </TouchableOpacity>
-          //   // ),
-          //   // ...getHeader,
+          headerShown: false,
+          ...getHeader,
         })}
       />
       <Stack.Screen

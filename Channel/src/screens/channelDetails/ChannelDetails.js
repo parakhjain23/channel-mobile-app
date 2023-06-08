@@ -118,21 +118,26 @@ const ChannelDetailsScreen = ({
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        {channelsState?.channelIdAndDataMapping[teamId]?.purpose && (
-          <Text style={styles.text}>
-            Purpose: {channelsState?.channelIdAndDataMapping[teamId]?.purpose}
-          </Text>
-        )}
-        {channelsState?.channelIdAndDataMapping[teamId]?.createdBy && (
-          <Text style={styles.text}>
-            Created by:{' '}
-            {
-              orgsState?.userIdAndNameMapping[
-                channelsState?.channelIdAndDataMapping[teamId]?.createdBy
-              ]
-            }
-          </Text>
-        )}
+        <View>
+          {channelsState?.channelIdAndDataMapping[teamId]?.purpose && (
+            <Text style={styles.text}>
+              Purpose: {channelsState?.channelIdAndDataMapping[teamId]?.purpose}
+            </Text>
+          )}
+        </View>
+        <View>
+          {channelsState?.channelIdAndDataMapping[teamId]?.createdBy && (
+            <Text style={styles.text}>
+              Created by:{' '}
+              {
+                orgsState?.userIdAndNameMapping[
+                  channelsState?.channelIdAndDataMapping[teamId]?.createdBy
+                ]
+              }
+            </Text>
+          )}
+        </View>
+
         <Text style={styles.header}>Add Members </Text>
         <SearchBox
           searchValue={searchValue}

@@ -54,6 +54,7 @@ import MentionList from './components/MentionList';
 import ActionModal from './components/ActionModal';
 import {Button} from 'react-native-paper';
 import AttachmentOptions from './components/AttachmentOptions';
+import Header from '../../components/Header';
 
 const ChatScreen = ({
   chatDetailsForTab,
@@ -84,7 +85,8 @@ const ChatScreen = ({
     teamId = chatDetailsForTab?.teamId;
     channelType = chatDetailsForTab?.channelType;
   } else {
-    var {teamId, reciverUserId, channelType, searchedChannel} = route.params;
+    var {teamId, reciverUserId, channelType, searchedChannel, chatHeaderTitle} =
+      route.params;
   }
 
   if (teamId == undefined) {
@@ -398,6 +400,18 @@ const ChatScreen = ({
 
   return (
     <AppProvider>
+      {!isScrolling && (
+        <Header
+          chatHeaderTitle={chatHeaderTitle}
+          userId={reciverUserId}
+          channelType={channelType}
+          searchUserProfileAction={searchUserProfileAction}
+          accessToken={accessToken}
+          teamId={teamId}
+          orgState={orgState}
+          channelsState={channelsState}
+        />
+      )}
       <SafeAreaView style={styles.safeAreaView}>
         <View style={styles.mainContainer}>
           <KeyboardAvoidingView

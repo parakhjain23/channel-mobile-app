@@ -97,7 +97,7 @@ const ChannelCard = ({
         chatHeaderTitle: Name,
         teamId: item?._id,
         channelType: item?.type,
-        userId,
+        reciverUserId: userId,
         searchedChannel: false,
       });
     }
