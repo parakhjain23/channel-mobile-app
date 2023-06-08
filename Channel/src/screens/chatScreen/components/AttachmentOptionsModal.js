@@ -25,12 +25,12 @@ const AttachmentOptionsModal = ({AttachmentObject}) => {
       snapPoint={200}
       modalHeight={300}
       onBackButtonPress={() => modalizeRef?.current?.close()}
+      closeOnOverlayTap={true}
       modalStyle={{
-        // flex: 1,
         backgroundColor: colors.modalColor,
       }}
       HeaderComponent={HeaderComponent}>
-      <View style={{padding: 15}}>
+      <View style={{padding: 15, flex: 1}}>
         <AttachmentOptions AttachmentObject={AttachmentObject} />
       </View>
     </Modalize>

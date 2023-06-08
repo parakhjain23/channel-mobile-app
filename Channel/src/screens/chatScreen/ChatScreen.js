@@ -63,6 +63,7 @@ import Header from '../../components/Header';
 import {listStyles} from './components/AttachmentStyles';
 import AttachmentOptionsModal from './components/AttachmentOptionsModal';
 import {addDraftMessage} from '../../redux/actions/chat/DraftMessageAction';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const ChatScreen = ({
   chatDetailsForTab,
@@ -446,317 +447,304 @@ const ChatScreen = ({
           channelsState={channelsState}
         />
       )}
-      <SafeAreaView style={styles.safeAreaView}>
-        <View style={styles.mainContainer}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : null}
-            keyboardVerticalOffset={searchedChannel ? 75 : offset}
-            style={{flex: 1}}>
-            <View style={styles.outerContainer}>
-              <View style={styles.messageListContainer}>
-                {teamId == undefined ||
-                chatState?.data[teamId]?.isloading == true ? (
-                  <View style={styles.loadingContainer}>
-                    <Text style={{color: colors?.color, textAlign: 'center'}}>
-                      Loading...
-                    </Text>
-                  </View>
-                ) : (
-                  <>
-                    <Animated.FlatList
-                      ref={FlatListRef}
-                      data={memoizedData}
-                      renderItem={renderItem}
-                      inverted
-                      ListFooterComponent={
-                        chatState?.data[teamId]?.messages?.length > 15 &&
-                        ListFooterComponent
-                      }
-                      onEndReached={
-                        chatState?.data[teamId]?.messages?.length > 20 &&
-                        onEndReached
-                      }
-                      onEndReachedThreshold={0.1}
-                      keyboardDismissMode="on-drag"
-                      keyboardShouldPersistTaps="always"
-                      onScroll={onScroll}
-                      showsVerticalScrollIndicator={false}
-                      refreshControl={
-                        <RefreshControl
-                          refreshing={refreshing}
-                          onRefresh={handleRefresh}
-                        />
-                      }
-                    />
-                  </>
+      <GestureHandlerRootView style={{flex: 1}}>
+        <SafeAreaView style={styles.safeAreaView}>
+          <View style={styles.mainContainer}>
+            <KeyboardAvoidingView
+              behavior={Platform.OS === 'ios' ? 'padding' : null}
+              keyboardVerticalOffset={searchedChannel ? 75 : offset}
+              style={{flex: 1}}>
+              <View style={styles.outerContainer}>
+                <View style={styles.messageListContainer}>
+                  {teamId == undefined ||
+                  chatState?.data[teamId]?.isloading == true ? (
+                    <View style={styles.loadingContainer}>
+                      <Text style={{color: colors?.color, textAlign: 'center'}}>
+                        Loading...
+                      </Text>
+                    </View>
+                  ) : (
+                    <>
+                      <Animated.FlatList
+                        ref={FlatListRef}
+                        data={memoizedData}
+                        renderItem={renderItem}
+                        inverted
+                        ListFooterComponent={
+                          chatState?.data[teamId]?.messages?.length > 15 &&
+                          ListFooterComponent
+                        }
+                        onEndReached={
+                          chatState?.data[teamId]?.messages?.length > 20 &&
+                          onEndReached
+                        }
+                        onEndReachedThreshold={0.1}
+                        keyboardDismissMode="on-drag"
+                        keyboardShouldPersistTaps="always"
+                        onScroll={onScroll}
+                        showsVerticalScrollIndicator={false}
+                        refreshControl={
+                          <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={handleRefresh}
+                          />
+                        }
+                      />
+                    </>
+                  )}
+                  <ScrollDownButton
+                    scrollToBottom={scrollToBottom}
+                    isVisible={isScrolling}
+                    isNewMessage={false}
+                  />
+                </View>
+
+                {attachmentLoading && (
+                  <AnimatedLottieView
+                    source={require('../../assests/images/attachments/uploading.json')}
+                    loop
+                    autoPlay
+                    style={styles.attachmentLoading}
+                  />
                 )}
-                <ScrollDownButton
-                  scrollToBottom={scrollToBottom}
-                  isVisible={isScrolling}
-                  isNewMessage={false}
-                />
-              </View>
 
-              {attachmentLoading && (
-                <AnimatedLottieView
-                  source={require('../../assests/images/attachments/uploading.json')}
-                  loop
-                  autoPlay
-                  style={styles.attachmentLoading}
-                />
-              )}
+                {showActions && (
+                  <ActionModal
+                    setShowActions={setShowActions}
+                    chat={currentSelectChatCard}
+                    userInfoState={userInfoState}
+                    orgState={orgState}
+                    deleteMessageAction={deleteMessageAction}
+                    chatState={chatState}
+                    setreplyOnMessage={setreplyOnMessage}
+                    setrepliedMsgDetails={setrepliedMsgDetails}
+                    searchUserProfileAction={searchUserProfileAction}
+                    flatListRef={FlatListRef}
+                    channelType={channelType}
+                    setCurrentSelectedChatCard={setCurrentSelectedChatCard}
+                    currentSelectChatCard={currentSelectChatCard}
+                  />
+                )}
 
-              {showActions && (
-                <ActionModal
-                  setShowActions={setShowActions}
-                  chat={currentSelectChatCard}
-                  userInfoState={userInfoState}
-                  orgState={orgState}
-                  deleteMessageAction={deleteMessageAction}
-                  chatState={chatState}
-                  setreplyOnMessage={setreplyOnMessage}
-                  setrepliedMsgDetails={setrepliedMsgDetails}
-                  searchUserProfileAction={searchUserProfileAction}
-                  flatListRef={FlatListRef}
-                  channelType={channelType}
-                  setCurrentSelectedChatCard={setCurrentSelectedChatCard}
-                  currentSelectChatCard={currentSelectChatCard}
-                />
-              )}
+                <View style={styles.bottomContainer}>
+                  <View
+                    style={[
+                      replyOnMessage && styles.inputWithReplyContainer,
+                      {
+                        width: isRecording ? '100%' : '87%',
+                        alignSelf: 'center',
+                      },
+                    ]}>
+                    {attachment?.length > 0 &&
+                      attachment?.map((item, index) => {
+                        return (
+                          <TouchableOpacity key={index}>
+                            <View style={styles.replyMessageInInput}>
+                              <Text style={styles.repliedText}>
+                                {item?.title}
+                              </Text>
+                              <MaterialIcons
+                                name="cancel"
+                                size={ms(18)}
+                                color={'black'}
+                                onPress={() => {
+                                  const newAttachment = attachment.filter(
+                                    (_, i) => i !== index,
+                                  );
+                                  setAttachment(newAttachment);
+                                }}
+                              />
+                            </View>
+                          </TouchableOpacity>
+                        );
+                      })}
 
-              <View style={styles.bottomContainer}>
-                <View
-                  style={[
-                    replyOnMessage && styles.inputWithReplyContainer,
-                    {width: isRecording ? '100%' : '87%', alignSelf: 'center'},
-                  ]}>
-                  {attachment?.length > 0 &&
-                    attachment?.map((item, index) => {
-                      return (
-                        <TouchableOpacity key={index}>
-                          <View style={styles.replyMessageInInput}>
-                            <Text style={styles.repliedText}>
-                              {item?.title}
-                            </Text>
-                            <MaterialIcons
-                              name="cancel"
-                              size={ms(18)}
-                              color={'black'}
-                              onPress={() => {
-                                const newAttachment = attachment.filter(
-                                  (_, i) => i !== index,
-                                );
-                                setAttachment(newAttachment);
-                              }}
+                    {replyOnMessage && (
+                      <TouchableOpacity
+                        activeOpacity={0.9}
+                        onPress={() => {
+                          setreplyOnMessage(false);
+                          setrepliedMsgDetails(null);
+                        }}>
+                        <View style={styles.replyMessageInInput}>
+                          {repliedMsgDetails?.content?.includes(
+                            '<span class="mention"',
+                          ) ? (
+                            <HTMLView
+                              value={`<div>${repliedMsgDetails?.content}</div>`}
+                              renderNode={renderNode}
+                              stylesheet={htmlStyles}
                             />
-                          </View>
-                        </TouchableOpacity>
-                      );
-                    })}
-
-                  {replyOnMessage && (
-                    <TouchableOpacity
-                      activeOpacity={0.9}
-                      onPress={() => {
-                        setreplyOnMessage(false);
-                        setrepliedMsgDetails(null);
-                      }}>
-                      <View style={styles.replyMessageInInput}>
-                        {repliedMsgDetails?.content?.includes(
-                          '<span class="mention"',
-                        ) ? (
-                          <HTMLView
-                            value={`<div>${repliedMsgDetails?.content}</div>`}
-                            renderNode={renderNode}
-                            stylesheet={htmlStyles}
-                          />
-                        ) : repliedMsgDetails?.attachment?.length > 0 &&
-                          typeof repliedMsgDetails?.attachment != 'string' ? (
-                          <Text style={{color: 'black'}}>
-                            <Icon name="attach-file" size={16} color="black" />
-                            attachment
-                          </Text>
-                        ) : (
-                          <RenderHTML
-                            source={{
-                              html: repliedMsgDetails?.content?.replace(
-                                emailRegex,
-                                '<span>$&</span>',
-                              ),
+                          ) : repliedMsgDetails?.attachment?.length > 0 &&
+                            typeof repliedMsgDetails?.attachment != 'string' ? (
+                            <Text style={{color: 'black'}}>
+                              <Icon
+                                name="attach-file"
+                                size={16}
+                                color="black"
+                              />
+                              attachment
+                            </Text>
+                          ) : (
+                            <RenderHTML
+                              source={{
+                                html: repliedMsgDetails?.content?.replace(
+                                  emailRegex,
+                                  '<span>$&</span>',
+                                ),
+                              }}
+                              contentWidth={width}
+                              tagsStyles={tagsStyles('black', 'black')}
+                            />
+                          )}
+                          <MaterialIcons
+                            name="cancel"
+                            size={ms(16)}
+                            color="black"
+                            style={{
+                              position: 'absolute',
+                              top: ms(5),
+                              right: ms(5),
+                              zIndex: 1,
                             }}
-                            contentWidth={width}
-                            tagsStyles={tagsStyles('black', 'black')}
                           />
-                        )}
+                        </View>
+                      </TouchableOpacity>
+                    )}
+
+                    {showMention && (
+                      <MentionList
+                        data={mentions}
+                        setMentionsArr={setMentionsArr}
+                        onChangeMessage={onChangeMessage}
+                        setMentions={setMentions}
+                        orgsState={orgState}
+                      />
+                    )}
+
+                    {Activities && (
+                      <ActivityList
+                        setaction={setaction}
+                        onChangeMessage={onChangeMessage}
+                        setActivities={setActivities}
+                      />
+                    )}
+
+                    {showPlayer && (
+                      <View style={styles.playerContainer}>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            minHeight: 60,
+                            flex: 1,
+                            alignItems: 'center',
+                          }}>
+                          <AudioRecordingPlayer remoteUrl={path} />
+                        </View>
                         <MaterialIcons
                           name="cancel"
-                          size={ms(16)}
-                          color="black"
-                          style={{
-                            position: 'absolute',
-                            top: ms(5),
-                            right: ms(5),
-                            zIndex: 1,
+                          size={18}
+                          color={colors?.textColor}
+                          onPress={() => {
+                            setShowPlayer(false);
                           }}
                         />
                       </View>
-                    </TouchableOpacity>
-                  )}
+                    )}
 
-                  {showMention && (
-                    <MentionList
-                      data={mentions}
-                      setMentionsArr={setMentionsArr}
-                      onChangeMessage={onChangeMessage}
-                      setMentions={setMentions}
-                      orgsState={orgState}
-                    />
-                  )}
-
-                  {Activities && (
-                    <ActivityList
-                      setaction={setaction}
-                      onChangeMessage={onChangeMessage}
-                      setActivities={setActivities}
-                    />
-                  )}
-
-                  {showPlayer && (
-                    <View style={styles.playerContainer}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          justifyContent: 'center',
-                          minHeight: 60,
-                          flex: 1,
-                          alignItems: 'center',
-                        }}>
-                        <AudioRecordingPlayer remoteUrl={path} />
-                      </View>
-                      <MaterialIcons
-                        name="cancel"
-                        size={18}
-                        color={colors?.textColor}
-                        onPress={() => {
-                          setShowPlayer(false);
-                        }}
-                      />
-                    </View>
-                  )}
-
-                  {!showPlayer && (
-                    <View style={styles.inputContainer}>
-                      {isRecording ? (
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                          }}>
-                          <View style={{flex: 1, alignItems: 'center'}}>
-                            <AnimatedLottieView
-                              source={require('../../assests/images/attachments/recording.json')}
-                              loop
-                              autoPlay
-                              style={{width: 100, height: 100}}
-                            />
-                          </View>
-                          <Button
-                            mode="contained"
-                            icon="microphone-off"
-                            buttonColor="#756EF6"
-                            onPress={() => {
-                              onStopRecord(
-                                setrecordingUrl,
-                                setvoiceAttachment,
-                                isMountedRef,
-                              ),
-                                setisRecording(false),
-                                setShowPlayer(true);
-                            }}>
-                            STOP
-                          </Button>
-                        </View>
-                      ) : (
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                          }}>
+                    {!showPlayer && (
+                      <View style={styles.inputContainer}>
+                        {isRecording ? (
                           <View
                             style={{
-                              alignSelf: 'flex-end',
+                              flexDirection: 'row',
+                              alignItems: 'center',
                             }}>
-                            <MaterialIcons
-                              name="add"
-                              size={20}
-                              style={listStyle.attachIcon}
+                            <View style={{flex: 1, alignItems: 'center'}}>
+                              <AnimatedLottieView
+                                source={require('../../assests/images/attachments/recording.json')}
+                                loop
+                                autoPlay
+                                style={{width: 100, height: 100}}
+                              />
+                            </View>
+                            <Button
+                              mode="contained"
+                              icon="microphone-off"
+                              buttonColor="#756EF6"
                               onPress={() => {
-                                Keyboard.dismiss();
-                                modalizeRef?.current?.open();
-                              }}
+                                onStopRecord(
+                                  setrecordingUrl,
+                                  setvoiceAttachment,
+                                  isMountedRef,
+                                ),
+                                  setisRecording(false),
+                                  setShowPlayer(true);
+                              }}>
+                              STOP
+                            </Button>
+                          </View>
+                        ) : (
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                            }}>
+                            <View
+                              style={{
+                                alignSelf: 'flex-end',
+                              }}>
+                              <MaterialIcons
+                                name="add"
+                                size={20}
+                                style={listStyle.attachIcon}
+                                onPress={() => {
+                                  Keyboard.dismiss();
+                                  modalizeRef?.current?.open();
+                                }}
+                              />
+                            </View>
+                            <TextInput
+                              ref={textInputRef}
+                              editable
+                              multiline
+                              onChangeText={handleInputChange}
+                              placeholder="Message"
+                              placeholderTextColor={colors.textColor}
+                              value={message}
+                              style={[
+                                replyOnMessage
+                                  ? styles.inputWithReply
+                                  : styles.inputWithoutReply,
+                                {color: colors.textColor},
+                              ]}
                             />
                           </View>
-                          <TextInput
-                            ref={textInputRef}
-                            editable
-                            multiline
-                            onChangeText={handleInputChange}
-                            placeholder="Message"
-                            placeholderTextColor={colors.textColor}
-                            value={message}
-                            style={[
-                              replyOnMessage
-                                ? styles.inputWithReply
-                                : styles.inputWithoutReply,
-                              {color: colors.textColor},
-                            ]}
-                          />
-                        </View>
-                      )}
-                      {showOptions &&
-                        message?.length == 1 &&
-                        setShowOptions(false)}
-                    </View>
-                  )}
-                </View>
-                <View
-                  style={{
-                    justifyContent: 'flex-end',
-                  }}>
-                  {message?.length > 0 ||
-                  showPlayer ||
-                  attachment?.length > 0 ? (
-                    <TouchableOpacity
-                      onPress={!action ? onSendPress : onSendWithAction}
-                      style={{
-                        backgroundColor: colors?.sentByMeCardColor,
-                        borderRadius: 7,
-                        marginLeft: 3,
-                      }}
-                      activeOpacity={0.9}>
-                      <MaterialIcons
-                        name="send"
-                        size={24}
-                        style={{
-                          color: colors.sentByMeTextColor,
-                          padding: 11,
-                        }}
-                      />
-                    </TouchableOpacity>
-                  ) : (
-                    !isRecording && (
+                        )}
+                        {showOptions &&
+                          message?.length == 1 &&
+                          setShowOptions(false)}
+                      </View>
+                    )}
+                  </View>
+                  <View
+                    style={{
+                      justifyContent: 'flex-end',
+                    }}>
+                    {message?.length > 0 ||
+                    showPlayer ||
+                    attachment?.length > 0 ? (
                       <TouchableOpacity
-                        onPress={() => {
-                          onStartRecord(setisRecording);
-                        }}
+                        onPress={!action ? onSendPress : onSendWithAction}
                         style={{
+                          backgroundColor: colors?.sentByMeCardColor,
                           borderRadius: 7,
                           marginLeft: 3,
-                          backgroundColor: colors?.sentByMeCardColor,
                         }}
                         activeOpacity={0.9}>
                         <MaterialIcons
-                          name="mic"
+                          name="send"
                           size={24}
                           style={{
                             color: colors.sentByMeTextColor,
@@ -764,15 +752,37 @@ const ChatScreen = ({
                           }}
                         />
                       </TouchableOpacity>
-                    )
-                  )}
+                    ) : (
+                      !isRecording && (
+                        <TouchableOpacity
+                          onPress={() => {
+                            onStartRecord(setisRecording);
+                          }}
+                          style={{
+                            borderRadius: 7,
+                            marginLeft: 3,
+                            backgroundColor: colors?.sentByMeCardColor,
+                          }}
+                          activeOpacity={0.9}>
+                          <MaterialIcons
+                            name="mic"
+                            size={24}
+                            style={{
+                              color: colors.sentByMeTextColor,
+                              padding: 11,
+                            }}
+                          />
+                        </TouchableOpacity>
+                      )
+                    )}
+                  </View>
                 </View>
               </View>
-            </View>
-          </KeyboardAvoidingView>
-          <AttachmentOptionsModal AttachmentObject={AttachmentObject} />
-        </View>
-      </SafeAreaView>
+            </KeyboardAvoidingView>
+            <AttachmentOptionsModal AttachmentObject={AttachmentObject} />
+          </View>
+        </SafeAreaView>
+      </GestureHandlerRootView>
     </AppProvider>
   );
 };
