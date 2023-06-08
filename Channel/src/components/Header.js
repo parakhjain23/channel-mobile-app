@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
-import {View, Animated, Text, Dimensions, TouchableOpacity} from 'react-native';
+import React from 'react';
+import {View, Text, TouchableOpacity} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Entypo from 'react-native-vector-icons/Entypo';
 import * as RootNavigation from '../navigation/RootNavigation';
 import {useTheme} from '@react-navigation/native';
-import {Image} from 'react-native';
 import FastImage from 'react-native-fast-image';
 
 const Header = ({
@@ -24,9 +24,12 @@ const Header = ({
 
   const HeaderTitle = ({chatHeaderTitle}) => {
     return (
-      <Text style={{color: colors?.color, fontSize: 12, margin: 5}}>
-        {chatHeaderTitle}
-      </Text>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <Text style={{color: colors?.color, fontSize: 12, margin: 5}}>
+          {chatHeaderTitle}
+        </Text>
+        <Entypo name="chevron-small-right" color={colors?.color} size={10} />
+      </View>
     );
   };
   const onTitlePress = (chatHeaderTitle, userId, channelType, accessToken) => {
@@ -127,4 +130,4 @@ const Header = ({
   );
 };
 
-export default Header;
+export default React.memo(Header);
