@@ -38,7 +38,6 @@ const AudioRecordingPlayer = ({remoteUrl}) => {
   };
 
   const handleSeek = value => {
-    console.log(value, 'in handle seek');
     audioRecorderPlayer.seekToPlayer(value);
   };
 
