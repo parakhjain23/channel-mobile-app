@@ -598,7 +598,7 @@ const ChatScreen = ({
                       </View>
                       <MaterialIcons
                         name="cancel"
-                        size={ms(18)}
+                        size={18}
                         color={colors?.textColor}
                         onPress={() => {
                           setShowPlayer(false);
@@ -645,7 +645,10 @@ const ChatScreen = ({
                             flexDirection: 'row',
                             alignItems: 'center',
                           }}>
-                          <View style={{alignSelf: 'flex-end'}}>
+                          <View
+                            style={{
+                              alignSelf: 'flex-end',
+                            }}>
                             <MaterialIcons
                               name="add"
                               size={20}
@@ -655,25 +658,6 @@ const ChatScreen = ({
                                 modalizeRef?.current?.open();
                               }}
                             />
-                            {/* {!showOptions ? (
-                              <MaterialIcons
-                                name="add"
-                                size={20}
-                                style={listStyle.attachIcon}
-                                onPress={() => {
-                                  modalizeRef?.current?.open();
-                                }}
-                              />
-                            ) : (
-                              <MaterialIcons
-                                name="chevron-left"
-                                size={20}
-                                style={listStyle.attachIcon}
-                                onPress={() => {
-                                  modalizeRef?.current?.close();
-                                }}
-                              />
-                            )} */}
                           </View>
                           <TextInput
                             ref={textInputRef}
@@ -709,14 +693,13 @@ const ChatScreen = ({
                       onPress={!action ? onSendPress : onSendWithAction}
                       style={{
                         backgroundColor: colors?.sentByMeCardColor,
-                        borderRadius: 50,
+                        borderRadius: 7,
                         marginLeft: 3,
-                        backgroundColor: '#43B14B',
                       }}
                       activeOpacity={0.9}>
                       <MaterialIcons
                         name="send"
-                        size={23}
+                        size={24}
                         style={{
                           color: colors.sentByMeTextColor,
                           padding: 11,
@@ -730,18 +713,17 @@ const ChatScreen = ({
                           onStartRecord(setisRecording);
                         }}
                         style={{
-                          backgroundColor: colors?.sentByMeCardColor,
-                          borderRadius: 50,
+                          borderRadius: 7,
                           marginLeft: 3,
-                          backgroundColor: '#43B14B',
+                          backgroundColor: colors?.sentByMeCardColor,
                         }}
                         activeOpacity={0.9}>
                         <MaterialIcons
                           name="mic"
-                          size={25}
+                          size={24}
                           style={{
                             color: colors.sentByMeTextColor,
-                            padding: 10,
+                            padding: 11,
                           }}
                         />
                       </TouchableOpacity>
