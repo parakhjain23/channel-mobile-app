@@ -143,6 +143,7 @@ export function channelsReducer(state = initialState, action) {
       var userIdAndTeamIdMapping = {};
       var teamIdAndNameMapping = {};
       var teamIdAndTypeMapping = {};
+      var channelIdAndDataMapping = {};
       var teamIdKey;
       if (action?.channel?.type == 'DIRECT_MESSAGE') {
         key =
@@ -161,6 +162,7 @@ export function channelsReducer(state = initialState, action) {
         teamIdAndTypeMapping[key] = action?.channel?.type;
         teamIdAndNameMapping[key] = action?.channel?.name;
       }
+      channelIdAndDataMapping[action?.channel._id] = action?.channel;
       return {
         ...state,
         channels: [action.channel, ...state?.channels],
@@ -176,6 +178,10 @@ export function channelsReducer(state = initialState, action) {
         teamIdAndTypeMapping: {
           ...state?.teamIdAndTypeMapping,
           ...teamIdAndTypeMapping,
+        },
+        channelIdAndDataMapping: {
+          ...state?.channelIdAndDataMapping,
+          ...channelIdAndDataMapping,
         },
       };
 
@@ -208,6 +214,7 @@ export function channelsReducer(state = initialState, action) {
       var userIdAndTeamIdMapping = {};
       var teamIdAndNameMapping = {};
       var teamIdAndTypeMapping = {};
+      var channelIdAndDataMapping = {};
       if (action?.channel?.type == 'DIRECT_MESSAGE') {
         key =
           action?.channel.userIds[0] != action?.userId
@@ -221,6 +228,7 @@ export function channelsReducer(state = initialState, action) {
         teamIdAndTypeMapping[key] = action?.channel?.type;
         teamIdAndNameMapping[key] = action?.channel?.name;
       }
+      channelIdAndDataMapping[action.channel._id] = action.channel;
       return {
         ...state,
         channels: [action.channel, ...state?.channels],
@@ -236,6 +244,10 @@ export function channelsReducer(state = initialState, action) {
         teamIdAndTypeMapping: {
           ...state?.teamIdAndTypeMapping,
           ...teamIdAndTypeMapping,
+        },
+        channelIdAndDataMapping: {
+          ...state?.channelIdAndDataMapping,
+          ...channelIdAndDataMapping,
         },
       };
     case Actions.CLOSE_CHANNEL_SUCCESS:
