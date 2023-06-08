@@ -11,7 +11,7 @@ const AttachmentOptionsModal = ({AttachmentObject}) => {
   const listStyle = listStyles(colors);
   const HeaderComponent = () => {
     return (
-      <View style={{marginTop: 10}}>
+      <View style={{paddingBottom: 15}}>
         <Text style={{textAlign: 'center', color: colors?.color, fontSize: 16}}>
           Attach a File
         </Text>
@@ -28,9 +28,9 @@ const AttachmentOptionsModal = ({AttachmentObject}) => {
       closeOnOverlayTap={true}
       modalStyle={{
         backgroundColor: colors.modalColor,
-      }}
-      HeaderComponent={HeaderComponent}>
+      }}>
       <View style={{padding: 15, flex: 1}}>
+        <HeaderComponent />
         <AttachmentOptions AttachmentObject={AttachmentObject} />
       </View>
     </Modalize>
