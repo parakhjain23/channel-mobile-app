@@ -25,7 +25,7 @@ const Header = ({
   const HeaderTitle = ({chatHeaderTitle}) => {
     return (
       <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
-        <Text style={{color: colors?.color, fontSize: 12}}>
+        <Text style={{color: colors?.color, fontSize: 14}}>
           {chatHeaderTitle}
         </Text>
         <Entypo name="chevron-small-right" color={colors?.color} size={10} />
@@ -118,7 +118,7 @@ const Header = ({
             <UserImageComponent userId={userImages[0]} width={45} height={45} />
           )}
         </View>
-        <View>
+        <View style={{marginRight: 2}}>
           <View style={{marginTop: -10}}>
             {userImages[2] != null && (
               <UserImageComponent
