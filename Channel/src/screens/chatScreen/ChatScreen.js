@@ -779,10 +779,10 @@ const ChatScreen = ({
                 </View>
               </View>
             </KeyboardAvoidingView>
-            <AttachmentOptionsModal AttachmentObject={AttachmentObject} />
           </View>
         </SafeAreaView>
       </GestureHandlerRootView>
+      <AttachmentOptionsModal AttachmentObject={AttachmentObject} />
     </AppProvider>
   );
 };
