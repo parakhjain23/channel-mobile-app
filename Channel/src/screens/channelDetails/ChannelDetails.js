@@ -27,7 +27,8 @@ const ChannelDetailsScreen = ({
   const styles = makeStyles(colors);
   const RED_COLOR = '#FF2E2E';
   const GREEN_COLOR = '#00A300';
-
+  const Purpose = channelsState?.channelIdAndDataMapping?.[teamId]?.purpose;
+  const CreatedBy = channelsState?.channelIdAndDataMapping[teamId]?.createdBy;
   const changeText = value => {
     setsearchValue(value);
   };
@@ -118,15 +119,16 @@ const ChannelDetailsScreen = ({
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <View>
-          {channelsState?.channelIdAndDataMapping[teamId]?.purpose && (
-            <Text style={styles.text}>
-              Purpose: {channelsState?.channelIdAndDataMapping[teamId]?.purpose}
-            </Text>
-          )}
-        </View>
-        <View>
-          {channelsState?.channelIdAndDataMapping[teamId]?.createdBy && (
+        {Purpose?.length > 0 && (
+          <Text style={styles.text}>
+            Purpose:{' '}
+            {channelsState?.channelIdAndDataMapping[
+              teamId
+            ]?.purpose?.toString()}
+          </Text>
+        )}
+        {CreatedBy?.length > 0 && (
+          <Text>
             <Text style={styles.text}>
               Created by:{' '}
               {
@@ -135,8 +137,8 @@ const ChannelDetailsScreen = ({
                 ]
               }
             </Text>
-          )}
-        </View>
+          </Text>
+        )}
 
         <Text style={styles.header}>Add Members </Text>
         <SearchBox
@@ -151,20 +153,20 @@ const ChannelDetailsScreen = ({
             keyboardDismissMode="on-drag"
             keyboardShouldPersistTaps="always"
             showsVerticalScrollIndicator={false}
-            ListFooterComponent={() => (
-              <View style={{marginBottom: 100}}></View>
-            )}
+            ListFooterComponent={() => {
+              return <View style={{height: 100}}></View>;
+            }}
           />
         )}
         {searchValue?.length === 0 && (
-          <View>
+          <View style={{flex: 1}}>
             <Text style={styles.header}>Members:</Text>
             <FlatList
               data={channelsState?.channelIdAndDataMapping[teamId]?.userIds}
               renderItem={renderItem}
               showsVerticalScrollIndicator={false}
               ListFooterComponent={() => {
-                return <View style={{marginBottom: 100}}></View>;
+                return <View style={{height: 100}}></View>;
               }}
             />
           </View>

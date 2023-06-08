@@ -7,6 +7,7 @@ export const makeStyles = colors =>
     },
     content: {
       padding: 20,
+      flex: 1,
     },
     text: {
       fontSize: 16,
@@ -46,7 +47,7 @@ export const makeStyles = colors =>
       alignItems: 'center',
       paddingHorizontal: 10,
       paddingVertical: 5,
-      marginTop: 3,
+      marginTop: 5,
       justifyContent: 'space-between',
     },
     memberText: {
