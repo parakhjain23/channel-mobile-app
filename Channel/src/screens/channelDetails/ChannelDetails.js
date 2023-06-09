@@ -54,7 +54,7 @@ const ChannelDetailsScreen = ({
               <TouchableOpacity
                 onPress={() => {
                   removeUserFromChannelAction(
-                    [item?._source?.userId],
+                    [{userId: item?._source?.userId}],
                     channelsState?.channelIdAndDataMapping[teamId]?._id,
                     orgsState?.currentOrgId,
                     userInfoState?.accessToken,
@@ -72,7 +72,7 @@ const ChannelDetailsScreen = ({
               <TouchableOpacity
                 onPress={() => {
                   addUsersToChannelAction(
-                    [item?._source?.userId],
+                    [{userId: item?._source?.userId}],
                     channelsState?.channelIdAndDataMapping[teamId]?._id,
                     orgsState?.currentOrgId,
                     userInfoState?.accessToken,
@@ -101,7 +101,7 @@ const ChannelDetailsScreen = ({
         <TouchableOpacity
           onPress={() => {
             removeUserFromChannelAction(
-              [item],
+              [{userId: item}],
               channelsState?.channelIdAndDataMapping[teamId]?._id,
               orgsState?.currentOrgId,
               userInfoState?.accessToken,

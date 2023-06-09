@@ -1,5 +1,6 @@
 export const addUsersToChannelApi = async (userIds, teamId, orgId, token) => {
   try {
+    console.log(userIds, '=-=-=');
     const requests = userIds.map(userId =>
       fetch(`https://api.intospace.io/chat/teamUser`, {
         method: 'POST',
@@ -28,6 +29,7 @@ export const removeUserFromChannelApi = async (
   orgId,
   token,
 ) => {
+  console.log(userIds, teamId, orgId);
   try {
     const requests = userIds.map(userId =>
       fetch(
@@ -43,6 +45,7 @@ export const removeUserFromChannelApi = async (
     );
 
     const results = await Promise.all(requests);
+    console.log(results, 'this is remove result');
     return results;
   } catch (error) {
     console.warn(error);
