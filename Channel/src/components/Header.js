@@ -24,8 +24,8 @@ const Header = ({
 
   const HeaderTitle = ({chatHeaderTitle}) => {
     return (
-      <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
-        <Text style={{color: colors?.color, fontSize: 14}}>
+      <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 1}}>
+        <Text style={{color: colors?.color, fontSize: 13}}>
           {chatHeaderTitle}
         </Text>
         <Entypo name="chevron-small-right" color={colors?.color} size={10} />
@@ -45,7 +45,7 @@ const Header = ({
         });
   };
 
-  const UserImageComponent = ({userId, width = 40, height = 40}) => {
+  const UserImageComponent = ({userId, width = 27, height = 27}) => {
     return (
       <FastImage
         source={{
@@ -65,9 +65,9 @@ const Header = ({
 
   const ChannelImageComponent = () => {
     const userImagesArray =
-      channelsState?.channelIdAndDataMapping[teamId]?.userIds;
+      channelsState?.channelIdAndDataMapping?.[teamId]?.userIds;
     let userImages = [];
-    for (let i = 0; userImages?.length != 5; i++) {
+    for (let i = 0; userImages?.length != 7; i++) {
       if (i > userImagesArray.length) {
         break;
       }
@@ -89,62 +89,98 @@ const Header = ({
           flexDirection: 'row',
           alignItems: 'center',
         }}>
-        <View>
+        <View
+          style={{
+            flexDirection: 'row',
+            // alignItems: 'center',
+          }}>
           <View
             style={{
-              alignItems: 'flex-end',
-              marginBottom: 3,
+              flexDirection: 'row',
+              alignItems: 'center',
             }}>
-            {userImages[3] != null && (
+            {/* first Left Image  */}
+            <View style={{marginTop: -5}}>
+              {userImages[5] != null && (
+                <UserImageComponent
+                  userId={userImages[5]}
+                  width={8}
+                  height={8}
+                />
+              )}
+            </View>
+            <View>
+              <View
+                style={{
+                  alignItems: 'flex-end',
+                }}>
+                {userImages[3] != null && (
+                  <UserImageComponent
+                    userId={userImages[3]}
+                    width={12}
+                    height={12}
+                  />
+                )}
+              </View>
+              <View style={{marginTop: 1}}>
+                {userImages[1] != null && (
+                  <UserImageComponent
+                    userId={userImages[1]}
+                    width={14}
+                    height={14}
+                  />
+                )}
+              </View>
+            </View>
+          </View>
+          {/* centered Image */}
+          <View style={{marginHorizontal: 1}}>
+            {userImages[0] != null && (
               <UserImageComponent
-                userId={userImages[3]}
-                width={18}
-                height={18}
+                userId={userImages[0]}
+                width={26}
+                height={26}
               />
             )}
           </View>
-          <View style={{marginBottom: -10}}>
-            {userImages[1] != null && (
-              <UserImageComponent
-                userId={userImages[1]}
-                width={30}
-                height={30}
-              />
-            )}
-          </View>
-        </View>
-        <View style={{marginHorizontal: 4}}>
-          {userImages[0] != null && (
-            <UserImageComponent userId={userImages[0]} width={45} height={45} />
-          )}
-        </View>
-        <View style={{marginRight: 2}}>
-          <View style={{marginTop: -10}}>
-            {userImages[2] != null && (
-              <UserImageComponent
-                userId={userImages[2]}
-                width={30}
-                height={30}
-              />
-            )}
-          </View>
-          <View
-            style={{
-              alignItems: 'flex-start',
-              marginTop: 3,
-            }}>
-            {userImages[4] != null && (
-              <UserImageComponent
-                userId={userImages[4]}
-                width={18}
-                height={18}
-              />
-            )}
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View>
+              <View style={{marginBottom: 1}}>
+                {userImages[2] != null && (
+                  <UserImageComponent
+                    userId={userImages[2]}
+                    width={14}
+                    height={14}
+                  />
+                )}
+              </View>
+              <View
+                style={{
+                  alignItems: 'flex-start',
+                }}>
+                {userImages[4] != null && (
+                  <UserImageComponent
+                    userId={userImages[4]}
+                    width={12}
+                    height={12}
+                  />
+                )}
+              </View>
+            </View>
+            <View style={{marginBottom: -5}}>
+              {userImages[6] != null && (
+                <UserImageComponent
+                  userId={userImages[6]}
+                  width={8}
+                  height={8}
+                />
+              )}
+            </View>
           </View>
         </View>
         {userImagesArray?.length - userImages?.length > 0 && (
           <View>
-            <Text style={{color: colors?.color, fontSize: 12}}>
+            <Text style={{color: colors?.color, fontSize: 8}}>
               +{userImagesArray?.length - userImages?.length}
             </Text>
           </View>
@@ -158,9 +194,9 @@ const Header = ({
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'center',
-          alignContent: 'center',
-          minHeight: 50,
+          // justifyContent: 'center',
+          // alignContent: 'center',
+          minHeight: 30,
           backgroundColor: colors?.headerColor,
           borderBottomColor: 'gray',
           borderBottomWidth: 0.5,
@@ -175,7 +211,7 @@ const Header = ({
             left: 0,
             zIndex: 1,
           }}>
-          <Icon name="chevron-left" size={18} color={colors?.color} />
+          <Icon name="chevron-left" size={12} color={colors?.color} />
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -194,7 +230,7 @@ const Header = ({
               // flex: 1,
               justifyContent: 'flex-end',
               alignItems: 'center',
-              marginTop: 5,
+              marginTop: 1,
             }}>
             {channelType == 'DIRECT_MESSAGE' ? (
               <UserImageComponent userId={userId} />

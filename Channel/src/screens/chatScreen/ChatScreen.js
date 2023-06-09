@@ -436,7 +436,7 @@ const ChatScreen = ({
   return (
     <AppProvider>
       <GestureHandlerRootView style={{flex: 1}}>
-        {!isScrolling && (
+        {/* {!isScrolling && (
           <Header
             chatHeaderTitle={chatHeaderTitle}
             userId={reciverUserId}
@@ -447,7 +447,7 @@ const ChatScreen = ({
             orgState={orgState}
             channelsState={channelsState}
           />
-        )}
+        )} */}
         <SafeAreaView style={styles.safeAreaView}>
           <View style={styles.mainContainer}>
             <KeyboardAvoidingView
