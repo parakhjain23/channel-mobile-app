@@ -58,12 +58,11 @@ import ActivityList from './components/ActivityList';
 import MentionList from './components/MentionList';
 import ActionModal from './components/ActionModal';
 import {Button} from 'react-native-paper';
-import AttachmentOptions from './components/AttachmentOptions';
-import Header from '../../components/Header';
 import {listStyles} from './components/AttachmentStyles';
 import AttachmentOptionsModal from './components/AttachmentOptionsModal';
 import {addDraftMessage} from '../../redux/actions/chat/DraftMessageAction';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {Header} from '../../components/Header';
 
 const ChatScreen = ({
   chatDetailsForTab,
@@ -436,19 +435,20 @@ const ChatScreen = ({
   return (
     <AppProvider>
       <GestureHandlerRootView style={{flex: 1}}>
-        {!isScrolling && (
-          <Header
-            chatHeaderTitle={chatHeaderTitle}
-            userId={reciverUserId}
-            channelType={channelType}
-            searchUserProfileAction={searchUserProfileAction}
-            accessToken={accessToken}
-            teamId={teamId}
-            orgState={orgState}
-            channelsState={channelsState}
-          />
-        )}
         <SafeAreaView style={styles.safeAreaView}>
+          {!isScrolling && (
+            <Header
+              chatHeaderTitle={chatHeaderTitle}
+              userId={reciverUserId}
+              channelType={channelType}
+              searchUserProfileAction={searchUserProfileAction}
+              accessToken={accessToken}
+              userInfoState={userInfoState}
+              teamId={teamId}
+              orgState={orgState}
+              channelsState={channelsState}
+            />
+          )}
           <View style={styles.mainContainer}>
             <KeyboardAvoidingView
               behavior={Platform.OS === 'ios' ? 'padding' : null}

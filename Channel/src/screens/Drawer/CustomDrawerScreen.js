@@ -19,6 +19,7 @@ import {
 import {switchOrgStart} from '../../redux/actions/org/changeCurrentOrg';
 import {removeCountOnOrgCard} from '../../redux/actions/org/UnreadCountOnOrgCardsAction';
 import * as RootNavigation from '../../navigation/RootNavigation';
+import FastImage from 'react-native-fast-image';
 
 const CustomeDrawerScreen = ({
   deviceType,
@@ -90,7 +91,7 @@ const CustomeDrawerScreen = ({
             padding: 8,
           }}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image
+            <FastImage
               source={
                 item?.iconKey
                   ? {uri: `${IMAGE_BASE_URL}${item.iconKey}`}
@@ -124,74 +125,81 @@ const CustomeDrawerScreen = ({
     );
   };
   return (
-    <View
-      style={{
-        flex: 1,
-        paddingVertical: '3%',
-        paddingTop: '8%',
-        paddingHorizontal: '3%',
-        backgroundColor: colors.drawerBackgroundColor,
-      }}>
-      <View style={{flex: 0.15, justifyContent: 'center'}}>
-        <TouchableOpacity
-          onPress={async () => {
-            RootNavigation.navigate('UserProfiles', {
-              displayName: userInfoState?.user?.displayName,
-              userId: userInfoState?.user?.id,
-            });
-          }}
-          style={{flexDirection: 'row', alignItems: 'center', maxWidth: '80%'}}>
-          <Image
-            source={{
-              uri: userInfoState?.user?.avatarKey
-                ? `${IMAGE_BASE_URL}${userInfoState?.user?.avatarKey}`
-                : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVe0cFaZ9e5Hm9X-tdWRLSvoZqg2bjemBABA&usqp=CAU',
-            }}
-            style={{width: 60, height: 60, borderRadius: 50}}
-          />
-          <View>
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: '400',
-                marginLeft: 10,
-                color: colors.textColor,
-              }}>
-              {userInfoState?.user?.displayName &&
-                userInfoState?.user?.displayName}{' '}
-              {userInfoState?.user?.lastName && userInfoState?.user?.lastName}
-            </Text>
-            <Text
-              style={{
-                marginLeft: 10,
-                color: colors.textColor,
-              }}>
-              {userInfoState?.user?.email && userInfoState?.user?.email}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </View>
+    <ScrollView
+      style={{backgroundColor: colors?.drawerBackgroundColor}}
+      contentContainerStyle={{flex: 1}}>
       <View
         style={{
-          flex: 0.85,
-          borderTopColor: 'gray',
-          borderTopWidth: 0.5,
-          paddingTop: 10,
+          flex: 1,
+          paddingVertical: '3%',
+          paddingTop: '8%',
+          paddingHorizontal: '3%',
+          backgroundColor: colors.drawerBackgroundColor,
         }}>
-        {data?.length > 0 ? (
-          <FlatList
-            data={data}
-            renderItem={({item}) => (
-              <OrgCard item={item} navigation={navigation} />
-            )}
-          />
-        ) : (
-          <View style={{flex: 0.65, justifyContent: 'center'}}>
-            <NoInternetComponent />
-          </View>
-        )}
+        <View style={{flex: 0.15, justifyContent: 'center'}}>
+          <TouchableOpacity
+            onPress={async () => {
+              RootNavigation.navigate('UserProfiles', {
+                displayName: userInfoState?.user?.displayName,
+                userId: userInfoState?.user?.id,
+              });
+            }}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              maxWidth: '80%',
+            }}>
+            <FastImage
+              source={{
+                uri: userInfoState?.user?.avatarKey
+                  ? `${IMAGE_BASE_URL}${userInfoState?.user?.avatarKey}`
+                  : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVe0cFaZ9e5Hm9X-tdWRLSvoZqg2bjemBABA&usqp=CAU',
+              }}
+              style={{width: 60, height: 60, borderRadius: 50}}
+            />
+            <View>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: '400',
+                  marginLeft: 10,
+                  color: colors.textColor,
+                }}>
+                {userInfoState?.user?.displayName &&
+                  userInfoState?.user?.displayName}{' '}
+                {userInfoState?.user?.lastName && userInfoState?.user?.lastName}
+              </Text>
+              <Text
+                style={{
+                  marginLeft: 10,
+                  color: colors.textColor,
+                }}>
+                {userInfoState?.user?.email && userInfoState?.user?.email}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            flex: 0.85,
+            borderTopColor: 'gray',
+            borderTopWidth: 0.5,
+            paddingTop: 10,
+          }}>
+          {data?.length > 0 ? (
+            data?.map((item, index) => {
+              return (
+                <OrgCard item={item} navigation={navigation} key={index} />
+              );
+            })
+          ) : (
+            <View style={{flex: 0.65, justifyContent: 'center'}}>
+              <NoInternetComponent />
+            </View>
+          )}
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 const mapStateToProps = state => ({

@@ -276,7 +276,6 @@ export function chatReducer(state = initialState, action) {
       };
 
     case Actions.ADD_DRAFT_MESSAGE:
-      console.log(action);
       return {
         ...state,
         data: {

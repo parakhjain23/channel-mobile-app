@@ -7,7 +7,15 @@ import ChatScreen from '../screens/chatScreen/ChatScreen';
 import ExploreChannels from '../screens/channelsScreen/ExploreChannels';
 import ContactDetailsPage from '../screens/userProfiles/UserProfiles';
 import {useTheme} from '@react-navigation/native';
-import {TouchableOpacity, Text, Platform, View, Dimensions} from 'react-native';
+import {
+  TouchableOpacity,
+  Text,
+  Platform,
+  View,
+  Dimensions,
+  StatusBar,
+  SafeAreaView,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as RootNavigation from '../navigation/RootNavigation';
 import {fetchSearchedUserProfileStart} from '../redux/actions/user/searchUserProfileActions';
@@ -17,7 +25,7 @@ import IpadScreen from '../screens/ipadScreen/IpadScreen';
 import {DEVICE_TYPES} from '../constants/Constants';
 import * as Actions from '../redux/Enums';
 import ChannelDetailsScreen from '../screens/channelDetails/ChannelDetails';
-import FastImage from 'react-native-fast-image';
+import {Header} from '../components/Header';
 
 const ProtectedNavigation = props => {
   const Stack = createNativeStackNavigator();
@@ -43,6 +51,33 @@ const ProtectedNavigation = props => {
     statusBarTranslucent: true,
     statusBarStyle: colors?.primaryColor == '#ffffff' ? 'dark' : 'light',
   };
+
+  const CustomHeader = React.memo(({route}) => {
+    const {
+      channelType,
+      chatHeaderTitle,
+      channelName,
+      displayName,
+      reciverUserId,
+      userId,
+      searchedChannel,
+      teamId,
+    } = route?.params;
+    const finalChatHeaderTitle = chatHeaderTitle || channelName || displayName;
+    const finalUserId = reciverUserId || userId;
+    return (
+      <Header
+        chatHeaderTitle={finalChatHeaderTitle}
+        userId={finalUserId}
+        channelType={channelType}
+        searchUserProfileAction={props?.searchUserProfileAction}
+        accessToken={props?.userInfoState?.accessToken}
+        teamId={teamId}
+        orgState={props?.orgsState}
+        channelsState={props?.channelsState}
+      />
+    );
+  });
 
   return props?.orgsState?.currentOrgId == null ? (
     <Stack.Navigator>
@@ -80,6 +115,7 @@ const ProtectedNavigation = props => {
         component={ChatScreen}
         options={({route}) => ({
           headerShown: false,
+          // header: () => <CustomHeader route={route} />,
           ...getHeader,
         })}
       />
@@ -105,7 +141,8 @@ const ProtectedNavigation = props => {
         name="ChannelDetails"
         component={ChannelDetailsScreen}
         options={({route}) => ({
-          headerTitle: route?.params?.channelName,
+          // header: () => <CustomHeader route={route} />,
+          // headerTitle: route?.params?.channelName,
           headerShown: true,
           ...getHeader,
         })}

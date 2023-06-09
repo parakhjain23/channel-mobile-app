@@ -25,6 +25,7 @@ import {AppContext} from '../appProvider/AppProvider';
 import {DEVICE_TYPES} from '../../constants/Constants';
 import {RightSwipeAction} from './components/RightActionsForChatCard';
 import FastImage from 'react-native-fast-image';
+import {getChannelByTeamIdStart} from '../../redux/actions/channels/GetChannelByTeamId';
 
 const TouchableItem =
   Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
@@ -235,6 +236,7 @@ const SearchChannelCard = ({
   userInfoState,
   searchUserProfileAction,
   orgsState,
+  getChannelByTeamIdAction,
 }) => {
   const {deviceType} = useContext(AppContext);
   const {colors} = useTheme();
@@ -269,8 +271,13 @@ const SearchChannelCard = ({
     ? props?.channelsState?.userIdAndTeamIdMapping[item?._source?.userId]
     : item?._id;
   const iconName = useMemo(
-    () => (item?._source?.type === 'U' ? 'user' : 'hashtag'),
-    [item?._source?.type],
+    () =>
+      item?._source?.type === 'U'
+        ? 'user'
+        : item?._source?.status == 'PUBLIC'
+        ? 'hashtag'
+        : 'lock',
+    [item?._source?.type, item?._source?.status],
   );
 
   const onPress = useCallback(async () => {
@@ -280,6 +287,13 @@ const SearchChannelCard = ({
         props?.orgsState?.currentOrgId,
         Name,
         item?._source?.userId,
+      );
+    }
+    if (props?.channelsState?.teamIdAndTypeMapping[teamId] === undefined) {
+      await getChannelByTeamIdAction(
+        userInfoState.accessToken,
+        teamId,
+        userInfoState?.user?.id,
       );
     }
     if (deviceType === DEVICE_TYPES[1]) {
@@ -460,6 +474,8 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => {
   return {
+    getChannelByTeamIdAction: (accessToken, teamId, userId) =>
+      dispatch(getChannelByTeamIdStart(accessToken, teamId, userId)),
     searchUserProfileAction: (userId, token) =>
       dispatch(fetchSearchedUserProfileStart(userId, token)),
     markAsUnreadAction: (
