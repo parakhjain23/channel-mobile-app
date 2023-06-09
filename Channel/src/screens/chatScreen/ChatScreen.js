@@ -63,6 +63,7 @@ import AttachmentOptionsModal from './components/AttachmentOptionsModal';
 import {addDraftMessage} from '../../redux/actions/chat/DraftMessageAction';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Header} from '../../components/Header';
+import {joinChannelStart} from '../../redux/actions/channels/JoinChannelActions';
 
 const ChatScreen = ({
   chatDetailsForTab,
@@ -87,6 +88,7 @@ const ChatScreen = ({
   addUsersToChannelAction,
   removeUserFromChannelAction,
   draftMessageAction,
+  joinChannelAction,
 }) => {
   var teamId, channelType;
   if (deviceType === DEVICE_TYPES[1]) {
@@ -96,7 +98,6 @@ const ChatScreen = ({
     var {teamId, reciverUserId, channelType, searchedChannel, chatHeaderTitle} =
       route.params;
   }
-
   if (teamId == undefined) {
     teamId = channelsState?.userIdAndTeamIdMapping[reciverUserId];
   }
@@ -526,289 +527,304 @@ const ChatScreen = ({
                   />
                 )}
 
-                <View style={styles.bottomContainer}>
+                {(channelType == 'CHANNEL' ||
+                  channelType == 'PUBLIC' ||
+                  channelType == 'PRIVATE') &&
+                !channelsState?.channelIdAndDataMapping[
+                  teamId
+                ]?.userIds?.includes(userInfoState?.user?.id) ? (
                   <View
-                    style={[
-                      replyOnMessage && styles.inputWithReplyContainer,
-                      {
-                        width: '100%',
-                        alignSelf: 'center',
-                      },
-                    ]}>
-                    {attachment?.length > 0 &&
-                      attachment?.map((item, index) => {
-                        return (
-                          <TouchableOpacity key={index}>
-                            <View style={styles.replyMessageInInput}>
-                              <Text style={styles.repliedText}>
-                                {item?.title}
-                              </Text>
-                              <MaterialIcons
-                                name="cancel"
-                                size={ms(18)}
-                                color={'black'}
-                                onPress={() => {
-                                  const newAttachment = attachment.filter(
-                                    (_, i) => i !== index,
-                                  );
-                                  setAttachment(newAttachment);
-                                }}
-                              />
-                            </View>
-                          </TouchableOpacity>
-                        );
-                      })}
+                    style={{
+                      flex: 1,
+                      // backgroundColor: 'red',
+                      borderTopWidth: 0.3,
+                      borderTopColor: colors.color,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <TouchableOpacity
+                      onPress={() =>
+                        joinChannelAction(
+                          orgState?.currentOrgId,
+                          teamId,
+                          userInfoState?.user?.id,
+                          userInfoState?.accessToken,
+                        )
+                      }
+                      style={{
+                        borderWidth: 1,
+                        borderColor: colors.color,
+                        borderRadius: 5,
+                      }}>
+                      <Text style={{margin: 10, color: colors.textColor}}>
+                        Join this channel
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                ) : (
+                  <View style={styles.bottomContainer}>
+                    <View
+                      style={[
+                        replyOnMessage && styles.inputWithReplyContainer,
+                        {
+                          width: '100%',
+                          alignSelf: 'center',
+                        },
+                      ]}>
+                      {attachment?.length > 0 &&
+                        attachment?.map((item, index) => {
+                          return (
+                            <TouchableOpacity key={index}>
+                              <View style={styles.replyMessageInInput}>
+                                <Text style={styles.repliedText}>
+                                  {item?.title}
+                                </Text>
+                                <MaterialIcons
+                                  name="cancel"
+                                  size={ms(18)}
+                                  color={'black'}
+                                  onPress={() => {
+                                    const newAttachment = attachment.filter(
+                                      (_, i) => i !== index,
+                                    );
+                                    setAttachment(newAttachment);
+                                  }}
+                                />
+                              </View>
+                            </TouchableOpacity>
+                          );
+                        })}
 
-                    {replyOnMessage && (
-                      <TouchableOpacity
-                        activeOpacity={0.9}
-                        onPress={() => {
-                          setreplyOnMessage(false);
-                          setrepliedMsgDetails(null);
-                        }}>
-                        <View style={styles.replyMessageInInput}>
-                          {repliedMsgDetails?.content?.includes(
-                            '<span class="mention"',
-                          ) ? (
-                            <HTMLView
-                              value={`<div>${repliedMsgDetails?.content}</div>`}
-                              renderNode={renderNode}
-                              stylesheet={htmlStyles}
-                            />
-                          ) : repliedMsgDetails?.attachment?.length > 0 &&
-                            typeof repliedMsgDetails?.attachment != 'string' ? (
-                            <Text style={{color: 'black'}}>
-                              <Icon
-                                name="attach-file"
-                                size={16}
-                                color="black"
-                              />
-                              attachment
-                            </Text>
-                          ) : (
-                            <RenderHTML
-                              source={{
-                                html: repliedMsgDetails?.content?.replace(
-                                  emailRegex,
-                                  '<span>$&</span>',
-                                ),
-                              }}
-                              contentWidth={width}
-                              tagsStyles={tagsStyles('black', 'black')}
-                            />
-                          )}
-                          <MaterialIcons
-                            name="cancel"
-                            size={ms(16)}
-                            color="black"
-                            style={{
-                              position: 'absolute',
-                              top: ms(5),
-                              right: ms(5),
-                              zIndex: 1,
-                            }}
-                          />
-                        </View>
-                      </TouchableOpacity>
-                    )}
-
-                    {showMention && (
-                      <MentionList
-                        data={mentions}
-                        setMentionsArr={setMentionsArr}
-                        onChangeMessage={onChangeMessage}
-                        setMentions={setMentions}
-                        orgsState={orgState}
-                      />
-                    )}
-
-                    {Activities && (
-                      <ActivityList
-                        setaction={setaction}
-                        onChangeMessage={onChangeMessage}
-                        setActivities={setActivities}
-                      />
-                    )}
-
-                    {showPlayer && (
-                      <View style={styles.playerContainer}>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            minHeight: 60,
-                            flex: 1,
-                            // backgroundColor: 'red',
-                            alignItems: 'center',
-                          }}>
-                          <AudioRecordingPlayer remoteUrl={path} />
-                        </View>
-                        <MaterialIcons
-                          name="cancel"
-                          size={18}
-                          color={colors?.textColor}
+                      {replyOnMessage && (
+                        <TouchableOpacity
+                          activeOpacity={0.9}
                           onPress={() => {
-                            setShowPlayer(false);
-                          }}
-                        />
-                        <View style={{justifyContent: 'center'}}>
-                          <TouchableOpacity
-                            onPress={!action ? onSendPress : onSendWithAction}
-                            style={{
-                              backgroundColor: colors?.sentByMeCardColor,
-                              borderRadius: 30,
-                              marginLeft: 3,
-                            }}
-                            activeOpacity={0.9}>
+                            setreplyOnMessage(false);
+                            setrepliedMsgDetails(null);
+                          }}>
+                          <View style={styles.replyMessageInInput}>
+                            {repliedMsgDetails?.content?.includes(
+                              '<span class="mention"',
+                            ) ? (
+                              <HTMLView
+                                value={`<div>${repliedMsgDetails?.content}</div>`}
+                                renderNode={renderNode}
+                                stylesheet={htmlStyles}
+                              />
+                            ) : repliedMsgDetails?.attachment?.length > 0 &&
+                              typeof repliedMsgDetails?.attachment !=
+                                'string' ? (
+                              <Text style={{color: 'black'}}>
+                                <Icon
+                                  name="attach-file"
+                                  size={16}
+                                  color="black"
+                                />
+                                attachment
+                              </Text>
+                            ) : (
+                              <RenderHTML
+                                source={{
+                                  html: repliedMsgDetails?.content?.replace(
+                                    emailRegex,
+                                    '<span>$&</span>',
+                                  ),
+                                }}
+                                contentWidth={width}
+                                tagsStyles={tagsStyles('black', 'black')}
+                              />
+                            )}
                             <MaterialIcons
-                              name="send"
-                              size={24}
+                              name="cancel"
+                              size={ms(16)}
+                              color="black"
                               style={{
-                                color: colors.sentByMeTextColor,
-                                padding: 10,
+                                position: 'absolute',
+                                top: ms(5),
+                                right: ms(5),
+                                zIndex: 1,
                               }}
                             />
-                          </TouchableOpacity>
-                        </View>
-                      </View>
-                    )}
+                          </View>
+                        </TouchableOpacity>
+                      )}
 
-                    {!showPlayer && (
-                      <View style={styles.inputContainer}>
-                        {isRecording ? (
+                      {showMention && (
+                        <MentionList
+                          data={mentions}
+                          setMentionsArr={setMentionsArr}
+                          onChangeMessage={onChangeMessage}
+                          setMentions={setMentions}
+                          orgsState={orgState}
+                        />
+                      )}
+
+                      {Activities && (
+                        <ActivityList
+                          setaction={setaction}
+                          onChangeMessage={onChangeMessage}
+                          setActivities={setActivities}
+                        />
+                      )}
+
+                      {showPlayer && (
+                        <View style={styles.playerContainer}>
                           <View
                             style={{
                               flexDirection: 'row',
+                              justifyContent: 'center',
+                              minHeight: 60,
+                              flex: 1,
+                              // backgroundColor: 'red',
                               alignItems: 'center',
-                              margin: 4,
                             }}>
+                            <AudioRecordingPlayer remoteUrl={path} />
+                          </View>
+                          <MaterialIcons
+                            name="cancel"
+                            size={18}
+                            color={colors?.textColor}
+                            onPress={() => {
+                              setShowPlayer(false);
+                            }}
+                          />
+                          <View style={{justifyContent: 'center'}}>
                             <TouchableOpacity
-                              style={{flex: 1, alignItems: 'center'}}
-                              onPress={() => {
-                                onStopRecord(
-                                  setrecordingUrl,
-                                  setvoiceAttachment,
-                                  isMountedRef,
-                                ),
-                                  setisRecording(false),
-                                  setShowPlayer(true);
-                              }}>
-                              <AnimatedLottieView
-                                source={require('../../assests/images/attachments/recordingJson2.json')}
-                                loop
-                                autoPlay
+                              onPress={!action ? onSendPress : onSendWithAction}
+                              style={{
+                                backgroundColor: colors?.sentByMeCardColor,
+                                borderRadius: 30,
+                                marginLeft: 3,
+                              }}
+                              activeOpacity={0.9}>
+                              <MaterialIcons
+                                name="send"
+                                size={24}
                                 style={{
-                                  width: 45,
-                                  height: 45,
-                                  // backgroundColor: 'blue',
+                                  color: colors.sentByMeTextColor,
+                                  padding: 10,
                                 }}
                               />
                             </TouchableOpacity>
-                            <Button
-                              mode="contained"
-                              icon="microphone-off"
-                              buttonColor={colors?.sentByMeCardColor}
-                              onPress={() => {
-                                onStopRecord(
-                                  setrecordingUrl,
-                                  setvoiceAttachment,
-                                  isMountedRef,
-                                ),
-                                  setisRecording(false),
-                                  setShowPlayer(true);
-                              }}>
-                              STOP
-                            </Button>
                           </View>
-                        ) : (
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              alignItems: 'center',
-                              // backgroundColor: 'red',
-                            }}>
+                        </View>
+                      )}
+
+                      {!showPlayer && (
+                        <View style={styles.inputContainer}>
+                          {isRecording ? (
                             <View
                               style={{
-                                alignSelf: 'flex-end',
-                                // backgroundColor: 'red',
-                                marginBottom: 3,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                margin: 4,
                               }}>
                               <TouchableOpacity
-                                style={{
-                                  borderRadius: 30,
-                                  // backgroundColor: 'grey',
-                                  margin: 3,
-                                }}
-                                activeOpacity={0.9}>
-                                <MaterialIcons
-                                  name="add"
-                                  size={24}
-                                  style={[listStyle.attachIcon]}
-                                  onPress={() => {
-                                    Keyboard.dismiss();
-                                    modalizeRef?.current?.open();
+                                style={{flex: 1, alignItems: 'center'}}
+                                onPress={() => {
+                                  onStopRecord(
+                                    setrecordingUrl,
+                                    setvoiceAttachment,
+                                    isMountedRef,
+                                  ),
+                                    setisRecording(false),
+                                    setShowPlayer(true);
+                                }}>
+                                <AnimatedLottieView
+                                  source={require('../../assests/images/attachments/recordingJson2.json')}
+                                  loop
+                                  autoPlay
+                                  style={{
+                                    width: 45,
+                                    height: 45,
+                                    // backgroundColor: 'blue',
                                   }}
                                 />
                               </TouchableOpacity>
+                              <Button
+                                mode="contained"
+                                icon="microphone-off"
+                                buttonColor={colors?.sentByMeCardColor}
+                                onPress={() => {
+                                  onStopRecord(
+                                    setrecordingUrl,
+                                    setvoiceAttachment,
+                                    isMountedRef,
+                                  ),
+                                    setisRecording(false),
+                                    setShowPlayer(true);
+                                }}>
+                                STOP
+                              </Button>
                             </View>
-                            <TextInput
-                              ref={textInputRef}
-                              editable
-                              multiline
-                              onChangeText={handleInputChange}
-                              placeholder="Message"
-                              placeholderTextColor={colors.textColor}
-                              value={message}
-                              style={[
-                                replyOnMessage
-                                  ? styles.inputWithReply
-                                  : styles.inputWithoutReply,
-                                {color: colors.textColor},
-                              ]}
-                            />
+                          ) : (
                             <View
                               style={{
-                                alignSelf: 'flex-end',
-                                // margin: 1,
-                                marginBottom: 3,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                // backgroundColor: 'red',
                               }}>
-                              {message?.length > 0 ||
-                              showPlayer ||
-                              attachment?.length > 0 ? (
+                              <View
+                                style={{
+                                  alignSelf: 'flex-end',
+                                  // backgroundColor: 'red',
+                                  marginBottom: 3,
+                                }}>
                                 <TouchableOpacity
-                                  onPress={
-                                    !action ? onSendPress : onSendWithAction
-                                  }
                                   style={{
-                                    backgroundColor: colors?.sentByMeCardColor,
                                     borderRadius: 30,
+                                    // backgroundColor: 'grey',
                                     margin: 3,
                                   }}
                                   activeOpacity={0.9}>
                                   <MaterialIcons
-                                    name="send"
-                                    size={20}
-                                    style={{
-                                      color: colors.sentByMeTextColor,
-                                      padding: 12,
+                                    name="add"
+                                    size={24}
+                                    style={[listStyle.attachIcon]}
+                                    onPress={() => {
+                                      Keyboard.dismiss();
+                                      modalizeRef?.current?.open();
                                     }}
                                   />
                                 </TouchableOpacity>
-                              ) : (
-                                !isRecording && (
+                              </View>
+                              <TextInput
+                                ref={textInputRef}
+                                editable
+                                multiline
+                                onChangeText={handleInputChange}
+                                placeholder="Message"
+                                placeholderTextColor={colors.textColor}
+                                value={message}
+                                style={[
+                                  replyOnMessage
+                                    ? styles.inputWithReply
+                                    : styles.inputWithoutReply,
+                                  {color: colors.textColor},
+                                ]}
+                              />
+                              <View
+                                style={{
+                                  alignSelf: 'flex-end',
+                                  // margin: 1,
+                                  marginBottom: 3,
+                                }}>
+                                {message?.length > 0 ||
+                                showPlayer ||
+                                attachment?.length > 0 ? (
                                   <TouchableOpacity
-                                    onPress={() => {
-                                      onStartRecord(setisRecording);
-                                    }}
+                                    onPress={
+                                      !action ? onSendPress : onSendWithAction
+                                    }
                                     style={{
-                                      borderRadius: 30,
-                                      margin: 3,
                                       backgroundColor:
                                         colors?.sentByMeCardColor,
+                                      borderRadius: 30,
+                                      margin: 3,
                                     }}
                                     activeOpacity={0.9}>
                                     <MaterialIcons
-                                      name="mic"
+                                      name="send"
                                       size={20}
                                       style={{
                                         color: colors.sentByMeTextColor,
@@ -816,43 +832,41 @@ const ChatScreen = ({
                                       }}
                                     />
                                   </TouchableOpacity>
-                                )
-                              )}
+                                ) : (
+                                  !isRecording && (
+                                    <TouchableOpacity
+                                      onPress={() => {
+                                        onStartRecord(setisRecording);
+                                      }}
+                                      style={{
+                                        borderRadius: 30,
+                                        margin: 3,
+                                        backgroundColor:
+                                          colors?.sentByMeCardColor,
+                                      }}
+                                      activeOpacity={0.9}>
+                                      <MaterialIcons
+                                        name="mic"
+                                        size={20}
+                                        style={{
+                                          color: colors.sentByMeTextColor,
+                                          padding: 12,
+                                        }}
+                                      />
+                                    </TouchableOpacity>
+                                  )
+                                )}
+                              </View>
                             </View>
-                          </View>
-                        )}
-                        {showOptions &&
-                          message?.length == 1 &&
-                          setShowOptions(false)}
-                      </View>
-                    )}
+                          )}
+                          {showOptions &&
+                            message?.length == 1 &&
+                            setShowOptions(false)}
+                        </View>
+                      )}
+                    </View>
                   </View>
-                  {/* <View
-                    style={{
-                      justifyContent: 'flex-start',
-                      backgroundColor: 'yellow',
-                    }}>
-                    {showPlayer && (
-                      <TouchableOpacity
-                        onPress={!action ? onSendPress : onSendWithAction}
-                        style={{
-                          backgroundColor: colors?.sentByMeCardColor,
-                          borderRadius: 7,
-                          marginLeft: 3,
-                        }}
-                        activeOpacity={0.9}>
-                        <MaterialIcons
-                          name="send"
-                          size={24}
-                          style={{
-                            color: colors.sentByMeTextColor,
-                            padding: 11,
-                          }}
-                        />
-                      </TouchableOpacity>
-                    )}
-                  </View> */}
-                </View>
+                )}
               </View>
             </KeyboardAvoidingView>
           </View>
@@ -873,6 +887,8 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => {
   return {
+    joinChannelAction: (orgId, teamId, userId, accessToken) =>
+      dispatch(joinChannelStart(orgId, teamId, userId, accessToken)),
     draftMessageAction: (message, teamId, accessToken, orgId, userId) =>
       dispatch(addDraftMessage(message, teamId, accessToken, orgId, userId)),
     fetchChatsOfTeamAction: (teamId, token, skip) =>
