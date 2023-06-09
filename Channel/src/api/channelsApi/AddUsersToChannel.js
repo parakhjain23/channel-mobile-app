@@ -1,6 +1,6 @@
 export const addUsersToChannelApi = async (userIds, teamId, orgId, token) => {
   try {
-    const requests = userIds.map(userId => 
+    const requests = userIds.map(userId =>
       fetch(`https://api.intospace.io/chat/teamUser`, {
         method: 'POST',
         headers: {
@@ -8,11 +8,11 @@ export const addUsersToChannelApi = async (userIds, teamId, orgId, token) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userId: userId,
+          userId: userId.userId,
           teamId: teamId,
           orgId: orgId,
         }),
-      }).then(response => response.json())
+      }).then(response => response.json()),
     );
 
     const results = await Promise.all(requests);
@@ -22,17 +22,24 @@ export const addUsersToChannelApi = async (userIds, teamId, orgId, token) => {
   }
 };
 
-
-export const removeUserFromChannelApi = async (userIds, teamId, orgId, token) => {
+export const removeUserFromChannelApi = async (
+  userIds,
+  teamId,
+  orgId,
+  token,
+) => {
   try {
-    const requests = userIds.map(userId => 
-      fetch(`https://api.intospace.io/chat/teamUser?orgId=${orgId}&userId=${userId}&teamId=${teamId}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: token,
-          'Content-Type': 'application/json',
-        }
-      }).then(response => response.json())
+    const requests = userIds.map(userId =>
+      fetch(
+        `https://api.intospace.io/chat/teamUser?orgId=${orgId}&userId=${userId.userId}&teamId=${teamId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: token,
+            'Content-Type': 'application/json',
+          },
+        },
+      ).then(response => response.json()),
     );
 
     const results = await Promise.all(requests);
@@ -41,4 +48,3 @@ export const removeUserFromChannelApi = async (userIds, teamId, orgId, token) =>
     console.warn(error);
   }
 };
-

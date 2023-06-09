@@ -238,6 +238,7 @@ const SearchChannelCard = ({
   orgsState,
   getChannelByTeamIdAction,
 }) => {
+  console.log(item, 'this is item');
   const {deviceType} = useContext(AppContext);
   const {colors} = useTheme();
   const handleListItemPress = (
