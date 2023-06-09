@@ -393,7 +393,13 @@ const SearchChannelCard = ({
     </TouchableItem>
   );
 };
-const UsersToAddCard = ({item, setUserIds, userIds, setsearchedUser}) => {
+const UsersToAddCard = ({
+  item,
+  setUserIds,
+  userIds,
+  setsearchedUser,
+  orgsState,
+}) => {
   const {colors} = useTheme();
   const Name = item?._source?.type == 'U' && item?._source?.title;
   return (
@@ -418,14 +424,30 @@ const UsersToAddCard = ({item, setUserIds, userIds, setsearchedUser}) => {
           justifyContent: 'flex-start',
           padding: 13,
         }}>
-        <Icon name="user" color={colors.textColor} />
+        {/* <Icon name="user" color={colors.textColor} /> */}
+        <FastImage
+          source={{
+            uri: orgsState?.userIdAndImageUrlMapping[item?._source?.userId]
+              ? orgsState?.userIdAndImageUrlMapping[item?._source?.userId]
+              : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVe0cFaZ9e5Hm9X-tdWRLSvoZqg2bjemBABA&usqp=CAU',
+            priority: FastImage.priority.normal,
+          }}
+          style={{
+            width: 25,
+            height: 25,
+            borderRadius: 50,
+            marginRight: 5,
+          }}
+        />
         <Text
           style={{
             fontSize: 16,
             fontWeight: '400',
             color: colors.textColor,
-          }}>
-          {' '}
+            flex: 1,
+          }}
+          numberOfLines={1}
+          ellipsizeMode="tail">
           {Name}
         </Text>
       </View>
@@ -468,4 +490,6 @@ export const RenderChannels = React.memo(
 export const RenderSearchChannels = React.memo(
   connect(mapStateToProps, mapDispatchToProps)(SearchChannelCard),
 );
-export const RenderUsersToAdd = React.memo(UsersToAddCard);
+export const RenderUsersToAdd = React.memo(
+  connect(mapStateToProps, null)(UsersToAddCard),
+);
