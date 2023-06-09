@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from 'react-redux';
 import SearchBox from '../../components/searchBox';
 import {getChannelsByQueryStart} from '../../redux/actions/channels/ChannelsByQueryAction';
@@ -22,7 +22,7 @@ const ChannelDetailsScreen = ({
   channelsState,
 }) => {
   const [searchValue, setsearchValue] = useState('');
-  const {teamId} = route?.params;
+  const {teamId, channelName} = route?.params;
   const {colors} = useTheme();
   const styles = makeStyles(colors);
   const RED_COLOR = '#FF2E2E';
@@ -92,7 +92,7 @@ const ChannelDetailsScreen = ({
     [channelsByQueryState?.channels, channelsState?.channelIdAndDataMapping],
   );
 
-  const renderItem = ({item, index}) => {
+  const RenderItem = ({item, index}) => {
     return (
       <View style={styles.memberContainer} key={index}>
         <Text style={styles.memberText}>
@@ -117,62 +117,56 @@ const ChannelDetailsScreen = ({
     );
   };
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        {Purpose?.length > 0 && (
-          <Text style={styles.text}>
-            Purpose:{' '}
-            {channelsState?.channelIdAndDataMapping[
-              teamId
-            ]?.purpose?.toString()}
-          </Text>
-        )}
-        {CreatedBy?.length > 0 && (
-          <Text>
+    <ScrollView style={{flex: 1, backgroundColor: colors?.primaryColor}}>
+      <View style={styles.container}>
+        <View style={styles.content}>
+          {Purpose?.length > 0 && (
             <Text style={styles.text}>
-              Created by:{' '}
-              {
-                orgsState?.userIdAndNameMapping[
-                  channelsState?.channelIdAndDataMapping[teamId]?.createdBy
-                ]
-              }
+              Purpose:{' '}
+              {channelsState?.channelIdAndDataMapping[
+                teamId
+              ]?.purpose?.toString()}
             </Text>
-          </Text>
-        )}
+          )}
+          {CreatedBy?.length > 0 && (
+            <Text>
+              <Text style={styles.text}>
+                Created by:{' '}
+                {
+                  orgsState?.userIdAndNameMapping[
+                    channelsState?.channelIdAndDataMapping[teamId]?.createdBy
+                  ]
+                }
+              </Text>
+            </Text>
+          )}
 
-        <Text style={styles.header}>Add Members </Text>
-        <SearchBox
-          searchValue={searchValue}
-          changeText={changeText}
-          isSearchFocus={false}
-        />
-        {searchValue != '' && channelsByQueryState?.channels?.length > 0 && (
-          <FlatList
-            data={channelsByQueryState?.channels}
-            renderItem={RenderUsers}
-            keyboardDismissMode="on-drag"
-            keyboardShouldPersistTaps="always"
-            showsVerticalScrollIndicator={false}
-            ListFooterComponent={() => {
-              return <View style={{height: 100}}></View>;
-            }}
+          <Text style={styles.header}>Add Members </Text>
+          <SearchBox
+            searchValue={searchValue}
+            changeText={changeText}
+            isSearchFocus={false}
           />
-        )}
-        {searchValue?.length === 0 && (
-          <View style={{flex: 1}}>
-            <Text style={styles.header}>Members:</Text>
-            <FlatList
-              data={channelsState?.channelIdAndDataMapping[teamId]?.userIds}
-              renderItem={renderItem}
-              showsVerticalScrollIndicator={false}
-              ListFooterComponent={() => {
-                return <View style={{height: 100}}></View>;
-              }}
-            />
-          </View>
-        )}
+
+          {searchValue != '' &&
+            channelsByQueryState?.channels?.length > 0 &&
+            channelsByQueryState?.channels?.map((item, index) => {
+              return <RenderUsers item={item} key={index} />;
+            })}
+
+          {searchValue?.length === 0 && (
+            <View style={{flex: 1}}>
+              <Text style={styles.header}>Members:</Text>
+              {channelsState?.channelIdAndDataMapping[teamId]?.userIds?.map(
+                (item, index) => {
+                  return <RenderItem item={item} index={index} key={index} />;
+                },
+              )}
+            </View>
+          )}
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 const mapStateToProps = state => ({

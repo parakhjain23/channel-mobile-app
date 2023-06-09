@@ -7,6 +7,14 @@ import {View} from 'react-native';
 const SearchChannelListComponent = ({props, navigation}) => {
   const renderItemSearchChannels = useCallback(
     ({item}) => {
+      if (
+        item?._source?.type === 'T' &&
+        item?._source?.status === 'PRIVATE' &&
+        props?.channelsState?.teamIdAndTypeMapping[item?._source?.id] ===
+          undefined
+      ) {
+        return null; // Do not render the component
+      }
       return (
         <RenderSearchChannels
           item={item}
