@@ -470,13 +470,20 @@ const ChatCard = ({
                             }
                             onLongPress={onLongPress}
                             style={{marginVertical: 5, alignItems: 'center'}}>
-                            <Image
+                            <FastImage
                               source={{uri: item?.resourceUrl}}
                               style={{
                                 height: 150,
                                 width: 150,
                               }}
                             />
+                            {/* <Image
+                              source={{uri: item?.resourceUrl}}
+                              style={{
+                                height: 150,
+                                width: 150,
+                              }}
+                            /> */}
                           </TouchableOpacity>
                         ) : item?.contentType?.includes('audio') ? (
                           <View
