@@ -6,7 +6,6 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import * as RootNavigation from '../navigation/RootNavigation';
 import {useTheme} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
-import {useDispatch} from 'react-redux';
 import {DEVICE_TYPES} from '../constants/Constants';
 
 const HeaderComponent = ({
@@ -32,7 +31,6 @@ const HeaderComponent = ({
       <View
         style={{
           flexDirection: 'row',
-          // alignItems: 'center',
           justifyContent: 'center',
           marginTop: 1,
           marginRight: -7,

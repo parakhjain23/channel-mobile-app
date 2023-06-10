@@ -491,7 +491,7 @@ const ChatCard = ({
                             style={{
                               flexDirection: 'row',
                               height: 50,
-                              width: ms(280),
+                              width: ms(260),
                               flex: 1,
                               alignItems: 'center',
                               overflow: 'hidden',

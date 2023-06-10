@@ -30,8 +30,8 @@ const AudioRecordingPlayer = ({remoteUrl}) => {
 
   const onStopPlay = async () => {
     try {
-      setIsPlaying(false);
       await audioRecorderPlayer.stopPlayer();
+      setIsPlaying(false);
     } catch (error) {
       console.error('Failed to stop playing:', error);
     }
@@ -91,9 +91,11 @@ const AudioRecordingPlayer = ({remoteUrl}) => {
           maximumTrackTintColor="#888"
           disabled={!isPlaying}
         />
-        <Text style={styles.timeText}>
-          {formatTime(currentPositionSec)} / {formatTime(currentDurationSec)}
-        </Text>
+        {isPlaying && (
+          <Text style={styles.timeText}>
+            {formatTime(currentPositionSec)} / {formatTime(currentDurationSec)}
+          </Text>
+        )}
       </View>
     </View>
   );

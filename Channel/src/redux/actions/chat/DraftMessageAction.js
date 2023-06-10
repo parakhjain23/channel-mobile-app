@@ -6,7 +6,7 @@ export function* draftMessage({message, teamId, accessToken, orgId, userId}) {
   try {
     yield call(draftMessageApi, message, teamId, accessToken, orgId, userId);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 }
 

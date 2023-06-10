@@ -38,7 +38,6 @@ const ProtectedNavigation = props => {
   useEffect(() => {
     props?.setDeviceTypeAction(deviceType);
   }, []);
-  const PLATFORM = Platform.OS == 'android' ? 'android' : 'ios';
 
   const getHeader = {
     headerTintColor: colors.textColor,
@@ -46,39 +45,11 @@ const ProtectedNavigation = props => {
     headerStyle: {
       color: colors.textColor,
       backgroundColor: colors.headerColor,
-      height: 80,
     },
     statusBarColor: 'transparent',
     statusBarTranslucent: true,
     statusBarStyle: colors?.primaryColor == '#ffffff' ? 'dark' : 'light',
   };
-
-  const CustomHeader = React.memo(({route}) => {
-    const {
-      channelType,
-      chatHeaderTitle,
-      channelName,
-      displayName,
-      reciverUserId,
-      userId,
-      searchedChannel,
-      teamId,
-    } = route?.params;
-    const finalChatHeaderTitle = chatHeaderTitle || channelName || displayName;
-    const finalUserId = reciverUserId || userId;
-    return (
-      <Header
-        chatHeaderTitle={finalChatHeaderTitle}
-        userId={finalUserId}
-        channelType={channelType}
-        searchUserProfileAction={props?.searchUserProfileAction}
-        accessToken={props?.userInfoState?.accessToken}
-        teamId={teamId}
-        orgState={props?.orgsState}
-        channelsState={props?.channelsState}
-      />
-    );
-  });
 
   return props?.orgsState?.currentOrgId == null ? (
     <Stack.Navigator>
@@ -114,11 +85,10 @@ const ProtectedNavigation = props => {
       <Stack.Screen
         name="Chat"
         component={ChatScreen}
-        options={({route}) => ({
+        options={{
           headerShown: false,
-          // header: () => <CustomHeader route={route} />,
           ...getHeader,
-        })}
+        }}
       />
       <Stack.Screen
         name="Explore Channels"
