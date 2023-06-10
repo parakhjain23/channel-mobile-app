@@ -17,11 +17,11 @@ export const listStyles = colors =>
       marginLeft: 3,
     },
     attachIcon: {
-      marginRight: 8,
+      // marginRight: 5,
       color: colors?.color,
       // backgroundColor: colors?.primaryColor,
       padding: 8,
-      borderRadius: 25,
+      // borderRadius: 25,
     },
     text: {
       color: colors?.color,

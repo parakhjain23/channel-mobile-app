@@ -9,7 +9,7 @@ export const makeStyles = colors =>
     mainContainer: {
       flex: 1,
       backgroundColor: colors.primaryColor,
-      paddingHorizontal: 5,
+      paddingHorizontal: 0,
     },
     outerContainer: {flex: 1, marginLeft: 10, marginRight: 10},
     messageListContainer: {
@@ -38,6 +38,7 @@ export const makeStyles = colors =>
     inputWithoutReply: {
       flex: 1,
       paddingVertical: 8,
+      marginLeft: 5,
     },
     inputWithReplyContainer: {
       borderWidth: 1,
@@ -61,13 +62,15 @@ export const makeStyles = colors =>
     },
     playerContainer: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      // justifyContent: 'space-between',
       marginTop: 0,
+      width: '100%',
       // borderWidth: 0.7,
       // borderColor: colors?.color,
       // borderRadius: ms(5),
       // paddingTop: ms(15),
       backgroundColor: colors?.primaryColor,
+      // flex: 1,
       // height:80,
       maxHeight: 200,
       // minHeight: ms(80),
@@ -149,11 +152,11 @@ export const makeStyles = colors =>
     inputContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      borderWidth: 1,
+      borderTopWidth: 1,
       borderRadius: 4,
       borderColor: '#b3b3b3',
-      paddingHorizontal: 5,
-      paddingVertical: 4,
+      // paddingHorizontal: 5,
+      // paddingVertical: 4,
       maxHeight: 200,
     },
   });

@@ -541,7 +541,7 @@ const ChatScreen = ({
                     style={[
                       replyOnMessage && styles.inputWithReplyContainer,
                       {
-                        width: isRecording ? '100%' : '87%',
+                        width: '100%',
                         alignSelf: 'center',
                       },
                     ]}>
@@ -648,6 +648,7 @@ const ChatScreen = ({
                             justifyContent: 'center',
                             minHeight: 60,
                             flex: 1,
+                            // backgroundColor: 'red',
                             alignItems: 'center',
                           }}>
                           <AudioRecordingPlayer remoteUrl={path} />
@@ -660,6 +661,25 @@ const ChatScreen = ({
                             setShowPlayer(false);
                           }}
                         />
+                        <View style={{justifyContent: 'center'}}>
+                          <TouchableOpacity
+                            onPress={!action ? onSendPress : onSendWithAction}
+                            style={{
+                              backgroundColor: colors?.sentByMeCardColor,
+                              borderRadius: 30,
+                              marginLeft: 3,
+                            }}
+                            activeOpacity={0.9}>
+                            <MaterialIcons
+                              name="send"
+                              size={24}
+                              style={{
+                                color: colors.sentByMeTextColor,
+                                padding: 10,
+                              }}
+                            />
+                          </TouchableOpacity>
+                        </View>
                       </View>
                     )}
 
@@ -670,19 +690,34 @@ const ChatScreen = ({
                             style={{
                               flexDirection: 'row',
                               alignItems: 'center',
+                              margin: 4,
                             }}>
-                            <View style={{flex: 1, alignItems: 'center'}}>
+                            <TouchableOpacity
+                              style={{flex: 1, alignItems: 'center'}}
+                              onPress={() => {
+                                onStopRecord(
+                                  setrecordingUrl,
+                                  setvoiceAttachment,
+                                  isMountedRef,
+                                ),
+                                  setisRecording(false),
+                                  setShowPlayer(true);
+                              }}>
                               <AnimatedLottieView
-                                source={require('../../assests/images/attachments/recording.json')}
+                                source={require('../../assests/images/attachments/recordingJson2.json')}
                                 loop
                                 autoPlay
-                                style={{width: 100, height: 100}}
+                                style={{
+                                  width: 45,
+                                  height: 45,
+                                  // backgroundColor: 'blue',
+                                }}
                               />
-                            </View>
+                            </TouchableOpacity>
                             <Button
                               mode="contained"
                               icon="microphone-off"
-                              buttonColor="#756EF6"
+                              buttonColor={colors?.sentByMeCardColor}
                               onPress={() => {
                                 onStopRecord(
                                   setrecordingUrl,
@@ -700,20 +735,31 @@ const ChatScreen = ({
                             style={{
                               flexDirection: 'row',
                               alignItems: 'center',
+                              // backgroundColor: 'red',
                             }}>
                             <View
                               style={{
                                 alignSelf: 'flex-end',
+                                // backgroundColor: 'red',
+                                marginBottom: 3,
                               }}>
-                              <MaterialIcons
-                                name="add"
-                                size={20}
-                                style={listStyle.attachIcon}
-                                onPress={() => {
-                                  Keyboard.dismiss();
-                                  modalizeRef?.current?.open();
+                              <TouchableOpacity
+                                style={{
+                                  borderRadius: 30,
+                                  // backgroundColor: 'grey',
+                                  margin: 3,
                                 }}
-                              />
+                                activeOpacity={0.9}>
+                                <MaterialIcons
+                                  name="add"
+                                  size={24}
+                                  style={[listStyle.attachIcon]}
+                                  onPress={() => {
+                                    Keyboard.dismiss();
+                                    modalizeRef?.current?.open();
+                                  }}
+                                />
+                              </TouchableOpacity>
                             </View>
                             <TextInput
                               ref={textInputRef}
@@ -730,6 +776,59 @@ const ChatScreen = ({
                                 {color: colors.textColor},
                               ]}
                             />
+                            <View
+                              style={{
+                                alignSelf: 'flex-end',
+                                // margin: 1,
+                                marginBottom: 3,
+                              }}>
+                              {message?.length > 0 ||
+                              showPlayer ||
+                              attachment?.length > 0 ? (
+                                <TouchableOpacity
+                                  onPress={
+                                    !action ? onSendPress : onSendWithAction
+                                  }
+                                  style={{
+                                    backgroundColor: colors?.sentByMeCardColor,
+                                    borderRadius: 30,
+                                    margin: 3,
+                                  }}
+                                  activeOpacity={0.9}>
+                                  <MaterialIcons
+                                    name="send"
+                                    size={20}
+                                    style={{
+                                      color: colors.sentByMeTextColor,
+                                      padding: 12,
+                                    }}
+                                  />
+                                </TouchableOpacity>
+                              ) : (
+                                !isRecording && (
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      onStartRecord(setisRecording);
+                                    }}
+                                    style={{
+                                      borderRadius: 30,
+                                      margin: 3,
+                                      backgroundColor:
+                                        colors?.sentByMeCardColor,
+                                    }}
+                                    activeOpacity={0.9}>
+                                    <MaterialIcons
+                                      name="mic"
+                                      size={20}
+                                      style={{
+                                        color: colors.sentByMeTextColor,
+                                        padding: 12,
+                                      }}
+                                    />
+                                  </TouchableOpacity>
+                                )
+                              )}
+                            </View>
                           </View>
                         )}
                         {showOptions &&
@@ -738,13 +837,12 @@ const ChatScreen = ({
                       </View>
                     )}
                   </View>
-                  <View
+                  {/* <View
                     style={{
-                      justifyContent: 'flex-end',
+                      justifyContent: 'flex-start',
+                      backgroundColor: 'yellow',
                     }}>
-                    {message?.length > 0 ||
-                    showPlayer ||
-                    attachment?.length > 0 ? (
+                    {showPlayer && (
                       <TouchableOpacity
                         onPress={!action ? onSendPress : onSendWithAction}
                         style={{
@@ -762,30 +860,8 @@ const ChatScreen = ({
                           }}
                         />
                       </TouchableOpacity>
-                    ) : (
-                      !isRecording && (
-                        <TouchableOpacity
-                          onPress={() => {
-                            onStartRecord(setisRecording);
-                          }}
-                          style={{
-                            borderRadius: 7,
-                            marginLeft: 3,
-                            backgroundColor: colors?.sentByMeCardColor,
-                          }}
-                          activeOpacity={0.9}>
-                          <MaterialIcons
-                            name="mic"
-                            size={24}
-                            style={{
-                              color: colors.sentByMeTextColor,
-                              padding: 11,
-                            }}
-                          />
-                        </TouchableOpacity>
-                      )
                     )}
-                  </View>
+                  </View> */}
                 </View>
               </View>
             </KeyboardAvoidingView>
