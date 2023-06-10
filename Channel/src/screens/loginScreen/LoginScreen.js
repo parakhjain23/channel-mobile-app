@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Image, Platform, View} from 'react-native';
+import {Image, Platform, View} from 'react-native';
 import {connect} from 'react-redux';
 import {
   AppleButton,
@@ -17,7 +17,6 @@ import {
   setSigningMethod,
 } from '../../redux/actions/spaceToken/SpaceTokenActions';
 import {useNavigation, useTheme} from '@react-navigation/native';
-import {ms} from 'react-native-size-matters';
 
 const LoginScreen = ({getSpaceTokenStartAction, setSigningMethodAction}) => {
   const navigation = useNavigation();
@@ -118,7 +117,7 @@ const LoginScreen = ({getSpaceTokenStartAction, setSigningMethodAction}) => {
       }}>
       <Image source={require('../../assests/images/appIcon/icon96size.png')} />
       <GoogleSigninButton
-        style={{width: ms(192), height: ms(48)}}
+        style={{width: 192, height: 48}}
         size={GoogleSigninButton.Size.Wide}
         color={GoogleSigninButton.Color.Light}
         onPress={_signIn}
@@ -129,8 +128,8 @@ const LoginScreen = ({getSpaceTokenStartAction, setSigningMethodAction}) => {
             buttonStyle={AppleButton.Style.BLACK}
             buttonType={AppleButton.Type.SIGN_IN}
             style={{
-              width: ms(192), // You must specify a width
-              height: ms(48), // You must specify a height
+              width: 192, // You must specify a width
+              height: 48, // You must specify a height
             }}
             onPress={() => onAppleButtonPress()}
           />
