@@ -281,6 +281,26 @@ export function channelsReducer(state = initialState, action) {
         channelIdAndDataMapping: tempChannelIdAndDataMap,
       };
 
+    case Actions.JOIN_CHANNEL_SUCCESS:
+      var tempChannelIdAndDataMap = state?.channelIdAndDataMapping;
+      if (
+        !tempChannelIdAndDataMap[action?.teamId]?.userIds?.includes(
+          action?.userId,
+        )
+      ) {
+        tempChannelIdAndDataMap[action?.teamId]?.userIds?.push(action?.userId);
+      }
+      return {
+        ...state,
+        channelIdAndDataMapping: tempChannelIdAndDataMap,
+      };
+    case Actions.CHANNEL_PATCHED_EVENT:
+      var tempChannelIdAndDataMap = state?.channelIdAndDataMapping;
+      tempChannelIdAndDataMap[action?.response?._id] = action?.response;
+      return {
+        ...state,
+        channelIdAndDataMapping: tempChannelIdAndDataMap,
+      };
     case Actions.SIGN_OUT:
       return initialState;
     default:
