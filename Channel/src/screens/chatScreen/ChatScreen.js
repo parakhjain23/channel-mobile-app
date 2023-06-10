@@ -14,6 +14,7 @@ import {
   StyleSheet,
   RefreshControl,
   Keyboard,
+  StatusBar,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -88,10 +89,17 @@ const ChatScreen = ({
   removeUserFromChannelAction,
   draftMessageAction,
 }) => {
-  var teamId, channelType;
+  var teamId, channelType, chatHeaderTitle, userId;
   if (deviceType === DEVICE_TYPES[1]) {
+    userId = chatDetailsForTab?.userId;
     teamId = chatDetailsForTab?.teamId;
     channelType = chatDetailsForTab?.channelType;
+    chatHeaderTitle =
+      channelType === 'DIRECT_MESSAGE'
+        ? orgState?.userIdAndDisplayNameMapping[userId]
+        : chatDetailsForTab?.searchedChannel
+        ? chatDetailsForTab?.channelName
+        : channelsState?.teamIdAndNameMapping[teamId];
   } else {
     var {teamId, reciverUserId, channelType, searchedChannel, chatHeaderTitle} =
       route.params;
@@ -439,7 +447,7 @@ const ChatScreen = ({
           {!isScrolling && (
             <Header
               chatHeaderTitle={chatHeaderTitle}
-              userId={reciverUserId}
+              userId={reciverUserId || userId}
               channelType={channelType}
               searchUserProfileAction={searchUserProfileAction}
               accessToken={accessToken}
@@ -447,6 +455,8 @@ const ChatScreen = ({
               teamId={teamId}
               orgState={orgState}
               channelsState={channelsState}
+              deviceType={deviceType}
+              setChatDetailsForTab={setChatDetailsForTab}
             />
           )}
           <View style={styles.mainContainer}>

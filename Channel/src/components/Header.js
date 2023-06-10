@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, Platform} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -7,6 +7,7 @@ import * as RootNavigation from '../navigation/RootNavigation';
 import {useTheme} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import {useDispatch} from 'react-redux';
+import {DEVICE_TYPES} from '../constants/Constants';
 
 const HeaderComponent = ({
   chatHeaderTitle,
@@ -18,6 +19,8 @@ const HeaderComponent = ({
   orgState,
   channelsState,
   userInfoState,
+  deviceType,
+  setChatDetailsForTab,
 }) => {
   const {colors} = useTheme();
   const handleGoBack = () => {
@@ -51,6 +54,7 @@ const HeaderComponent = ({
       ? (RootNavigation.navigate('UserProfiles', {
           displayName: chatHeaderTitle,
           userId: userId,
+          setChatDetailsForTab: setChatDetailsForTab,
         }),
         searchUserProfileAction(userId, accessToken))
       : RootNavigation.navigate('ChannelDetails', {
@@ -59,30 +63,32 @@ const HeaderComponent = ({
         });
   };
 
-  return (
-    <SafeAreaView style={{backgroundColor: colors?.headerColor}}>
+  const MainComponent = () => {
+    return (
       <View
         style={{
+          // flex: 1,
           flexDirection: 'row',
-          // justifyContent: 'center',
-          // alignContent: 'center',
-          minHeight: 50,
+          minHeight: 60,
           backgroundColor: colors?.headerColor,
           borderBottomColor: 'gray',
           borderBottomWidth: 0.5,
         }}>
-        <TouchableOpacity
-          onPress={handleGoBack}
-          style={{
-            paddingLeft: 20,
-            paddingRight: 50,
-            paddingVertical: 16,
-            position: 'absolute',
-            left: 0,
-            zIndex: 1,
-          }}>
-          <Icon name="chevron-left" size={12} color={colors?.color} />
-        </TouchableOpacity>
+        {deviceType != DEVICE_TYPES[1] && (
+          <TouchableOpacity
+            onPress={handleGoBack}
+            style={{
+              paddingLeft: 15,
+              paddingRight: 50,
+              paddingVertical: 16,
+              position: 'absolute',
+              left: 0,
+              bottom: 10,
+              zIndex: 1,
+            }}>
+            <Icon name="chevron-left" size={15} color={colors?.color} />
+          </TouchableOpacity>
+        )}
 
         <TouchableOpacity
           style={{flex: 1}} // don't remove it bcz of this full header is touchable
@@ -116,7 +122,19 @@ const HeaderComponent = ({
           </View>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    );
+  };
+  const platform = Platform.OS === 'ios' ? 'ios' : 'android';
+  return (
+    <>
+      {platform !== 'ios' ? (
+        <SafeAreaView style={{backgroundColor: colors?.headerColor}}>
+          <MainComponent />
+        </SafeAreaView>
+      ) : (
+        <MainComponent />
+      )}
+    </>
   );
 };
 

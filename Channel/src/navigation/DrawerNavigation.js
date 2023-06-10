@@ -27,6 +27,7 @@ const DrawerNavigation = ({orgsState, appInfoState}) => {
   } else {
     [ScreenName, ScreenComponent] = ['Ipad', IpadScreen];
   }
+
   return (
     <Drawer.Navigator
       drawerContent={props => (
@@ -41,7 +42,7 @@ const DrawerNavigation = ({orgsState, appInfoState}) => {
               ? orgsState?.orgIdAndNameMapping[orgsState?.currentOrgId]
               : 'Channel',
           headerStyle: {backgroundColor: colors.headerColor},
-          headerTitleStyle: {color: colors.textColor, left: 0},
+          headerTitleStyle: {color: colors.textColor},
           headerLeft: () => (
             <TouchableOpacity
               style={{

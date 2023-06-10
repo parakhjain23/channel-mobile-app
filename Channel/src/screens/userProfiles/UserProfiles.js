@@ -173,13 +173,13 @@ const ContactDetailsPage = ({
                           channelsState?.teamIdAndTypeMapping[teamId],
                         userId: UserId,
                       })
-                    : handleListItemPress(
+                    : (handleListItemPress(
                         teamId,
                         channelsState?.teamIdAndTypeMapping[teamId],
                         UserId,
                         false,
-                      ) &&
-                  navigation.goBack();
+                      ),
+                      navigation.goBack());
                 }}>
                 <Text style={[styles.buttonText, styles.buttonTextWhite]}>
                   Message {DisplayName}
