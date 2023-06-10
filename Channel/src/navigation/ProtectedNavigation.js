@@ -142,7 +142,7 @@ const ProtectedNavigation = props => {
         component={ChannelDetailsScreen}
         options={({route}) => ({
           // header: () => <CustomHeader route={route} />,
-          // headerTitle: route?.params?.channelName,
+          headerTitle: route?.params?.channelName,
           headerShown: true,
           ...getHeader,
         })}
