@@ -14,7 +14,7 @@
 		4639B08B6FEC41754F33B6A4 /* libPods-Channel-ChannelTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1364A0197308E18A7505E919 /* libPods-Channel-ChannelTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		B7FFB092B74FFA2F1C3A44DB /* libPods-Channel.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F28CF0DE014575B66EFD798 /* libPods-Channel.a */; };
-		E5BC4A0429810C1300EA84FB /* BuildFile in Resources */ = {isa = PBXBuildFile; };
+		E5BC4A0429810C1300EA84FB /* (null) in Resources */ = {isa = PBXBuildFile; };
 		E5BC4A182981104100EA84FB /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5BC4A082981104100EA84FB /* Fontisto.ttf */; };
 		E5BC4A192981104100EA84FB /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5BC4A092981104100EA84FB /* Octicons.ttf */; };
 		E5BC4A1A2981104100EA84FB /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5BC4A0A2981104100EA84FB /* Feather.ttf */; };
@@ -312,7 +312,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E5BC4A202981104100EA84FB /* Ionicons.ttf in Resources */,
-				E5BC4A0429810C1300EA84FB /* BuildFile in Resources */,
+				E5BC4A0429810C1300EA84FB /* (null) in Resources */,
 				E5BC4A1A2981104100EA84FB /* Feather.ttf in Resources */,
 				E5BC4A232981104100EA84FB /* FontAwesome.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
@@ -614,7 +614,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2.0;
+				MARKETING_VERSION = 2.2.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -649,7 +649,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2.0;
+				MARKETING_VERSION = 2.2.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
